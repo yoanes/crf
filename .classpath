@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="test/unit/resources"/>
+	<classpathentry kind="src" path="test/unit/java"/>
+	<classpathentry kind="src" path="test/selenium/java"/>
+	<classpathentry kind="src" path="src/web"/>
+	<classpathentry kind="src" path="showcase/resources"/>
+	<classpathentry kind="src" path="showcase/java"/>
+	<classpathentry kind="src" path="src/resources"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?ivyXmlPath=ivy-settings%2Fivy.xml&amp;confs=default%2Cshowcase%2Ctest&amp;ivySettingsPath=project%3A%2F%2F%2Fivy-settings%2Fivy-eclipse.xml&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre6"/>
+	<classpathentry kind="lib" path="shared-build-scripts/lib/java/tools/jsp-api.jar"/>
+	<classpathentry kind="lib" path="shared-build-scripts/lib/java/tools/servlet-api.jar"/>
+	<classpathentry kind="output" path="eclipseBin"/>
+</classpath>

@@ -1,0 +1,15 @@
+/* [mapComponent-iphone-ipod] component/map/map.css */
+
+.invisible {
+    visibility: hidden;
+}
+ 
+.map {
+    /**
+     * Acceptance criteria covered by this class (Jira CRF-27):
+     *      This abstract image path will result in the real, device specific image being returned
+     *      in the response, including Content-Type, Content-Length, Last-Modified and Date HTTP 
+     *      response headers. 
+     */ 
+    background-image: url("/resources/images/component/map/tile_bg.image");
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+
+<project name="wl-crf-component"
+    xmlns:sensis="antlib:au.com.sensis.mobiles">
+
+    <description>Builds the crf-component.</description>
+
+    <!-- Modify the following for local only configuration -->
+    <property file="build.properties"/>
+    
+    <!-- ==================================================================================== -->
+    <!-- 
+      - Execute rather than import build-boostrap.xml so that it can automatically
+      - retrieve bootstrap build scripts if neccessary for the imports below. 
+      - TODO: this works but it's inefficient. Imported build scripts use antcontrib:foreach 
+      - to execute targets. This causes the entire build script to be reparsed and hence
+      - the build-bootstrap.xml script is invoked again each time.
+      - include 
+      -->
+<!--    <ant antfile="build-bootstrap.xml"/>-->
+    
+    <!-- ==================================================================================== -->
+    <!-- Import shared build scripts. --> 
+<!--    <import file="shared-build-scripts/src/toplevel/build-component-with-showcase-support.xml" />-->
+    <import file="shared-build-scripts/src/toplevel/build-library-with-showcase-support.xml" />
+	<import file="shared-build-scripts/src/standard/build-standard-require-jdk5-home-property.xml"/>
+	
+    <!--
+      - Override imported target: add extra steps to standard library step. 
+      -->
+    <target name="prepare-resources-for-jar" depends="build-library-override-prepare-resources-for-jar.prepare-resources-for-jar">
+        <echo message="crf: Overriding library prepare-resources-for-jar target to add additional steps." />
+            
+      	<!-- 
+      	  - Extra step for crf since we have tld files, even though we are notionally a "library". 
+      	  - TODO: watch out if this library starts to overlap even further with components.
+      	  -->
+        <copy todir="${jar.dist.work.dir}" overwrite="true"> 
+            <fileset id="crf.jar.custom.jsp.tags.fileset" dir="${web.dir}" >
+                <include name="**/*.tag"/>
+                <include name="**/*.tld"/>
+            </fileset>
+        </copy>         
+
+        <sensis:log-file-set-size refid="crf.jar.custom.jsp.tags.fileset" basedir="${web.dir}"/>
+    </target>   
+</project>

@@ -1,0 +1,8 @@
+mcs.devicerepository.filepath=/app/smtestapp/sandpit-dev/crf-component/devices/devices.mdpr
+mcs.policies.filepath=/app/smtestapp/sandpit-dev/crf-component/policies
+
+mcs.mgrp.component.scripts.base.url=/dev/crf-component-showcase/comp/
+mcs.mgrp.component.images.base.url=/dev/crf-component-imageserver/
+
+mcs.cache.policies=false
+#mcs.script.asset.path=/crf-component-showcase/scripts/

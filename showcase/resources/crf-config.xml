@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<crf:ui-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
+         xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
+
+    <groups>
+        <!-- Device specific groups. -->
+        <group name="iphone-ipod-os2" expr="device.name =~ '.*iPhone.*' and device.userAgent =~ '.*OS 2_.*'" />
+        <group name="iphone-ipod" expr="device.name =~ '.*iPhone.*'" />
+        <group name="iPad" expr = "device.name =~ '.*iPad.*'" />
+        <group name="nokia7600" expr = "device.userAgent =~ '.*Nokia7600.*'" />
+
+        <!-- Browser family groups. -->        
+        <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
+        <group name="webkit" expr="device.userAgent =~ '.*WebKit.*'" />
+
+        <!-- Image category groups. -->
+        <group name="HD800" expr="device.imageCategory eq 'HD800'" />
+        <group name="large" expr="device.imageCategory eq 'L'" />
+        <group name="medium" expr="device.imageCategory eq 'M'" />
+        <group name="small" expr="device.imageCategory eq 'S'" />
+        
+        <default-group name="default" />
+    </groups>
+
+</crf:ui-configuration>

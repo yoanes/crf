@@ -1,0 +1,158 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.
+-->
+
+<!-- 
+  - Ivy dependencies file for the entire project, including configurations 
+  - for each separate component.
+  -->
+<ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
+    <info organisation="com.sensis" module="wl-crf-component"/>
+
+    <configurations>
+        <!--  
+          - Note: the configurations approach here differs from other projects:
+          - 
+          - 1. The showcase configuration extends the default configuration. The test configuration extends all other configurations. 
+          - This ensures that ivy will detect and handle library conflicts. 
+          - 
+          - 2. When building classpaths in your build scripts, you _should not_ combine these configurations if you are, say, running
+          - JUnit tests in a forked JVM. This is because the command line will be too long for Windows to handle, due to the overlap
+          - between configurations. When running tests, the libs in the test configuration are sufficient. 
+          - In theory, it is still okay to combine the classpaths in your build script if you are not forking a JVM, since any 
+          - duplicate jars should be compatible. ie. you can compile tests with all configurations on the classpath.
+          -->
+        <conf name="default" description="Default libs required by the component." />
+        <conf name="showcase" description="Libs required by the component's showcase." extends="default"/>
+        <conf name="test" description="Test libs." extends="default, showcase"/>
+        
+        <conf name="buildBootstrap"  
+            description="Shared build scripts required by this project." />
+    </configurations>
+    
+    <publications>
+        <artifact name="wl-crf" type="jar" ext="jar" conf="default"/>
+        <artifact name="wl-crf-test" type="jar" ext="jar" conf="test"/>
+    </publications>
+
+    <dependencies>
+    
+        <!-- Shared build scripts required by this project. -->    
+        <dependency org="com.sensis" name="wl-build-scripts" rev="1.3.3" conf="buildBootstrap->default" />
+        
+        <!-- Commons -->
+        <dependency org="apache" name="commons-lang" rev="2.4" conf="default" />
+        <dependency org="apache" name="commons-io" rev="1.1" conf="default"/>
+        <dependency org="apache" name="commons-configuration" rev="1.4" conf="default"/>
+        <dependency org="apache" name="commons-jexl" rev="2.0.1" conf="default"/>
+        
+        <!-- jstl tags -->
+        <!-- note this is already referenced in the spring 2.0.6 ivy.xml -->
+        <!-- not sure why - seems a weird place for it -->
+        <dependency org="taglibs" name="standard" rev="1.1.2" conf="default"/>        
+        
+        <!-- MCS -->
+        <dependency org="com.volantis" name="com.volantis.mcs.servlet" rev="5.1.2" conf="showcase->default"/>
+        
+        <!-- Struts2 -->
+        <dependency org="org.apache" name="struts2-core" rev="2.0.11.2" conf="showcase->default"/>
+        
+        <!-- Tiles2 core -->
+        <dependency org="org.apache" name="tiles-core" rev="2.0.6" conf="showcase->default"/>
+
+        <!-- Struts2 Tiles plugin -->
+        <dependency org="org.apache" name="struts2-tiles-plugin" rev="2.0.11.2" conf="showcase->default"/>
+        
+
+        <!-- Spring Integration -->        
+        <dependency org="org.springframework" name="spring" rev="2.5.5" conf="default"/>
+        <dependency org="org.apache" name="struts2-spring-plugin" rev="2.0.11.2" conf="showcase->default"/>        
+        
+        <!-- Spring MVC -->
+        <dependency org="org.springframework" name="spring-webmvc" rev="2.5.5" conf="default"/>
+        
+        <!--  WP Web Services -->
+        <dependency org="org.apache.cxf" name="cxf" rev="2.1.2" conf="showcase->client"/>
+        <dependency org="javax.xml" name="jaxws-api" rev="2.1" conf="showcase->default"/>
+        <dependency org="javax.xml" name="jaxb-api" rev="2.1" conf="showcase->default"/>
+        <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.1.3" conf="showcase->default"/>
+        <dependency org="com.sun.xml.bind" name="jaxb-xjc" rev="2.1.3" conf="showcase->default"/>
+        <dependency org="com.sun.xml" name="fastinfoset" rev="1.2.2" conf="showcase->default"/>
+
+        <!-- Oracle Driver -->
+        <dependency org="com.oracle" name="ojdbc6" rev="11.1.0.7.0" conf="showcase->default"/>
+
+        <!-- Spring Security -->
+        <dependency org="org.springframework" name="spring-security-core" rev="2.0.3" conf="showcase->default"/>
+        <dependency org="org.springframework" name="spring-security-taglibs" rev="2.0.3" conf="showcase->default"/>
+        <dependency org="apache" name="commons-codec" rev="1.3" conf="showcase->default"/>
+
+        <!-- Sensis ServiceAccessLayer -->
+        <dependency org="com.sensis" name="sal-common" rev="1.9-013" conf="showcase->default"/>
+        <dependency org="com.sensis" name="sal-advertising" rev="1.9-016" conf="showcase->default"/>
+        <dependency org="com.sensis" name="sal-wlcommon" rev="1.9-013" conf="showcase->default"/>
+        <dependency org="com.sensis" name="sal-positioning" rev="1.9-013" conf="showcase->default"/>
+        
+        <dependency org="com.sensis" name="wl-smsmanager-cxf-client" rev="1.6.001" conf="showcase->default"/>
+
+        <!-- SDP Common -->
+        <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>        
+        <dependency org="com.sensis" name="sdpCommon-web" rev="1.6-012" conf="default"/>
+        <dependency org="com.sensis" name="sdpCommon-manager" rev="1.0-050" conf="default"/>
+
+        <!-- EMS dependencies -->
+        <dependency org="com.sensis" name="ems-cxf-client" rev="1.6" conf="showcase->default"/>
+
+        <!-- Hibernate Persistence -->
+        <!-- Should be included in hibernate 3.2.6.ga dependencies??
+        <dependency org="dom4j" name="dom4j" rev="1.6.1" conf="showcase->default"/>
+        -->
+        <dependency org="javax.persistence" name="persistence-api" rev="1.0" conf="showcase->default"/>
+        <dependency org="hibernate" name="hibernate" rev="3.2.2.ga" conf="showcase->default"/>
+        <dependency org="hibernate" name="hibernate-commons-annotations" rev="3.3.0.ga" conf="showcase->default"/>
+        <dependency org="hibernate" name="hibernate-annotations" rev="3.3.0.ga" conf="showcase->default"/>
+        
+        <!-- Castor. -->
+        <dependency org="org.exolab" name="castor-xml" rev="1.1.2.1" conf="default"/>
+        
+        <!-- Testing -->
+        <dependency org="junit" name="junit" rev="4.4" conf="test->default"/>
+        <dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="test->default"/>
+        <dependency org="com.sensis" name="sdpCommon-testing" rev="0.4-007" conf="test->default"/>
+        <dependency org="org.springframework" name="spring-test" rev="2.5.5" conf="test->default"/>
+        <dependency org="hsqldb" name="hsqldb" rev="1.8.0.1" conf="test->default"/>
+        
+        <dependency org="com.thoughtworks" name="selenium-java-client-driver" rev="1.0-beta-1" conf="test->default"/>
+        <dependency org="com.thoughtworks" name="selenium-server" rev="1.0-beta-1" conf="test->default"/>
+
+<!--         
+        <dependency org="com.thoughtworks" name="selenium-server-standalone" rev="2.0a4" conf="test->default"/>
+        -->
+        
+        <dependency org="com.vladium" name="emma" rev="2.0" conf="test->default"/>
+
+        <!--
+          - Dependencies on components.
+          -->
+        <!-- TODO: should not depend on core component. -->
+        <dependency org="com.sensis" name="wl-core-component" rev="1.1.5" conf="default,test"/>
+        
+        <!-- Testbed depedency. -->
+        <dependency org="com.sensis" name="wl-webapp-testbed" rev="1.0.9" conf="showcase->default"/>        
+    </dependencies>
+</ivy-module>

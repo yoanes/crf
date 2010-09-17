@@ -1,0 +1,4 @@
+# Project level environment properties. 
+#
+# Projects should set platform dependent properties here if they wish to add additional environment 
+# properties to the default org.springframework.beans.factory.config.PropertyPlaceholderConfigurer.

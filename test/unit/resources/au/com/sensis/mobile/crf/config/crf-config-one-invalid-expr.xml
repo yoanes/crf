@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<crf:ui-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
+         xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
+
+    <groups>
+        <group name="iphone" expr="device.name =~ '.*iPhone.*'" />
+
+        <!-- Invalid expression. Property of device does not exist. -->
+        <group name="HD800" expr="device.propertyDoesNotExist eq 'HD800'" />
+        
+        <group name="large" expr="device.imageCategor eq 'L'" />
+        
+        <default-group name="default" />
+    </groups>
+
+</crf:ui-configuration>

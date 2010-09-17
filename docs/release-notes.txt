@@ -1,0 +1,8 @@
+==== Version 0.0.2 (tag: crp_v0_0_2) ==== 
+
+JSP resolution, basic CSS and basic image resolution done (except for img tag width and height output).
+
+==== Version 0.0.1 (tag: crp_v0_0_1) ==== 
+
+JSP routing via (configurable) .crp extension implemented. Showcase demonstrates JSP routing
+via both forwards and includes.

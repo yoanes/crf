@@ -1,0 +1,12 @@
+########################################################
+## ENVIRONMENT : DESK
+########################################################
+
+env.resources.jsp.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-component-showcase/
+env.resources.css.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-component-showcase/resources/css
+env.resources.javascript.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-component-showcase/resources/javascript
+env.resources.images.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-component-showcase/resources/images
+
+env.resources.css.client.path.prefix=/resources/css/
+env.resources.javascript.client.path.prefix=/resources/javascript/
+env.resources.images.client.path.prefix=/resources/images/

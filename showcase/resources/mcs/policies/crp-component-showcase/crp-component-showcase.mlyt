@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<variable-policy xmlns="http://www.volantis.com/xmlns/2006/02/marlin-lpdm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpdm="http://www.volantis.com/xmlns/2006/02/marlin-rpdm" xmlns:struct="http://www.volantis.com/xmlns/2005/10/ThemeStruct" xsi:schemaLocation="http://www.volantis.com/xmlns/2006/02/marlin-lpdm http://www.volantis.com/schema/2006/02/marlin-lpdm.xsd">
+    <type>layout</type>
+    <variants>
+        <variant>
+            <type>layout</type>
+            <selection>
+                <default/>
+            </selection>
+            <content>
+                <layout>
+                    <canvasLayout>
+                        <gridFormat rows="3" columns="1" backgroundComponentType="image" borderWidth="0" cellPadding="0" cellSpacing="0" width="100" widthUnits="percent" optimizationLevel="never">
+                            <gridFormatColumns>
+                                <gridFormatColumn widthUnits="percent"/>
+                            </gridFormatColumns>
+                            <gridFormatRow>
+                                <paneFormat name="header" backgroundComponentType="image" borderWidth="0" cellPadding="0" cellSpacing="0" width="100" widthUnits="percent" filterOnKeyboardUsability="0" optimizationLevel="never"/>
+                            </gridFormatRow>
+                            <gridFormatRow>
+                                <paneFormat name="content" backgroundComponentType="image" borderWidth="0" cellPadding="0" cellSpacing="0" width="100" widthUnits="percent" filterOnKeyboardUsability="0" optimizationLevel="never"/>
+                            </gridFormatRow>
+                            <gridFormatRow>
+                                <paneFormat name="footer" backgroundComponentType="image" borderWidth="0" cellPadding="0" cellSpacing="0" width="100" widthUnits="percent" filterOnKeyboardUsability="0" optimizationLevel="never"/>
+                            </gridFormatRow>
+                        </gridFormat>
+                    </canvasLayout>
+                </layout>
+            </content>
+        </variant>
+    </variants>
+</variable-policy>

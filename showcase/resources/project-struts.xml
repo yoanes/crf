@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+    <!-- 
+      - Project level struts config file. 
+      -
+      - Projects should provide their own copy of this file if they wish to 
+      - add struts packages, typically via includes. eg: 
+      -      
+      - <include file="../view/map/map.xml"/>
+      -->
+
+    <!-- 
+      - Sample package for the base testbed so that it can be deployed standalone without
+      - yet being customised. There is no need to retain this for projects 
+      - that use the testbed. 
+      -->
+    <package name="testbed-sample" namespace="/" extends="testbed-default">
+
+        <!-- Home Page Action -->
+        <action name="home" class="dumbAction">
+            <result name="success" type="tiles">testbed.home</result>
+        </action>
+        
+        <!-- Struts forward to bdp via the ContentRenderingFrameworkServlet. -->
+        <action name="bdp" class="dumbAction">
+            <result name="success">/WEB-INF/view/jsp/detail/bdp.crf</result>
+        </action>
+
+    </package>
+
+</struts>

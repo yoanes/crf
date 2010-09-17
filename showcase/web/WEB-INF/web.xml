@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    id="WebApp_ID" version="2.5">
+    <display-name>dmrTestbed</display-name>
+    
+    <!-- Application Resources -->
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+        <param-value>application</param-value>
+    </context-param>
+    
+    <!-- MCS Configuration -->
+    <context-param>
+        <param-name>config.file</param-name>
+        <param-value>/WEB-INF/mcs-config.xml</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>mcs.log4j.config.file</param-name>
+        <param-value>/WEB-INF/mcs-log4j.xml</param-value>
+    </context-param>
+    
+    <!-- Tiles Parameters -->
+    <context-param>
+        <param-name>org.apache.tiles.impl.BasicTilesContainer.DEFINITIONS_CONFIG</param-name>
+        <param-value>/WEB-INF/tiles-definitions.xml, /WEB-INF/project-tiles-definitions.xml</param-value>
+    </context-param>
+        
+    
+    <!-- Spring Context locations -->   
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            <!--
+              - Context files from all component jars. Will also pick up Context files from expanded component jars, 
+              - provided that the expansion ensures tha the files are placed on the classpath. 
+              -->
+            classpath*:/au/com/sensis/mobile/web/component/*/context/beanfactorypostprocessor/**/*Context.xml, 
+            classpath*:/au/com/sensis/mobile/web/component/*/context/root/**/*Context.xml, 
+            
+            <!-- crf context files. -->
+            classpath*:/au/com/sensis/mobile/crf/context/beanfactorypostprocessor/**/*Context.xml,
+            classpath*:/au/com/sensis/mobile/crf/context/root/**/*Context.xml, 
+            
+            <!-- Context files from the testbed.  -->
+            /WEB-INF/context/root/**/*Context.xml
+        </param-value>
+    </context-param>    
+    
+    <!-- Stash Visitor and Device data in the session--> 
+   <!-- <filter>
+        <filter-name>contextSetUpFilter</filter-name>
+        <filter-class>au.com.sensis.wireless.web.filter.MobileContextSetUpFilter</filter-class>
+    </filter>   
+    
+    -->
+    
+    
+    <filter>
+        <filter-name>contextSetUpFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+     
+    
+    <!-- MCS Vform Removal Request Wrapper Filter -->
+    <filter>
+        <filter-name>mcsVformRequestWrapperFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+
+	<filter-mapping>
+        <filter-name>contextSetUpFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>  
+ 
+    
+    <filter-mapping>
+        <filter-name>mcsVformRequestWrapperFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <!-- MCS Filter -->
+    <filter>
+        <filter-name>MCSFilter</filter-name>
+        <filter-class>com.volantis.mcs.servlet.MCSFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>MCSFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>MCSFilter</filter-name>
+        <url-pattern>*.xdime</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>MCSFilter</filter-name>
+        <url-pattern>*.action</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    
+
+    <!-- Capture Filter -->
+    <filter>
+        <filter-name>capture</filter-name>
+        <filter-class>au.com.sensis.wireless.web.filter.ServletCaptureFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>capture</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+<!--    
+    <filter-mapping>
+        <filter-name>capture</filter-name>
+        <url-pattern>*.xdime</url-pattern>
+    </filter-mapping>
+-->
+    <filter-mapping>
+        <filter-name>capture</filter-name>
+        <url-pattern>*.action</url-pattern>
+    </filter-mapping>
+    
+    <!--
+      - (Optional) BundleExploderActivatonFilter from the core component.
+      - 
+      - Thanks to the OptionalTargetBeanDelegatingFilterProxy, this filter
+      - will not fail if the target bean is not found. Thus, the testbed has no
+      - hard dependency on the core component.
+      -->
+    <filter>
+        <filter-name>bundleExploderActivatonFilter</filter-name>
+        <filter-class>au.com.sensis.mobile.web.testbed.presentation.framework.OptionalTargetBeanDelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetBeanName</param-name>
+            <param-value>core.comp.bundleExploderActivatonFilter</param-value>
+        </init-param>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>bundleExploderActivatonFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <!--
+      - (Optional) JsonLeadingAndTrailingWhitespaceTrimmingFilter from the core component.
+      - 
+      - Thanks to the OptionalTargetBeanDelegatingFilterProxy, this filter
+      - will not fail if the target bean is not found. Thus, the testbed has no
+      - hard dependency on the core component.
+      -->
+    <filter>
+        <filter-name>jsonLeadingAndTrailingWhitespaceTrimmingFilter</filter-name>
+        <filter-class>au.com.sensis.mobile.web.testbed.presentation.framework.OptionalTargetBeanDelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetBeanName</param-name>
+            <param-value>core.comp.jsonLeadingAndTrailingWhitespaceTrimmingFilter</param-value>
+        </init-param>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>jsonLeadingAndTrailingWhitespaceTrimmingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <!-- Struts2 Filter -->
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+        <init-param>
+            <!--
+              - We allow both .action and .check extensions. The .check extension
+              - is intended only to be used for health checks. However, we configure
+              - all of this with the same FilterDispatcher. Using
+              - separate dispatchers with different struts mappings ended up being
+              - very messy (and also very fiddly to get working correctly).
+              -->
+            <param-name>struts.action.extension</param-name>
+            <param-value>action,check</param-value>
+        </init-param>
+    </filter>
+
+    <!-- Struts2 Filter Mappings - note that these need to be last in the chain -->
+    <!-- Struts2 Filter Mapping for *.action. See FilterDispatcher comments above. -->
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>*.action</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+
+    <!-- Struts2 Filter Mapping for *.check. See FilterDispatcher comments above. -->
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>*.check</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    
+    <!-- LifeCheckServlet -->
+    <servlet>
+        <servlet-name>lifecheck</servlet-name>
+        <servlet-class>au.com.sensis.wireless.web.servlet.LifeCheckServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>lifecheck</servlet-name>
+        <url-pattern>/lifecheck</url-pattern>
+    </servlet-mapping>
+    
+    <!-- MCS Servlet Definitions -->
+    <servlet>
+      <servlet-name>MarinerFFP</servlet-name>
+      <servlet-class>com.volantis.mcs.servlet.FormFragmentationServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>MarinerFFP</servlet-name>
+      <url-pattern>/MarinerFFP</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+      <servlet-name>MCSCSS</servlet-name>
+      <servlet-class>com.volantis.mcs.servlet.CSSServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+      <servlet-name>MCSCSS</servlet-name>
+      <url-pattern>/MCSCSS/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AgentServlet</servlet-name>
+        <servlet-class>com.volantis.mcs.management.agent.servlet.AgentServlet</servlet-class>
+        <init-param>
+            <param-name>enabled</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>host</param-name>
+            <param-value>localhost</param-value>
+        </init-param>
+        <init-param>
+            <param-name>port</param-name>
+            <param-value>27013</param-value>
+        </init-param>
+        <init-param>
+            <param-name>password</param-name>
+            <param-value>mc5pwd</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>    
+
+    <!-- Servlet dedicated to web components. -->
+    <servlet>
+        <servlet-name>webComponentServlet</servlet-name>
+        <servlet-class>
+            org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>
+                /WEB-INF/context/component/webComponentServletContext.xml
+             </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>webComponentServlet</servlet-name>
+        <url-pattern>/comp/*</url-pattern>
+    </servlet-mapping>
+    
+    <!-- crf Servlet. -->
+    <servlet>
+        <servlet-name>crfResourceSelectorServlet</servlet-name>
+        <servlet-class>au.com.sensis.mobile.crf.presentation.ResourceSelectorServlet</servlet-class>
+        <init-param>
+            <param-name>resourceSelectorBeanName</param-name>
+            <param-value>crf.resourceSelector</param-value>
+        </init-param>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>crfResourceSelectorServlet</servlet-name>
+        <url-pattern>*.crf</url-pattern>
+    </servlet-mapping>
+    
+    <!-- crf ImageServlet. -->
+    <servlet>
+        <servlet-name>crfImageServlet</servlet-name>
+        <servlet-class>au.com.sensis.mobile.crf.presentation.ImageServlet</servlet-class>
+        <init-param>
+            <param-name>imageServletCollaboratorsMementoBeanName</param-name>
+            <param-value>crf.imageServletCollaboratorsMemento</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>crfImageServlet</servlet-name>
+        <url-pattern>*.image</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Mime Mappings -->
+    <!-- I'm not sure we actually need this here. -->
+    <!-- I have removed everything except: -->
+    <!-- 1. those which are not in the standard tomcat web.xml. -->
+    <!-- 1. those which are different here than in the standard tomcat web.xml. -->
+    <mime-mapping>
+        <extension>3gp</extension>
+        <mime-type>video/3gpp</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>726</extension>
+        <mime-type>audio/kadpcm32</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>amr</extension>
+        <mime-type>audio/amr</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>gsm</extension>
+        <mime-type>audio/gsm</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mid</extension>
+        <mime-type>audio/sp-midi</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mp3</extension>
+        <mime-type>audio/mp3</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>rmf</extension>
+        <mime-type>audio/x-rmf</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>imy</extension>
+        <mime-type>audio/imelody</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>rng</extension>
+        <mime-type>application/vnd.nokia.ringing-tone</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ra</extension>
+        <mime-type>audio/x-realaudio</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>rmm</extension>
+        <mime-type>audio/x-realaudio</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ram</extension>
+        <mime-type>audio/x-pn-realaudio</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>rm</extension>
+        <mime-type>audio/x-pn-realaudio</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mimg</extension>
+        <mime-type>application/x-mcs-image</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mtxt</extension>
+        <mime-type>application/x-mcs-text</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>mmf</extension>
+        <mime-type>application/vnd.smaf</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>png</extension>
+        <mime-type>image/png</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>cept</extension>
+        <mime-type>image/vnd.videotex</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>vtx</extension>
+        <mime-type>image/vnd.videotex</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>xdime</extension>
+        <mime-type>x-application/vnd.xdime+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>xdinc</extension>
+        <mime-type>x-application/vnd.xdime+xml;use=include</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>xdtpl</extension>
+        <mime-type>x-application/vnd.xdime+xml;use=template</mime-type>
+    </mime-mapping>
+    
+    <welcome-file-list>
+        <welcome-file>home.action</welcome-file>
+    </welcome-file-list>
+    
+    <!-- Taglibs -->
+    <jsp-config>
+
+        <taglib>
+            <taglib-uri>/WEB-INF/taglibs/volantis-mcs.tld</taglib-uri>
+            <taglib-location>/WEB-INF/taglibs/volantis-mcs.tld</taglib-location>
+        </taglib>
+        
+    </jsp-config>
+    
+    <!-- Spring Listener -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <!-- Tiles Listener -->
+    <listener>
+        <listener-class>org.apache.struts2.tiles.StrutsTilesListener</listener-class>
+    </listener>
+    
+    
+    <!-- Custom Tiles Listener -->
+    <!-- NOTE: this listener must be after the Spring listener in case it requires Spring configured beans. -->
+    
+    <!--
+    <listener>
+        <listener-class>au.com.sensis.mobile.crf.presentation.tiles.ContentRenderingFrameworkTilesListener</listener-class>
+    </listener>
+    -->
+</web-app>

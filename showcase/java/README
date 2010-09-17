@@ -1,0 +1,2 @@
+Hack: adding this README so that the showcase/java directory is guaranteed to exist, even if the project
+is checked out of CVS with empty directories pruned.

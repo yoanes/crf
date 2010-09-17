@@ -1,0 +1,6 @@
+########################################################
+## ENVIRONMENT : crf-showcase SANDPIT overrides
+########################################################
+
+# Context root relative prefix for all components.
+env.context.root.component.prefix=/mcstestapp/comp/

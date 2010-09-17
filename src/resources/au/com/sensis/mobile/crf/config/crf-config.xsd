@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://mobile.sensis.com.au/web/crf/config"
+    targetNamespace="http://mobile.sensis.com.au/web/crf/config"
+    elementFormDefault="unqualified" attributeFormDefault="unqualified"
+    version="1.0">
+
+    <xs:annotation>
+        <xs:documentation>
+            Schema for the Content Rendering Platform resources config file. 
+        </xs:documentation>
+    </xs:annotation>
+
+    <!-- ================================================================== -->
+    
+    <xs:element name="ui-configuration" type="UiConfiguration" />
+    
+    <xs:complexType name="UiConfiguration">
+        <xs:sequence>
+            <xs:element name="groups" type="Groups" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Groups">
+        <xs:annotation>
+            <xs:documentation>
+                Encapsulates a sequence of groups.
+            </xs:documentation>
+        </xs:annotation>
+        
+        <xs:sequence>
+            <xs:element name="group" type="Group" 
+                minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="default-group" type="DefaultGroup" 
+                minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="Group">
+        <xs:annotation>
+            <xs:documentation>
+                Represents a group of resources.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:attribute name="name" type="xs:string" />        
+        <xs:attribute name="expr" type="xs:string" />        
+    </xs:complexType>
+    
+    <xs:complexType name="DefaultGroup">
+        <xs:annotation>
+            <xs:documentation>
+                Special default group of resources.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:attribute name="name" type="xs:string" />        
+    </xs:complexType>
+    
+</xs:schema>

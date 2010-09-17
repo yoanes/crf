@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+    <bean id="crf.resourceSelector" 
+        class="au.com.sensis.mobile.crf.service.ChainedPathRestrictedResourceSelectorBean">
+        <constructor-arg ref="crf.defaultResourceSelector" />
+    </bean>                
+
+    <bean id="crf.defaultResourceSelector" 
+        class="au.com.sensis.mobile.crf.service.ResourceSelectorBean">
+        <constructor-arg ref="crf.configurationFactory"/>
+        <constructor-arg ref="crf.resourcePathMapper"/>
+    </bean>                
+        
+    <bean id="crf.configurationFactory" 
+        class="au.com.sensis.mobile.crf.config.ConfigurationFactoryBean">
+        <constructor-arg value="@{crf.resources.config.classpath}"/>
+    </bean>
+    
+    <bean id="crf.resourcePathMapper" class="au.com.sensis.mobile.crf.service.ChainedResourcePathMapper">
+        <constructor-arg>
+            <list>
+                <bean class="au.com.sensis.mobile.crf.service.JspResourcePathMapper">
+                    <constructor-arg value="@{crf.resources.jsp.root.servlet.path}"/>
+                    <constructor-arg value="@{crf.resources.jsp.abstract.extension}"/>
+                    <constructor-arg value="@{crf.env.resources.jsp.root.dir}"/>
+                </bean>
+                <bean class="au.com.sensis.mobile.crf.service.CssResourcePathMapper">
+                    <constructor-arg value="@{crf.resources.css.abstract.path.extension}"/>
+                    <constructor-arg value="@{crf.env.resources.css.root.dir}"/>
+                </bean>
+                <bean class="au.com.sensis.mobile.crf.service.ImageResourcePathMapper">
+                    <constructor-arg value="@{crf.resources.image.abstract.path.extension}"/>
+                    <constructor-arg value="@{crf.env.resources.images.root.dir}"/>
+                </bean>
+                <bean class="au.com.sensis.mobile.crf.service.JavaScriptResourcePathMapper">
+                    <constructor-arg value="@{crf.resources.javascript.abstract.path.extension}"/>
+                    <constructor-arg value="@{crf.env.resources.javascript.root.dir}"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="crf.resourceResolutionWarnLogger" class="au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger" />
+    
+    <bean id="crf.linkTagCollaboratorsMemento" 
+        class="au.com.sensis.mobile.crf.presentation.tag.LinkTagCollaboratorsMemento">
+        <constructor-arg ref="crf.resourceSelector" />
+        <constructor-arg ref="crf.deploymentVersion" />
+        <constructor-arg ref="crf.cssBundleFactory" />
+        <constructor-arg value="@{crf.env.resources.css.client.path.prefix}" />
+        <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
+    </bean>
+    
+    <bean id="crf.imageTagCollaboratorsMemento" 
+        class="au.com.sensis.mobile.crf.presentation.tag.ImageTagCollaboratorsMemento">
+        <constructor-arg ref="crf.resourceSelector" />
+        <constructor-arg ref="crf.deploymentVersion" />
+        <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
+        <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
+    </bean>
+    
+    <bean id="crf.scriptTagCollaboratorsMemento" 
+        class="au.com.sensis.mobile.crf.presentation.tag.ScriptTagCollaboratorsMemento">
+        <constructor-arg ref="crf.resourceSelector" />
+        <constructor-arg ref="crf.deploymentVersion" />
+        <constructor-arg ref="crf.scriptBundleFactory" />
+        <constructor-arg value="@{crf.env.resources.javascript.client.path.prefix}" />
+        <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
+    </bean>
+    
+    <bean id="crf.cssBundleFactory" class="au.com.sensis.mobile.crf.service.CssBundleFactoryBean" />
+    <bean id="crf.scriptBundleFactory" class="au.com.sensis.mobile.crf.service.ScriptBundleFactoryBean" />
+    
+    <bean id="crf.imageServletCollaboratorsMemento" 
+        class="au.com.sensis.mobile.crf.presentation.ImageServlet$ImageServletCollaboratorsMemento">
+        <constructor-arg ref="crf.resourceSelector" />
+        <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
+    </bean>
+    
+    
+    <!-- TODO: extract this global deploymentVersion bean (and its class) into somewhere more common? -->
+    <bean id="crf.deploymentVersion" class="au.com.sensis.mobile.crf.config.DeploymentVersion">
+        <property name="platform"> 
+            <!-- TODO: in future, the platform will be set from a properties file. For now, only DEV is supported. -->
+            <util:constant static-field="au.com.sensis.mobile.crf.config.DeploymentVersion$Platform.DEVELEOPMENT" />
+        </property>
+    </bean>
+</beans>

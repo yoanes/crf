@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <!-- 
+      - NOTE: we are not using this web module definition for the purposes of deployment.
+      - We are _only_ using it to allow code navigation in JSPs (eg. navigating to a file
+      - included via <jsp:directive.include />) and to allow setting of breakpoints 
+      - in JSPs.
+      -->
+    <wb-module deploy-name="template-component-showcase">
+        <wb-resource deploy-path="/" source-path="/showcase/web"/>
+        <wb-resource deploy-path="/" source-path="/lib/zip/wl.webapp.testbed-exploded/web"/>
+    </wb-module>
+</project-modules>

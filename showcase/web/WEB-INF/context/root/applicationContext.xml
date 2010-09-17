@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.1.xsd">
+
+
+    <!-- ======================================================================================= -->
+    <!-- Properties                                                                              -->
+    <!-- ======================================================================================= -->
+    <bean id="placeHolderConfigurer"
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="propertiesArray">
+            <list>
+                <ref local="globalVersionProperties" />
+                <ref local="applicationProperties" />
+                <ref local="projectApplicationProperties" />
+                <ref local="projectEnvironmentProperties" />
+            </list>
+        </property>
+    </bean>
+
+    <util:properties id="globalVersionProperties" location="classpath:global-version.properties"/>
+    
+    <!-- Application Properties -->
+    <util:properties id="applicationProperties" location="classpath:application.properties"/>
+    
+    <!-- Component showcase specific application Properties -->
+    <util:properties id="projectApplicationProperties" location="classpath:project-application.properties"/>
+
+    <!-- Environment Properties -->
+    <util:properties id="projectEnvironmentProperties" location="classpath:project-environment.properties"/>
+
+    <!-- ======================================================================================= -->
+    <!-- MCS Vform Parameter Removal Request Wrapper Filter                                      -->
+    <!-- ======================================================================================= -->
+
+    <bean id="mcsVformRequestWrapperFilter"
+            class="au.com.sensis.wireless.web.filter.McsVFormRemovalRequestWrapperFilter" />
+            
+    <!-- ======================================================================================= -->
+    <!-- Interceptors                                                                            -->
+    <!-- ======================================================================================= -->
+
+    <bean id="businessContextInterceptor"
+            class="au.com.sensis.wireless.web.framework.MobileContextSetUpInterceptor"
+            init-method="validateState">
+
+        <property name="deviceRecognition" ref="volantisDeviceRecognition" />
+
+        <!-- For this showcase, we just create a new Visitor for every request. -->  
+        <property name="headerInterpreter" ref="defaultHeaderInterpreter" />
+    </bean>
+    
+    <bean id="volantisDeviceRecognition"
+            class="au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceRecognition">
+    </bean>
+    
+<!--     
+    <bean id="wurflDeviceRecognition"
+            class="au.com.sensis.mobile.common.device.WurflDeviceRecognition">
+        <constructor-arg ref="wurflHolder" />
+    </bean>
+    
+    <bean id="propertiesSwitchedDeviceRecognition"
+            class="au.com.sensis.mobile.common.device.PropertiesSwitchedDeviceRecognition">
+        <constructor-arg>
+            <map>
+                <entry key="wurfl"><ref local="wurflDeviceRecognition"/></entry>
+                <entry key="volantis"><ref local="volantisDeviceRecognition"/></entry>
+            </map>
+        </constructor-arg>
+        <constructor-arg><value>/device-recognition.properties</value></constructor-arg>
+        <constructor-arg ref="volantisDeviceRecognition" />
+    </bean>
+-->    
+
+    <bean id="defaultHeaderInterpreter"
+            class="au.com.sensis.wireless.web.mobile.DefaultHeaderInterpreter"
+            init-method="validateState">
+        <property name="clientAppDetectionHolder" ref="requestClientAppDetectionHolder" />
+    </bean>
+    
+    <bean id="requestClientAppDetectionHolder" class="au.com.sensis.wireless.web.clientapp.RequestClientAppDetectionHolder">
+        <property name="requestAttribute" value="clientApp"/>
+    </bean>
+    
+    
+    <!-- Create the context setup filter bean that is referenced in web.xml  -->
+    <bean id="contextSetUpFilter" name="contextSetUpFilter"
+            class="au.com.sensis.mobile.web.testbed.ContextSetUpFIlterThatWorks">
+
+        <property name="headerInterpreter" ref="defaultHeaderInterpreter"/>
+        
+        <property name="deviceRecognition" ref="volantisDeviceRecognition"/>
+    </bean>
+
+    <!-- ==================================================================================== -->
+ 
+</beans>

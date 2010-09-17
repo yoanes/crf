@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+    <!-- 
+      - Project level tiles definitions. 
+      -
+      - Projects should provide their own copy of this file that defines all tiles 
+      - that they require.
+      -->
+
+    <!-- 
+      - Sample tile for the base testbed so that it can be deployed standalone without
+      - yet being customised. There is no need to retain this for projects 
+      - that use the testbed. 
+      -->
+    <definition name="testbed.home" extends="testbed.base">
+        <put-attribute name="title" value="Testbed sample page."/>    
+        <put-attribute name="body" value="/WEB-INF/view/common/jsp/testbed-sample.jsp"/>
+    </definition>
+
+</tiles-definitions>

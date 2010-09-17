@@ -1,0 +1,10 @@
+########################################################
+## ENVIRONMENT : crf-showcase SANDPIT-dev overrides
+########################################################
+
+# True if you want bundle explosion initially activated for each new session. 
+# Only honoured if env.bundleExplosionEnabled=true. 
+env.bundleExplosionInitialValue=true
+
+# Context root relative prefix for all components.
+env.context.root.component.prefix=/dev/crf-component-showcase/comp/
