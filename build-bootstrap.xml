@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+
+<project name="bootstrap-build-scripts" default="bootstrap-check"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <description>
+        Targets for bootstrapping a project by retrieving shared build scripts.
+    </description>
+    
+    <!-- Grab the properties that are used for the normal build of this project. -->
+    <property file="build.properties"/>
+    
+    <!-- ======================================================================================================== -->
+    <!-- Public targets. -->
+    
+    <target name="bootstrap-check" description="Check if the bootstrap needs to be done. If so, do it. Otherwise don't." 
+          depends="-bootstrap-check-do, -bootstrap-do">
+        
+        <echo message="You can now run ant -p for a list of targets. If none appear, please run ant boostrap-clean,bootstrap then try again."/>
+    </target>
+    
+    <target name="bootstrap" 
+        description="Bootstrap the project by retrieving shared build scripts. Mainly used for retrieving locally published dev scripts on demand." 
+        depends="boostrap-clean, -bootstrap-init, -bootstrap-build-scripts-install">
+    
+        <echo message="You can now run ant -p for a list of targets. If none appear, please run ant boostrap-clean,bootstrap then try again."/>
+    </target>
+    
+    <target name="bootstrap-no-clean" 
+        description="Similar to bootstrap but doesn't clean first (Eclipse sometimes locks libs and antlib files)." 
+        depends="-bootstrap-init, -bootstrap-build-scripts-install">
+    
+        <echo message="You can now run ant -p for a list of targets. If none appear, please run ant boostrap-clean,bootstrap then try again."/>
+    </target>
+    
+    <target name="boostrap-clean" description="Remove shared build scripts and libs used by them."
+           depends="-bootstrap-init-props">
+        <echo message="Cleaning shared build scripts and libs."/>
+        
+        <delete dir="${shared.build.scripts.dir}"/>
+    </target>
+
+    <!-- ======================================================================================================== -->
+    <!-- Private targets (names start with a hyphen so they cannot be executed directly). -->
+    
+    <!-- Top level target to initialize all properties. -->
+    <target name="-bootstrap-init-props" depends="-bootstrap-init-dir-props, -bootstrap-init-lib-props, -bootstrap-init-ivy-props"/>
+    
+    <target name="-bootstrap-init-dir-props">
+        <!-- Location to install the shared build scripts, relative to the project being built. -->
+        <property name="shared.build.scripts.dir" location="shared-build-scripts"/>
+        
+        <property name="lib.dir" value="lib"/>
+    </target>
+        
+    <target name="-bootstrap-init-lib-props">
+        <!-- Fileset include pattern to match the wl build scripts zip that will be retrieved by ivy. --> 
+        <property name="build.scripts.zip.fileset.pattern" value="wl-build-scripts-*.zip"/>
+    </target>
+    
+    <target name="-bootstrap-init-ivy-props" depends="-bootstrap-init-dir-props">
+        <property name="ivy.dep.file" value="${basedir}/ivy-settings/ivy.xml"/>
+        <property name="ivy.retrieve.pattern" value="${lib.dir}/[type]/[conf]/[artifact]-[revision].[ext]"/>
+        <property name="ivy.cache.dir" location="c:\ivy-cache"/>
+        <property name="ivy.local.desk.repository.dir" location="C:\ivy-local-desk-repository"/>        
+        <property name="ivy.local.desk.repository.cache.dir" location="C:\ivy-local-desk-repository-cache"/>        
+    </target>
+    
+    <target name="-bootstrap-init" depends="-bootstrap-init-props">
+        <echo message="Bootstrapping project with shared build scripts."/>
+        
+        <mkdir dir="${shared.build.scripts.dir}"/>
+        <mkdir dir="${lib.dir}"/>
+    </target>
+    
+    <target name="-bootstrap-check-do" depends="-bootstrap-init-props">
+        <echo message="Checking if shared build scripts exist."/>
+        
+        <fileset id="boostrap.build.scripts.fileset" dir="${shared.build.scripts.dir}" 
+            includes="**/*" erroronmissingdir="false"/>
+        
+        <!-- 
+          - Very basic check that only checks if the shared build scripts directory 
+          - has at least one file.
+          -->
+        <condition property="bootstrap-build-scripts-missing">
+            <resourcecount refid="boostrap.build.scripts.fileset" when="equal" count="0" />
+        </condition>        
+    </target>
+    
+    <!-- 
+      - Wrapper around the bootstrap target so that it and its dependencies are only executed
+      - if the bootstrap-build-scripts-missing property is set.
+      -->
+    <target name="-bootstrap-do" if="bootstrap-build-scripts-missing">
+        <antcall target="bootstrap"/>
+    </target>
+
+    <target name="-bootstrap-build-scripts-install" depends="-bootstrap-init, -resolve">
+        <echo message="Installing shared build scripts. This may take some time ..."/>
+        
+        <echo message="Ensuring that any existing installation is writable (Windows only for now) ..." />
+        <attrib readonly="false" hidden="false" verbose="true">
+        	<fileset dir="${shared.build.scripts.dir}" includes="**/*"/>
+         </attrib>
+
+        <unzip dest="${shared.build.scripts.dir}" 
+            description="Installing shared build scripts."
+            overwrite="true">
+            
+            <fileset dir="${lib.dir}/zip/buildBootstrap" includes="${build.scripts.zip.fileset.pattern}"/>                  
+        </unzip>
+    	
+        <echo message="Ensuring that the installation is readonly and hidden (Windows only for now) ..." />
+    	<attrib readonly="true" hidden="true" verbose="true">
+    		<fileset dir="${shared.build.scripts.dir}" includes="**/*" excludes="generated/**/*" />
+    	</attrib>
+        
+        <echo message="Shared build scripts installed to ${shared.build.scripts.dir}."/>
+    </target>
+    
+    <!-- Resolve and retrieve Ivy dependencies. -->
+    <target name="-resolve" depends="-bootstrap-init, -ivy-setup">
+        <echo message="Retrieving shared build scripts."/>
+
+        <!--
+          - Resolve and retrieve all configurations, even though we really only need the bootstrap 
+          - config at the moment. This is because we want to retrieve with sync set to true. If you set
+          - this but don't ask for all configs, ivy will remove libs from all other configs. 
+          -->
+        <ivy:resolve file="${ivy.dep.file}" conf="*" />
+        <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="*" sync="true"/>
+    </target>
+
+    <target name="-ivy-setup" depends="-bootstrap-init-ivy-props">
+        <ivy:settings file="${basedir}/ivy-settings/ivysettings.xml"/>
+    </target>
+</project>
