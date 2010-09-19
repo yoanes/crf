@@ -1,4 +1,4 @@
-==== Version 0.0.3 (tag: crp_v0_0_3) ==== 
+==== Version 0.0.3 (tag: contentRenderingFramework_v0_0_3) ==== 
 
 Tagging initial commit under contentRenderingFramework. This was copied from the previous, temporary CVS
 home of mcs/crp.
