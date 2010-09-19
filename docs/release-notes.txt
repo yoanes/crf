@@ -1,8 +1,13 @@
-==== Version 0.0.2 (tag: crp_v0_0_2) ==== 
+==== Version 0.0.3 (tag: crp_v0_0_3) ==== 
+
+Tagging initial commit under contentRenderingFramework. This was copied from the previous, temporary CVS
+home of mcs/crp.
+
+==== Version 0.0.2 (tag: crp_v0_0_2) (in old mcs/crp CVS home) ==== 
 
 JSP resolution, basic CSS and basic image resolution done (except for img tag width and height output).
 
-==== Version 0.0.1 (tag: crp_v0_0_1) ==== 
+==== Version 0.0.1 (tag: crp_v0_0_1) (in old mcs/crp CVS home) ==== 
 
 JSP routing via (configurable) .crp extension implemented. Show case demonstrates JSP routing
 via both forwards and includes.
