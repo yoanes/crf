@@ -3,6 +3,9 @@
 Tagging initial commit under contentRenderingFramework. This was copied from the previous, temporary CVS
 home of mcs/crp.
 
+Code base should be ready for component integration (albeit possibly with a few rough edges). 
+Basic JavaScript resolution now works (<name>.js and *.js forms but with no bundling).
+
 ==== Version 0.0.2 (tag: crp_v0_0_2) (in old mcs/crp CVS home) ==== 
 
 JSP resolution, basic CSS and basic image resolution done (except for img tag width and height output).
