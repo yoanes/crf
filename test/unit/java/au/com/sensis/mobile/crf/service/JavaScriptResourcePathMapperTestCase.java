@@ -22,6 +22,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
     private File resourcesRootDir;
+    private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
 
 
     /**
@@ -34,8 +35,9 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
     public void setUp() throws Exception {
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
-        setObjectUnderTest(new JavaScriptResourcePathMapper(getResourcePathTestData()
-                .getScriptExtensionWithoutLeadingDot(), getResourcesRootDir()));
+        setObjectUnderTest(new JavaScriptResourcePathMapper(
+                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
     }
 
     @Test
@@ -44,7 +46,8 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  "};
         for (final String testValue : testValues) {
             try {
-                new JavaScriptResourcePathMapper(testValue, getResourcesRootDir());
+                new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+                        getMockResourceResolutionWarnLogger());
 
                 Assert.fail("IllegalArgumentException expected");
             } catch (final IllegalArgumentException e) {
@@ -68,7 +71,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
             try {
                 new JavaScriptResourcePathMapper(
                         getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                        invalidPath);
+                        invalidPath, getMockResourceResolutionWarnLogger());
                 Assert.fail("IllegalArgumentException expected for invalidPath: '"
                       + invalidPath + "'");
             } catch (final IllegalArgumentException e) {
@@ -81,7 +84,23 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
         }
     }
 
+    @Test
+    public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
+            throws Throwable {
+        try {
+            new JavaScriptResourcePathMapper(
+                    getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
+                    getResourcesRootDir(), null);
 
+            Assert.fail("IllegalArgumentException expected");
+        } catch (final IllegalArgumentException e) {
+
+            Assert.assertEquals("IllegalArgumentException has wrong message",
+                    "resourceResolutionWarnLogger must not be null", e
+                            .getMessage());
+        }
+
+    }
 
     @Test
     public void testMapResourcePathWhenBundleRequestedAndMappingPerformed() throws Throwable {
@@ -90,7 +109,8 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir()));
+            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+                    getMockResourceResolutionWarnLogger()));
 
             final MappedResourcePath actualMappedResourcePath =
                     getObjectUnderTest().mapResourcePath(
@@ -112,7 +132,8 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir()));
+            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+                    getMockResourceResolutionWarnLogger()));
 
             final MappedResourcePath actualMappedResourcePath =
                 getObjectUnderTest().mapResourcePath(
@@ -184,6 +205,15 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
      */
     private void setResourcesRootDir(final File resourcesRootDir) {
         this.resourcesRootDir = resourcesRootDir;
+    }
+
+    public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
+        return mockResourceResolutionWarnLogger;
+    }
+
+    public void setMockResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
+        this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
     }
 
 }

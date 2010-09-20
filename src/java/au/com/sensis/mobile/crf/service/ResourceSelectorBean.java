@@ -8,7 +8,6 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
@@ -96,78 +95,6 @@ public class ResourceSelectorBean implements
      * {@inheritDoc}
      */
     @Override
-    public MappedResourcePath getResourcePathWithExtensions(final Device device,
-            final String requestedResourcePath, final String[] wildcardExtensions)
-            throws IllegalArgumentException {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Looking for resource '" + requestedResourcePath
-                    + "' for device '" + device + "'.");
-        }
-
-        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(device);
-        while (matchingGroupIterator.hasNext()) {
-
-            final Group currGroup = matchingGroupIterator.next();
-
-            debugLogCheckingGroup(currGroup);
-
-            final MappedResourcePath mappedResourcePath =
-                    getMappedResourcePath(requestedResourcePath, currGroup);
-
-            final List<MappedResourcePath> mappedResourcePathWithExtensions =
-                    mappedResourcePath.existWithExtensions(wildcardExtensions);
-
-            if (!mappedResourcePathWithExtensions.isEmpty()) {
-                warnIfMultipleResourcesWithExtensionsFound(requestedResourcePath,
-                        mappedResourcePathWithExtensions, wildcardExtensions);
-
-                debugLogSingleResourceFoundAndReturningIt(
-                        mappedResourcePathWithExtensions.get(0));
-
-                return mappedResourcePathWithExtensions.get(0);
-            }
-        }
-
-        return new NullMappedResourcePath(requestedResourcePath);
-    }
-
-    private void warnIfMultipleResourcesWithExtensionsFound(
-            final String requestedResourcePath,
-            final List<MappedResourcePath> mappedResourcePathWithExtensions,
-            final String[] wildcardExtensions) {
-        if ((mappedResourcePathWithExtensions.size() > 1)
-                && getResourceResolutionWarnLogger().isWarnEnabled()) {
-            getResourceResolutionWarnLogger().warn(
-                    "Requested resource '"
-                    + requestedResourcePath
-                    + "' resolved to multiple real resources with extensions matching "
-                    + ArrayUtils.toString(wildcardExtensions)
-                    + ". Will only return the first resource. Total found: "
-                    + nonEmptyListToString(mappedResourcePathWithExtensions)
-                    + ".");
-        }
-    }
-
-    private String nonEmptyListToString(
-            final List<MappedResourcePath> mappedResourcePathWithExtensions) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("[");
-        int i = 0;
-        for (final MappedResourcePath mappedResourcePath : mappedResourcePathWithExtensions) {
-            stringBuilder.append(mappedResourcePath);
-            if (i < mappedResourcePathWithExtensions.size() - 1) {
-                stringBuilder.append(", ");
-            }
-            i++;
-        }
-        stringBuilder.append("]");
-        return stringBuilder.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public List<MappedResourcePath> getAllResourcePaths(final Device device,
             final String requestedResourcePath) {
 
@@ -224,14 +151,6 @@ public class ResourceSelectorBean implements
             final String requestedResourcePath, final Group currGroup) {
         return getResourcePathMapper().mapResourcePath(
                 requestedResourcePath, currGroup);
-    }
-
-    private void debugLogResourceFoundAddingToList(
-            final MappedResourcePath mappedResourcePath) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Resource found! Adding it to list: '"
-                    + mappedResourcePath.getNewResourcePath() + "'");
-        }
     }
 
     private void debugLogResourceFoundAddingToList(

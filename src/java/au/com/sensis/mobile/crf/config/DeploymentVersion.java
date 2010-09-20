@@ -13,7 +13,14 @@ public class DeploymentVersion {
      * Flags indicating the deployment platform.
      */
     public static enum Platform {
+        /**
+         * Development platform.
+         */
         DEVELEOPMENT,
+
+        /**
+         * Production platform.
+         */
         PRODUCTION
     }
 

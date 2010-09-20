@@ -27,10 +27,28 @@ public class ImageResourcePathMapper extends AbstractResourcePathMapper {
      *            Abstract extension for resources.
      * @param rootResourcesDir
      *            Root directory where the concrete resources are stored.
+     * @param resourceResolutionWarnLogger
+     *            {@link ResourceResolutionWarnLogger}.
      */
     public ImageResourcePathMapper(final String abstractResourceExtension,
-            final File rootResourcesDir) {
-        super(abstractResourceExtension, rootResourcesDir);
+            final File rootResourcesDir,
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        super(abstractResourceExtension, rootResourcesDir,
+                resourceResolutionWarnLogger);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected MappedResourcePath createMappedResourcePath(
+            final String requestedResourcePath, final String newResourcePath) {
+        final ImageMappedResourcePathBean imageMappedResourcePathBean =
+                new ImageMappedResourcePathBean(requestedResourcePath,
+                        newResourcePath, getRootResourcesDir());
+        imageMappedResourcePathBean
+                .setResourceResolutionWarnLogger(getResourceResolutionWarnLogger());
+        return imageMappedResourcePathBean;
     }
 
     /**

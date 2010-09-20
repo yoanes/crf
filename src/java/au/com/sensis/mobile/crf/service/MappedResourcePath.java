@@ -33,37 +33,12 @@ public interface MappedResourcePath {
 
     /**
      * Resolves the requested path to a single {@link MappedResourcePath}.
+     *
+     * @return the requested path as a single {@link MappedResourcePath}.
      */
     // TODO: this is the start of decomposing MappedResourcePath into a GroupResourceResolver
     // and a Resource.
     MappedResourcePath resolveToSingle();
-
-    /**
-     * Returns a list of {@link MappedResourcePath}s that exist in
-     * {@link #getRootResourceDir()} and match the current
-     * {@link #getNewResourcePath()} but with any of the given extensions. As
-     * such, the last component of {@link #getNewResourcePath()} is assumed to
-     * be the stem of a file, not a directory. Note that if
-     * {@link #getNewResourcePath()} already has an extension, this is
-     * <b>not</b> stripped first.
-     *
-     * <b>
-     * Note that each extension is prefixed with "." before testing occurs.
-     * Therefore, in the above example, default/common/unmetered will never
-     * be matched itself even if it exists.
-     * </b>
-     *
-     * @param extensions
-     *            Array of extensions allowed. A "*" wildcard pattern is
-     *            supported and is analogous to the typical Dos/Windows command
-     *            line wildcard.
-     * @return list of {@link MappedResourcePath}s that exist in
-     *         {@link #getRootResourceDir()} and match
-     *         {@link #getNewResourcePath()} but with any of the given
-     *         extensions. May not be null. Empty indicates no matches exist.
-     */
-    List<MappedResourcePath> existWithExtensions(
-            final String[] extensions);
 
     /**
      * Returns a list of {@link MappedResourcePath}s that exist in

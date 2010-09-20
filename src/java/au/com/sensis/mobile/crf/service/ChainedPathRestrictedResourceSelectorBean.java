@@ -109,31 +109,6 @@ public class ChainedPathRestrictedResourceSelectorBean
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public MappedResourcePath getResourcePathWithExtensions(
-            final Device device, final String requestedResourcePath,
-            final String[] wildcardExtensions) throws IllegalArgumentException {
-
-        for (final PathRestrictedResourceSelector resourceSelector
-                : getPathRestrictedResourceSelectors()) {
-
-            if (resourceSelector.isInterestedIn(requestedResourcePath)) {
-                debugLogFoundInterestedSelector(requestedResourcePath, resourceSelector);
-
-                return resourceSelector.getResourcePathWithExtensions(device,
-                        requestedResourcePath, wildcardExtensions);
-            }
-        }
-
-        debugLogNoInterestedSelectorFound(requestedResourcePath);
-
-        return getDefaultSelector().getResourcePathWithExtensions(device,
-                requestedResourcePath, wildcardExtensions);
-    }
-
-    /**
      * All {@link PathRestrictedResourceSelector}
      * instances are added to the internal delegation chain. The order
      * in which they are added is undefined.

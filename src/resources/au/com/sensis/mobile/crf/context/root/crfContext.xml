@@ -31,18 +31,22 @@
                     <constructor-arg value="@{crf.resources.jsp.root.servlet.path}"/>
                     <constructor-arg value="@{crf.resources.jsp.abstract.extension}"/>
                     <constructor-arg value="@{crf.env.resources.jsp.root.dir}"/>
+                    <constructor-arg ref="crf.resourceResolutionWarnLogger" />
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.CssResourcePathMapper">
                     <constructor-arg value="@{crf.resources.css.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.css.root.dir}"/>
+                    <constructor-arg ref="crf.resourceResolutionWarnLogger" />
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.ImageResourcePathMapper">
                     <constructor-arg value="@{crf.resources.image.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.images.root.dir}"/>
+                    <constructor-arg ref="crf.resourceResolutionWarnLogger" />
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.JavaScriptResourcePathMapper">
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.javascript.root.dir}"/>
+                    <constructor-arg ref="crf.resourceResolutionWarnLogger" />
                 </bean>
             </list>
         </constructor-arg>

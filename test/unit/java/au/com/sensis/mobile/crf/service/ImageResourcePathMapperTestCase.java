@@ -22,6 +22,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
     private File resourcesRootDir;
+    private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
 
 
     /**
@@ -34,17 +35,19 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     public void setUp() throws Exception {
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
-        setObjectUnderTest(new ImageResourcePathMapper(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir()));
+        setObjectUnderTest(new ImageResourcePathMapper(
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
     }
 
     @Test
     public void testConstructorWithBlankAbstractResourceExtension()
             throws Throwable {
-        final String[] testValues = { null, StringUtils.EMPTY, " ", "  "};
+        final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new ImageResourcePathMapper(testValue, getResourcesRootDir());
+                new ImageResourcePathMapper(testValue, getResourcesRootDir(),
+                        getMockResourceResolutionWarnLogger());
 
                 Assert.fail("IllegalArgumentException expected");
             } catch (final IllegalArgumentException e) {
@@ -68,7 +71,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
             try {
                 new ImageResourcePathMapper(
                         getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        invalidPath);
+                        invalidPath, getMockResourceResolutionWarnLogger());
                 Assert.fail("IllegalArgumentException expected for invalidPath: '"
                       + invalidPath + "'");
             } catch (final IllegalArgumentException e) {
@@ -81,7 +84,23 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         }
     }
 
+    @Test
+    public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
+            throws Throwable {
+        try {
+            new ImageResourcePathMapper(getResourcePathTestData()
+                    .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                    null);
 
+            Assert.fail("IllegalArgumentException expected");
+        } catch (final IllegalArgumentException e) {
+
+            Assert.assertEquals("IllegalArgumentException has wrong message",
+                    "resourceResolutionWarnLogger must not be null", e
+                            .getMessage());
+        }
+
+    }
 
     @Test
     public void testMapResourcePathWhenMappingPerformed() throws Throwable {
@@ -90,7 +109,8 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir()));
+            setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir(),
+                    getMockResourceResolutionWarnLogger()));
 
             final MappedResourcePath actualMappedResourcePath =
                     getObjectUnderTest().mapResourcePath(
@@ -162,5 +182,14 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
      */
     private void setResourcesRootDir(final File resourcesRootDir) {
         this.resourcesRootDir = resourcesRootDir;
+    }
+
+    public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
+        return mockResourceResolutionWarnLogger;
+    }
+
+    public void setMockResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
+        this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
     }
 }

@@ -20,11 +20,16 @@ public class JavaScriptResourcePathMapper extends AbstractResourcePathMapper {
      *
      * @param abstractResourceExtension
      *            Abstract extension for resources.
-     * @param rootResourcesDir Root directory where the concrete resources are stored.
+     * @param rootResourcesDir
+     *            Root directory where the concrete resources are stored.
+     * @param resourceResolutionWarnLogger
+     *            {@link ResourceResolutionWarnLogger}.
      */
     public JavaScriptResourcePathMapper(final String abstractResourceExtension,
-            final File rootResourcesDir) {
-        super(abstractResourceExtension, rootResourcesDir);
+            final File rootResourcesDir,
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        super(abstractResourceExtension, rootResourcesDir,
+                resourceResolutionWarnLogger);
     }
 
     /**

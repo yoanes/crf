@@ -76,6 +76,9 @@ public class MappedResourcePathBean implements MappedResourcePath {
                 getRootResourceDir(), getNewResourcePath());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MappedResourcePath resolveToSingle() {
         if (exists()) {
@@ -83,51 +86,6 @@ public class MappedResourcePathBean implements MappedResourcePath {
         } else {
             return null;
         }
-    }
-
-    /**
-     * Returns a list of {@link MappedResourcePath}s that exist in
-     * {@link #getRootResourceDir()} and match the current
-     * {@link #getNewResourcePath()} but with any of the given extensions. As
-     * such, the last component of {@link #getNewResourcePath()} is assumed to
-     * be the stem of a file, not a directory. Note that if
-     * {@link #getNewResourcePath()} already has an extension, this is
-     * <b>not</b> stripped first.
-     *
-     * <b>
-     * Note that each extension is prefixed with "." before testing occurs.
-     * Therefore, in the above example, default/common/unmetered will never
-     * be matched itself even if it exists.
-     * </b>
-     *
-     * @param extensions
-     *            Array of extensions allowed. A "*" wildcard pattern is
-     *            supported and is analogous to the typical Dos/Windows command
-     *            line wildcard.
-     * @return list of {@link MappedResourcePath}s that exist in
-     *         {@link #getRootResourceDir()} and match
-     *         {@link #getNewResourcePath()} but with any of the given
-     *         extensions. May not be null. Empty indicates no matches exist.
-     */
-    public List<MappedResourcePath> existWithExtensions(
-            final String[] extensions) {
-        // TODO: possibly cache the result since we are accessing the file
-        // system?
-        final List<MappedResourcePath> foundMappedResourcePaths =
-                new ArrayList<MappedResourcePath>();
-
-        final File[] matchedFiles =
-                FileIoFacadeFactory.getFileIoFacadeSingleton().list(
-                        getRootResourceDir(), getNewResourcePath(), extensions);
-        for (final File matchedFile : matchedFiles) {
-            final MappedResourcePath mappedResourcePath =
-                    new MappedResourcePathBean(getOriginalResourcePath(),
-                            getNewResourcePathPlusFileExtension(matchedFile),
-                            getRootResourceDir());
-            foundMappedResourcePaths.add(mappedResourcePath);
-        }
-
-        return foundMappedResourcePaths;
     }
 
     /**
@@ -181,14 +139,6 @@ public class MappedResourcePathBean implements MappedResourcePath {
             throw new IllegalStateException(
                     "Illegal to call this method when isBundlePath() is false.");
         }
-    }
-
-    private String getNewResourcePathPlusFileExtension(final File matchedFile) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getNewResourcePath());
-        stringBuilder.append(".");
-        stringBuilder.append(FilenameUtils.getExtension(matchedFile.getName()));
-        return stringBuilder.toString();
     }
 
     /**

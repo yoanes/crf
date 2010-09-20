@@ -97,31 +97,6 @@ public class PathPrefixRestrictedResourceSelectorBean
         }
     }
 
-    /**
-     * If {@link #isInterestedIn(String)} returns true, then delegates to the
-     * {@link ResourceSelector} that was passed to the
-     * constructor. Else a {@link NullMappedResourcePath} is returned.
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    public MappedResourcePath getResourcePathWithExtensions(
-            final Device device, final String requestedResourcePath,
-            final String[] wildcardExtensions) throws IllegalArgumentException {
-
-        if (isInterestedIn(requestedResourcePath)) {
-            debugLogInterest(requestedResourcePath);
-
-            return getResourceSelector().getResourcePathWithExtensions(device,
-                    requestedResourcePath, wildcardExtensions);
-        } else {
-            debugLogDisinterest(requestedResourcePath);
-
-            return new NullMappedResourcePath(requestedResourcePath);
-        }
-
-    }
-
     private ResourceSelector getResourceSelector() {
         return resourceSelector;
     }

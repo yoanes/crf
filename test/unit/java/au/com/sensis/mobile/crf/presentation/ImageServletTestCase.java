@@ -265,11 +265,8 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
             final String requestedResourcePath,
             final MappedResourcePath mappedResourcePath) {
         EasyMock.expect(
-                getMockResourceSelector().getResourcePathWithExtensions(
-                        EasyMock.eq(getMockDevice()),
-                        EasyMock.eq(requestedResourcePath),
-                        EasyMock.aryEq(new String[] { "*" }))).andReturn(
-                mappedResourcePath);
+                getMockResourceSelector().getResourcePath(getMockDevice(),
+                        requestedResourcePath)).andReturn(mappedResourcePath);
 
     }
 

@@ -21,8 +21,6 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 public class PathPrefixRestrictedResourceSelectorBeanTestCase
         extends AbstractJUnit4TestCase {
 
-    private static final String [] WILDCARD_EXTENSIONS = new String [] {"*"};
-
     private PathPrefixRestrictedResourceSelectorBean objectUnderTest;
     private ResourceSelector mockResourceSelector;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
@@ -120,46 +118,6 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
     private String getRequestedUnmatchedResourcePath() {
         return getResourcePathTestData()
                 .getRequestedJspResourcePath();
-    }
-
-    @Test
-    public void testGetResourcePathWithExtensionsWhenPrefixMatches()
-            throws Throwable {
-
-        EasyMock.expect(
-                getMockResourceSelector().getResourcePathWithExtensions(
-                        getMockDevice(),
-                        getRequestedMatchedResourcePath(),
-                        WILDCARD_EXTENSIONS)).andReturn(
-                getExpectedMappedResourcePath());
-        replay();
-
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().getResourcePathWithExtensions(
-                        getMockDevice(),
-                        getRequestedMatchedResourcePath(),
-                        WILDCARD_EXTENSIONS);
-
-        Assert.assertEquals("actualMappedResourcePath is wrong",
-                getExpectedMappedResourcePath(),
-                actualMappedResourcePath);
-    }
-
-    @Test
-    public void testGetResourcePathWithExtensionsWhenPrefixDoesNotMatch()
-            throws Throwable {
-        final NullMappedResourcePath expectedMappedResourcePath =
-                new NullMappedResourcePath(getRequestedUnmatchedResourcePath());
-
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest()
-                        .getResourcePathWithExtensions(
-                                getMockDevice(),
-                                getRequestedUnmatchedResourcePath(),
-                                WILDCARD_EXTENSIONS);
-
-        Assert.assertEquals("actualMappedResourcePath is wrong",
-                expectedMappedResourcePath, actualMappedResourcePath);
     }
 
     @Test

@@ -27,10 +27,15 @@ public class JspResourcePathMapper extends AbstractResourcePathMapper {
      *            Abstract extension for resources.
      * @param rootResourcesDir
      *            Root directory where the concrete resources are stored.
+     * @param resourceResolutionWarnLogger
+     *            {@link ResourceResolutionWarnLogger}.
      */
     public JspResourcePathMapper(final String jspResourcesRootServletPath,
-            final String abstractResourceExtension, final File rootResourcesDir) {
-        super(abstractResourceExtension, rootResourcesDir);
+            final String abstractResourceExtension,
+            final File rootResourcesDir,
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        super(abstractResourceExtension, rootResourcesDir,
+                resourceResolutionWarnLogger);
 
         validateJspResourcesRootServletPath(jspResourcesRootServletPath);
 

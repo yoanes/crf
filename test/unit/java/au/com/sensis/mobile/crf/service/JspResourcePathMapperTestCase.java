@@ -21,6 +21,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
+    private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
 
     /**
      * Setup test data.
@@ -33,7 +34,8 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         setObjectUnderTest(new JspResourcePathMapper(
                 getResourcePathTestData().getJspResourcesRootServletPath(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
-                getResourcesRootDir()));
+                getResourcesRootDir(),
+                getMockResourceResolutionWarnLogger()));
     }
 
     @Test
@@ -44,7 +46,8 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
             try {
                 new JspResourcePathMapper(testValue, getResourcePathTestData()
                         .getCrfExtensionWithoutLeadingDot(),
-                        getResourcesRootDir());
+                        getResourcesRootDir(),
+                        getMockResourceResolutionWarnLogger());
 
                 Assert
                         .fail("IllegalArgumentException expected for testValue: '"
@@ -66,7 +69,8 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
             try {
                 new JspResourcePathMapper(getResourcePathTestData()
                         .getJspResourcesRootServletPath(), testValue,
-                        getResourcesRootDir());
+                        getResourcesRootDir(),
+                        getMockResourceResolutionWarnLogger());
 
                 Assert
                         .fail("IllegalArgumentException expected for testValue: '"
@@ -93,7 +97,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                 new JspResourcePathMapper(getResourcePathTestData()
                         .getJspResourcesRootServletPath(),
                         getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
-                        invalidPath);
+                        invalidPath, getMockResourceResolutionWarnLogger());
                 Assert.fail("IllegalArgumentException expected for invalidPath: '"
                       + invalidPath + "'");
             } catch (final IllegalArgumentException e) {
@@ -107,6 +111,26 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
+    public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
+            throws Throwable {
+        try {
+            new JspResourcePathMapper(getResourcePathTestData()
+                    .getJspResourcesRootServletPath(),
+                    getResourcePathTestData()
+                            .getCrfExtensionWithoutLeadingDot(),
+                    getResourcesRootDir(), null);
+
+            Assert.fail("IllegalArgumentException expected");
+        } catch (final IllegalArgumentException e) {
+
+            Assert.assertEquals("IllegalArgumentException has wrong message",
+                    "resourceResolutionWarnLogger must not be null", e
+                            .getMessage());
+        }
+
+    }
+
+    @Test
     public void testMapResourcePathWhenMappingPerformed() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
@@ -116,7 +140,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         for (final String testValue : testValues) {
             setObjectUnderTest(new JspResourcePathMapper(
                     getResourcePathTestData().getJspResourcesRootServletPath(),
-                    testValue, getResourcesRootDir()));
+                    testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
 
             final MappedResourcePath actualMappedResourcePath =
                     getObjectUnderTest().mapResourcePath(
@@ -182,5 +206,14 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
      */
     private File getResourcesRootDir() {
         return getResourcePathTestData().getRootResourcesPath();
+    }
+
+    public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
+        return mockResourceResolutionWarnLogger;
+    }
+
+    public void setMockResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
+        this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
     }
 }

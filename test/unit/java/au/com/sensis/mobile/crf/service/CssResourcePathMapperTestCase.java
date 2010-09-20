@@ -22,6 +22,7 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
     private File resourcesRootDir;
+    private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
 
 
     /**
@@ -35,16 +36,18 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
         setObjectUnderTest(new CssResourcePathMapper(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir()));
+                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                getMockResourceResolutionWarnLogger()));
     }
 
     @Test
     public void testConstructorWithBlankAbstractResourceExtension()
             throws Throwable {
-        final String[] testValues = { null, StringUtils.EMPTY, " ", "  "};
+        final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new CssResourcePathMapper(testValue, getResourcesRootDir());
+                new CssResourcePathMapper(testValue, getResourcesRootDir(),
+                        getMockResourceResolutionWarnLogger());
 
                 Assert.fail("IllegalArgumentException expected");
             } catch (final IllegalArgumentException e) {
@@ -58,39 +61,69 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testConstructorWhenResourcesRootPathInvalid() throws Throwable {
-        final File [] invalidPaths = { new File(StringUtils.EMPTY), new File(" "),
-                new File("  "), new File("I-do-not-exist"),
-                new File(getClass().getResource(
-                        "/au/com/sensis/mobile/crf/service/"
-                        + "CssResourcePathMapperTestCase.class")
-                        .toURI()) };
+        final File[] invalidPaths =
+                {
+                        new File(StringUtils.EMPTY),
+                        new File(" "),
+                        new File("  "),
+                        new File("I-do-not-exist"),
+                        new File(
+                                getClass()
+                                        .getResource(
+                                                "/au/com/sensis/mobile/crf/service/"
+                                                        + "CssResourcePathMapperTestCase.class")
+                                        .toURI()) };
         for (final File invalidPath : invalidPaths) {
             try {
-                new CssResourcePathMapper(
-                        getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        invalidPath);
-                Assert.fail("IllegalArgumentException expected for invalidPath: '"
-                      + invalidPath + "'");
+                new CssResourcePathMapper(getResourcePathTestData()
+                        .getCssExtensionWithoutLeadingDot(), invalidPath,
+                        getMockResourceResolutionWarnLogger());
+                Assert
+                        .fail("IllegalArgumentException expected for invalidPath: '"
+                                + invalidPath + "'");
             } catch (final IllegalArgumentException e) {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message",
-                        "rootResourcesDir must be a directory: '"
-                                + invalidPath + "'", e.getMessage());
+                        "rootResourcesDir must be a directory: '" + invalidPath
+                                + "'", e.getMessage());
             }
         }
+    }
+
+    @Test
+    public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
+            throws Throwable {
+        try {
+            new CssResourcePathMapper(getResourcePathTestData()
+                    .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                    null);
+
+            Assert.fail("IllegalArgumentException expected");
+        } catch (final IllegalArgumentException e) {
+
+            Assert.assertEquals("IllegalArgumentException has wrong message",
+                    "resourceResolutionWarnLogger must not be null", e
+                            .getMessage());
+        }
+
     }
 
 
 
     @Test
     public void testMapResourcePathWhenMappingPerformed() throws Throwable {
-        final String[] testValues = {
-                getResourcePathTestData().getCssExtensionWithLeadingDot(),
-                getResourcePathTestData().getCssExtensionWithLeadingDot() };
+        final String[] testValues =
+                {
+                        getResourcePathTestData()
+                                .getCssExtensionWithLeadingDot(),
+                        getResourcePathTestData()
+                                .getCssExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new CssResourcePathMapper(testValue, getResourcesRootDir()));
+            setObjectUnderTest(new CssResourcePathMapper(testValue,
+                    getResourcesRootDir(),
+                    getMockResourceResolutionWarnLogger()));
 
             final MappedResourcePath actualMappedResourcePath =
                     getObjectUnderTest().mapResourcePath(
@@ -99,8 +132,9 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                             getGroupTestData().createIPhoneGroup());
 
             Assert.assertEquals("mappedResourcePath is wrong",
-                    getResourcePathTestData().getMappedIphoneGroupCssResourcePath(),
-                        actualMappedResourcePath);
+                    getResourcePathTestData()
+                            .getMappedIphoneGroupCssResourcePath(),
+                    actualMappedResourcePath);
         }
 
     }
@@ -162,5 +196,14 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
      */
     private void setResourcesRootDir(final File resourcesRootDir) {
         this.resourcesRootDir = resourcesRootDir;
+    }
+
+    public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
+        return mockResourceResolutionWarnLogger;
+    }
+
+    public void setMockResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
+        this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
     }
 }

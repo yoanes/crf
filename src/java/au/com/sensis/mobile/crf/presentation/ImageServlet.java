@@ -64,9 +64,8 @@ public class ImageServlet extends HttpServletBean {
 
             final MappedResourcePath mappedResourcePath =
                     getImageServletCollaboratorsMemento().getResourceSelector()
-                            .getResourcePathWithExtensions(getDevice(request),
-                                    getRequestedResourcePath(request),
-                                    new String[] { "*" });
+                            .getResourcePath(getDevice(request),
+                                    getRequestedResourcePath(request));
 
             if (mappedResourcePath.exists()) {
                 setResponseHeaders(response, mappedResourcePath);

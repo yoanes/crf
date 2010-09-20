@@ -3,6 +3,7 @@ package au.com.sensis.mobile.crf.service;
 import java.io.File;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
@@ -24,6 +25,7 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
 
     private final String abstractResourceExtension;
     private final File rootResourcesDir;
+    private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
 
     /**
      * Constructor.
@@ -34,16 +36,22 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
      * @param rootResourcesDir
      *            Root directory where the real resources that this mapper
      *            handles are stored.
+     * @param resourceResolutionWarnLogger
+     *            {@link ResourceResolutionWarnLogger}.
      */
     public AbstractResourcePathMapper(final String abstractResourceExtension,
-            final File rootResourcesDir) {
+            final File rootResourcesDir,
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         validateAbstractResourceExtension(abstractResourceExtension);
         validateRootResourcesDir(rootResourcesDir);
+        validateResourceResolutionWarnLogger(resourceResolutionWarnLogger);
 
         this.abstractResourceExtension =
                 prefixWithLeadingDotIfRequired(abstractResourceExtension);
         this.rootResourcesDir = rootResourcesDir;
+        this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
     }
+
 
     private void validateAbstractResourceExtension(
             final String abstractResourceExtension) {
@@ -60,6 +68,12 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
                     "rootResourcesDir must be a directory: '"
                             + resourcesRootDir + "'");
         }
+    }
+
+    private void validateResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        Validate.notNull(resourceResolutionWarnLogger,
+        "resourceResolutionWarnLogger must not be null");
     }
 
     private String prefixWithLeadingDotIfRequired(final String path) {
@@ -229,6 +243,13 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
      */
     protected File getRootResourcesDir() {
         return rootResourcesDir;
+    }
+
+    /**
+     * @return the {@link ResourceResolutionWarnLogger}.
+     */
+    protected final ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
+        return resourceResolutionWarnLogger;
     }
 
 }

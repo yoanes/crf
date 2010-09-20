@@ -11,7 +11,7 @@ import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 /**
  * Interface that knows how to write out a tag for which the value of a
  * particular attribute is resolved via a
- * {@link au.com.sensis.mobile.crf.service.ResourceSelector}
+ * {@link au.com.sensis.mobile.crf.service.ResourceSelector}.
  */
 public interface ResourceSelectorTagWriter {
 

@@ -250,12 +250,10 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
             final MappedResourcePath mappedResourcePath) {
 
         EasyMock.expect(
-                getMockResourceSelector()
-                        .getResourcePathWithExtensions(
-                                EasyMock.eq(getMockDevice()),
-                                EasyMock.eq(getResourcePathTestData()
-                                        .getRequestedImageResourcePath()),
-                                EasyMock.aryEq(new String[] { "*" }))).andReturn(
+                getMockResourceSelector().getResourcePath(
+                        getMockDevice(),
+                        getResourcePathTestData()
+                                .getRequestedImageResourcePath())).andReturn(
                 mappedResourcePath);
     }
 

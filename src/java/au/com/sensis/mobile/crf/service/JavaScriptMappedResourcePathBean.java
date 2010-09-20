@@ -17,7 +17,7 @@ public class JavaScriptMappedResourcePathBean extends MappedResourcePathBean {
     /**
      * Callback interface to be passed to {@link #expandPath(MappedResourcePath)}.
      */
-    public static interface PathExpander {
+    public interface PathExpander {
 
         /**
          * Expand the given {@link MappedResourcePath} into a list of

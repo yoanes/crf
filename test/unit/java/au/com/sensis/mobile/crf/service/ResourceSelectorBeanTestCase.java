@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
@@ -59,7 +58,6 @@ public class ResourceSelectorBeanTestCase extends
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
-    private final String[] fileExtensions = new String[] { "*" };
 
     /**
      * Setup test data.
@@ -375,234 +373,6 @@ public class ResourceSelectorBeanTestCase extends
 
         Assert.assertEquals("resourcePath is wrong",
                 expectedResourcePath, actualResourcePath);
-    }
-
-    @Test
-    public void testGetResourcePathWithExtensionsWhenFirstMappedResourceMatchesAndHasResource()
-            throws Throwable {
-
-        recordGetUiConfiguration();
-
-        recordGetMatchingGroupsIteratorForGetResourcePath();
-
-        recordCheckIfIphoneGroupHasResourceWithExtension(getFileExtensions(),
-                getOneIphoneMappedResourcePathsWithExtensions());
-
-        replay();
-
-        final MappedResourcePath actualResourcePath =
-                getObjectUnderTest().getResourcePathWithExtensions(
-                        getMockDevice(),
-                        getResourcePathTestData()
-                                .getRequestedImageResourcePath(),
-                        getFileExtensions());
-
-        assertComplexObjectsEqual("resourcePath is wrong",
-                getResourcePathTestData()
-                        .getMappedIphoneGroupPngImageResourcePath(),
-                actualResourcePath);
-    }
-
-    @Test
-    public void
-        testGetResourcePathWithExtensionsWhenFirstMappedResourceMatchesAndHasMultipleResources()
-            throws Throwable {
-
-        recordGetUiConfiguration();
-
-        recordGetMatchingGroupsIteratorForGetResourcePath();
-
-        recordCheckIfIphoneGroupHasResourceWithExtension(getFileExtensions(),
-                getTwoIphoneMappedResourcePathsWithExtensions());
-
-        recordLogWarningMultipleResourcesFoundWithExtensions();
-
-        replay();
-
-        final MappedResourcePath actualResourcePath =
-                getObjectUnderTest().getResourcePathWithExtensions(
-                        getMockDevice(),
-                        getResourcePathTestData()
-                                .getRequestedImageResourcePath(),
-                        getFileExtensions());
-
-        assertComplexObjectsEqual("resourcePath is wrong",
-                getResourcePathTestData()
-                        .getMappedIphoneGroupPngImageResourcePath(),
-                actualResourcePath);
-    }
-
-    private void recordLogWarningMultipleResourcesFoundWithExtensions() {
-        EasyMock.expect(getMockResolutionWarnLogger().isWarnEnabled()).andReturn(Boolean.TRUE);
-
-        getMockResolutionWarnLogger()
-            .warn("Requested resource '"
-                    + getResourcePathTestData().getRequestedImageResourcePath()
-                    + "' resolved to multiple real resources with extensions matching "
-                    + ArrayUtils.toString(getFileExtensions())
-                    + ". Will only return the first resource. Total found: ["
-                    + getResourcePathTestData().getMappedIphoneGroupPngImageResourcePath()
-                    + ", " + getResourcePathTestData().getMappedIphoneGroupGifImageResourcePath()
-                    + "].");
-    }
-
-    @Test
-    public void testGetResourcePathWithExtensionsWhenLaterMappedResourceMatchesAndHasResource() {
-        recordGetUiConfiguration();
-
-        recordGetMatchingGroupsIteratorForGetResourcePath();
-
-        recordCheckIfIphoneGroupHasResourceWithExtension(getFileExtensions(),
-                getNoMappedResourcePathsWithExtensions());
-
-        recordCheckIfAndroidGroupHasResourceWithExtension(getFileExtensions(),
-                getOneAndroidMappedResourcePathsWithExtensions());
-
-        replay();
-
-        final MappedResourcePath actualResourcePath =
-                getObjectUnderTest().getResourcePathWithExtensions(
-                        getMockDevice(),
-                        getResourcePathTestData()
-                                .getRequestedImageResourcePath(),
-                        getFileExtensions());
-
-        assertComplexObjectsEqual("resourcePath is wrong",
-                getResourcePathTestData()
-                        .getMappedAndroidGroupPngImageResourcePath(),
-                actualResourcePath);
-    }
-
-    @Test
-    public void testGetResourcePathWithExtensionsWhenDefaultGroupHasResource() {
-        recordGetUiConfiguration();
-
-        recordGetMatchingGroupsIteratorForGetResourcePath();
-
-        recordCheckIfIphoneGroupHasResourceWithExtension(getFileExtensions(),
-                getNoMappedResourcePathsWithExtensions());
-
-        recordCheckIfAndroidGroupHasResourceWithExtension(getFileExtensions(),
-                getNoMappedResourcePathsWithExtensions());
-
-        recordCheckIfDefaultGroupHasResourceWithExtension(getFileExtensions(),
-                getOneDefaultMappedResourcePathsWithExtensions());
-
-        replay();
-
-        final MappedResourcePath actualResourcePath =
-                getObjectUnderTest().getResourcePathWithExtensions(
-                        getMockDevice(),
-                        getResourcePathTestData()
-                                .getRequestedImageResourcePath(),
-                        getFileExtensions());
-
-        assertComplexObjectsEqual("resourcePath is wrong",
-                getResourcePathTestData()
-                        .getMappedDefaultGroupPngImageResourcePath(),
-                actualResourcePath);
-
-    }
-
-    @Test
-    public void testGetResourcePathWithExtensionsWhenNoGroupsHaveResource() {
-        recordGetUiConfiguration();
-
-        recordGetMatchingGroupsIteratorForGetResourcePath();
-
-        recordCheckIfIphoneGroupHasResourceWithExtension(getFileExtensions(),
-                getNoMappedResourcePathsWithExtensions());
-
-        recordCheckIfAndroidGroupHasResourceWithExtension(getFileExtensions(),
-                getNoMappedResourcePathsWithExtensions());
-
-        recordCheckIfDefaultGroupHasResourceWithExtension(getFileExtensions(),
-                getNoMappedResourcePathsWithExtensions());
-
-        replay();
-
-        final MappedResourcePath actualResourcePath =
-                getObjectUnderTest().getResourcePathWithExtensions(
-                        getMockDevice(),
-                        getResourcePathTestData()
-                                .getRequestedImageResourcePath(),
-                        getFileExtensions());
-
-        assertComplexObjectsEqual("resourcePath is wrong",
-                getResourcePathTestData()
-                        .getNullMappedImageResourcePath(),
-                actualResourcePath);
-    }
-
-    private List<MappedResourcePath> getNoMappedResourcePathsWithExtensions() {
-        return new ArrayList<MappedResourcePath>();
-    }
-
-    private List<MappedResourcePath> getOneIphoneMappedResourcePathsWithExtensions() {
-        final List<MappedResourcePath> mappedResourcePathsWithExtensions =
-                Arrays.asList(getResourcePathTestData()
-                        .getMappedIphoneGroupPngImageResourcePath());
-        return mappedResourcePathsWithExtensions;
-    }
-
-    private List<MappedResourcePath> getTwoIphoneMappedResourcePathsWithExtensions() {
-        final List<MappedResourcePath> mappedResourcePathsWithExtensions =
-                Arrays.asList(getResourcePathTestData().getMappedIphoneGroupPngImageResourcePath(),
-                        getResourcePathTestData().getMappedIphoneGroupGifImageResourcePath());
-        return mappedResourcePathsWithExtensions;
-    }
-
-    private List<MappedResourcePath> getOneAndroidMappedResourcePathsWithExtensions() {
-        final List<MappedResourcePath> mappedResourcePathsWithExtensions =
-            Arrays.asList(getResourcePathTestData()
-                    .getMappedAndroidGroupPngImageResourcePath());
-        return mappedResourcePathsWithExtensions;
-    }
-
-    private List<MappedResourcePath> getOneDefaultMappedResourcePathsWithExtensions() {
-        final List<MappedResourcePath> mappedResourcePathsWithExtensions =
-            Arrays.asList(getResourcePathTestData()
-                    .getMappedDefaultGroupPngImageResourcePath());
-        return mappedResourcePathsWithExtensions;
-    }
-
-    private void recordCheckIfIphoneGroupHasResourceWithExtension(final String[] extensions,
-            final List<MappedResourcePath> mappedResourcePaths) {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedImageResourcePath(),
-                        getGroupTestData().createIPhoneGroup()))
-                .andReturn(getMockIphoneMappedResourcePath1());
-
-        EasyMock.expect(getMockIphoneMappedResourcePath1().existWithExtensions(extensions))
-            .andReturn(mappedResourcePaths);
-
-    }
-
-    private void recordCheckIfAndroidGroupHasResourceWithExtension(final String[] extensions,
-            final List<MappedResourcePath> mappedResourcePaths) {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedImageResourcePath(),
-                        getGroupTestData().createAndroidGroup()))
-                        .andReturn(getMockAndroidMappedResourcePath1());
-
-        EasyMock.expect(getMockAndroidMappedResourcePath1().existWithExtensions(extensions))
-            .andReturn(mappedResourcePaths);
-
-    }
-
-    private void recordCheckIfDefaultGroupHasResourceWithExtension(final String[] extensions,
-            final List<MappedResourcePath> mappedResourcePaths) {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedImageResourcePath(),
-                        getGroupTestData().createDefaultGroup()))
-                        .andReturn(getMockDefaultMappedResourcePath1());
-
-        EasyMock.expect(getMockDefaultMappedResourcePath1().existWithExtensions(extensions))
-        .andReturn(mappedResourcePaths);
-
     }
 
     @Test
@@ -1092,13 +862,6 @@ public class ResourceSelectorBeanTestCase extends
     public void setMockMediumMappedResourcePath1(
             final MappedResourcePath mockMediumMappedResourcePath1) {
         this.mockMediumMappedResourcePath1 = mockMediumMappedResourcePath1;
-    }
-
-    /**
-     * @return the fileExtensions
-     */
-    private String[] getFileExtensions() {
-        return fileExtensions;
     }
 
     /**

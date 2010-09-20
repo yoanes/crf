@@ -1,8 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
@@ -186,39 +184,6 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
         Assert.assertNull("resolveToSingle() should be null", getObjectUnderTest()
                 .resolveToSingle());
 
-    }
-
-    @Test
-    public void testExistWithExtensions() throws Throwable {
-        final String[] extensions = { "png", "jpg" };
-
-        final MappedResourcePath mappedResourcePath =
-                getResourcePathTestData()
-                        .getMappedDefaultGroupImageResourcePath();
-
-        EasyMock.expect(
-                getMockFileIoFacade().list(
-                        getResourcePathTestData().getRootResourcesPath(),
-                        mappedResourcePath.getNewResourcePath(), extensions))
-                .andReturn(
-                        getMatchedPngImageArray());
-        replay();
-
-        final List<MappedResourcePath> expectedMappedResourcePaths =
-                Arrays.asList(getResourcePathTestData()
-                        .getMappedDefaultGroupPngImageResourcePath());
-        final List<MappedResourcePath> actualMappedResourcePaths =
-                mappedResourcePath.existWithExtensions(extensions);
-
-        assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
-                expectedMappedResourcePaths, actualMappedResourcePaths);
-    }
-
-    private File[] getMatchedPngImageArray() {
-        return new File[] { new File(getResourcePathTestData()
-                .getRootResourcesPath(), getResourcePathTestData()
-                .getMappedDefaultGroupPngImageResourcePath()
-                .getNewResourcePath()) };
     }
 
     @Test

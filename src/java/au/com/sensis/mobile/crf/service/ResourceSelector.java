@@ -30,28 +30,6 @@ public interface ResourceSelector {
     MappedResourcePath getResourcePath(Device device, String requestedResourcePath);
 
     /**
-     * Return the first concrete resource path for the requested abstract path
-     * and allowed wildcard extensions.
-     *
-     * @param device
-     *            {@link Device} for the request.
-     * @param requestedResourcePath
-     *            Path of the resource requested. This should be relative to the
-     *            webapp's context root.
-     * @param wildcardExtensions
-     *            Array of allowed wildcard extensions. eg. "png", "*".
-     * @return Return the first concrete resource path for the requested
-     *         abstract path. If none is found, a {@link NullMappedResourcePath}
-     *         is returned.
-     * @throws IllegalArgumentException
-     *             Thrown if the requestedResourcePath already has an extension.
-     */
-    // TODO: merge with the simpler interface getResourcePath above.
-    MappedResourcePath getResourcePathWithExtensions(Device device,
-            String requestedResourcePath, String[] wildcardExtensions)
-            throws IllegalArgumentException;
-
-    /**
      * List of all concrete resource paths (not just the first found)
      * that correspond to the requested abstract path. May not be null or empty.
      *

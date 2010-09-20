@@ -23,8 +23,6 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
 
     private static final String BEAN_NAME = "beanName";
 
-    private static final String [] WILDCARD_EXTENSIONS = new String [] {"*"};
-
     private ChainedPathRestrictedResourceSelectorBean objectUnderTest;
 
     private ResourceSelector mockDefaultSelector;
@@ -179,59 +177,6 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
         final MappedResourcePath actualMappedResourcePath =
                 getObjectUnderTest().getResourcePath(getMockDevice(),
                         getRequestedResourcePath());
-
-        Assert.assertEquals("MappedResourcePath is wrong",
-                getExpectedMappedResourcePath(), actualMappedResourcePath);
-
-    }
-
-    @Test
-    public void testGetResourcePathWithExtensionsWhenPathRestrictedSelectorFound()
-        throws Throwable {
-
-        setupForPostProcessAfterInitializationWhenBeanIsOfInterest(
-                getMockPathRestrictedSelector());
-
-        EasyMock.expect(
-                getMockPathRestrictedSelector().isInterestedIn(
-                        getRequestedResourcePath())).andReturn(
-                Boolean.TRUE);
-
-        EasyMock.expect(
-                getMockPathRestrictedSelector().getResourcePathWithExtensions(
-                        getMockDevice(), getRequestedResourcePath(), WILDCARD_EXTENSIONS))
-                .andReturn(getExpectedMappedResourcePath());
-
-        replay();
-
-        assertForPostProcessAfterInitializationWhenBeanIsOfInterest(
-                getMockPathRestrictedSelector());
-
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().getResourcePathWithExtensions(getMockDevice(),
-                        getRequestedResourcePath(), WILDCARD_EXTENSIONS);
-
-        Assert.assertEquals("MappedResourcePath is wrong",
-                getExpectedMappedResourcePath(), actualMappedResourcePath);
-
-    }
-
-    @Test
-    public void testGetResourcePathWithExtensionsWhenNoPathRestrictedSelectorFound()
-            throws Throwable {
-
-        EasyMock.expect(
-                getMockDefaultSelector().getResourcePathWithExtensions(
-                        getMockDevice(), getRequestedResourcePath(),
-                        WILDCARD_EXTENSIONS)).andReturn(
-                getExpectedMappedResourcePath());
-
-        replay();
-
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().getResourcePathWithExtensions(
-                        getMockDevice(), getRequestedResourcePath(),
-                        WILDCARD_EXTENSIONS);
 
         Assert.assertEquals("MappedResourcePath is wrong",
                 getExpectedMappedResourcePath(), actualMappedResourcePath);
