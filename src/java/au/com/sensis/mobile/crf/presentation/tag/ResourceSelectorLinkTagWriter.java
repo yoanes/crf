@@ -87,8 +87,13 @@ public class ResourceSelectorLinkTagWriter implements ResourceSelectorTagWriter 
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
             final List<MappedResourcePath> allMappedResourcePaths) throws IOException {
-        for (final MappedResourcePath mappedResourcePath : allMappedResourcePaths) {
-            writeSingleLinkTag(jspWriter, mappedResourcePath);
+        if (allMappedResourcePaths.isEmpty()) {
+            logNoResourcesFoundWarning();
+
+        } else {
+            for (final MappedResourcePath mappedResourcePath : allMappedResourcePaths) {
+                writeSingleLinkTag(jspWriter, mappedResourcePath);
+            }
         }
     }
 
@@ -96,35 +101,42 @@ public class ResourceSelectorLinkTagWriter implements ResourceSelectorTagWriter 
             final List<MappedResourcePath> allMappedResourcePaths)
             throws IOException {
 
-        final MappedResourcePath bundleResourcePath =
-                getCssBundleFactory().getBundle(allMappedResourcePaths);
+        if (allMappedResourcePaths.isEmpty()) {
+            logNoResourcesFoundWarning();
 
-        writeSingleLinkTag(jspWriter, bundleResourcePath);
+        } else {
+            final MappedResourcePath bundleResourcePath =
+                    getCssBundleFactory().getBundle(allMappedResourcePaths);
+
+            writeSingleLinkTag(jspWriter, bundleResourcePath);
+
+        }
+
+    }
+
+    private void logNoResourcesFoundWarning() {
+        if (getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "No resource was found for requested resource '"
+                    + getHref()
+                    + "' and device " + getDevice());
+        }
     }
 
     private void writeSingleLinkTag(final JspWriter jspWriter,
             final MappedResourcePath mappedResourcePath) throws IOException {
-        if (mappedResourcePath.exists()) {
-            jspWriter.print("<link ");
+        jspWriter.print("<link ");
 
-            jspWriter.print("href=\""
-                    + getCollaboratorsMemento().getClientPathPrefix()
-                    + mappedResourcePath.getNewResourcePath() + "\" ");
+        jspWriter.print("href=\""
+                + getCollaboratorsMemento().getClientPathPrefix()
+                + mappedResourcePath.getNewResourcePath() + "\" ");
 
-            for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
-                jspWriter.print(attribute.getLocalName() + "=\""
-                        + attribute.getValue() + "\" ");
-            }
-
-            jspWriter.print("/>\n");
-        } else {
-            if (getResourceResolutionWarnLogger().isWarnEnabled()) {
-                getResourceResolutionWarnLogger().warn(
-                    "No resource was found for requested resource '"
-                    + mappedResourcePath.getOriginalResourcePath()
-                    + "' and device " + getDevice());
-            }
+        for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
+            jspWriter.print(attribute.getLocalName() + "=\""
+                    + attribute.getValue() + "\" ");
         }
+
+        jspWriter.print("/>\n");
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
@@ -136,16 +148,16 @@ public class ResourceSelectorLinkTagWriter implements ResourceSelectorTagWriter 
                 getResourceSelector().getAllResourcePaths(getDevice(),
                         getHref());
 
-        assertNotNullOrEmpty(allResourcePaths);
+        assertNotNull(allResourcePaths);
 
         return allResourcePaths;
     }
 
-    private void assertNotNullOrEmpty(final List<MappedResourcePath> allResourcePaths) {
-        if ((allResourcePaths == null) || allResourcePaths.isEmpty()) {
+    private void assertNotNull(final List<MappedResourcePath> allResourcePaths) {
+        if (allResourcePaths == null) {
             throw new IllegalStateException(
                     "getResourceSelector.getAllResourcePaths "
-                            + "returned no results for '" + getHref() + ". "
+                            + "returned null for '" + getHref() + ". "
                             + "This should never happen !!!");
         }
     }

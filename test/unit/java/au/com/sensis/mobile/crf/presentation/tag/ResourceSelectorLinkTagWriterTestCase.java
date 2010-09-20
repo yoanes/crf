@@ -102,25 +102,18 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
 
                 recordGetMappedResourcePath(testDataArray[i].getMappedResourcePaths());
 
-                if (testDataArray[i].getDeploymentVersion().isDevPlatform()) {
-                    if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
-                        recordLogResourceNotFoundWarning();
-                    } else {
-                        recordCheckMappedResourcePathsExist(
-                                testDataArray[i].getMappedResourcePaths());
-                    }
+                if (testDataArray[i].getDeploymentVersion().isDevPlatform()
+                        && StringUtils.isEmpty(testDataArray[i].getOutputString())) {
+                    recordLogResourceNotFoundWarning();
                 }
 
                 if (testDataArray[i].getDeploymentVersion().isProdPlatform()) {
-                    EasyMock.expect(getMockCssBundleFactory().getBundle(
-                          testDataArray[i].getMappedResourcePaths())).andReturn(
-                                  testDataArray[i].getBundleMappedResourcePath()).atLeastOnce();
-
                     if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
                         recordLogResourceNotFoundWarning();
                     } else {
-                        recordCheckMappedResourcePathsExist(
-                              Arrays.asList(testDataArray[i].getBundleMappedResourcePath()));
+                        EasyMock.expect(getMockCssBundleFactory().getBundle(
+                              testDataArray[i].getMappedResourcePaths())).andReturn(
+                                      testDataArray[i].getBundleMappedResourcePath()).atLeastOnce();
                     }
                 }
 
@@ -169,22 +162,6 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
                         .getAllResourcePaths(getMockDevice(), getRequestedCssResourcePath()))
                         .andReturn(expectedMappedResourcePaths).atLeastOnce();
     }
-
-    private void recordCheckMappedResourcePathsExist(
-            final List<MappedResourcePath> expectedMappedResourcePaths) {
-        for (final MappedResourcePath mappedResourcePath : expectedMappedResourcePaths) {
-            // NOTE: we are being really naughty here and mocking the internals
-            // of MappedResourcePath. We'd rather not but mocking MappedResourcePath
-            // would lead to the data driven tests being harder to debug when they go wrong
-            // (the toString of all MappedResourcePaths would look the same as they would all
-            // just be generic EasyMock mocks).
-            EasyMock.expect(getMockFileIoFacade().fileExists(
-                    getResourcePathTestData().getRootResourcesPath(),
-                    mappedResourcePath.getNewResourcePath())).andReturn(Boolean.TRUE);
-        }
-
-    }
-
 
     private void recordLogResourceNotFoundWarning() {
         EasyMock.expect(getMockResolutionWarnLogger().isWarnEnabled())
@@ -491,8 +468,7 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
     private TestData createTestDataNoDynamicAttributesNoMappedResourceDevMode() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                Arrays.asList((MappedResourcePath)
-                        getResourcePathTestData().getNullMappedCssResourcePath()),
+                new ArrayList<MappedResourcePath>(),
                 null,
                 StringUtils.EMPTY,
                 getDeploymentVersionTestData().createDevDeploymentVersion());
@@ -501,11 +477,10 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
     private TestData createTestDataNoDynamicAttributesNoMappedResourceProdMode() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                Arrays.asList((MappedResourcePath)
-                        getResourcePathTestData().getNullMappedCssResourcePath()),
-                        getResourcePathTestData().getNullMappedCssResourcePath(),
-                        StringUtils.EMPTY,
-                        getDeploymentVersionTestData().createProdDeploymentVersion());
+                new ArrayList<MappedResourcePath>(),
+                null,
+                StringUtils.EMPTY,
+                getDeploymentVersionTestData().createProdDeploymentVersion());
     }
 
     private TestData createTestDataNoDynamicAttributesSingleMappedResourceDevMode() {

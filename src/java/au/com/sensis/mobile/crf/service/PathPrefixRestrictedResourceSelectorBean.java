@@ -51,7 +51,7 @@ public class PathPrefixRestrictedResourceSelectorBean
     /**
      * If {@link #isInterestedIn(String)} returns true, then delegates to the
      * {@link ResourceSelector} that was passed to the
-     * constructor. Else a {@link NullMappedResourcePath} is returned.
+     * constructor. Else an empty {@link List} is returned.
      *
      * {@inheritDoc}
      */
@@ -67,9 +67,7 @@ public class PathPrefixRestrictedResourceSelectorBean
         } else {
             debugLogDisinterest(requestedResourcePath);
 
-            final List<MappedResourcePath> result = new ArrayList<MappedResourcePath>();
-            result.add(new NullMappedResourcePath(requestedResourcePath));
-            return result;
+            return new ArrayList<MappedResourcePath>();
         }
 
     }
@@ -77,7 +75,7 @@ public class PathPrefixRestrictedResourceSelectorBean
     /**
      * If {@link #isInterestedIn(String)} returns true, then delegates to the
      * {@link ResourceSelector} that was passed to the
-     * constructor. Else a {@link NullMappedResourcePath} is returned.
+     * constructor. Else null is returned.
      *
      * {@inheritDoc}
      */
@@ -93,7 +91,7 @@ public class PathPrefixRestrictedResourceSelectorBean
         } else {
             debugLogDisinterest(requestedResourcePath);
 
-            return new NullMappedResourcePath(requestedResourcePath);
+            return null;
         }
     }
 
@@ -139,7 +137,7 @@ public class PathPrefixRestrictedResourceSelectorBean
     private void debugLogDisinterest(final String requestedResourcePath) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(requestedResourcePath
-                    + " is NOT of interest. Returning NullMappedResourcePath.");
+                    + " is NOT of interest. Returning null.");
         }
     }
 }

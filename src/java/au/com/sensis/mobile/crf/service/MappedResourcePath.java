@@ -20,18 +20,6 @@ public interface MappedResourcePath {
     String BUNDLE_DIR_NAME = "bundle";
 
     /**
-     * @return true if {@link #getNewResourcePath()} equals
-     *         {@link #getOriginalResourcePath()}.
-     */
-    boolean isIdentityMapping();
-
-    /**
-     * @return true if the mapped path given by {@link #getNewResourcePath()}
-     *         exists in {@link #getRootResourceDir()}.
-     */
-    boolean exists();
-
-    /**
      * Resolves the requested path to a single {@link MappedResourcePath}.
      *
      * @return the requested path as a single {@link MappedResourcePath}.
@@ -52,7 +40,7 @@ public interface MappedResourcePath {
      * @throws IOException
      *             Thrown if any IO error occurs during the expansion.
      */
-    List<MappedResourcePath> existByExpansion() throws IOException;
+    List<MappedResourcePath> resolve() throws IOException;
 
     /**
      * @return true if {@link #getNewResourcePath() corresponds to a bundle

@@ -23,7 +23,6 @@ import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
 import au.com.sensis.mobile.crf.service.MappedResourcePathBean;
-import au.com.sensis.mobile.crf.service.NullMappedResourcePath;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceSelector;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -114,8 +113,6 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getMapComponentRequestedImageResourcePath(),
                 getMappedResourcePath());
 
-        recordCheckIfMappedResourcePathExists(getMappedResourcePath());
-
         recordSetResponseContentType();
         recordSetResponseContentLength();
         recordSetResponseLastModified();
@@ -133,17 +130,9 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
     }
 
-    private void recordCheckIfMappedResourcePathExists(
-            final MappedResourcePath mappedResourcePath) {
-
-        EasyMock.expect(FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
-                mappedResourcePath.getRootResourceDir(),
-                mappedResourcePath.getNewResourcePath())).andReturn(Boolean.TRUE);
-    }
-
     @Test
     public void testDoGetWhenRequestStartsWithExpectedPrefixAndFileDoesNotExist()
-        throws Throwable {
+            throws Throwable {
 
         recordGetImageServletCollaboratorsMemento();
 
@@ -151,9 +140,8 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         recordGetServletPath(getRequestedResourcePath());
 
-        recordGetMappedResourcePath(
-                getResourcePathTestData().getMapComponentRequestedImageResourcePath(),
-                new NullMappedResourcePath(getRequestedResourcePath()));
+        recordGetMappedResourcePath(getResourcePathTestData()
+                .getMapComponentRequestedImageResourcePath(), null);
 
         recordSetHttp404ErrorResponse();
 

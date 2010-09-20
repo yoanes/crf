@@ -52,35 +52,35 @@ public class JavaScriptMappedResourcePathBeanTestCase extends
     }
 
     @Test
-    public void testExistByPathExpansionWhenPathIsForABundleWhenFilesFound() throws Throwable {
+    public void testResolveWhenPathIsForABundleWhenFilesFound() throws Throwable {
 
         EasyMock.expect(getMockPathExpander().expandPath(getObjectUnderTest())).andReturn(
                 createExistsByFilterExpectedFileFilterResults());
         replay();
 
         final List<MappedResourcePath> actualMappedResourcePaths =
-                getObjectUnderTest().existByExpansion();
+                getObjectUnderTest().resolve();
 
         assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
                 createExistsByFilterExpectedMappedResourcePaths(), actualMappedResourcePaths);
     }
 
     @Test
-    public void testExistByPathExpansionWhenPathIsForABundleWhenNoFilesFound() throws Throwable {
+    public void testResolveWhenPathIsForABundleWhenNoFilesFound() throws Throwable {
 
         EasyMock.expect(getMockPathExpander().expandPath(getObjectUnderTest())).andReturn(
                 new ArrayList<File>());
         replay();
 
         final List<MappedResourcePath> actualMappedResourcePaths =
-            getObjectUnderTest().existByExpansion();
+            getObjectUnderTest().resolve();
 
         assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
                 new ArrayList<MappedResourcePath>(), actualMappedResourcePaths);
     }
 
     @Test
-    public void testExistByPathExpansionWhenPathIsForABundleWhenNullFilesFound() throws Throwable {
+    public void testResolveWhenPathIsForABundleWhenNullFilesFound() throws Throwable {
         final MappedResourcePath mappedResourcePath =
             getResourcePathTestData()
             .getMappedDefaultGroupBundledScriptBundleResourcePath();
@@ -93,26 +93,52 @@ public class JavaScriptMappedResourcePathBeanTestCase extends
         replay();
 
         final List<MappedResourcePath> actualMappedResourcePaths =
-            getObjectUnderTest().existByExpansion();
+            getObjectUnderTest().resolve();
 
         assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
                 new ArrayList<MappedResourcePath>(), actualMappedResourcePaths);
     }
 
     @Test
-    public void testExistByPathExpansionWhenPathIsNotForABundle() throws Throwable {
+    public void testResolveWhenPathIsNotForABundleAndExists() throws Throwable {
         setObjectUnderTest((JavaScriptMappedResourcePathBean) getResourcePathTestData()
                 .getMappedDefaultGroupNamedScriptBundleResourcePath());
+
+        recordCheckIfNewResourcePathExists(Boolean.TRUE);
 
         replay();
 
         final List<MappedResourcePath> actualMappedResourcePaths =
-                getObjectUnderTest().existByExpansion();
+                getObjectUnderTest().resolve();
         final List<MappedResourcePath> expectedMappedResourcePaths
             = Arrays.asList((MappedResourcePath) getObjectUnderTest());
 
         assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
                 expectedMappedResourcePaths, actualMappedResourcePaths);
+    }
+
+    @Test
+    public void testResolveWhenPathIsNotForABundleAndDoesNotExist() throws Throwable {
+        setObjectUnderTest((JavaScriptMappedResourcePathBean) getResourcePathTestData()
+                .getMappedDefaultGroupNamedScriptBundleResourcePath());
+
+        recordCheckIfNewResourcePathExists(Boolean.FALSE);
+
+        replay();
+
+        final List<MappedResourcePath> actualMappedResourcePaths =
+            getObjectUnderTest().resolve();
+        assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+                new ArrayList<MappedResourcePath>(), actualMappedResourcePaths);
+    }
+
+    private void recordCheckIfNewResourcePathExists(final Boolean exists) {
+        EasyMock.expect(
+                getMockFileIoFacade().fileExists(
+                        getResourcePathTestData().getRootResourcesPath(),
+                        getObjectUnderTest().getNewResourcePath())).andReturn(
+                exists);
+
     }
 
     private List<File> createExistsByFilterExpectedFileFilterResults() {

@@ -21,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
-import au.com.sensis.mobile.crf.service.NullMappedResourcePath;
 import au.com.sensis.mobile.crf.service.ResourceSelector;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
@@ -142,13 +141,11 @@ public class ResourceSelectorServletTestCase extends
 
     private void recordGetNullResourcePathFromResourceSelector(
             final String requestedResourceServletPath) {
-        final NullMappedResourcePath nullMappedResourcePath
-            = new NullMappedResourcePath(requestedResourceServletPath);
+
         EasyMock.expect(
-                getMockResourceSelector()
-                        .getResourcePath(getMockDevice(),
-                                requestedResourceServletPath)).andReturn(
-                nullMappedResourcePath).atLeastOnce();
+                getMockResourceSelector().getResourcePath(getMockDevice(),
+                        requestedResourceServletPath)).andReturn(null)
+                .atLeastOnce();
 
     }
 
@@ -184,7 +181,7 @@ public class ResourceSelectorServletTestCase extends
 
         final String actualResourceServletPath =
             "/WEB-INF/view/master/home/home.jsp";
-        recordCheckIfMappedResourcePathExists(actualResourceServletPath, Boolean.TRUE);
+        recordGetNewResourcePath(actualResourceServletPath);
 
         recordGetRequestDispatcher(actualResourceServletPath);
 
@@ -195,15 +192,10 @@ public class ResourceSelectorServletTestCase extends
         getObjectUnderTest().init(getSpringMockServletConfig());
     }
 
-    private void recordCheckIfMappedResourcePathExists(
-            final String actualResourceServletPath, final boolean exists) {
+    private void recordGetNewResourcePath(final String newResourcePath) {
 
-        EasyMock.expect(getMockMappedResourcePath().exists()).andReturn(exists);
-
-        if (exists) {
-            EasyMock.expect(getMockMappedResourcePath().getNewResourcePath())
-                    .andReturn(actualResourceServletPath);
-        }
+        EasyMock.expect(getMockMappedResourcePath().getNewResourcePath())
+                .andReturn(newResourcePath);
     }
 
     @Test
@@ -242,7 +234,7 @@ public class ResourceSelectorServletTestCase extends
 
         final String actualResourceServletPath =
             "/WEB-INF/view/master/common/logo.jsp";
-        recordCheckIfMappedResourcePathExists(actualResourceServletPath, Boolean.TRUE);
+        recordGetNewResourcePath(actualResourceServletPath);
 
         recordGetRequestDispatcher(actualResourceServletPath);
 

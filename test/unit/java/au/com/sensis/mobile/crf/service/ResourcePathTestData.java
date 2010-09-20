@@ -26,22 +26,6 @@ public class ResourcePathTestData {
         return getJspResourcesRootServletPath() + "detail/bdp.crf";
     }
 
-    public NullMappedResourcePath getNullMappedResourcePath() {
-        return new NullMappedResourcePath(getRequestedJspResourcePath());
-    }
-
-    public NullMappedResourcePath getNullMappedCssResourcePath() {
-        return new NullMappedResourcePath(getRequestedCssResourcePath());
-    }
-
-    public NullMappedResourcePath getNullMappedScriptResourcePath() {
-        return new NullMappedResourcePath(getRequestedNamedScriptResourcePath());
-    }
-
-    public NullMappedResourcePath getNullMappedImageResourcePath() {
-        return new NullMappedResourcePath(getRequestedImageResourcePath());
-    }
-
     public MappedResourcePath getDotNullMappedImageResourcePath() {
         return new MappedResourcePathBean(getRequestedImageResourcePathWithoutExtension(),
                 "extrasmall/common/unmetered.null", getRootResourcesPath());

@@ -87,8 +87,14 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
             final List<MappedResourcePath> allMappedResourcePaths) throws IOException {
-        for (final MappedResourcePath mappedResourcePath : allMappedResourcePaths) {
-            writeSingleLinkTag(jspWriter, mappedResourcePath);
+
+        if (allMappedResourcePaths.isEmpty()) {
+            logNoResourcesFoundWarning();
+
+        } else {
+            for (final MappedResourcePath mappedResourcePath : allMappedResourcePaths) {
+                writeSingleLinkTag(jspWriter, mappedResourcePath);
+            }
         }
     }
 
@@ -96,35 +102,39 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
             final List<MappedResourcePath> allMappedResourcePaths)
             throws IOException {
 
-        final MappedResourcePath bundleResourcePath =
-                getScriptBundleFactory().getBundle(allMappedResourcePaths);
+        if (allMappedResourcePaths.isEmpty()) {
+            logNoResourcesFoundWarning();
+        } else {
+            final MappedResourcePath bundleResourcePath =
+                    getScriptBundleFactory().getBundle(allMappedResourcePaths);
 
-        writeSingleLinkTag(jspWriter, bundleResourcePath);
+            writeSingleLinkTag(jspWriter, bundleResourcePath);
+        }
+    }
+
+    private void logNoResourcesFoundWarning() {
+        if (getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "No resource was found for requested resource '"
+                    + getHref()
+                    + "' and device " + getDevice());
+        }
     }
 
     private void writeSingleLinkTag(final JspWriter jspWriter,
             final MappedResourcePath mappedResourcePath) throws IOException {
-        if (mappedResourcePath.exists()) {
-            jspWriter.print("<script ");
+        jspWriter.print("<script ");
 
-            jspWriter.print("src=\""
-                    + getCollaboratorsMemento().getClientPathPrefix()
-                    + mappedResourcePath.getNewResourcePath() + "\" ");
+        jspWriter.print("src=\""
+                + getCollaboratorsMemento().getClientPathPrefix()
+                + mappedResourcePath.getNewResourcePath() + "\" ");
 
-            for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
-                jspWriter.print(attribute.getLocalName() + "=\""
-                        + attribute.getValue() + "\" ");
-            }
-
-            jspWriter.print("></script>\n");
-        } else {
-            if (getResourceResolutionWarnLogger().isWarnEnabled()) {
-                getResourceResolutionWarnLogger().warn(
-                    "No resource was found for requested resource '"
-                    + mappedResourcePath.getOriginalResourcePath()
-                    + "' and device " + getDevice());
-            }
+        for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
+            jspWriter.print(attribute.getLocalName() + "=\""
+                    + attribute.getValue() + "\" ");
         }
+
+        jspWriter.print("></script>\n");
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
@@ -136,13 +146,13 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
                 getResourceSelector().getAllResourcePaths(getDevice(),
                         getHref());
 
-        assertNotNullOrEmpty(allResourcePaths);
+        assertNotNull(allResourcePaths);
 
         return allResourcePaths;
     }
 
-    private void assertNotNullOrEmpty(final List<MappedResourcePath> allResourcePaths) {
-        if ((allResourcePaths == null) || allResourcePaths.isEmpty()) {
+    private void assertNotNull(final List<MappedResourcePath> allResourcePaths) {
+        if (allResourcePaths == null) {
             throw new IllegalStateException(
                     "getResourceSelector.getAllResourcePaths "
                             + "returned no results for '" + getHref() + ". "

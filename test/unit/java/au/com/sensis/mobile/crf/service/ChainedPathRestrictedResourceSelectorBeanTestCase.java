@@ -149,8 +149,8 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
 
     }
 
-    private NullMappedResourcePath getExpectedMappedResourcePath() {
-        return getResourcePathTestData().getNullMappedResourcePath();
+    private MappedResourcePath getExpectedMappedResourcePath() {
+        return getResourcePathTestData().getMappedDefaultGroupResourcePath();
     }
 
     private List<MappedResourcePath> getExpectedMappedResourcePaths() {

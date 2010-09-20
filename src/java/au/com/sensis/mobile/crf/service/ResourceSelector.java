@@ -24,8 +24,7 @@ public interface ResourceSelector {
      *            Path of the resource requested. This should be relative to the
      *            webapp's context root.
      * @return Return the first concrete resource path for the requested
-     *         abstract path. If none is found, a {@link NullMappedResourcePath}
-     *         is returned.
+     *         abstract path. If none is found, null is returned.
      */
     MappedResourcePath getResourcePath(Device device, String requestedResourcePath);
 
@@ -40,8 +39,8 @@ public interface ResourceSelector {
      *            Path of the resource requested. This should be relative to the
      *            webapp's context root.
      * @return List of all concrete resource paths that correspond to the
-     *         requested path. May not be null or empty. If no concrete resource paths are found,
-     *         a {@link List} with a single {@link NullMappedResourcePath} is returned.
+     *         requested path. May not be null. If no concrete resource paths are found,
+     *         an empty {@link List} is returned.
      */
     List<MappedResourcePath> getAllResourcePaths(Device device, String requestedResourcePath);
 }

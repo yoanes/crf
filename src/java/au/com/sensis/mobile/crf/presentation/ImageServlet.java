@@ -67,7 +67,7 @@ public class ImageServlet extends HttpServletBean {
                             .getResourcePath(getDevice(request),
                                     getRequestedResourcePath(request));
 
-            if (mappedResourcePath.exists()) {
+            if (mappedResourcePath != null) {
                 setResponseHeaders(response, mappedResourcePath);
                 writeImageToResponse(response, mappedResourcePath);
             } else {

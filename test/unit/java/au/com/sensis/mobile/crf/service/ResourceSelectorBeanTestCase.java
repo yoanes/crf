@@ -180,11 +180,11 @@ public class ResourceSelectorBeanTestCase extends
                 .andReturn(getMockIphoneMappedResourcePath1());
 
         if (fileExists) {
-            EasyMock.expect(getMockIphoneMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockIphoneMappedResourcePath1().resolve()).andReturn(
                     Arrays.asList(getMockIphoneMappedResourcePath1(),
                             getMockIphoneMappedResourcePath2()));
         } else {
-            EasyMock.expect(getMockIphoneMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockIphoneMappedResourcePath1().resolve()).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
 
@@ -199,11 +199,11 @@ public class ResourceSelectorBeanTestCase extends
                         .andReturn(getMockAppleMappedResourcePath1());
 
         if (fileExists) {
-            EasyMock.expect(getMockAppleMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockAppleMappedResourcePath1().resolve()).andReturn(
                     Arrays.asList(getMockAppleMappedResourcePath1(),
                             getMockAppleMappedResourcePath2()));
         } else {
-            EasyMock.expect(getMockAppleMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockAppleMappedResourcePath1().resolve()).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
     }
@@ -217,11 +217,11 @@ public class ResourceSelectorBeanTestCase extends
                         .andReturn(getMockHD800MappedResourcePath1());
 
         if (fileExists) {
-            EasyMock.expect(getMockHD800MappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockHD800MappedResourcePath1().resolve()).andReturn(
                     Arrays.asList(getMockHD800MappedResourcePath1(),
                             getMockHD800MappedResourcePath2()));
         } else {
-            EasyMock.expect(getMockHD800MappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockHD800MappedResourcePath1().resolve()).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
 
@@ -236,11 +236,11 @@ public class ResourceSelectorBeanTestCase extends
                         .andReturn(getMockMediumMappedResourcePath1());
 
         if (fileExists) {
-            EasyMock.expect(getMockMediumMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockMediumMappedResourcePath1().resolve()).andReturn(
                     Arrays.asList(getMockMediumMappedResourcePath1(),
                             getMockMediumMappedResourcePath2()));
         } else {
-            EasyMock.expect(getMockMediumMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockMediumMappedResourcePath1().resolve()).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
 
@@ -255,11 +255,11 @@ public class ResourceSelectorBeanTestCase extends
                         .andReturn(getMockAndroidMappedResourcePath1());
 
         if (fileExists) {
-            EasyMock.expect(getMockAndroidMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockAndroidMappedResourcePath1().resolve()).andReturn(
                     Arrays.asList(getMockAndroidMappedResourcePath1(),
                             getMockAndroidMappedResourcePath2()));
         } else {
-            EasyMock.expect(getMockAndroidMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockAndroidMappedResourcePath1().resolve()).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
 
@@ -319,11 +319,11 @@ public class ResourceSelectorBeanTestCase extends
                 .andReturn(getMockDefaultMappedResourcePath1());
 
         if (fileExists) {
-            EasyMock.expect(getMockDefaultMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockDefaultMappedResourcePath1().resolve()).andReturn(
                     Arrays.asList(getMockDefaultMappedResourcePath1(),
                             getMockDefaultMappedResourcePath2()));
         } else {
-            EasyMock.expect(getMockDefaultMappedResourcePath1().existByExpansion()).andReturn(
+            EasyMock.expect(getMockDefaultMappedResourcePath1().resolve()).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
     }
@@ -368,11 +368,7 @@ public class ResourceSelectorBeanTestCase extends
             getObjectUnderTest().getResourcePath(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
-        final MappedResourcePath expectedResourcePath = new NullMappedResourcePath(
-                getResourcePathTestData().getRequestedJspResourcePath());
-
-        Assert.assertEquals("resourcePath is wrong",
-                expectedResourcePath, actualResourcePath);
+        Assert.assertNull("resourcePath is wrong", actualResourcePath);
     }
 
     @Test
@@ -639,9 +635,10 @@ public class ResourceSelectorBeanTestCase extends
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
 
-        Assert.assertEquals("resourcePath is wrong", Arrays.asList(
-                getResourcePathTestData().getNullMappedResourcePath()),
+        Assert.assertNotNull("actualResourcePaths should not be null",
                 actualResourcePaths);
+        Assert.assertTrue("actualResourcePaths should be empty",
+                actualResourcePaths.isEmpty());
     }
 
     private void recordGetMatchingGroupsIteratorForGetResourcePath() {

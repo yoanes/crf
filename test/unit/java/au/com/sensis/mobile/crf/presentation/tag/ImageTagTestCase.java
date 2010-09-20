@@ -143,7 +143,6 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                         .getMappedResourcePath());
 
                 if (StringUtils.isNotEmpty(testDataArray[i].getOutputString())) {
-                    recordCheckMappedResourcePathExists(Boolean.TRUE);
                     recordMappedResourcePathEndsWithDotNull(Boolean.FALSE);
                     recordGetMappedResourcePathNewPath();
                     recordGetJspWriter();
@@ -185,8 +184,6 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         recordGetImageTagCollaboratorsMemento();
 
         recordLookupRequestedResourceWhenFound(getMockMappedResourcePath());
-
-        recordCheckMappedResourcePathExists(Boolean.TRUE);
 
         recordMappedResourcePathEndsWithDotNull(Boolean.TRUE);
 
@@ -240,10 +237,6 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private MappedResourcePath getMappedDefaultGroupPngImageResourcePath() {
         return getResourcePathTestData().getMappedDefaultGroupPngImageResourcePath();
-    }
-
-    private void recordCheckMappedResourcePathExists(final Boolean exists) {
-        EasyMock.expect(getMockMappedResourcePath().exists()).andReturn(exists);
     }
 
     private void recordLookupRequestedResourceWhenFound(
@@ -474,9 +467,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResource() {
-        return new TestData(new ArrayList<DynamicTagAttribute>(),
-                getResourcePathTestData()
-                        .getNullMappedImageResourcePath(), StringUtils.EMPTY);
+        return new TestData(new ArrayList<DynamicTagAttribute>(), null,
+                StringUtils.EMPTY);
     }
 
     private DynamicTagAttribute createTitleDynamicAttribute() {

@@ -101,16 +101,12 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
 
     @Test
     public void testGetResourcePathWhenPrefixDoesNotMatch() throws Throwable {
-        final NullMappedResourcePath expectedMappedResourcePath =
-                new NullMappedResourcePath(getRequestedUnmatchedResourcePath());
-
         final MappedResourcePath actualMappedResourcePath =
                 getObjectUnderTest().getResourcePath(
                         getMockDevice(),
                         getRequestedUnmatchedResourcePath());
 
-        Assert.assertEquals("actualMappedResourcePath is wrong",
-                expectedMappedResourcePath,
+        Assert.assertNull("actualMappedResourcePath is wrong",
                 actualMappedResourcePath);
 
     }
@@ -150,7 +146,7 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
 
         Assert
         .assertEquals("actualMappedResourcePath is wrong",
-                getExpectedNullMappedResourcePaths(),
+                new ArrayList<MappedResourcePath>(),
                 actualMappedResourcePaths);
 
     }
@@ -159,19 +155,10 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
         return getResourcePathTestData()
                 .getMappedAppleGroupResourcePath();
     }
+
     private List<MappedResourcePath> getExpectedMappedResourcePaths() {
         return Arrays.asList(getExpectedMappedResourcePath());
     }
-
-
-    private List<MappedResourcePath> getExpectedNullMappedResourcePaths() {
-        final List<MappedResourcePath> expectedMappedResourcePaths =
-                new ArrayList<MappedResourcePath>();
-        expectedMappedResourcePaths.add(new NullMappedResourcePath(
-                getRequestedUnmatchedResourcePath()));
-        return expectedMappedResourcePaths;
-    }
-
 
     private PathPrefixRestrictedResourceSelectorBean getObjectUnderTest() {
         return objectUnderTest;

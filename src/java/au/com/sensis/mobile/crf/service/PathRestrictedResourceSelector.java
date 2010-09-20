@@ -5,7 +5,7 @@ package au.com.sensis.mobile.crf.service;
  * restricted set of requested resource paths that satisfy
  * {@link #isInterestedIn(String)}. If {@link #isInterestedIn(String)} returns
  * false, all {@link ResourceSelector} methods will
- * return a {@link NullMappedResourcePath}.
+ * return a null/empty List as appropriate.
  *
  * @author Adrian.Koh2@sensis.com.au
  */

@@ -78,7 +78,7 @@ public class JavaScriptMappedResourcePathBean extends MappedResourcePathBean {
      *             Thrown if any IO error occurs during the expansion.
      */
     @Override
-    public List<MappedResourcePath> existByExpansion() throws IOException {
+    public List<MappedResourcePath> resolve() throws IOException {
         // TODO: hack implementation. Really testing the difference between
         // requesting a named JS file and a *.js type of grouping.
         if (isBundlePath() && getNewResourcePath().endsWith("bundle-all.js")) {
@@ -101,7 +101,11 @@ public class JavaScriptMappedResourcePathBean extends MappedResourcePathBean {
 
             return result;
         } else {
-            return Arrays.asList((MappedResourcePath) this);
+            if (exists()) {
+                return Arrays.asList((MappedResourcePath) this);
+            } else {
+                return new ArrayList<MappedResourcePath>();
+            }
         }
 
     }

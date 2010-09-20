@@ -103,25 +103,19 @@ public class ResourceSelectorScriptTagWriterTestCase extends
 
                 recordGetMappedResourcePath(testDataArray[i].getMappedResourcePaths());
 
-                if (testDataArray[i].getDeploymentVersion().isDevPlatform()) {
-                    if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
-                        recordLogResourceNotFoundWarning();
-                    } else {
-                        recordCheckMappedResourcePathsExist(
-                                testDataArray[i].getMappedResourcePaths());
-                    }
+                if (testDataArray[i].getDeploymentVersion().isDevPlatform()
+                        && StringUtils.isEmpty(testDataArray[i].getOutputString())) {
+                    recordLogResourceNotFoundWarning();
                 }
 
                 if (testDataArray[i].getDeploymentVersion().isProdPlatform()) {
-                    EasyMock.expect(getMockScriptBundleFactory().getBundle(
-                          testDataArray[i].getMappedResourcePaths())).andReturn(
-                                  testDataArray[i].getBundleMappedResourcePath()).atLeastOnce();
-
                     if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
                         recordLogResourceNotFoundWarning();
                     } else {
-                        recordCheckMappedResourcePathsExist(
-                              Arrays.asList(testDataArray[i].getBundleMappedResourcePath()));
+                        EasyMock.expect(getMockScriptBundleFactory().getBundle(
+                                testDataArray[i].getMappedResourcePaths())).andReturn(
+                                        testDataArray[i].getBundleMappedResourcePath())
+                                .atLeastOnce();
                     }
                 }
 
@@ -169,22 +163,6 @@ public class ResourceSelectorScriptTagWriterTestCase extends
                                 getRequestedScriptResourcePath()))
                         .andReturn(expectedMappedResourcePaths).atLeastOnce();
     }
-
-    private void recordCheckMappedResourcePathsExist(
-            final List<MappedResourcePath> expectedMappedResourcePaths) {
-        for (final MappedResourcePath mappedResourcePath : expectedMappedResourcePaths) {
-            // NOTE: we are being really naughty here and mocking the internals
-            // of MappedResourcePath. We'd rather not but mocking MappedResourcePath
-            // would lead to the data driven tests being harder to debug when they go wrong
-            // (the toString of all MappedResourcePaths would look the same as they would all
-            // just be generic EasyMock mocks).
-            EasyMock.expect(getMockFileIoFacade().fileExists(
-                    getResourcePathTestData().getRootResourcesPath(),
-                    mappedResourcePath.getNewResourcePath())).andReturn(Boolean.TRUE);
-        }
-
-    }
-
 
     private void recordLogResourceNotFoundWarning() {
         EasyMock.expect(getMockResolutionWarnLogger().isWarnEnabled())
@@ -491,8 +469,7 @@ public class ResourceSelectorScriptTagWriterTestCase extends
     private TestData createTestDataNoDynamicAttributesNoMappedResourceDevMode() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                Arrays.asList((MappedResourcePath)
-                        getResourcePathTestData().getNullMappedScriptResourcePath()),
+                new ArrayList<MappedResourcePath>(),
                 null,
                 StringUtils.EMPTY,
                 getDeploymentVersionTestData().createDevDeploymentVersion());
@@ -501,11 +478,10 @@ public class ResourceSelectorScriptTagWriterTestCase extends
     private TestData createTestDataNoDynamicAttributesNoMappedResourceProdMode() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                Arrays.asList((MappedResourcePath)
-                        getResourcePathTestData().getNullMappedScriptResourcePath()),
-                        getResourcePathTestData().getNullMappedScriptResourcePath(),
-                        StringUtils.EMPTY,
-                        getDeploymentVersionTestData().createProdDeploymentVersion());
+                new ArrayList<MappedResourcePath>(),
+                null,
+                StringUtils.EMPTY,
+                getDeploymentVersionTestData().createProdDeploymentVersion());
     }
 
     private TestData createTestDataNoDynamicAttributesSingleMappedResourceDevMode() {
@@ -636,5 +612,4 @@ public class ResourceSelectorScriptTagWriterTestCase extends
             final ResourceResolutionWarnLogger mockResolutionWarnLogger) {
         this.mockResolutionWarnLogger = mockResolutionWarnLogger;
     }
-
 }

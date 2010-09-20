@@ -104,16 +104,17 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
             }
             return createMappedResourcePath(requestedResourcePath,
                     doMapResourcePath(requestedResourcePath, group));
-        }
+        } else {
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug(
-                    "Requested resource '" + requestedResourcePath
-                            + "' is not for a " + getDebugResourceTypeName()
-                            + " file. Returning the original requested path.");
-        }
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug(
+                        "Requested resource '" + requestedResourcePath
+                                + "' is not for a " + getDebugResourceTypeName()
+                                + " file. Returning null.");
+            }
 
-        return new NullMappedResourcePath(requestedResourcePath);
+            return null;
+        }
     }
 
     /**

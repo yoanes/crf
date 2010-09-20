@@ -44,10 +44,9 @@ public class ChainedResourcePathMapper implements ResourcePathMapper {
      * Delegates to each {@link ResourcePathMapper} from a chain of
      * responsibility. The chain stops when either of the following occurs:
      * <ol>
-     * <li>A {@link MappedResourcePath}is found for which
-     * {@link MappedResourcePath#isIdentityMapping()} returns false.</li>
+     * <li>A non-null {@link MappedResourcePath}is found.</li>
      * <li>The end of the chain is reached without the previous condition being
-     * reached. In this case, a {@link NullMappedResourcePath} is returned.</li>
+     * reached. In this case, null is returned.</li>
      * </ol>
      *
      * {@inheritDoc}
@@ -59,11 +58,11 @@ public class ChainedResourcePathMapper implements ResourcePathMapper {
             final MappedResourcePath mappedResourcePath =
                     resourcePathMapper.mapResourcePath(requestedResourcePath,
                             group);
-            if (!mappedResourcePath.isIdentityMapping()) {
+            if (mappedResourcePath != null) {
                 return mappedResourcePath;
             }
         }
-        return new NullMappedResourcePath(requestedResourcePath);
+        return null;
     }
 
 

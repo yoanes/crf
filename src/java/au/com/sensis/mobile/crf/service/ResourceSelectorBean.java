@@ -83,7 +83,8 @@ public class ResourceSelectorBean implements
             }
         }
 
-        return new NullMappedResourcePath(requestedResourcePath);
+        // No resource found.
+        return null;
     }
 
     private Iterator<Group> getMatchingGroupIterator(final Device device) {
@@ -117,13 +118,7 @@ public class ResourceSelectorBean implements
                     allResourcePaths);
         }
 
-        if (allResourcePaths.isEmpty()) {
-            allResourcePaths.add(new NullMappedResourcePath(requestedResourcePath));
-        }
-
         return new ArrayList<MappedResourcePath>(allResourcePaths);
-
-
     }
 
     private void accumulateGroupResources(
@@ -131,14 +126,14 @@ public class ResourceSelectorBean implements
             final Deque<MappedResourcePath> allResourcePaths) {
 
         try {
-            final List<MappedResourcePath> existByExpansion = mappedResourcePath.existByExpansion();
-            if (!existByExpansion.isEmpty()) {
+            final List<MappedResourcePath> resolvedPaths = mappedResourcePath.resolve();
+            if (!resolvedPaths.isEmpty()) {
 
-                debugLogResourceFoundAddingToList(existByExpansion);
+                debugLogResourceFoundAddingToList(resolvedPaths);
 
-                Collections.reverse(existByExpansion);
+                Collections.reverse(resolvedPaths);
 
-                for (final MappedResourcePath currPath : existByExpansion) {
+                for (final MappedResourcePath currPath : resolvedPaths) {
                     allResourcePaths.push(currPath);
                 }
             }

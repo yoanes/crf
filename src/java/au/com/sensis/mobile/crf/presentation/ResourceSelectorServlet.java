@@ -128,11 +128,11 @@ public class ResourceSelectorServlet extends HttpServletBean {
             LOGGER.debug("mappedResourcePath [" + mappedResourcePath + "].");
         }
 
-        if (mappedResourcePath.exists()) {
+        if (mappedResourcePath != null) {
             return mappedResourcePath.getNewResourcePath();
         } else {
             throw new IOException("No concrete resource found for requested path: '"
-                    + mappedResourcePath.getOriginalResourcePath() + "'");
+                    + httpServletRequestInterrogator.getRequestUri() + "'");
         }
     }
 

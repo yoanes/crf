@@ -70,7 +70,7 @@ public class MappedResourcePathBean implements MappedResourcePath {
      * @return true if the mapped path given by {@link #getNewResourcePath()}
      *         exists in {@link #getRootResourceDir()}.
      */
-    public boolean exists() {
+    protected boolean exists() {
         // TODO: possibly cache the result since we are accessing the file system?
         return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
                 getRootResourceDir(), getNewResourcePath());
@@ -100,7 +100,7 @@ public class MappedResourcePathBean implements MappedResourcePath {
      * @throws IOException
      *             Thrown if any IO error occurs during the expansion.
      */
-    public List<MappedResourcePath> existByExpansion() throws IOException {
+    public List<MappedResourcePath> resolve() throws IOException {
         if (exists()) {
             return Arrays.asList((MappedResourcePath) this);
         } else {

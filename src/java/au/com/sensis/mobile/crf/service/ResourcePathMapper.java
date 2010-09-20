@@ -15,7 +15,7 @@ public interface ResourcePathMapper {
      * @param requestedResourcePath Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
      * @param group {@link Group} to perform the path mapping for.
      * @return {@link MappedResourcePath} containing the results of the mapping. If no mapping
-     * is found, {@link NullMappedResourcePath} is returned.
+     * is found, null is returned.
      */
     MappedResourcePath mapResourcePath(String requestedResourcePath, Group group);
 

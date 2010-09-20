@@ -141,9 +141,6 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testMapResourcePathWhenNoMappingPerformed() throws Throwable {
-        final NullMappedResourcePath expectedMappedResourcePath =
-                new NullMappedResourcePath(getResourcePathTestData()
-                        .getRequestedJspResourcePath());
         final MappedResourcePath actualMappedResourcePath =
                 getObjectUnderTest()
                         .mapResourcePath(
@@ -151,8 +148,7 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                                         .getRequestedJspResourcePath(),
                                 getGroupTestData().createIPhoneGroup());
 
-        Assert.assertEquals("mappedResourcePath is wrong",
-                expectedMappedResourcePath, actualMappedResourcePath);
+        Assert.assertNull("mappedResourcePath is wrong", actualMappedResourcePath);
 
     }
 

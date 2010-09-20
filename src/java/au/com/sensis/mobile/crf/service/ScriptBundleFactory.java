@@ -20,8 +20,8 @@ public interface ScriptBundleFactory {
      *            {@link MappedResourcePath} of each file to include in the
      *            bundle.
      * @return {@link MappedResourcePath} of the bundle. If no bundle is created
-     *         (because none of the given resourcePathsToInclude exists), a
-     *         {@link NullMappedResourcePath} is returned.
+     *         (because none of the given resourcePathsToInclude exists), null
+     *         is returned.
      */
     MappedResourcePath getBundle(List<MappedResourcePath> resourcePathsToInclude);
 
