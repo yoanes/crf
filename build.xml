@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="wl-crf-component"
+<project name="wl-crf"
     xmlns:sensis="antlib:au.com.sensis.mobiles">
 
     <description>Builds the crf-component.</description>

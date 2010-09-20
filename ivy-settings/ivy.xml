@@ -22,7 +22,7 @@
   - for each separate component.
   -->
 <ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
-    <info organisation="com.sensis" module="wl-crf-component"/>
+    <info organisation="com.sensis" module="wl-crf"/>
 
     <configurations>
         <!--  
