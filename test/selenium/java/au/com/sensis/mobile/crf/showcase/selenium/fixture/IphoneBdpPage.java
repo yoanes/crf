@@ -154,8 +154,8 @@ public abstract class IphoneBdpPage extends BdpPage {
                 "default/fielddecorators/decorator2.js");
         assertScript("default/fielddecorators/decorator1.js script not found",
                 "default/fielddecorators/decorator1.js");
-        assertScript("webkit/fielddecorators/decorator3.js script not found",
-                "webkit/fielddecorators/decorator3.js");
+        assertScript("default/fielddecorators/decorator3.js script not found",
+                "default/fielddecorators/decorator3.js");
     }
 
     private void assertIphoneGridScripts() {
@@ -163,8 +163,8 @@ public abstract class IphoneBdpPage extends BdpPage {
                 "iphone-ipod/grid/grid2.js");
         assertScript("iphone-ipod/grid/grid1.js script not found",
                 "iphone-ipod/grid/grid1.js");
-        assertScript("webkit/grid/grid3.js script not found",
-                "webkit/grid/grid3.js");
+        assertScript("iphone-ipod/grid/grid3.js script not found",
+                "iphone-ipod/grid/grid3.js");
     }
 
     private void assertIphoneAnimationScripts() {
