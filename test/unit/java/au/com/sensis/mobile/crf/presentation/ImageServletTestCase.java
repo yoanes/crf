@@ -251,7 +251,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
     private void recordGetMappedResourcePath(
             final String requestedResourcePath,
-            final MappedResourcePath mappedResourcePath) {
+            final MappedResourcePath mappedResourcePath) throws IOException {
         EasyMock.expect(
                 getMockResourceSelector().getResourcePath(getMockDevice(),
                         requestedResourcePath)).andReturn(mappedResourcePath);

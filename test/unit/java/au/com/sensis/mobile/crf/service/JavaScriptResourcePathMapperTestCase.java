@@ -1,8 +1,13 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +26,9 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
-    private File resourcesRootDir;
     private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
-
+    private JavaScriptFileFinder mockJavaScriptFileFinder;
+    private FileIoFacade mockFileIoFacade;
 
     /**
      * Setup test data.
@@ -33,11 +38,24 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
      */
     @Before
     public void setUp() throws Exception {
-        setResourcesRootDir(new File(getClass().getResource("/").toURI()));
+        FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
         setObjectUnderTest(new JavaScriptResourcePathMapper(
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
+
+        // TODO: get rid of setter injection.
+        getObjectUnderTest().setPathExpander(getMockJavaScriptFileFinder());
+    }
+
+    /**
+     * Tear down test data.
+     *
+     * @throws Exception Thrown if any error occurs.
+     */
+    @After
+    public void tearDown() throws Exception {
+        FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
     }
 
     @Test
@@ -103,7 +121,8 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
     }
 
     @Test
-    public void testMapResourcePathWhenBundleRequestedAndMappingPerformed() throws Throwable {
+    public void testResolveWhenBundleRequestedAndResourcesFound()
+        throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getScriptExtensionWithLeadingDot(),
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
@@ -112,21 +131,37 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
             setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
-            final MappedResourcePath actualMappedResourcePath =
-                    getObjectUnderTest().mapResourcePath(
+            // TODO: get rid of setter injection.
+            getObjectUnderTest().setPathExpander(getMockJavaScriptFileFinder());
+
+
+            EasyMock.expect(getMockJavaScriptFileFinder().findJavaScriptFiles(
+                    getResourcePathTestData().getMappedIphoneGroupBundledScriptBundleResourcePath()
+                        .getBundleParentDirFile())).andReturn(
+                    createExistsByFilterExpectedFileFilterResults());
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                    getObjectUnderTest().resolve(
                             getResourcePathTestData()
                                     .getRequestedBundledScriptResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
-            assertComplexObjectsEqual("mappedResourcePath is wrong",
-                    getResourcePathTestData().getMappedIphoneGroupBundledScriptBundleResourcePath(),
-                        actualMappedResourcePath);
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+
+            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+                    createExistsByFilterExpectedMappedResourcePaths(),
+                        actualMappedResourcePaths);
         }
 
     }
 
     @Test
-    public void testMapResourcePathWhenBundleNotRequestedMappingPerformed() throws Throwable {
+    public void testResolveWhenBundleRequestedAndNoResourcesFound()
+        throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getScriptExtensionWithLeadingDot(),
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
@@ -135,29 +170,136 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
             setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
-            final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().mapResourcePath(
+            // TODO: get rid of setter injection.
+            getObjectUnderTest().setPathExpander(getMockJavaScriptFileFinder());
+
+
+            EasyMock.expect(getMockJavaScriptFileFinder().findJavaScriptFiles(
+                    getResourcePathTestData().getMappedIphoneGroupBundledScriptBundleResourcePath()
+                    .getBundleParentDirFile())).andReturn(
+                            new ArrayList<File>());
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData()
+                        .getRequestedBundledScriptResourcePath(),
+                        getGroupTestData().createIPhoneGroup());
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+
+            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+                    new ArrayList<MappedResourcePath>(),
+                    actualMappedResourcePaths);
+        }
+
+    }
+
+    private List<File> createExistsByFilterExpectedFileFilterResults() {
+        final File expectedFile1 =
+                getResourcePathTestData().getMappedDefaultGroupBundledScriptResourcePath1().getNewResourceFile();
+        final File expectedFile2 =
+                getResourcePathTestData().getMappedDefaultGroupBundledScriptResourcePath2().getNewResourceFile();
+        return Arrays.asList(expectedFile1, expectedFile2);
+    }
+
+    private List<MappedResourcePath> createExistsByFilterExpectedMappedResourcePaths() {
+        return Arrays.asList(
+            getResourcePathTestData()
+                    .getMappedDefaultGroupBundledScriptResourcePath1(),
+            getResourcePathTestData()
+                    .getMappedDefaultGroupBundledScriptResourcePath2());
+    }
+
+    @Test
+    public void testResolveWhenBundleNotRequestedAndResourcesFound() throws Throwable {
+        final String[] testValues = {
+                getResourcePathTestData().getScriptExtensionWithLeadingDot(),
+                getResourcePathTestData().getScriptExtensionWithLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+                    getMockResourceResolutionWarnLogger()));
+
+            recordCheckIfNewResourcePathExists(Boolean.TRUE);
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve(
                         getResourcePathTestData()
                         .getRequestedNamedScriptResourcePath(),
                         getGroupTestData().createIPhoneGroup());
 
-            assertComplexObjectsEqual("mappedResourcePath is wrong",
-                    getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath(),
-                    actualMappedResourcePath);
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+
+            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+                    Arrays.asList(getResourcePathTestData()
+                            .getMappedIphoneGroupNamedScriptResourcePath()),
+                    actualMappedResourcePaths);
         }
 
     }
 
     @Test
-    public void testMapResourcePathWhenNoMappingPerformed() throws Throwable {
-        final MappedResourcePath actualMappedResourcePath =
+    public void testResolveWhenBundleNotRequestedAndNoResourcesFound() throws Throwable {
+        final String[] testValues = {
+                getResourcePathTestData().getScriptExtensionWithLeadingDot(),
+                getResourcePathTestData().getScriptExtensionWithLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+                    getMockResourceResolutionWarnLogger()));
+
+            recordCheckIfNewResourcePathExists(Boolean.FALSE);
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData()
+                        .getRequestedNamedScriptResourcePath(),
+                        getGroupTestData().createIPhoneGroup());
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+
+            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+                    new ArrayList<MappedResourcePath>(),
+                            actualMappedResourcePaths);
+        }
+
+    }
+
+    @Test
+    public void testResolveWhenNoMappingPerformed() throws Throwable {
+        final List<MappedResourcePath> actualMappedResourcePaths =
                 getObjectUnderTest()
-                        .mapResourcePath(
+                        .resolve(
                                 getResourcePathTestData()
                                         .getRequestedJspResourcePath(),
                                 getGroupTestData().createIPhoneGroup());
 
-        Assert.assertNull("mappedResourcePath is wrong", actualMappedResourcePath);
+        Assert.assertNotNull("actualMappedResourcePaths should not be null",
+                actualMappedResourcePaths);
+        Assert.assertTrue("actualMappedResourcePaths should be empty",
+                actualMappedResourcePaths.isEmpty());
+
+    }
+
+    private void recordCheckIfNewResourcePathExists(final Boolean exists) {
+        EasyMock.expect(
+                getMockFileIoFacade().fileExists(
+                        getResourcePathTestData().getRootResourcesPath(),
+                        getResourcePathTestData()
+                                .getMappedIphoneGroupNamedScriptResourcePath()
+                                .getNewResourcePath())).andReturn(exists);
 
     }
 
@@ -193,14 +335,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
      * @return the resourcesRootDir
      */
     private File getResourcesRootDir() {
-        return resourcesRootDir;
-    }
-
-    /**
-     * @param resourcesRootDir the resourcesRootDir to set
-     */
-    private void setResourcesRootDir(final File resourcesRootDir) {
-        this.resourcesRootDir = resourcesRootDir;
+        return getResourcePathTestData().getRootResourcesPath();
     }
 
     public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
@@ -212,4 +347,20 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
         this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
     }
 
+    public JavaScriptFileFinder getMockJavaScriptFileFinder() {
+        return mockJavaScriptFileFinder;
+    }
+
+    public void setMockJavaScriptFileFinder(
+            final JavaScriptFileFinder mockJavaScriptFileFinder) {
+        this.mockJavaScriptFileFinder = mockJavaScriptFileFinder;
+    }
+
+    public FileIoFacade getMockFileIoFacade() {
+        return mockFileIoFacade;
+    }
+
+    public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
+        this.mockFileIoFacade = mockFileIoFacade;
+    }
 }

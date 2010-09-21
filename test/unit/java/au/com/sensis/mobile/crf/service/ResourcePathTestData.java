@@ -10,12 +10,19 @@ import java.net.URISyntaxException;
  */
 public class ResourcePathTestData {
 
-    public File getRootResourcesPath() {
+    private static final File ROOT_RESOURCES_DIR;
+
+    static {
         try {
-            return new File(getClass().getResource("/").toURI());
+            ROOT_RESOURCES_DIR = new File(ResourcePathTestData.class.getResource("/").toURI());
         } catch (final URISyntaxException e) {
             throw new RuntimeException("Error creating test data.");
         }
+
+    }
+
+    public File getRootResourcesPath() {
+        return ROOT_RESOURCES_DIR;
     }
 
     public String getJspResourcesRootServletPath() {
@@ -112,8 +119,8 @@ public class ResourcePathTestData {
     }
 
     public MappedResourcePath getMappedDefaultGroupNamedScriptBundleResourcePath() {
-        // TODO: should the method return the concrete JavaScriptMappedResourcePathBean?
-        return new JavaScriptMappedResourcePathBean(getRequestedNamedScriptResourcePath(),
+        // TODO: should the method return the concrete MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedNamedScriptResourcePath(),
                 "default/common/bundle/main.js", getRootResourcesPath());
     }
 
@@ -123,8 +130,8 @@ public class ResourcePathTestData {
     }
 
     public MappedResourcePath getMappedDefaultGroupBundledScriptBundleResourcePath() {
-        // TODO: should the method return the concrete JavaScriptMappedResourcePathBean?
-        return new JavaScriptMappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+        // TODO: should the method return the concrete MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
                 "default/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
@@ -158,8 +165,8 @@ public class ResourcePathTestData {
     }
 
     public MappedResourcePath getMappedIphoneGroupNamedScriptResourcePath() {
-        // TODO: should the method return the concrete JavaScriptMappedResourcePathBean?
-        return new JavaScriptMappedResourcePathBean(getRequestedNamedScriptResourcePath(),
+        // TODO: should the method return the concrete MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedNamedScriptResourcePath(),
                 "iPhone/common/main.js", getRootResourcesPath());
     }
 
@@ -180,8 +187,8 @@ public class ResourcePathTestData {
     }
 
     public MappedResourcePath getMappedIphoneGroupBundledScriptBundleResourcePath() {
-        // TODO: should the method return the concrete JavaScriptMappedResourcePathBean?
-        return new JavaScriptMappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+        // TODO: should the method return the concrete MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
                 "iPhone/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 

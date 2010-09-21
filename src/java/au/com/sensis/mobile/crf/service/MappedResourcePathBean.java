@@ -77,18 +77,6 @@ public class MappedResourcePathBean implements MappedResourcePath {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public MappedResourcePath resolveToSingle() {
-        if (exists()) {
-            return this;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Returns a list of {@link MappedResourcePath}s that exist in
      * {@link #getRootResourceDir()} based on this {@link MappedResourcePath}s
      * path expasion algorithm.

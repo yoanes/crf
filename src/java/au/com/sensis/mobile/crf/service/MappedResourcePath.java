@@ -20,15 +20,6 @@ public interface MappedResourcePath {
     String BUNDLE_DIR_NAME = "bundle";
 
     /**
-     * Resolves the requested path to a single {@link MappedResourcePath}.
-     *
-     * @return the requested path as a single {@link MappedResourcePath}.
-     */
-    // TODO: this is the start of decomposing MappedResourcePath into a GroupResourceResolver
-    // and a Resource.
-    MappedResourcePath resolveToSingle();
-
-    /**
      * Returns a list of {@link MappedResourcePath}s that exist in
      * {@link #getRootResourceDir()} based on expanding this
      * {@link MappedResourcePath}'s path.

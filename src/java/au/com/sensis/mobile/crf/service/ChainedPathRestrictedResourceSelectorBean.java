@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,10 +65,11 @@ public class ChainedPathRestrictedResourceSelectorBean
 
     /**
      * {@inheritDoc}
+     * @throws IOException
      */
     @Override
     public List<MappedResourcePath> getAllResourcePaths(final Device device,
-            final String requestedResourcePath) {
+            final String requestedResourcePath) throws IOException {
 
         for (final PathRestrictedResourceSelector resourceSelector
                 : getPathRestrictedResourceSelectors()) {
@@ -87,10 +89,11 @@ public class ChainedPathRestrictedResourceSelectorBean
 
     /**
      * {@inheritDoc}
+     * @throws IOException
      */
     @Override
     public MappedResourcePath getResourcePath(final Device device,
-            final String requestedResourcePath) {
+            final String requestedResourcePath) throws IOException {
 
         for (final PathRestrictedResourceSelector resourceSelector
                 : getPathRestrictedResourceSelectors()) {

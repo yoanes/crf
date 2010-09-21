@@ -1,5 +1,8 @@
 package au.com.sensis.mobile.crf.service;
 
+import java.io.IOException;
+import java.util.List;
+
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
@@ -10,13 +13,18 @@ import au.com.sensis.mobile.crf.config.Group;
 public interface ResourcePathMapper {
 
     /**
-     * Maps a requested resource path to a path that corresponds to the given {@link Group}.
+     * Maps a requested resource path to a path that corresponds to the given
+     * {@link Group}.
      *
-     * @param requestedResourcePath Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
-     * @param group {@link Group} to perform the path mapping for.
-     * @return {@link MappedResourcePath} containing the results of the mapping. If no mapping
-     * is found, null is returned.
+     * @param requestedResourcePath
+     *            Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
+     * @param group
+     *            {@link Group} to perform the path mapping for.
+     * @return List of {@link MappedResourcePath} containing the results. If
+     *         resources can be resolved, an empty list is returned. May not be
+     *         null.
+     * @throws IOException Thrown if an IO error occurs.
      */
-    MappedResourcePath mapResourcePath(String requestedResourcePath, Group group);
+    List<MappedResourcePath> resolve(String requestedResourcePath, Group group) throws IOException;
 
 }

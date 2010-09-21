@@ -24,9 +24,6 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private FileIoFacade mockFileIoFacade;
 
-    public MappedResourcePathBeanTestCase() {
-    }
-
     /**
      * Setup test data.
      *
@@ -93,44 +90,6 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
                                 + "'", e.getMessage());
             }
         }
-    }
-
-    @Test
-    public void testResolveToSingleWhenFound() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
-                getResourcePathTestData().getMappedIphoneGroupResourcePath();
-        setObjectUnderTest(mappedResourcePath);
-
-        EasyMock.expect(
-                getMockFileIoFacade().fileExists(
-                        getResourcePathTestData().getRootResourcesPath(),
-                        mappedResourcePath.getNewResourcePath())).andReturn(
-                Boolean.TRUE);
-
-        replay();
-
-        Assert.assertEquals("resolveToSingle() should return 'this'", getObjectUnderTest(),
-                getObjectUnderTest().resolveToSingle());
-
-    }
-
-    @Test
-    public void testResolveToSingleWhenNotFound() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
-                getResourcePathTestData().getMappedIphoneGroupResourcePath();
-        setObjectUnderTest(mappedResourcePath);
-
-        EasyMock.expect(
-                getMockFileIoFacade().fileExists(
-                        getResourcePathTestData().getRootResourcesPath(),
-                        mappedResourcePath.getNewResourcePath())).andReturn(
-                Boolean.FALSE);
-
-        replay();
-
-        Assert.assertNull("resolveToSingle() should be null", getObjectUnderTest()
-                .resolveToSingle());
-
     }
 
     @Test

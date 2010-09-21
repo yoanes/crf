@@ -1,8 +1,11 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,12 +20,15 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
  */
 public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
 
+    private static final String[] FILE_EXTENSION_WILDCARDS = new String[] { "*" };
+
     private ImageResourcePathMapper objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
     private File resourcesRootDir;
     private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
+    private FileIoFacade mockFileIoFacade;
 
 
     /**
@@ -33,6 +39,8 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
+        FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
+
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
         setObjectUnderTest(new ImageResourcePathMapper(
@@ -103,7 +111,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testMapResourcePathWhenMappingPerformed() throws Throwable {
+    public void testMapResourcePathWhenMappingPerformedAndResourceExists() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
@@ -112,29 +120,100 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
             setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
-            final MappedResourcePath actualMappedResourcePath =
-                    getObjectUnderTest().mapResourcePath(
+            recordListFilesByExtension(
+                new File[] { getMappedIphoneGroupPngImageResourcePath().getNewResourceFile() });
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                    getObjectUnderTest().resolve(
                             getResourcePathTestData()
                                     .getRequestedImageResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
-            assertComplexObjectsEqual("mappedResourcePath is wrong",
-                    getResourcePathTestData().getMappedIphoneGroupImageResourcePath(),
-                        actualMappedResourcePath);
+            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+                    Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
+                        actualMappedResourcePaths);
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
         }
 
     }
 
     @Test
+    public void testMapResourcePathWhenMappingPerformedAndResourceDoesNotExist()
+        throws Throwable {
+
+        final String[] testValues = {
+                getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
+                getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir(),
+                    getMockResourceResolutionWarnLogger()));
+
+            recordListFilesByExtension(new File[] {});
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData()
+                        .getRequestedImageResourcePath(),
+                        getGroupTestData().createIPhoneGroup());
+
+            Assert.assertNotNull("actualMappedResourcePaths should not be null",
+                    actualMappedResourcePaths);
+            Assert.assertTrue("actualMappedResourcePaths should be empty",
+                    actualMappedResourcePaths.isEmpty());
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+        }
+
+    }
+
+    private void recordListFilesByExtension(final File[] files) {
+        EasyMock.expect(
+                getMockFileIoFacade().list(
+                        EasyMock.eq(getRootResourcesDir()),
+                        EasyMock.eq(getMappedIphoneGroupImageResourcePath()
+                                .getNewResourcePath()),
+                        EasyMock.aryEq(FILE_EXTENSION_WILDCARDS))).andReturn(
+                files);
+
+    }
+
+    private MappedResourcePath getMappedIphoneGroupImageResourcePath() {
+        return getResourcePathTestData()
+        .getMappedIphoneGroupImageResourcePath();
+    }
+
+    private MappedResourcePath getMappedIphoneGroupPngImageResourcePath() {
+        return getResourcePathTestData()
+                .getMappedIphoneGroupPngImageResourcePath();
+    }
+
+    private File getRootResourcesDir() {
+        return getResourcePathTestData().getRootResourcesPath();
+    }
+
+    @Test
     public void testMapResourcePathWhenNoMappingPerformed() throws Throwable {
-        final MappedResourcePath actualMappedResourcePath =
+        final List<MappedResourcePath> actualMappedResourcePaths =
                 getObjectUnderTest()
-                        .mapResourcePath(
+                        .resolve(
                                 getResourcePathTestData()
                                         .getRequestedImageResourcePath(),
                                 getGroupTestData().createIPhoneGroup());
 
-        Assert.assertNull("mappedResourcePath is wrong", actualMappedResourcePath);
+        Assert.assertNotNull("actualMappedResourcePaths should not be null",
+                actualMappedResourcePaths);
+        Assert.assertTrue("actualMappedResourcePaths should be empty",
+                actualMappedResourcePaths.isEmpty());
 
     }
 
@@ -188,4 +267,14 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
             final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
         this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
     }
+
+    public FileIoFacade getMockFileIoFacade() {
+        return mockFileIoFacade;
+    }
+
+    public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
+        this.mockFileIoFacade = mockFileIoFacade;
+    }
+
+
 }

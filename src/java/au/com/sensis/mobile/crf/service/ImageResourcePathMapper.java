@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
  * paths. Note that the generated path will not have an extension given that
  * there is a multitude of possible image formats. The
  * {@link MappedResourcePath} returned by
- * {@link AbstractResourcePathMapper#mapResourcePath(String, au.com.sensis.mobile.crf.config.Group)}
+ * {@link AbstractResourcePathMapper#resolve(String, au.com.sensis.mobile.crf.config.Group)}
  * can be consulted to resolve the new path to actual files.
  *
  * @author Adrian.Koh2@sensis.com.au

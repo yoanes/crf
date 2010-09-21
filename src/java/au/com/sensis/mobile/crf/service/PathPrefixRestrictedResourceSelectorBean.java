@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,10 +55,11 @@ public class PathPrefixRestrictedResourceSelectorBean
      * constructor. Else an empty {@link List} is returned.
      *
      * {@inheritDoc}
+     * @throws IOException
      */
     @Override
     public List<MappedResourcePath> getAllResourcePaths(final Device device,
-            final String requestedResourcePath) {
+            final String requestedResourcePath) throws IOException {
 
         if (isInterestedIn(requestedResourcePath)) {
             debugLogInterest(requestedResourcePath);
@@ -78,10 +80,11 @@ public class PathPrefixRestrictedResourceSelectorBean
      * constructor. Else null is returned.
      *
      * {@inheritDoc}
+     * @throws IOException
      */
     @Override
     public MappedResourcePath getResourcePath(final Device device,
-            final String requestedResourcePath) {
+            final String requestedResourcePath) throws IOException {
 
         if (isInterestedIn(requestedResourcePath)) {
             debugLogInterest(requestedResourcePath);

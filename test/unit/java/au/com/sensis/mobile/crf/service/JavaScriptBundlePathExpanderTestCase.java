@@ -65,7 +65,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
     }
 
     @Test
-    public void testExpandPathWhenMappedResourcePathIsForABundle()
+    public void testFindJavaScriptFiles()
             throws Throwable {
 
         final TestData[] testData = getTestDataWhenMappedResourcePathIsForABundle();
@@ -100,7 +100,8 @@ public class JavaScriptBundlePathExpanderTestCase extends
             replay();
 
             final List<File> actualFiles =
-                    getObjectUnderTest().expandPath(mappedResourcePath);
+                    getObjectUnderTest().findJavaScriptFiles(
+                            mappedResourcePath.getBundleParentDirFile());
             assertComplexObjectsEqual(
                     "Incorrect files returned for testData at index " + i
                             + ": " + testData[i], testData[i].getExpectedResult(), actualFiles);
@@ -114,7 +115,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
     }
 
     @Test
-    public void testExpandPathWhenMappedResourcePathIsForABundleAndOrderPropertyMalformed()
+    public void testFindJavaScriptFilesWhenOrderPropertyMalformed()
             throws Throwable {
 
         final String[] testOrderPropertyValues =
@@ -139,7 +140,8 @@ public class JavaScriptBundlePathExpanderTestCase extends
             replay();
 
             try {
-                getObjectUnderTest().expandPath(mappedResourcePath);
+                getObjectUnderTest().findJavaScriptFiles(
+                        mappedResourcePath.getBundleParentDirFile());
 
                 Assert
                         .fail("ConfigurationRuntimeException expected for testValue: '"
@@ -167,7 +169,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
     }
 
     @Test
-    public void testExpandPathWhenMappedResourcePathIsForABundleAndPropertiesLoaderThrowsException()
+    public void testFindJavaScriptFilesWhenPropertiesLoaderThrowsException()
             throws Throwable {
 
         final MappedResourcePath mappedResourcePath =
@@ -184,7 +186,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
         replay();
 
         try {
-            getObjectUnderTest().expandPath(mappedResourcePath);
+            getObjectUnderTest().findJavaScriptFiles(mappedResourcePath.getBundleParentDirFile());
 
             Assert.fail("IOException expected");
         } catch (final IOException e) {
@@ -192,22 +194,22 @@ public class JavaScriptBundlePathExpanderTestCase extends
         }
     }
 
-    @Test
-    public void testExpandPathWhenMappedResourcePathIsNotForABundle()
-            throws Throwable {
-        final MappedResourcePath mappedResourcePath =
-                getResourcePathTestData()
-                        .getMappedDefaultGroupNamedScriptResourcePath();
-
-        final List<File> expectedFiles =
-                Arrays.asList(new File(mappedResourcePath.getRootResourceDir(),
-                        mappedResourcePath.getNewResourcePath()));
-        final List<File> actualFiles =
-                getObjectUnderTest().expandPath(mappedResourcePath);
-        assertComplexObjectsEqual(
-                "Incorrect files returned ", expectedFiles, actualFiles);
-
-    }
+//    @Test
+//    public void testExpandPathWhenMappedResourcePathIsNotForABundle()
+//            throws Throwable {
+//        final MappedResourcePath mappedResourcePath =
+//                getResourcePathTestData()
+//                        .getMappedDefaultGroupNamedScriptResourcePath();
+//
+//        final List<File> expectedFiles =
+//                Arrays.asList(new File(mappedResourcePath.getRootResourceDir(),
+//                        mappedResourcePath.getNewResourcePath()));
+//        final List<File> actualFiles =
+//                getObjectUnderTest().findJavaScriptFiles(mappedResourcePath);
+//        assertComplexObjectsEqual(
+//                "Incorrect files returned ", expectedFiles, actualFiles);
+//
+//    }
 
     private JavaScriptBundlePathExpander getObjectUnderTest() {
         return objectUnderTest;

@@ -1,5 +1,7 @@
 package au.com.sensis.mobile.crf.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -52,17 +54,18 @@ public class ChainedResourcePathMapper implements ResourcePathMapper {
      * {@inheritDoc}
      */
     @Override
-    public MappedResourcePath mapResourcePath(
-            final String requestedResourcePath, final Group group) {
+    public List<MappedResourcePath> resolve(
+            final String requestedResourcePath, final Group group) throws IOException {
         for (final ResourcePathMapper resourcePathMapper : getResourcePathMappers()) {
-            final MappedResourcePath mappedResourcePath =
-                    resourcePathMapper.mapResourcePath(requestedResourcePath,
-                            group);
-            if (mappedResourcePath != null) {
-                return mappedResourcePath;
+            // TODO: needs to check if resourcePathMapper is interested instead of checking
+            // foundResourcePaths.isEmpty?.
+            final List<MappedResourcePath> foundResourcePaths
+                = resourcePathMapper.resolve(requestedResourcePath, group);
+            if (!foundResourcePaths.isEmpty()) {
+                return foundResourcePaths;
             }
         }
-        return null;
+        return new ArrayList<MappedResourcePath>();
     }
 
 

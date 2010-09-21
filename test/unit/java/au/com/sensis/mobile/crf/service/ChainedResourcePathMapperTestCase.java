@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.log4j.Level;
 import org.easymock.EasyMock;
@@ -74,47 +75,49 @@ public class ChainedResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testMapResourcePathWhenFound() throws Throwable {
 
-        EasyMock.expect(getMockRsourcePathMapper1().mapResourcePath(
+        EasyMock.expect(getMockRsourcePathMapper1().resolve(
                 getRequestedPath(), getGroup()))
-                .andReturn(null);
+                .andReturn(new ArrayList<MappedResourcePath>());
 
-        EasyMock.expect(getMockRsourcePathMapper2().mapResourcePath(
+        EasyMock.expect(getMockRsourcePathMapper2().resolve(
                 getRequestedPath(), getGroup()))
-                .andReturn(getExpectedMappedResourcePath());
+                .andReturn(getExpectedMappedResourcePaths());
 
         replay();
 
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().mapResourcePath(getRequestedPath(),
+        final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve(getRequestedPath(),
                         getGroup());
 
         Assert.assertEquals("actualMappedResourcePath is wrong",
-                getExpectedMappedResourcePath(), actualMappedResourcePath);
+                getExpectedMappedResourcePaths(), actualMappedResourcePaths);
     }
 
     @Test
     public void testMapResourcePathWhenNotFound() throws Throwable {
 
         EasyMock.expect(
-                getMockRsourcePathMapper1().mapResourcePath(getRequestedPath(),
-                        getGroup())).andReturn(null);
+                getMockRsourcePathMapper1().resolve(getRequestedPath(),
+                        getGroup())).andReturn(new ArrayList<MappedResourcePath>());
 
         EasyMock.expect(
-                getMockRsourcePathMapper2().mapResourcePath(getRequestedPath(),
-                        getGroup())).andReturn(null);
+                getMockRsourcePathMapper2().resolve(getRequestedPath(),
+                        getGroup())).andReturn(new ArrayList<MappedResourcePath>());
 
         replay();
 
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().mapResourcePath(getRequestedPath(),
+        final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve(getRequestedPath(),
                         getGroup());
 
-        Assert.assertNull("actualMappedResourcePath is wrong",
-                actualMappedResourcePath);
+        Assert.assertNotNull("actualMappedResourcePath should not be null",
+                actualMappedResourcePaths);
+        Assert.assertTrue("actualMappedResourcePath should not be empty",
+                actualMappedResourcePaths.isEmpty());
     }
 
-    private MappedResourcePath getExpectedMappedResourcePath() {
-        return getResourcePathTestData().getMappedIphoneGroupResourcePath();
+    private List<MappedResourcePath> getExpectedMappedResourcePaths() {
+        return Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath());
     }
 
     private Group getGroup() {

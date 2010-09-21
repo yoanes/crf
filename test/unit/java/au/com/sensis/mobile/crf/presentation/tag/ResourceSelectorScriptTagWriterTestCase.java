@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,7 +157,7 @@ public class ResourceSelectorScriptTagWriterTestCase extends
     }
 
     private void recordGetMappedResourcePath(
-            final List<MappedResourcePath> expectedMappedResourcePaths) {
+            final List<MappedResourcePath> expectedMappedResourcePaths) throws IOException {
         EasyMock.expect(
                 getMockResourceSelector()
                         .getAllResourcePaths(getMockDevice(),

@@ -1,8 +1,12 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +26,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
     private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
+    private FileIoFacade mockFileIoFacade;
 
     /**
      * Setup test data.
@@ -31,11 +36,23 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
+        FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
+
         setObjectUnderTest(new JspResourcePathMapper(
                 getResourcePathTestData().getJspResourcesRootServletPath(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcesRootDir(),
                 getMockResourceResolutionWarnLogger()));
+    }
+
+    /**
+     * Tear down test data.
+     *
+     * @throws Exception Thrown if any error occurs.
+     */
+    @After
+    public void tearDown() throws Exception {
+        FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
     }
 
     @Test
@@ -131,7 +148,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testMapResourcePathWhenMappingPerformed() throws Throwable {
+    public void testMapResourcePathWhenMappingPerformedAndResourceExists() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getCrfExtensionWithLeadingDot()
@@ -142,30 +159,84 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                     getResourcePathTestData().getJspResourcesRootServletPath(),
                     testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
 
-            final MappedResourcePath actualMappedResourcePath =
-                    getObjectUnderTest().mapResourcePath(
+            recordCheckIfNewResourcePathExists(Boolean.TRUE);
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                    getObjectUnderTest().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
-            Assert.assertEquals("mappedResourcePath is wrong",
-                    getResourcePathTestData().getMappedIphoneGroupResourcePath(),
-                    actualMappedResourcePath);
+            Assert.assertEquals("actualMappedResourcePaths is wrong",
+                    Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath()),
+                    actualMappedResourcePaths);
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
         }
 
     }
 
     @Test
+    public void testMapResourcePathWhenMappingPerformedAndResourceDoesNotExist()
+        throws Throwable {
+        final String[] testValues = {
+                getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
+                getResourcePathTestData().getCrfExtensionWithLeadingDot()
+        };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(new JspResourcePathMapper(
+                    getResourcePathTestData().getJspResourcesRootServletPath(),
+                    testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
+
+            recordCheckIfNewResourcePathExists(Boolean.FALSE);
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData()
+                        .getRequestedJspResourcePath(),
+                        getGroupTestData().createIPhoneGroup());
+
+            Assert.assertNotNull("actualMappedResourcePaths should not be null",
+                    actualMappedResourcePaths);
+            Assert.assertTrue("actualMappedResourcePaths should be empty",
+                    actualMappedResourcePaths.isEmpty());
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+        }
+
+    }
+
+    private void recordCheckIfNewResourcePathExists(final Boolean exists) {
+        EasyMock.expect(
+                getMockFileIoFacade().fileExists(
+                        getResourcePathTestData().getRootResourcesPath(),
+                        getResourcePathTestData()
+                                .getMappedIphoneGroupResourcePath()
+                                .getNewResourcePath())).andReturn(exists);
+
+    }
+    @Test
     public void testMapResourcePathWhenNoMappingPerformed() throws Throwable {
-        final MappedResourcePath actualMappedResourcePath =
+        final List<MappedResourcePath> actualMappedResourcePaths =
                 getObjectUnderTest()
-                        .mapResourcePath(
+                        .resolve(
                                 getResourcePathTestData()
                                         .getRequestedCssResourcePath(),
                                 getGroupTestData().createIPhoneGroup());
 
-        Assert.assertNull("mappedResourcePath is wrong", actualMappedResourcePath);
-
+        Assert.assertNotNull("actualMappedResourcePaths should not be null",
+                actualMappedResourcePaths);
+        Assert.assertTrue("actualMappedResourcePaths should be empty",
+                actualMappedResourcePaths.isEmpty());
     }
 
     /**
@@ -211,5 +282,13 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     public void setMockResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
         this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
+    }
+
+    public FileIoFacade getMockFileIoFacade() {
+        return mockFileIoFacade;
+    }
+
+    public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
+        this.mockFileIoFacade = mockFileIoFacade;
     }
 }

@@ -1,6 +1,8 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.easymock.EasyMock;
@@ -47,7 +49,7 @@ public class ImageMappedResourcePathBeanTestCase extends AbstractJUnit4TestCase 
     }
 
     @Test
-    public void testResolveToSingleWhenSingleResourceFound() throws Throwable {
+    public void testResolveWhenSingleResourceFound() throws Throwable {
         setObjectUnderTest((ImageMappedResourcePathBean) getResourcePathTestData()
                 .getMappedIphoneGroupImageResourcePath());
         getObjectUnderTest().setResourceResolutionWarnLogger(getMockResolutionWarnLogger());
@@ -59,11 +61,11 @@ public class ImageMappedResourcePathBeanTestCase extends AbstractJUnit4TestCase 
                 getSingleMatchedPngImageArray());
         replay();
 
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().resolveToSingle();
+        final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve();
 
         assertComplexObjectsEqual("actualMappedResourcePath is wrong",
-                getMappedPngImageResourcePath(), actualMappedResourcePath);
+                Arrays.asList(getMappedPngImageResourcePath()), actualMappedResourcePaths);
     }
 
     private File[] getSingleMatchedPngImageArray() {
@@ -98,11 +100,11 @@ public class ImageMappedResourcePathBeanTestCase extends AbstractJUnit4TestCase 
 
         replay();
 
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().resolveToSingle();
+        final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve();
 
         assertComplexObjectsEqual("actualMappedResourcePath is wrong",
-                getMappedPngImageResourcePath(), actualMappedResourcePath);
+                Arrays.asList(getMappedPngImageResourcePath()), actualMappedResourcePaths);
     }
 
     private File[] getMultipleMatchedPngImageArray() {
@@ -146,11 +148,13 @@ public class ImageMappedResourcePathBeanTestCase extends AbstractJUnit4TestCase 
 
         replay();
 
-        final MappedResourcePath actualMappedResourcePath =
-                getObjectUnderTest().resolveToSingle();
+        final List<MappedResourcePath> actualMappedResourcePaths =
+                getObjectUnderTest().resolve();
 
-        Assert.assertNull("actualMappedResourcePath is wrong",
-                actualMappedResourcePath);
+        Assert.assertNotNull("actualMappedResourcePaths should not be null",
+                actualMappedResourcePaths);
+        Assert.assertTrue("actualMappedResourcePaths should be empty",
+                actualMappedResourcePaths.isEmpty());
     }
 
     private ImageMappedResourcePathBean getObjectUnderTest() {

@@ -11,10 +11,9 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 
 import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
-import au.com.sensis.mobile.crf.service.JavaScriptMappedResourcePathBean.PathExpander;
 
 /**
- * {@link PathExpander} for returning all JavaScript files for
+ * {@link JavaScriptFileFinder} for returning all JavaScript files for
  * a {@link MappedResourcePath} that corresponds to a JavaScript bundle.
  *
  * @author Adrian.Koh2@sensis.com.au
@@ -22,7 +21,7 @@ import au.com.sensis.mobile.crf.service.JavaScriptMappedResourcePathBean.PathExp
  */
 // TODO: will be merged into JavaScriptGroupResourceResolver (once JavaScriptMappedResourcePathBean
 // is split into two. See comments in MappedResourcePath).
-public class JavaScriptBundlePathExpander implements PathExpander {
+public class JavaScriptBundlePathExpander implements JavaScriptFileFinder {
 
     private static final String ORDER_PROPERTY_SPLIT_CHAR = ",";
 
@@ -62,46 +61,38 @@ public class JavaScriptBundlePathExpander implements PathExpander {
      * Bundle expansion occurs by finding all files in
      * {@link MappedResourcePath#getBundleParentDirFile()} that match the
      * {@link #getBundleOrderPropertyName()} property found in the
-     * {@link #getBundlesPropertiesFileName()} properties file. If no such property
-     * is found or no such file is found, then the order defaults to
-     * {@link #ORDER_PROPERTY_DEFAULT_VALUE}. This default relies on the JVM/platform
-     * default for file ordering.
+     * {@link #getBundlesPropertiesFileName()} properties file. If no such
+     * property is found or no such file is found, then the order defaults to
+     * {@link #ORDER_PROPERTY_DEFAULT_VALUE}. This default relies on the
+     * JVM/platform default for file ordering.
      * </p>
      *
+     * @return May not be null.
      * {@inheritDoc}
      */
     @Override
-    public List<File> expandPath(final MappedResourcePath mappedResourcePath)
-        throws IOException {
-        if (mappedResourcePath.isBundlePath()) {
-            return expandBundlePath(mappedResourcePath);
-        } else {
-            return Arrays.asList(mappedResourcePath.getNewResourceFile());
-        }
-    }
-
-    private List<File> expandBundlePath(final MappedResourcePath mappedResourcePath)
-            throws IOException {
-
-        final String bundleOrderProperty =
-                getBundleOrderProperty(mappedResourcePath);
+    public List<File> findJavaScriptFiles(final File dir) throws IOException {
+        final String bundleOrderProperty = getBundleOrderProperty(dir);
 
         final LinkedHashSet<File> foundFilesSet = new LinkedHashSet<File>();
         for (final String wildcard : createWildcards(bundleOrderProperty)) {
-            // We treat each wildcard separately because the order of returned files
+            // We treat each wildcard separately because the order of returned
+            // files
             // is significant.
-            final File [] foundFiles = getFileIoFacade().list(
-                    mappedResourcePath.getBundleParentDirFile(),
-                    new String [] {wildcard.trim()});
+            final File[] foundFiles =
+                    getFileIoFacade().list(dir,
+                            new String[] { wildcard.trim() });
             foundFilesSet.addAll(Arrays.asList(foundFiles));
 
         }
         return new ArrayList<File>(foundFilesSet);
+
     }
 
+
     private String getBundleOrderProperty(
-            final MappedResourcePath mappedResourcePath) throws IOException {
-        return loadBundlesPropertiesWithDefaults(mappedResourcePath).getProperty(
+            final File dir) throws IOException {
+        return loadBundlesPropertiesWithDefaults(dir).getProperty(
                 getBundleOrderPropertyName());
     }
 
@@ -115,10 +106,10 @@ public class JavaScriptBundlePathExpander implements PathExpander {
     }
 
     private Properties loadBundlesPropertiesWithDefaults(
-            final MappedResourcePath mappedResourcePath) throws IOException {
+            final File dir) throws IOException {
 
         final File bundlePropertiesFile =
-                createBundlePropertiesFile(mappedResourcePath);
+                createBundlePropertiesFile(dir);
         final Properties properties =
                 getPropertiesLoader().loadPropertiesNotNull(
                         bundlePropertiesFile);
@@ -166,10 +157,8 @@ public class JavaScriptBundlePathExpander implements PathExpander {
                 ORDER_PROPERTY_DEFAULT_VALUE);
     }
 
-    private File createBundlePropertiesFile(
-            final MappedResourcePath mappedResourcePath) {
-        return new File(mappedResourcePath.getBundleParentDirFile(),
-                getBundlesPropertiesFileName());
+    private File createBundlePropertiesFile(final File dir) {
+        return new File(dir, getBundlesPropertiesFileName());
     }
 
     private PropertiesLoader getPropertiesLoader() {

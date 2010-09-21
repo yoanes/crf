@@ -143,7 +143,7 @@ public class ResourceSelectorLinkTagWriter implements ResourceSelectorTagWriter 
         return getCollaboratorsMemento().getResourceResolutionWarnLogger();
     }
 
-    private List<MappedResourcePath> getAllResourcePaths() {
+    private List<MappedResourcePath> getAllResourcePaths() throws IOException {
         final List<MappedResourcePath> allResourcePaths =
                 getResourceSelector().getAllResourcePaths(getDevice(),
                         getHref());

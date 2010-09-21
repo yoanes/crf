@@ -154,135 +154,164 @@ public class ResourceSelectorBeanTestCase extends
     }
 
 
-    private void recordCheckIfIphoneGroupHasSingleResource(final Boolean fileExists) {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createIPhoneGroup()))
-                        .andReturn(getMockIphoneMappedResourcePath1());
+    private void recordCheckIfIphoneGroupHasSingleResource(final Boolean fileExists)
+        throws IOException {
+        final List<MappedResourcePath> mapperResults
+            = Arrays.asList(getMockIphoneMappedResourcePath1());
 
         if (fileExists) {
-            EasyMock.expect(getMockIphoneMappedResourcePath1().resolveToSingle())
-                .andReturn(getMockIphoneMappedResourcePath1());
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData().getRequestedJspResourcePath(),
+                            getGroupTestData().createIPhoneGroup()))
+                            .andReturn(mapperResults);
         } else {
-            EasyMock.expect(getMockIphoneMappedResourcePath1().resolveToSingle())
-                .andReturn(null);
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData().getRequestedJspResourcePath(),
+                            getGroupTestData().createIPhoneGroup()))
+                            .andReturn(new ArrayList<MappedResourcePath>());
         }
-
     }
 
     private void recordCheckIfIphoneGroupHasResource(final Boolean fileExists)
-        throws IOException {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createIPhoneGroup()))
-                .andReturn(getMockIphoneMappedResourcePath1());
+            throws IOException {
+        final List<MappedResourcePath> mapperResults =
+                Arrays.asList(getMockIphoneMappedResourcePath1(),
+                        getMockIphoneMappedResourcePath2());
 
         if (fileExists) {
-            EasyMock.expect(getMockIphoneMappedResourcePath1().resolve()).andReturn(
-                    Arrays.asList(getMockIphoneMappedResourcePath1(),
-                            getMockIphoneMappedResourcePath2()));
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createIPhoneGroup())).andReturn(
+                    mapperResults);
         } else {
-            EasyMock.expect(getMockIphoneMappedResourcePath1().resolve()).andReturn(
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createIPhoneGroup())).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
 
     }
 
     private void recordCheckIfAppleGroupHasResource(final Boolean fileExists)
-        throws IOException {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createAppleGroup()))
-                        .andReturn(getMockAppleMappedResourcePath1());
+            throws IOException {
+        final List<MappedResourcePath> mapperResults =
+                Arrays.asList(getMockAppleMappedResourcePath1(),
+                        getMockAppleMappedResourcePath2());
 
         if (fileExists) {
-            EasyMock.expect(getMockAppleMappedResourcePath1().resolve()).andReturn(
-                    Arrays.asList(getMockAppleMappedResourcePath1(),
-                            getMockAppleMappedResourcePath2()));
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createAppleGroup())).andReturn(
+                    mapperResults);
         } else {
-            EasyMock.expect(getMockAppleMappedResourcePath1().resolve()).andReturn(
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createAppleGroup())).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
     }
 
     private void recordCheckIfHD800GroupHasResource(final Boolean fileExists)
-        throws IOException {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createHD800Group()))
-                        .andReturn(getMockHD800MappedResourcePath1());
+            throws IOException {
+        final List<MappedResourcePath> mapperResults =
+                Arrays.asList(getMockHD800MappedResourcePath1(),
+                        getMockHD800MappedResourcePath2());
 
         if (fileExists) {
-            EasyMock.expect(getMockHD800MappedResourcePath1().resolve()).andReturn(
-                    Arrays.asList(getMockHD800MappedResourcePath1(),
-                            getMockHD800MappedResourcePath2()));
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createHD800Group())).andReturn(
+                    mapperResults);
         } else {
-            EasyMock.expect(getMockHD800MappedResourcePath1().resolve()).andReturn(
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createHD800Group())).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
 
     }
 
     private void recordCheckIfMediumGroupHasResource(final Boolean fileExists)
-        throws IOException {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createMediumGroup()))
-                        .andReturn(getMockMediumMappedResourcePath1());
+            throws IOException {
+        final List<MappedResourcePath> mapperResults =
+                Arrays.asList(getMockMediumMappedResourcePath1(),
+                        getMockMediumMappedResourcePath2());
 
         if (fileExists) {
-            EasyMock.expect(getMockMediumMappedResourcePath1().resolve()).andReturn(
-                    Arrays.asList(getMockMediumMappedResourcePath1(),
-                            getMockMediumMappedResourcePath2()));
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createMediumGroup())).andReturn(
+                    mapperResults);
         } else {
-            EasyMock.expect(getMockMediumMappedResourcePath1().resolve()).andReturn(
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createMediumGroup())).andReturn(
                     new ArrayList<MappedResourcePath>());
         }
 
     }
 
     private void recordCheckIfAndroidGroupHasResource(final Boolean fileExists)
-        throws IOException {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createAndroidGroup()))
-                        .andReturn(getMockAndroidMappedResourcePath1());
+            throws IOException {
+        final List<MappedResourcePath> mapperResults =
+                Arrays.asList(getMockAndroidMappedResourcePath1(),
+                        getMockAndroidMappedResourcePath2());
 
         if (fileExists) {
-            EasyMock.expect(getMockAndroidMappedResourcePath1().resolve()).andReturn(
-                    Arrays.asList(getMockAndroidMappedResourcePath1(),
-                            getMockAndroidMappedResourcePath2()));
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createAndroidGroup()))
+                    .andReturn(mapperResults);
         } else {
-            EasyMock.expect(getMockAndroidMappedResourcePath1().resolve()).andReturn(
-                    new ArrayList<MappedResourcePath>());
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createAndroidGroup()))
+                    .andReturn(new ArrayList<MappedResourcePath>());
         }
 
     }
 
     private void recordCheckIfAndroidGroupHasSingleResource(
-            final Boolean fileExists) {
-        EasyMock.expect(
-                getMockResourcePathMapper()
-                        .mapResourcePath(
-                                getResourcePathTestData()
-                                        .getRequestedJspResourcePath(),
-                                getGroupTestData().createAndroidGroup()))
-                .andReturn(getMockAndroidMappedResourcePath1());
+            final Boolean fileExists) throws IOException {
+        final List<MappedResourcePath> mapperResults =
+                Arrays.asList(getMockAndroidMappedResourcePath1());
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockAndroidMappedResourcePath1().resolveToSingle())
-                        .andReturn(getMockAndroidMappedResourcePath1());
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createAndroidGroup()))
+                    .andReturn(mapperResults);
         } else {
             EasyMock.expect(
-                    getMockAndroidMappedResourcePath1().resolveToSingle())
-                        .andReturn(null);
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createAndroidGroup()))
+                    .andReturn(new ArrayList<MappedResourcePath>());
         }
     }
 
@@ -311,41 +340,47 @@ public class ResourceSelectorBeanTestCase extends
     }
 
     private void recordCheckIfDefaultGroupHasResource(final Boolean fileExists)
-        throws IOException {
-        EasyMock.expect(
-                getMockResourcePathMapper().mapResourcePath(
-                        getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createDefaultGroup()))
-                .andReturn(getMockDefaultMappedResourcePath1());
+            throws IOException {
+        final List<MappedResourcePath> mapperResults =
+                Arrays.asList(getMockDefaultMappedResourcePath1(),
+                        getMockDefaultMappedResourcePath2());
 
         if (fileExists) {
-            EasyMock.expect(getMockDefaultMappedResourcePath1().resolve()).andReturn(
-                    Arrays.asList(getMockDefaultMappedResourcePath1(),
-                            getMockDefaultMappedResourcePath2()));
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createDefaultGroup()))
+                    .andReturn(mapperResults);
         } else {
-            EasyMock.expect(getMockDefaultMappedResourcePath1().resolve()).andReturn(
-                    new ArrayList<MappedResourcePath>());
+            EasyMock.expect(
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createDefaultGroup()))
+                    .andReturn(new ArrayList<MappedResourcePath>());
         }
     }
 
     private void recordCheckIfDefaultGroupHasSingleResource(
-            final Boolean fileExists) {
-        EasyMock.expect(
-                getMockResourcePathMapper()
-                        .mapResourcePath(
-                                getResourcePathTestData()
-                                        .getRequestedJspResourcePath(),
-                                getGroupTestData().createDefaultGroup()))
-                .andReturn(getMockDefaultMappedResourcePath1());
+            final Boolean fileExists) throws IOException {
+        final List<MappedResourcePath> mapperResults =
+                Arrays.asList(getMockDefaultMappedResourcePath1());
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockDefaultMappedResourcePath1().resolveToSingle())
-                        .andReturn(getMockDefaultMappedResourcePath1());
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createDefaultGroup()))
+                    .andReturn(mapperResults);
         } else {
             EasyMock.expect(
-                    getMockDefaultMappedResourcePath1().resolveToSingle())
-                        .andReturn(null);
+                    getMockResourcePathMapper().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedJspResourcePath(),
+                            getGroupTestData().createDefaultGroup()))
+                    .andReturn(new ArrayList<MappedResourcePath>());
         }
     }
 

@@ -1,6 +1,9 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -89,10 +92,12 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
      * paths.
      *
      * {@inheritDoc}
+     * @throws IOException Thrown if an IO error occurs.
      */
     @Override
-    public final MappedResourcePath mapResourcePath(
-            final String requestedResourcePath, final Group group) {
+    public List<MappedResourcePath> resolve(
+            final String requestedResourcePath, final Group group)
+                throws IOException {
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug(
@@ -102,18 +107,20 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
                                 + doMapResourcePath(requestedResourcePath,
                                         group) + "'");
             }
-            return createMappedResourcePath(requestedResourcePath,
+            final MappedResourcePath mappedResourcePath =
+                createMappedResourcePath(requestedResourcePath,
                     doMapResourcePath(requestedResourcePath, group));
+            return mappedResourcePath.resolve();
         } else {
 
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug(
                         "Requested resource '" + requestedResourcePath
                                 + "' is not for a " + getDebugResourceTypeName()
-                                + " file. Returning null.");
+                                + " file. Returning an empty list.");
             }
 
-            return null;
+            return new ArrayList<MappedResourcePath>();
         }
     }
 
@@ -228,12 +235,12 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
     /**
      * The {@link Logger} to use for this
      * {@link ResourcePathMapper}. Allows the
-     * {@link #mapResourcePath(String, Group)} to log messages that clearly
+     * {@link #resolve(String, Group)} to log messages that clearly
      * indicate what the actual {@link ResourcePathMapper} implementation being
      * executed is.
      *
      * @return The {@link Logger} to use for this {@link ResourcePathMapper}.
-     *         Allows the {@link #mapResourcePath(String, Group)} to log
+     *         Allows the {@link #resolve(String, Group)} to log
      *         messages that clearly indicate what the actual
      *         {@link ResourcePathMapper} implementation being executed is.
      */

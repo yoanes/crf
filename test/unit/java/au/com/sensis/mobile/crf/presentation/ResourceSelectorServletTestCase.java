@@ -140,7 +140,7 @@ public class ResourceSelectorServletTestCase extends
     }
 
     private void recordGetNullResourcePathFromResourceSelector(
-            final String requestedResourceServletPath) {
+            final String requestedResourceServletPath) throws IOException {
 
         EasyMock.expect(
                 getMockResourceSelector().getResourcePath(getMockDevice(),
@@ -299,7 +299,7 @@ public class ResourceSelectorServletTestCase extends
     }
 
     private void recordGetResourcePathFromResourceSelector(
-            final String requestedResourceServletPath) {
+            final String requestedResourceServletPath) throws IOException {
         EasyMock.expect(
                 getMockResourceSelector()
                         .getResourcePath(getMockDevice(),

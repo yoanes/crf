@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.Group;
-import au.com.sensis.mobile.crf.exception.ContentRenderingFrameworkRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -53,9 +52,10 @@ public class ResourceSelectorBean implements
 
     /**
      * {@inheritDoc}
+     * @throws IOException
      */
     public MappedResourcePath getResourcePath(final Device device,
-            final String requestedResourcePath) {
+            final String requestedResourcePath) throws IOException {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Looking for resource '" + requestedResourcePath
@@ -69,17 +69,14 @@ public class ResourceSelectorBean implements
 
             debugLogCheckingGroup(currGroup);
 
-            final MappedResourcePath mappedResourcePath =
+            final List<MappedResourcePath> mappedResourcePath =
                     getMappedResourcePath(requestedResourcePath, currGroup);
 
-            // TODO: looks weird and it is. One more step towards splitting MappedResourcePath
-            // into two.
-            final MappedResourcePath foundMappedResourcePath =
-                    mappedResourcePath.resolveToSingle();
-            if (foundMappedResourcePath != null) {
-                debugLogSingleResourceFoundAndReturningIt(foundMappedResourcePath);
+            if (!mappedResourcePath.isEmpty()) {
+                // TODO: warn if multiple resources found
+//                debugLogSingleResourceFoundAndReturningIt(foundMappedResourcePath);
 
-                return foundMappedResourcePath;
+                return mappedResourcePath.get(0);
             }
         }
 
@@ -94,10 +91,11 @@ public class ResourceSelectorBean implements
 
     /**
      * {@inheritDoc}
+     * @throws IOException
      */
     @Override
     public List<MappedResourcePath> getAllResourcePaths(final Device device,
-            final String requestedResourcePath) {
+            final String requestedResourcePath) throws IOException {
 
         final Deque<MappedResourcePath> allResourcePaths = new ArrayDeque<MappedResourcePath>();
 
@@ -122,29 +120,24 @@ public class ResourceSelectorBean implements
     }
 
     private void accumulateGroupResources(
-            final MappedResourcePath mappedResourcePath,
+            final List<MappedResourcePath> resolvedPaths,
             final Deque<MappedResourcePath> allResourcePaths) {
 
-        try {
-            final List<MappedResourcePath> resolvedPaths = mappedResourcePath.resolve();
-            if (!resolvedPaths.isEmpty()) {
+        if (!resolvedPaths.isEmpty()) {
 
-                debugLogResourceFoundAddingToList(resolvedPaths);
+            debugLogResourceFoundAddingToList(resolvedPaths);
 
-                Collections.reverse(resolvedPaths);
+            Collections.reverse(resolvedPaths);
 
-                for (final MappedResourcePath currPath : resolvedPaths) {
-                    allResourcePaths.push(currPath);
-                }
+            for (final MappedResourcePath currPath : resolvedPaths) {
+                allResourcePaths.push(currPath);
             }
-        } catch (final IOException e) {
-            throw new ContentRenderingFrameworkRuntimeException("TODO. Arrrghhh !!! ", e);
         }
     }
 
-    private MappedResourcePath getMappedResourcePath(
-            final String requestedResourcePath, final Group currGroup) {
-        return getResourcePathMapper().mapResourcePath(
+    private List<MappedResourcePath> getMappedResourcePath(
+            final String requestedResourcePath, final Group currGroup) throws IOException {
+        return getResourcePathMapper().resolve(
                 requestedResourcePath, currGroup);
     }
 

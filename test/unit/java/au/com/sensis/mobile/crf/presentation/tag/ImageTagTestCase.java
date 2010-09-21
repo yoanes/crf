@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -240,7 +241,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     }
 
     private void recordLookupRequestedResourceWhenFound(
-            final MappedResourcePath mappedResourcePath) {
+            final MappedResourcePath mappedResourcePath) throws IOException {
 
         EasyMock.expect(
                 getMockResourceSelector().getResourcePath(

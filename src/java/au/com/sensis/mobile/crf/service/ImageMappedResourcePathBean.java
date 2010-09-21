@@ -1,6 +1,9 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -38,7 +41,7 @@ public class ImageMappedResourcePathBean extends MappedResourcePathBean {
      * {@inheritDoc}
      */
     @Override
-    public MappedResourcePath resolveToSingle() {
+    public List<MappedResourcePath> resolve() {
         // TODO: possibly cache the result since we are accessing the file
         // system?
         final File[] matchedFiles =
@@ -48,12 +51,14 @@ public class ImageMappedResourcePathBean extends MappedResourcePathBean {
         warnIfMultipleResourcesWithExtensionsFound(getOriginalResourcePath(),
                 matchedFiles);
 
+        // TODO: clean this up once we've refactored it into a ResourceResolver.
         if (matchedFiles.length > 0) {
-            return new ImageMappedResourcePathBean(getOriginalResourcePath(),
+            return Arrays.asList((MappedResourcePath)
+                    new ImageMappedResourcePathBean(getOriginalResourcePath(),
                             getNewResourcePathPlusFileExtension(matchedFiles[0]),
-                            getRootResourceDir());
+                            getRootResourceDir()));
         } else {
-            return null;
+            return new ArrayList<MappedResourcePath>();
         }
     }
 
