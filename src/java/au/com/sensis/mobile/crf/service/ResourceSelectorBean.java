@@ -28,7 +28,7 @@ public class ResourceSelectorBean implements
 
     private final ConfigurationFactory configurationFactory;
     private final ResourcePathMapper resourcePathMapper;
-    private ResourceResolutionWarnLogger resourceResolutionWarnLogger;
+    private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
 
     /**
      * Constructor.
@@ -39,15 +39,22 @@ public class ResourceSelectorBean implements
      * @param resourcePathMapper
      *            {@link ResourcePathMapper} to map requested paths to real,
      *            device specific paths.
+     * @param resourceResolutionWarnLogger {@link ResourceResolutionWarnLogger} to
+     *            use to log warnings.
      */
     public ResourceSelectorBean(
             final ConfigurationFactory configurationFactory,
-            final ResourcePathMapper resourcePathMapper) {
+            final ResourcePathMapper resourcePathMapper,
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+
         Validate.notNull(configurationFactory, "configurationFactory must not be null");
         Validate.notNull(resourcePathMapper, "resourcePathMapper must not be null");
+        Validate.notNull(resourceResolutionWarnLogger,
+                "resourceResolutionWarnLogger must not be null");
 
         this.configurationFactory = configurationFactory;
         this.resourcePathMapper = resourcePathMapper;
+        this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
     }
 
     /**
@@ -69,16 +76,19 @@ public class ResourceSelectorBean implements
 
             debugLogCheckingGroup(currGroup);
 
-            final List<MappedResourcePath> mappedResourcePath =
+            final List<MappedResourcePath> mappedResourcePaths =
                     getMappedResourcePath(requestedResourcePath, currGroup);
 
-            if (!mappedResourcePath.isEmpty()) {
-                // TODO: warn if multiple resources found
-//                debugLogSingleResourceFoundAndReturningIt(foundMappedResourcePath);
+            if (!mappedResourcePaths.isEmpty()) {
+                debugLogResourcesFound(mappedResourcePaths);
 
-                return mappedResourcePath.get(0);
+                warnIfMultipleResourcesFound(requestedResourcePath, mappedResourcePaths);
+
+                return mappedResourcePaths.get(0);
             }
         }
+
+        debugLogNoResourcesFound(requestedResourcePath);
 
         // No resource found.
         return null;
@@ -87,6 +97,20 @@ public class ResourceSelectorBean implements
     private Iterator<Group> getMatchingGroupIterator(final Device device) {
         return getConfigurationFactory().getUiConfiguration()
                 .matchingGroupIterator(device);
+    }
+
+    private void warnIfMultipleResourcesFound(
+            final String requestedResourcePath,
+            final List<MappedResourcePath> mappedResourcePaths) {
+        if ((mappedResourcePaths.size() > 1)
+                && getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "Requested resource '"
+                    + requestedResourcePath
+                    + "' resolved to multiple resources when only one was requested. "
+                    + "Will only return the first. Total found: "
+                    + mappedResourcePaths + ".");
+        }
     }
 
     /**
@@ -116,6 +140,8 @@ public class ResourceSelectorBean implements
                     allResourcePaths);
         }
 
+        debugLogNoResourcesFound(requestedResourcePath);
+
         return new ArrayList<MappedResourcePath>(allResourcePaths);
     }
 
@@ -125,7 +151,7 @@ public class ResourceSelectorBean implements
 
         if (!resolvedPaths.isEmpty()) {
 
-            debugLogResourceFoundAddingToList(resolvedPaths);
+            debugLogResourcesFound(resolvedPaths);
 
             Collections.reverse(resolvedPaths);
 
@@ -141,14 +167,21 @@ public class ResourceSelectorBean implements
                 requestedResourcePath, currGroup);
     }
 
-    private void debugLogResourceFoundAddingToList(
+    private void debugLogResourcesFound(
             final List<MappedResourcePath> mappedResourcePaths) {
 
         if (LOGGER.isDebugEnabled()) {
             for (final MappedResourcePath mappedResourcePath : mappedResourcePaths) {
-                LOGGER.debug("Resource found! Adding it to list: '"
+                LOGGER.debug("Resource found: '"
                         + mappedResourcePath.getNewResourcePath() + "'");
             }
+        }
+    }
+
+    private void debugLogNoResourcesFound(final String requestedResourcePath) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("No resources found for requsted path: '"
+                    + requestedResourcePath + "'");
         }
     }
 
@@ -169,30 +202,13 @@ public class ResourceSelectorBean implements
     /**
      * @return the resourceResolutionWarnLogger
      */
-    public ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
+    private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
         return resourceResolutionWarnLogger;
-    }
-
-    /**
-     * @param resourceResolutionWarnLogger the resourceResolutionWarnLogger to set
-     */
-    // TODO: pass via constructor, not setter.
-    public void setResourceResolutionWarnLogger(
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
     }
 
     private void debugLogCheckingGroup(final Group currGroup) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Looking for resource in matching group: " + currGroup);
-        }
-    }
-
-    private void debugLogSingleResourceFoundAndReturningIt(
-            final MappedResourcePath mappedResourcePath) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Resource found! Returning it: '"
-                    + mappedResourcePath.getNewResourcePath() + "'");
         }
     }
 }

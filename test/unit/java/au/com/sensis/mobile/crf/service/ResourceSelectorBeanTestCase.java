@@ -35,14 +35,6 @@ public class ResourceSelectorBeanTestCase extends
     private Device mockDevice;
     private MappedResourcePath mockIphoneMappedResourcePath1;
     private MappedResourcePath mockIphoneMappedResourcePath2;
-    public MappedResourcePath getMockIphoneMappedResourcePath2() {
-        return mockIphoneMappedResourcePath2;
-    }
-
-    public void setMockIphoneMappedResourcePath2(
-            final MappedResourcePath mockIphoneMappedResourcePath2) {
-        this.mockIphoneMappedResourcePath2 = mockIphoneMappedResourcePath2;
-    }
 
     private MappedResourcePath mockAndroidMappedResourcePath1;
     private MappedResourcePath mockAndroidMappedResourcePath2;
@@ -70,9 +62,8 @@ public class ResourceSelectorBeanTestCase extends
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
         setObjectUnderTest(new ResourceSelectorBean(
-                getMockConfigurationFactory(), getMockResourcePathMapper()));
-
-        getObjectUnderTest().setResourceResolutionWarnLogger(getMockResolutionWarnLogger());
+                getMockConfigurationFactory(), getMockResourcePathMapper(),
+                getMockResolutionWarnLogger()));
     }
 
     /**
@@ -89,7 +80,7 @@ public class ResourceSelectorBeanTestCase extends
     public void testConstructorWhenConfigurationFactoryNull() throws Throwable {
         try {
             new ResourceSelectorBean(null,
-                    getMockResourcePathMapper());
+                    getMockResourcePathMapper(), getMockResolutionWarnLogger());
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
 
@@ -102,12 +93,24 @@ public class ResourceSelectorBeanTestCase extends
     public void testConstructorWhenResourcePathMapperNull() throws Throwable {
         try {
             new ResourceSelectorBean(getMockConfigurationFactory(),
-                    null);
+                    null, getMockResolutionWarnLogger());
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
 
             Assert.assertEquals("IllegalArgumentException has wrong message",
                     "resourcePathMapper must not be null", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testConstructorWhenResourceResolutionWarnLoggerNull() throws Throwable {
+        try {
+            new ResourceSelectorBean(getMockConfigurationFactory(),
+                    getMockResourcePathMapper(), null);
+            Assert.fail("IllegalArgumentException expected");
+        } catch (final IllegalArgumentException e) {
+            Assert.assertEquals("IllegalArgumentException has wrong message",
+                    "resourceResolutionWarnLogger must not be null", e.getMessage());
         }
     }
 
@@ -129,6 +132,40 @@ public class ResourceSelectorBeanTestCase extends
         Assert.assertEquals("resourcePath is wrong",
                 getMockIphoneMappedResourcePath1(),
                 actualResourcePath);
+    }
+
+    @Test
+    public void testGetResourcePathWhenFirstMappedResourceMatchesAndMultipleResourcesFound()
+        throws Throwable {
+
+        recordGetUiConfiguration();
+
+        recordGetMatchingGroupsIteratorForGetResourcePath();
+
+        recordCheckIfIphoneGroupHasResource(Boolean.TRUE);
+
+        recordLogWarningResolveTFoundMultipleResources();
+
+        replay();
+
+        final MappedResourcePath actualResourcePath =
+            getObjectUnderTest().getResourcePath(getMockDevice(),
+                    getResourcePathTestData().getRequestedJspResourcePath());
+
+        Assert.assertEquals("resourcePath is wrong",
+                getMockIphoneMappedResourcePath1(),
+                actualResourcePath);
+    }
+
+    private void recordLogWarningResolveTFoundMultipleResources() {
+        EasyMock.expect(getMockResolutionWarnLogger().isWarnEnabled()).andReturn(Boolean.TRUE);
+
+        getMockResolutionWarnLogger().warn("Requested resource '"
+                + getResourcePathTestData().getRequestedJspResourcePath()
+                + "' resolved to multiple resources when only one was requested. "
+                + "Will only return the first. Total found: "
+                + Arrays.asList(getMockIphoneMappedResourcePath1(),
+                        getMockIphoneMappedResourcePath2()) + ".");
     }
 
     @Test
@@ -819,6 +856,15 @@ public class ResourceSelectorBeanTestCase extends
     public void setMockIphoneMappedResourcePath1(
             final MappedResourcePath mockIphoneMappedResourcePath1) {
         this.mockIphoneMappedResourcePath1 = mockIphoneMappedResourcePath1;
+    }
+
+    public MappedResourcePath getMockIphoneMappedResourcePath2() {
+        return mockIphoneMappedResourcePath2;
+    }
+
+    public void setMockIphoneMappedResourcePath2(
+            final MappedResourcePath mockIphoneMappedResourcePath2) {
+        this.mockIphoneMappedResourcePath2 = mockIphoneMappedResourcePath2;
     }
 
     /**
