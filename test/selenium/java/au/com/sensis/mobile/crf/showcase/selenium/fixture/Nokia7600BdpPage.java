@@ -73,6 +73,6 @@ public class Nokia7600BdpPage extends BdpPage {
         assertNumImgElements(1);
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
-                "default/common/unmetered.gif");
+                "nokia7600/common/unmetered.gif");
     }
 }

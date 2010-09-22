@@ -10,7 +10,7 @@
   -
   - Nokia 7600:
   -     resource found in default group only; gif format:
-  -         resources/images/default/common/unmetered.gif
+  -         resources/images/nokia7600/common/unmetered.gif
   -     resource not found in any group:  
   -         no img tag written out for common/app_store.image
   - HD800 device:
