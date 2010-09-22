@@ -3,6 +3,7 @@ package au.com.sensis.mobile.crf.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -110,7 +111,12 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
             final MappedResourcePath mappedResourcePath =
                 createMappedResourcePath(requestedResourcePath,
                     doMapResourcePath(requestedResourcePath, group));
-            return mappedResourcePath.resolve();
+            // TODO: refactor so that we check existance before we instantiate the Resource?
+            if (exists(mappedResourcePath)) {
+                return Arrays.asList(mappedResourcePath);
+            } else {
+                return new ArrayList<MappedResourcePath>();
+            }
         } else {
 
             if (getLogger().isDebugEnabled()) {
@@ -122,6 +128,16 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
 
             return new ArrayList<MappedResourcePath>();
         }
+    }
+
+    /**
+     * @return true if the mapped path given by {@link #getNewResourcePath()}
+     *         exists in {@link #getRootResourceDir()}.
+     */
+    private boolean exists(final MappedResourcePath mappedResourcePath) {
+        // TODO: possibly cache the result since we are accessing the file system?
+        return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
+                mappedResourcePath.getRootResourceDir(), mappedResourcePath.getNewResourcePath());
     }
 
     /**

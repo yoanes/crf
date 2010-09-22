@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +48,16 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         setObjectUnderTest(new ImageResourcePathMapper(
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
+    }
+
+    /**
+     * Tear down test data.
+     *
+     * @throws Exception Thrown if any error occurs.
+     */
+    @After
+    public void tearDown() throws Exception {
+        FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
     }
 
     @Test
@@ -111,7 +123,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testMapResourcePathWhenMappingPerformedAndResourceExists() throws Throwable {
+    public void testResolveWhenMappingPerformedAndSingleResourceFound() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
@@ -120,8 +132,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
             setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
-            recordListFilesByExtension(
-                new File[] { getMappedIphoneGroupPngImageResourcePath().getNewResourceFile() });
+            recordListFilesByExtension(getSingleMatchedPngImageArray());
 
             replay();
 
@@ -142,8 +153,77 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
 
     }
 
+    private File[] getSingleMatchedPngImageArray() {
+        return new File[] {
+                getMappedIPhonePngImageResourcePath().getNewResourceFile() };
+    }
+
+    private File[] getMultipleMatchedPngImageArray() {
+        return new File[] {
+                        getMappedIPhonePngImageResourcePath().getNewResourceFile(),
+                        getMappedIPhoneGroupGifImageResourcePath().getNewResourceFile() };
+    }
+
+    private MappedResourcePath getMappedIPhonePngImageResourcePath() {
+        return getResourcePathTestData()
+                .getMappedIphoneGroupPngImageResourcePath();
+    }
+
+    private MappedResourcePath getMappedIPhoneGroupGifImageResourcePath() {
+        return getResourcePathTestData()
+                .getMappedIphoneGroupGifImageResourcePath();
+    }
+
     @Test
-    public void testMapResourcePathWhenMappingPerformedAndResourceDoesNotExist()
+    public void testResolveWhenMappingPerformedAndMultipleResourcesFound() throws Throwable {
+        final String[] testValues = {
+                getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
+                getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir(),
+                    getMockResourceResolutionWarnLogger()));
+
+            recordListFilesByExtension(getMultipleMatchedPngImageArray());
+
+            recordLogWarningResolveToSingleFoundMultipleResources();
+
+            replay();
+
+            final List<MappedResourcePath> actualMappedResourcePaths =
+                    getObjectUnderTest().resolve(
+                            getResourcePathTestData()
+                                    .getRequestedImageResourcePath(),
+                            getGroupTestData().createIPhoneGroup());
+
+            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+                    Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
+                        actualMappedResourcePaths);
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+        }
+
+    }
+
+    private void recordLogWarningResolveToSingleFoundMultipleResources() {
+        EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled())
+            .andReturn(Boolean.TRUE);
+
+        getMockResourceResolutionWarnLogger()
+            .warn("Requested resource '"
+                    + getResourcePathTestData().getRequestedImageResourcePath()
+                    + "' resolved to multiple real resources with extensions matching "
+                    + ArrayUtils.toString(FILE_EXTENSION_WILDCARDS)
+                    + ". Will only return the first resource. Total found: ["
+                    + getMappedIPhonePngImageResourcePath().getNewResourceFile()
+                    + ", " + getMappedIPhoneGroupGifImageResourcePath().getNewResourceFile()
+                    + "].");
+    }
+
+    @Test
+    public void testResolveWhenMappingPerformedAndResourceDoesNotExist()
         throws Throwable {
 
         final String[] testValues = {
@@ -202,7 +282,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testMapResourcePathWhenNoMappingPerformed() throws Throwable {
+    public void testResolveWhenNoMappingPerformed() throws Throwable {
         final List<MappedResourcePath> actualMappedResourcePaths =
                 getObjectUnderTest()
                         .resolve(

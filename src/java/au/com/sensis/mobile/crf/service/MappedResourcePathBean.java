@@ -1,10 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -64,36 +60,6 @@ public class MappedResourcePathBean implements MappedResourcePath {
      */
     public boolean isIdentityMapping() {
         return getNewResourcePath().equals(getOriginalResourcePath());
-    }
-
-    /**
-     * @return true if the mapped path given by {@link #getNewResourcePath()}
-     *         exists in {@link #getRootResourceDir()}.
-     */
-    protected boolean exists() {
-        // TODO: possibly cache the result since we are accessing the file system?
-        return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
-                getRootResourceDir(), getNewResourcePath());
-    }
-
-    /**
-     * Returns a list of {@link MappedResourcePath}s that exist in
-     * {@link #getRootResourceDir()} based on this {@link MappedResourcePath}s
-     * path expasion algorithm.
-     *
-     * @return a list of {@link MappedResourcePath}s that exist in
-     *         {@link #getRootResourceDir()} based on this
-     *         {@link MappedResourcePath}s path expasion algorithm. May not be
-     *         null. Empty indicates no matches exist.
-     * @throws IOException
-     *             Thrown if any IO error occurs during the expansion.
-     */
-    public List<MappedResourcePath> resolve() throws IOException {
-        if (exists()) {
-            return Arrays.asList((MappedResourcePath) this);
-        } else {
-            return new ArrayList<MappedResourcePath>();
-        }
     }
 
     /**

@@ -322,32 +322,32 @@ public class ResourcePathTestData {
     }
 
     public MappedResourcePath getMappedDefaultGroupImageResourcePath() {
-        // TODO: change return type to ImageMappedResourcePathBean?
-        return new ImageMappedResourcePathBean(getRequestedImageResourcePath(),
+        // TODO: change return type to MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedImageResourcePath(),
                 "default/common/unmetered", getRootResourcesPath());
     }
 
     public MappedResourcePath getMappedIphoneGroupImageResourcePath() {
-        // TODO: change return type to ImageMappedResourcePathBean?
-        return new ImageMappedResourcePathBean(getRequestedImageResourcePath(),
+        // TODO: change return type to MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered", getRootResourcesPath());
     }
 
     public MappedResourcePath getMappedDefaultGroupPngImageResourcePath() {
-        // TODO: change return type to ImageMappedResourcePathBean?
-        return new ImageMappedResourcePathBean(getRequestedImageResourcePath(),
+        // TODO: change return type to MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedImageResourcePath(),
                 "default/common/unmetered.png", getRootResourcesPath());
     }
 
     public MappedResourcePath getMappedIphoneGroupPngImageResourcePath() {
-        // TODO: change return type to ImageMappedResourcePathBean?
-        return new ImageMappedResourcePathBean(getRequestedImageResourcePath(),
+        // TODO: change return type to MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered.png", getRootResourcesPath());
     }
 
     public MappedResourcePath getMappedIphoneGroupGifImageResourcePath() {
-        // TODO: change return type to ImageMappedResourcePathBean?
-        return new ImageMappedResourcePathBean(getRequestedImageResourcePath(),
+        // TODO: change return type to MappedResourcePathBean?
+        return new MappedResourcePathBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered.gif", getRootResourcesPath());
     }
 

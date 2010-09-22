@@ -1,11 +1,8 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
-import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -90,44 +87,6 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
                                 + "'", e.getMessage());
             }
         }
-    }
-
-    @Test
-    public void testResolveWhenFound() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
-                getResourcePathTestData().getMappedIphoneGroupResourcePath();
-        setObjectUnderTest(mappedResourcePath);
-
-        EasyMock.expect(
-                getMockFileIoFacade().fileExists(
-                        getResourcePathTestData().getRootResourcesPath(),
-                        mappedResourcePath.getNewResourcePath())).andReturn(
-                Boolean.TRUE);
-
-        replay();
-
-        Assert.assertEquals("resolve() should return 'this' in a List", Arrays
-                .asList(getObjectUnderTest()), getObjectUnderTest().resolve());
-
-    }
-
-    @Test
-    public void testResolveWhenNotFound() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
-            getResourcePathTestData().getMappedIphoneGroupResourcePath();
-        setObjectUnderTest(mappedResourcePath);
-
-        EasyMock.expect(
-                getMockFileIoFacade().fileExists(
-                        getResourcePathTestData().getRootResourcesPath(),
-                        mappedResourcePath.getNewResourcePath())).andReturn(
-                                Boolean.FALSE);
-
-        replay();
-
-        Assert.assertEquals("resolve() should be empty", new ArrayList<MappedResourcePath>(),
-                getObjectUnderTest().resolve());
-
     }
 
     @Test
