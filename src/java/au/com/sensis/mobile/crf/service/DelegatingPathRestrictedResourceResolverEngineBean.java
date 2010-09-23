@@ -13,31 +13,32 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * {@link ResourceResolverEngine} that delegates each request
- * to a chain of {@link PathRestrictedResourceResolverEngine} instances.
- * Only the selector for which
+ * to a {@link List} of {@link PathRestrictedResourceResolverEngine} instances.
+ * Only the engine for which
  * {@link PathRestrictedResourceResolverEngine#isInterestedIn(String)}
- * returns true will handle the request. If no such selector is
- * found, the {@link #getDefaultResourceResolverEngine()} is used instead.
+ * returns true will handle the request. If no such engine is
+ * found, {@link #getDefaultResourceResolverEngine()} is used instead.
  * <p>
  * Each {@link PathRestrictedResourceResolverEngine} is added to this
- * {@link ChainedPathRestrictedResourceResolverEngineBean} automatically as long as it
+ * {@link DelegatingPathRestrictedResourceResolverEngineBean} automatically as long as it
  * is defined in the same Spring context. This is facilitated by partaking
- * in the {@link BeanPostProcessor} lifecycle.
+ * in the Spring {@link BeanPostProcessor} lifecycle.
  * </p>
  * <p>
  * The order in which {@link PathRestrictedResourceResolverEngine}s are checked is undefined.
+ * ie. we implicitly expect the path prefix of each engine to be unique.
  * </p>
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ChainedPathRestrictedResourceResolverEngineBean
+public class DelegatingPathRestrictedResourceResolverEngineBean
         implements ResourceResolverEngine, BeanPostProcessor {
 
     /**
      * Not final to allow injection of a mock for unit testing.
      */
     private static Logger logger = Logger.getLogger(
-            ChainedPathRestrictedResourceResolverEngineBean.class);
+            DelegatingPathRestrictedResourceResolverEngineBean.class);
 
     private final List<PathRestrictedResourceResolverEngine>
         pathRestrictedResourceResolverEngines =
@@ -56,7 +57,7 @@ public class ChainedPathRestrictedResourceResolverEngineBean
      *            {@link PathRestrictedResourceResolverEngine#isInterestedIn(String)}
      *            returns true.
      */
-    public ChainedPathRestrictedResourceResolverEngineBean(
+    public DelegatingPathRestrictedResourceResolverEngineBean(
             final ResourceResolverEngine defaultResourceResolverEngine) {
         Validate.notNull(defaultResourceResolverEngine,
                 "defaultResourceResolverEngine must not be null");

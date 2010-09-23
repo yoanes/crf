@@ -45,7 +45,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     private ScriptBundleFactory mockScriptBundleFactory;
     private final DeploymentVersionTestData deploymentVersionTestData
         = new DeploymentVersionTestData();
-    private ScriptTagCollaboratorsMemento scriptTagCollaboratorsMemento;
+    private ScriptTagDependencies scriptTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private ResourceSelectorScriptTagWriter mockResourceSelectorScriptTagWriter;
     private ResourceSelectorScriptTagWriterFactory
@@ -96,8 +96,8 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
             .restoreDefaultResourceSelectorScriptTagWriterFactorySingleton();
     }
 
-    private ScriptTagCollaboratorsMemento createCollaboratorsMemento() {
-        return new ScriptTagCollaboratorsMemento(
+    private ScriptTagDependencies createCollaboratorsMemento() {
+        return new ScriptTagDependencies(
                 getMockResourceResolverEngine(),
                 getDeploymentVersionTestData()
                     .createDevDeploymentVersion(),
@@ -116,7 +116,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                 getMockWebApplicationContext());
 
         EasyMock.expect(
-                getMockWebApplicationContext().getBean(ScriptTagCollaboratorsMemento.BEAN_NAME))
+                getMockWebApplicationContext().getBean(ScriptTagDependencies.BEAN_NAME))
                 .andReturn(getCollaboratorsMemento())
                 .atLeastOnce();
     }
@@ -369,19 +369,19 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the scriptTagCollaboratorsMemento
+     * @return the scriptTagDependencies
      */
-    private ScriptTagCollaboratorsMemento getCollaboratorsMemento() {
-        return scriptTagCollaboratorsMemento;
+    private ScriptTagDependencies getCollaboratorsMemento() {
+        return scriptTagDependencies;
     }
 
     /**
-     * @param scriptTagCollaboratorsMemento
-     *            the scriptTagCollaboratorsMemento to set
+     * @param scriptTagDependencies
+     *            the scriptTagDependencies to set
      */
     private void setCollaboratorsMemento(
-            final ScriptTagCollaboratorsMemento scriptTagCollaboratorsMemento) {
-        this.scriptTagCollaboratorsMemento = scriptTagCollaboratorsMemento;
+            final ScriptTagDependencies scriptTagDependencies) {
+        this.scriptTagDependencies = scriptTagDependencies;
     }
 
     /**

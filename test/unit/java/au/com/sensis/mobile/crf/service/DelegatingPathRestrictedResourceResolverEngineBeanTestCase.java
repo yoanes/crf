@@ -14,16 +14,16 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
  * Unit test
- * {@link ChainedPathRestrictedResourceResolverEngineBean}.
+ * {@link DelegatingPathRestrictedResourceResolverEngineBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ChainedPathRestrictedResourceResolverEngineBeanTestCase
+public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
         extends AbstractJUnit4TestCase {
 
     private static final String BEAN_NAME = "beanName";
 
-    private ChainedPathRestrictedResourceResolverEngineBean objectUnderTest;
+    private DelegatingPathRestrictedResourceResolverEngineBean objectUnderTest;
 
     private ResourceResolverEngine mockDefaultResourceResolverEngine;
     private PathRestrictedResourceResolverEngine mockPathRestrictedResourceResolverEngine;
@@ -41,22 +41,22 @@ public class ChainedPathRestrictedResourceResolverEngineBeanTestCase
     @Before
     public void setUp() throws Exception {
         setObjectUnderTest(
-                new ChainedPathRestrictedResourceResolverEngineBean(
+                new DelegatingPathRestrictedResourceResolverEngineBean(
                         getMockDefaultResourceResolverEngine()));
         swapOutRealLoggerForMock(
-                ChainedPathRestrictedResourceResolverEngineBean.class);
+                DelegatingPathRestrictedResourceResolverEngineBean.class);
 
     }
 
     private Logger getMockLogger() {
         return getMockLogger(
-                ChainedPathRestrictedResourceResolverEngineBean.class);
+                DelegatingPathRestrictedResourceResolverEngineBean.class);
     }
 
     @Test
     public void testConstructorWhenDefaultSelectorIsNull() throws Throwable {
         try {
-            new ChainedPathRestrictedResourceResolverEngineBean(
+            new DelegatingPathRestrictedResourceResolverEngineBean(
                     null);
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
@@ -234,13 +234,13 @@ public class ChainedPathRestrictedResourceResolverEngineBeanTestCase
 
     }
 
-    private ChainedPathRestrictedResourceResolverEngineBean
+    private DelegatingPathRestrictedResourceResolverEngineBean
         getObjectUnderTest() {
         return objectUnderTest;
     }
 
     private void setObjectUnderTest(
-            final ChainedPathRestrictedResourceResolverEngineBean
+            final DelegatingPathRestrictedResourceResolverEngineBean
                 objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }

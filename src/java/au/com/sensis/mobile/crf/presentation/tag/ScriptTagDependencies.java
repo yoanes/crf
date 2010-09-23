@@ -11,11 +11,11 @@ import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ScriptTagCollaboratorsMemento extends TagCollaboratorsMemento {
+public class ScriptTagDependencies extends TagDependencies {
     /**
-     * Standard name of the {@link ScriptTagCollaboratorsMemento} in the Spring context.
+     * Standard name of the {@link ScriptTagDependencies} in the Spring context.
      */
-    public static final String BEAN_NAME = "crf.scriptTagCollaboratorsMemento";
+    public static final String BEAN_NAME = "crf.scriptTagDependencies";
 
     private final ScriptBundleFactory scriptBundleFactory;
 
@@ -34,7 +34,7 @@ public class ScriptTagCollaboratorsMemento extends TagCollaboratorsMemento {
      *            Special {@link ResourceResolutionWarnLogger} for logging
      *            warnings.
      */
-    public ScriptTagCollaboratorsMemento(
+    public ScriptTagDependencies(
             final ResourceResolverEngine resourceResolverEngine,
             final DeploymentVersion deploymentVersion,
             final ScriptBundleFactory scriptBundleFactory,

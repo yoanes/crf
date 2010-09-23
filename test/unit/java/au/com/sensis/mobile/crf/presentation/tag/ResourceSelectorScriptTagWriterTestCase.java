@@ -148,9 +148,9 @@ public class ResourceSelectorScriptTagWriterTestCase extends
                 createCollaboratorsMemento(testData));
     }
 
-    private ScriptTagCollaboratorsMemento createCollaboratorsMemento(
+    private ScriptTagDependencies createCollaboratorsMemento(
             final TestData testData) {
-        return new ScriptTagCollaboratorsMemento(getMockResourceResolverEngine(),
+        return new ScriptTagDependencies(getMockResourceResolverEngine(),
                 testData.getDeploymentVersion(), getMockScriptBundleFactory(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());

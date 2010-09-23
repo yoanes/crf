@@ -9,6 +9,14 @@ import java.util.List;
  */
 public interface JavaScriptFileFinder {
 
-    // TODO
+    /**
+     * Find all JavaScript files in the given directory, sorted according to the dependencies of
+     * the files.
+     *
+     * @param dir Directory to find the files in.
+     * @return all JavaScript files in the given directory, sorted according to the dependencies of
+     * the files.
+     * @throws IOException Thrown if any IO error occurs.
+     */
     List<File> findJavaScriptFiles(File dir) throws IOException;
 }

@@ -5,12 +5,12 @@ import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
 /**
- * Simple memento encapsulating the singleton collaborators of a JSP tag.
- * The tags will retrieve this from the Spring context.
+ * Simple encapsulation of the singleton collaborators of a JSP tag.
+ * The tags will programmatically retrieve this from the Spring context.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class TagCollaboratorsMemento {
+public class TagDependencies {
 
     private final ResourceResolverEngine
         resourceResolverEngine;
@@ -32,7 +32,7 @@ public class TagCollaboratorsMemento {
      *            Special {@link ResourceResolutionWarnLogger} for logging
      *            warnings.
      */
-    public TagCollaboratorsMemento(
+    public TagDependencies(
             final ResourceResolverEngine
                 resourceResolverEngine,
             final DeploymentVersion deploymentVersion,

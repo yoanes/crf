@@ -9,7 +9,7 @@
                 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
     <bean id="crf.resourceResolverEngine" 
-        class="au.com.sensis.mobile.crf.service.ChainedPathRestrictedResourceResolverEngineBean">
+        class="au.com.sensis.mobile.crf.service.DelegatingPathRestrictedResourceResolverEngineBean">
         <constructor-arg ref="crf.defaultResourceResolverEngine" />
     </bean>                
 
@@ -55,8 +55,8 @@
     
     <bean id="crf.resourceResolutionWarnLogger" class="au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger" />
     
-    <bean id="crf.linkTagCollaboratorsMemento" 
-        class="au.com.sensis.mobile.crf.presentation.tag.LinkTagCollaboratorsMemento">
+    <bean id="crf.linkTagDependencies" 
+        class="au.com.sensis.mobile.crf.presentation.tag.LinkTagDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentVersion" />
         <constructor-arg ref="crf.cssBundleFactory" />
@@ -64,16 +64,16 @@
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
     </bean>
     
-    <bean id="crf.imageTagCollaboratorsMemento" 
-        class="au.com.sensis.mobile.crf.presentation.tag.ImageTagCollaboratorsMemento">
+    <bean id="crf.imageTagDependencies" 
+        class="au.com.sensis.mobile.crf.presentation.tag.ImageTagDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentVersion" />
         <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
     </bean>
     
-    <bean id="crf.scriptTagCollaboratorsMemento" 
-        class="au.com.sensis.mobile.crf.presentation.tag.ScriptTagCollaboratorsMemento">
+    <bean id="crf.scriptTagDependencies" 
+        class="au.com.sensis.mobile.crf.presentation.tag.ScriptTagDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentVersion" />
         <constructor-arg ref="crf.scriptBundleFactory" />

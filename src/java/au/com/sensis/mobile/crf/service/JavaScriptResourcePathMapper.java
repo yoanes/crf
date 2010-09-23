@@ -111,6 +111,7 @@ public class JavaScriptResourcePathMapper extends AbstractResourcePathMapper {
     }
 
     /**
+     * @param mappedResourcePath {@link MappedResourcePath} to test the existence of.
      * @return true if the mapped path given by {@link #getNewResourcePath()}
      *         exists in {@link #getRootResourceDir()}.
      */

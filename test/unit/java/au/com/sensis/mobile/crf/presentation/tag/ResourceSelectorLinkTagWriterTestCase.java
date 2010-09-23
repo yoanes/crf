@@ -146,9 +146,9 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
                 createCollaboratorsMemento(testData));
     }
 
-    private LinkTagCollaboratorsMemento createCollaboratorsMemento(
+    private LinkTagDependencies createCollaboratorsMemento(
             final TestData testData) {
-        return new LinkTagCollaboratorsMemento(
+        return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
                 testData.getDeploymentVersion(),
                 getMockCssBundleFactory(),

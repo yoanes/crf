@@ -53,7 +53,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private MockServletContext springMockServletContext;
     private WebApplicationContext mockWebApplicationContext;
     private ResourceResolverEngine mockResourceResolverEngine;
-    private ImageTagCollaboratorsMemento imageTagCollaboratorsMemento;
+    private ImageTagDependencies imageTagDependencies;
     private FileIoFacade mockFileIoFacade;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private MappedResourcePath mockMappedResourcePath;
@@ -72,7 +72,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
         setObjectUnderTest(new ImageTag());
 
-        setImageTagCollaboratorsMemento(createImageTagCollaboratorsMemento());
+        setImageTagDependencies(createImageTagDependencies());
 
         getObjectUnderTest().setDevice(getMockDevice());
         getObjectUnderTest().setJspContext(getMockPageContext());
@@ -97,8 +97,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
     }
 
-    private ImageTagCollaboratorsMemento createImageTagCollaboratorsMemento() {
-        return new ImageTagCollaboratorsMemento(
+    private ImageTagDependencies createImageTagDependencies() {
+        return new ImageTagDependencies(
                 getMockResourceResolverEngine(),
                 getDeploymentVersionTestData().createDevDeploymentVersion(),
                 getResourcePathTestData().getImageClientPathPrefix(),
@@ -138,7 +138,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
                 initObjectUnderTest(testDataArray[i]);
 
-                recordGetImageTagCollaboratorsMemento();
+                recordGetImageTagDependencies();
 
                 recordLookupRequestedResourceWhenFound(testDataArray[i]
                         .getMappedResourcePath());
@@ -182,7 +182,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testDoTagWhenDotNullMappedResourcePath() throws Throwable {
 
-        recordGetImageTagCollaboratorsMemento();
+        recordGetImageTagDependencies();
 
         recordLookupRequestedResourceWhenFound(getMockMappedResourcePath());
 
@@ -205,7 +205,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private void initObjectUnderTest(final TestData testData) throws Exception {
         setObjectUnderTest(new ImageTag());
 
-        setImageTagCollaboratorsMemento(createImageTagCollaboratorsMemento());
+        setImageTagDependencies(createImageTagDependencies());
 
         getObjectUnderTest().setDevice(getMockDevice());
         getObjectUnderTest().setJspContext(getMockPageContext());
@@ -251,7 +251,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 mappedResourcePath);
     }
 
-    private void recordGetImageTagCollaboratorsMemento() {
+    private void recordGetImageTagDependencies() {
 
         EasyMock.expect(getMockPageContext().getServletContext()).andReturn(
                 getSpringMockServletContext()).atLeastOnce();
@@ -261,8 +261,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 getMockWebApplicationContext());
 
         EasyMock.expect(
-                getMockWebApplicationContext().getBean(ImageTagCollaboratorsMemento.BEAN_NAME))
-                .andReturn(getImageTagCollaboratorsMemento())
+                getMockWebApplicationContext().getBean(ImageTagDependencies.BEAN_NAME))
+                .andReturn(getImageTagDependencies())
                 .atLeastOnce();
     }
 
@@ -344,18 +344,18 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the imageTagCollaboratorsMemento
+     * @return the imageTagDependencies
      */
-    public ImageTagCollaboratorsMemento getImageTagCollaboratorsMemento() {
-        return imageTagCollaboratorsMemento;
+    public ImageTagDependencies getImageTagDependencies() {
+        return imageTagDependencies;
     }
 
     /**
-     * @param imageTagCollaboratorsMemento the imageTagCollaboratorsMemento to set
+     * @param imageTagDependencies the imageTagDependencies to set
      */
-    public void setImageTagCollaboratorsMemento(
-            final ImageTagCollaboratorsMemento imageTagCollaboratorsMemento) {
-        this.imageTagCollaboratorsMemento = imageTagCollaboratorsMemento;
+    public void setImageTagDependencies(
+            final ImageTagDependencies imageTagDependencies) {
+        this.imageTagDependencies = imageTagDependencies;
     }
 
     /**

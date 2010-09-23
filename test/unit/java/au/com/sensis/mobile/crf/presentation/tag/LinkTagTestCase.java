@@ -46,7 +46,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private CssBundleFactory mockCssBundleFactory;
     private final DeploymentVersionTestData deploymentVersionTestData
         = new DeploymentVersionTestData();
-    private LinkTagCollaboratorsMemento linkTagCollaboratorsMemento;
+    private LinkTagDependencies linkTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private ResourceSelectorLinkTagWriter mockResourceSelectorLinkTagWriter;
     private ResourceSelectorLinkTagWriterFactory
@@ -97,8 +97,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
             .restoreDefaultResourceResolverLinkTagWriterFactorySingleton();
     }
 
-    private LinkTagCollaboratorsMemento createCollaboratorsMemento() {
-        return new LinkTagCollaboratorsMemento(
+    private LinkTagDependencies createCollaboratorsMemento() {
+        return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
                 getDeploymentVersionTestData()
                     .createDevDeploymentVersion(),
@@ -117,7 +117,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                 getMockWebApplicationContext());
 
         EasyMock.expect(
-                getMockWebApplicationContext().getBean(LinkTagCollaboratorsMemento.BEAN_NAME))
+                getMockWebApplicationContext().getBean(LinkTagDependencies.BEAN_NAME))
                 .andReturn(getCollaboratorsMemento())
                 .atLeastOnce();
     }
@@ -367,19 +367,19 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the linkTagCollaboratorsMemento
+     * @return the linkTagDependencies
      */
-    private LinkTagCollaboratorsMemento getCollaboratorsMemento() {
-        return linkTagCollaboratorsMemento;
+    private LinkTagDependencies getCollaboratorsMemento() {
+        return linkTagDependencies;
     }
 
     /**
-     * @param linkTagCollaboratorsMemento
-     *            the linkTagCollaboratorsMemento to set
+     * @param linkTagDependencies
+     *            the linkTagDependencies to set
      */
     private void setCollaboratorsMemento(
-            final LinkTagCollaboratorsMemento linkTagCollaboratorsMemento) {
-        this.linkTagCollaboratorsMemento = linkTagCollaboratorsMemento;
+            final LinkTagDependencies linkTagDependencies) {
+        this.linkTagDependencies = linkTagDependencies;
     }
 
     /**

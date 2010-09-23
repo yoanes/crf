@@ -65,15 +65,15 @@ public class ResourceSelectorScriptTagWriterFactory {
      *            tag attributes to be written out.
      * @param href
      *            Href attribute of the tag to be written.
-     * @param scriptTagCollaboratorsMemento
+     * @param scriptTagDependencies
      *            Singleton collaborators.
      * @return a new {@link ResourceSelectorScriptTagWriter}.
      */
     public ResourceSelectorTagWriter createResourceSelectorScriptTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes,
-            final String href, final ScriptTagCollaboratorsMemento scriptTagCollaboratorsMemento) {
+            final String href, final ScriptTagDependencies scriptTagDependencies) {
         return new ResourceSelectorScriptTagWriter(device, dynamicAttributes, href,
-                scriptTagCollaboratorsMemento);
+                scriptTagDependencies);
     }
 }

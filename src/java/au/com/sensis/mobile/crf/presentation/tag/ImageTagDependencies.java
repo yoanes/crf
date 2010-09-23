@@ -2,7 +2,6 @@ package au.com.sensis.mobile.crf.presentation.tag;
 
 import au.com.sensis.mobile.crf.config.DeploymentVersion;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.mobile.crf.service.CssBundleFactory;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 
 /**
@@ -11,45 +10,33 @@ import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class LinkTagCollaboratorsMemento extends TagCollaboratorsMemento {
+public class ImageTagDependencies extends TagDependencies {
     /**
-     * Standard name of the {@link LinkTagCollaboratorsMemento} in the Spring context.
+     * Standard name of the {@link ImageTagDependencies} in the Spring context.
      */
-    public static final String BEAN_NAME = "crf.linkTagCollaboratorsMemento";
+    public static final String BEAN_NAME = "crf.imageTagDependencies";
 
-    private final CssBundleFactory cssBundleFactory;
     /**
      * @param resourceResolverEngine
-     * {@link ResourceResolverEngine} to use to map
-     * {@link #getHref()} to concrete resource(s).
+     *            {@link ResourceResolverEngine} to use to
+     *            map {@link #getHref()} to concrete resource(s).
      *
      * @param deploymentVersion
      *            {@link DeploymentVersion} of the current deployment.
-     * @param cssBundleFactory
-     *            {@link CssBundleFactory} to use to get CSS Bundles.
      * @param clientPathPrefix Prefix to be used for the final paths
      *            that a client (web browser) will see.
      * @param resourceResolutionWarnLogger
      *            Special {@link ResourceResolutionWarnLogger} for logging
      *            warnings.
      */
-    public LinkTagCollaboratorsMemento(
+    public ImageTagDependencies(
             final ResourceResolverEngine
                 resourceResolverEngine,
-                final DeploymentVersion deploymentVersion,
-            final CssBundleFactory cssBundleFactory,
+            final DeploymentVersion deploymentVersion,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         super(resourceResolverEngine, deploymentVersion, clientPathPrefix,
                 resourceResolutionWarnLogger);
-
-        this.cssBundleFactory = cssBundleFactory;
     }
 
-    /**
-     * @return {@link CssBundleFactory}
-     */
-    public CssBundleFactory getCssBundleFactory() {
-        return cssBundleFactory;
-    }
 }

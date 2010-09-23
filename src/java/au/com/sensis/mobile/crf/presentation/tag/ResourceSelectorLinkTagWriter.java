@@ -26,7 +26,7 @@ public class ResourceSelectorLinkTagWriter implements ResourceSelectorTagWriter 
     private final List<DynamicTagAttribute> dynamicAttributes;
     private final String href;
 
-    private final LinkTagCollaboratorsMemento linkTagCollaboratorsMemento;
+    private final LinkTagDependencies linkTagDependencies;
 
     /**
      * Default constructor.
@@ -38,16 +38,16 @@ public class ResourceSelectorLinkTagWriter implements ResourceSelectorTagWriter 
      *            tag attributes to be written out.
      * @param href
      *            Href attribute of the tag to be written.
-     * @param linkTagCollaboratorsMemento Singleton collaborators.
+     * @param linkTagDependencies Singleton collaborators.
      */
     public ResourceSelectorLinkTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes, final String href,
-            final LinkTagCollaboratorsMemento linkTagCollaboratorsMemento) {
+            final LinkTagDependencies linkTagDependencies) {
         this.device = device;
         this.dynamicAttributes = dynamicAttributes;
         this.href = href;
-        this.linkTagCollaboratorsMemento = linkTagCollaboratorsMemento;
+        this.linkTagDependencies = linkTagDependencies;
     }
 
     /**
@@ -189,9 +189,9 @@ public class ResourceSelectorLinkTagWriter implements ResourceSelectorTagWriter 
     }
 
     /**
-     * @return the linkTagCollaboratorsMemento
+     * @return the linkTagDependencies
      */
-    private LinkTagCollaboratorsMemento getCollaboratorsMemento() {
-        return linkTagCollaboratorsMemento;
+    private LinkTagDependencies getCollaboratorsMemento() {
+        return linkTagDependencies;
     }
 }
