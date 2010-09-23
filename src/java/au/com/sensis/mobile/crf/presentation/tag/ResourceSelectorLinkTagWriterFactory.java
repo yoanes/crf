@@ -13,33 +13,33 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  */
 public class ResourceSelectorLinkTagWriterFactory {
     private static ResourceSelectorLinkTagWriterFactory
-        resourceSelectorLinkTagWriterFactorySingleton;
+        resourceResolverLinkTagWriterFactorySingleton;
 
     static {
-        restoreDefaultResourceSelectorLinkTagWriterFactorySingleton();
+        restoreDefaultResourceResolverLinkTagWriterFactorySingleton();
     }
 
     /**
      * @return the fileIoFacadeSingleton
      */
     public static ResourceSelectorLinkTagWriterFactory
-        getResourceSelectorLinkTagWriterFactorySingleton() {
-        return resourceSelectorLinkTagWriterFactorySingleton;
+        getResourceResolverLinkTagWriterFactorySingleton() {
+        return resourceResolverLinkTagWriterFactorySingleton;
     }
 
     /**
      * Change the default {@link ResourceSelectorLinkTagWriterFactory}
      * singleton. Only to be called during unit testing.
      *
-     * @param resourceSelectorLinkTagWriterFactorySingleton
+     * @param resourceResolverLinkTagWriterFactorySingleton
      *            the {@link ResourceSelectorLinkTagWriterFactory} to use for
      *            unit testing.
      */
-    public static void changeDefaultResourceSelectorLinkTagWriterFactorySingleton(
+    public static void changeDefaultResourceResolverLinkTagWriterFactorySingleton(
             final ResourceSelectorLinkTagWriterFactory
-                resourceSelectorLinkTagWriterFactorySingleton) {
-        ResourceSelectorLinkTagWriterFactory.resourceSelectorLinkTagWriterFactorySingleton =
-                resourceSelectorLinkTagWriterFactorySingleton;
+                resourceResolverLinkTagWriterFactorySingleton) {
+        ResourceSelectorLinkTagWriterFactory.resourceResolverLinkTagWriterFactorySingleton =
+            resourceResolverLinkTagWriterFactorySingleton;
     }
 
     /**
@@ -48,9 +48,9 @@ public class ResourceSelectorLinkTagWriterFactory {
      * Only to be called during unit testing.
      */
     public static void
-        restoreDefaultResourceSelectorLinkTagWriterFactorySingleton() {
+        restoreDefaultResourceResolverLinkTagWriterFactorySingleton() {
         // We actually instantiate a new instance since it contains no state.
-        ResourceSelectorLinkTagWriterFactory.resourceSelectorLinkTagWriterFactorySingleton =
+        ResourceSelectorLinkTagWriterFactory.resourceResolverLinkTagWriterFactorySingleton =
                 new ResourceSelectorLinkTagWriterFactory();
     }
 

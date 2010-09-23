@@ -9,7 +9,7 @@ import javax.servlet.jsp.JspWriter;
 import au.com.sensis.mobile.crf.config.DeploymentVersion;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -161,11 +161,11 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
     }
 
     /**
-     * @return the {@link ResourceSelector}.
+     * @return the {@link ResourceResolverEngine}.
      */
-    private ResourceSelector
+    private ResourceResolverEngine
         getResourceSelector() {
-        return getCollaboratorsMemento().getResourceSelector();
+        return getCollaboratorsMemento().getResourceResolverEngine();
     }
 
     /**

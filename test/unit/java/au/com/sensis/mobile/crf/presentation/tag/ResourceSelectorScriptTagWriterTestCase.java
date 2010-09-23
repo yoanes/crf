@@ -25,7 +25,7 @@ import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -50,7 +50,7 @@ public class ResourceSelectorScriptTagWriterTestCase extends
     private StringWriter stringWriter;
 
     private WebApplicationContext mockWebApplicationContext;
-    private ResourceSelector mockResourceSelector;
+    private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
     private ScriptBundleFactory mockScriptBundleFactory;
     private FileIoFacade mockFileIoFacade;
@@ -150,7 +150,7 @@ public class ResourceSelectorScriptTagWriterTestCase extends
 
     private ScriptTagCollaboratorsMemento createCollaboratorsMemento(
             final TestData testData) {
-        return new ScriptTagCollaboratorsMemento(getMockResourceSelector(),
+        return new ScriptTagCollaboratorsMemento(getMockResourceResolverEngine(),
                 testData.getDeploymentVersion(), getMockScriptBundleFactory(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());
@@ -159,7 +159,7 @@ public class ResourceSelectorScriptTagWriterTestCase extends
     private void recordGetMappedResourcePath(
             final List<MappedResourcePath> expectedMappedResourcePaths) throws IOException {
         EasyMock.expect(
-                getMockResourceSelector()
+                getMockResourceResolverEngine()
                         .getAllResourcePaths(getMockDevice(),
                                 getRequestedScriptResourcePath()))
                         .andReturn(expectedMappedResourcePaths).atLeastOnce();
@@ -224,20 +224,20 @@ public class ResourceSelectorScriptTagWriterTestCase extends
     }
 
     /**
-     * @return the mockResourceSelector
+     * @return the mockResourceResolverEngine
      */
-    public ResourceSelector
-        getMockResourceSelector() {
-        return mockResourceSelector;
+    public ResourceResolverEngine
+        getMockResourceResolverEngine() {
+        return mockResourceResolverEngine;
     }
 
     /**
-     * @param mockResourceSelector
-     *            the mockResourceSelector to set
+     * @param mockResourceResolverEngine
+     *            the mockResourceResolverEngine to set
      */
-    public void setMockResourceSelector(
-            final ResourceSelector mockResourceSelector) {
-        this.mockResourceSelector = mockResourceSelector;
+    public void setMockResourceResolverEngine(
+            final ResourceResolverEngine mockResourceResolverEngine) {
+        this.mockResourceResolverEngine = mockResourceResolverEngine;
     }
 
     /**

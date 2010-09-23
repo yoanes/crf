@@ -24,7 +24,7 @@ import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
 import au.com.sensis.mobile.crf.service.MappedResourcePathBean;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 import au.com.sensis.wireless.web.mobile.MobileContext;
@@ -48,7 +48,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     private HttpServletResponse mockHttpServletResponse;
     private MockHttpSession springMockHttpSession;
     private MobileContext mockMobileContext;
-    private ResourceSelector mockResourceSelector;
+    private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
     private ServletOutputStream mockServletOutputStream;
     private FileIoFacade mockFileIoFacade;
@@ -86,7 +86,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
                 expectedMappedFileOnClasspath).toURI()));
 
         setImageServletCollaboratorsMemento(new ImageServletCollaboratorsMemento(
-                getMockResourceSelector(), IMAGES_CLIENT_PATH_PREFIX));
+                getMockResourceResolverEngine(), IMAGES_CLIENT_PATH_PREFIX));
     }
 
     /**
@@ -253,7 +253,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
             final String requestedResourcePath,
             final MappedResourcePath mappedResourcePath) throws IOException {
         EasyMock.expect(
-                getMockResourceSelector().getResourcePath(getMockDevice(),
+                getMockResourceResolverEngine().getResourcePath(getMockDevice(),
                         requestedResourcePath)).andReturn(mappedResourcePath);
 
     }
@@ -288,13 +288,13 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
         this.mockHttpServletResponse = mockHttpServletResponse;
     }
 
-    public ResourceSelector getMockResourceSelector() {
-        return mockResourceSelector;
+    public ResourceResolverEngine getMockResourceResolverEngine() {
+        return mockResourceResolverEngine;
     }
 
-    public void setMockResourceSelector(
-            final ResourceSelector mockResourceSelector) {
-        this.mockResourceSelector = mockResourceSelector;
+    public void setMockResourceResolverEngine(
+            final ResourceResolverEngine mockResourceResolverEngine) {
+        this.mockResourceResolverEngine = mockResourceResolverEngine;
     }
 
     public Device getMockDevice() {

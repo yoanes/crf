@@ -1,7 +1,7 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
 import au.com.sensis.mobile.crf.config.DeploymentVersion;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.service.CssBundleFactory;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 
@@ -19,8 +19,8 @@ public class LinkTagCollaboratorsMemento extends TagCollaboratorsMemento {
 
     private final CssBundleFactory cssBundleFactory;
     /**
-     * @param resourceSelector
-     * {@link ResourceSelector} to use to map
+     * @param resourceResolverEngine
+     * {@link ResourceResolverEngine} to use to map
      * {@link #getHref()} to concrete resource(s).
      *
      * @param deploymentVersion
@@ -34,13 +34,13 @@ public class LinkTagCollaboratorsMemento extends TagCollaboratorsMemento {
      *            warnings.
      */
     public LinkTagCollaboratorsMemento(
-            final ResourceSelector
-                resourceSelector,
+            final ResourceResolverEngine
+                resourceResolverEngine,
                 final DeploymentVersion deploymentVersion,
             final CssBundleFactory cssBundleFactory,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        super(resourceSelector, deploymentVersion, clientPathPrefix,
+        super(resourceResolverEngine, deploymentVersion, clientPathPrefix,
                 resourceResolutionWarnLogger);
 
         this.cssBundleFactory = cssBundleFactory;

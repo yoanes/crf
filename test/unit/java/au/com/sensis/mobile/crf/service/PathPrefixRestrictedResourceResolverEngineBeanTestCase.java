@@ -14,15 +14,15 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link PathPrefixRestrictedResourceSelectorBean}.
+ * Unit test {@link PathPrefixRestrictedResourceResolverEngineBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class PathPrefixRestrictedResourceSelectorBeanTestCase
+public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
         extends AbstractJUnit4TestCase {
 
-    private PathPrefixRestrictedResourceSelectorBean objectUnderTest;
-    private ResourceSelector mockResourceSelector;
+    private PathPrefixRestrictedResourceResolverEngineBean objectUnderTest;
+    private ResourceResolverEngine mockResourceResolverEngine;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private Device mockDevice;
 
@@ -34,9 +34,9 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
      */
     @Before
     public void setUp() throws Exception {
-        setObjectUnderTest(new PathPrefixRestrictedResourceSelectorBean(
+        setObjectUnderTest(new PathPrefixRestrictedResourceResolverEngineBean(
                 getResourcePathTestData().getMapComponentPathPrefix(),
-                getMockResourceSelector()));
+                getMockResourceResolverEngine()));
     }
 
     @Test
@@ -45,8 +45,8 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
                 new String[] { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new PathPrefixRestrictedResourceSelectorBean(testValue,
-                        getMockResourceSelector());
+                new PathPrefixRestrictedResourceResolverEngineBean(testValue,
+                        getMockResourceResolverEngine());
 
                 Assert
                         .fail("IllegalArgumentException expected for testValue: '"
@@ -61,14 +61,14 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
     }
 
     @Test
-    public void testConstructorWhenResourceSelectorIsNull() throws Throwable {
+    public void testConstructorWhenResourceResolverEngineIsNull() throws Throwable {
         try {
-            new PathPrefixRestrictedResourceSelectorBean(
+            new PathPrefixRestrictedResourceResolverEngineBean(
                     getResourcePathTestData().getMapComponentPathPrefix(), null);
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
             Assert.assertEquals("IllegalArgumentException has wrong message",
-                    "resourceSelector must not be null", e
+                    "resourceResolverEngine must not be null", e
                             .getMessage());
         }
     }
@@ -77,7 +77,7 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
     public void testGetResourcePathWhenPrefixMatches() throws Throwable {
 
         EasyMock.expect(
-                getMockResourceSelector().getResourcePath(
+                getMockResourceResolverEngine().getResourcePath(
                         getMockDevice(),
                         getRequestedMatchedResourcePath()))
                 .andReturn(
@@ -120,7 +120,7 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
     public void testGetAllResourcePathsWhenPrefixMatches() throws Throwable {
 
         EasyMock.expect(
-                getMockResourceSelector().getAllResourcePaths(
+                getMockResourceResolverEngine().getAllResourcePaths(
                         getMockDevice(),
                         getRequestedMatchedResourcePath()))
                 .andReturn(
@@ -160,22 +160,22 @@ public class PathPrefixRestrictedResourceSelectorBeanTestCase
         return Arrays.asList(getExpectedMappedResourcePath());
     }
 
-    private PathPrefixRestrictedResourceSelectorBean getObjectUnderTest() {
+    private PathPrefixRestrictedResourceResolverEngineBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
     private void setObjectUnderTest(
-            final PathPrefixRestrictedResourceSelectorBean objectUnderTest) {
+            final PathPrefixRestrictedResourceResolverEngineBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 
-    public ResourceSelector getMockResourceSelector() {
-        return mockResourceSelector;
+    public ResourceResolverEngine getMockResourceResolverEngine() {
+        return mockResourceResolverEngine;
     }
 
-    public void setMockResourceSelector(
-            final ResourceSelector mockResourceSelector) {
-        this.mockResourceSelector = mockResourceSelector;
+    public void setMockResourceResolverEngine(
+            final ResourceResolverEngine mockResourceResolverEngine) {
+        this.mockResourceResolverEngine = mockResourceResolverEngine;
     }
 
     private ResourcePathTestData getResourcePathTestData() {

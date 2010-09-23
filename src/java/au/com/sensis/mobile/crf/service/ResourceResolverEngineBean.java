@@ -16,15 +16,15 @@ import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
- * Standard implementation of {@link ResourceSelector}.
+ * Standard implementation of {@link ResourceResolverEngine}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ResourceSelectorBean implements
-        ResourceSelector {
+public class ResourceResolverEngineBean implements
+        ResourceResolverEngine {
 
     private static final Logger LOGGER = Logger.getLogger(
-            ResourceSelectorBean.class);
+            ResourceResolverEngineBean.class);
 
     private final ConfigurationFactory configurationFactory;
     private final ResourcePathMapper resourcePathMapper;
@@ -42,7 +42,7 @@ public class ResourceSelectorBean implements
      * @param resourceResolutionWarnLogger {@link ResourceResolutionWarnLogger} to
      *            use to log warnings.
      */
-    public ResourceSelectorBean(
+    public ResourceResolverEngineBean(
             final ConfigurationFactory configurationFactory,
             final ResourcePathMapper resourcePathMapper,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {

@@ -8,13 +8,13 @@
                 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
                 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-    <bean id="crf.resourceSelector" 
-        class="au.com.sensis.mobile.crf.service.ChainedPathRestrictedResourceSelectorBean">
-        <constructor-arg ref="crf.defaultResourceSelector" />
+    <bean id="crf.resourceResolverEngine" 
+        class="au.com.sensis.mobile.crf.service.ChainedPathRestrictedResourceResolverEngineBean">
+        <constructor-arg ref="crf.defaultResourceResolverEngine" />
     </bean>                
 
-    <bean id="crf.defaultResourceSelector" 
-        class="au.com.sensis.mobile.crf.service.ResourceSelectorBean">
+    <bean id="crf.defaultResourceResolverEngine" 
+        class="au.com.sensis.mobile.crf.service.ResourceResolverEngineBean">
         <constructor-arg ref="crf.configurationFactory"/>
         <constructor-arg ref="crf.resourcePathMapper"/>
         <constructor-arg ref="crf.resourceResolutionWarnLogger"/>
@@ -57,7 +57,7 @@
     
     <bean id="crf.linkTagCollaboratorsMemento" 
         class="au.com.sensis.mobile.crf.presentation.tag.LinkTagCollaboratorsMemento">
-        <constructor-arg ref="crf.resourceSelector" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentVersion" />
         <constructor-arg ref="crf.cssBundleFactory" />
         <constructor-arg value="@{crf.env.resources.css.client.path.prefix}" />
@@ -66,7 +66,7 @@
     
     <bean id="crf.imageTagCollaboratorsMemento" 
         class="au.com.sensis.mobile.crf.presentation.tag.ImageTagCollaboratorsMemento">
-        <constructor-arg ref="crf.resourceSelector" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentVersion" />
         <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
@@ -74,7 +74,7 @@
     
     <bean id="crf.scriptTagCollaboratorsMemento" 
         class="au.com.sensis.mobile.crf.presentation.tag.ScriptTagCollaboratorsMemento">
-        <constructor-arg ref="crf.resourceSelector" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentVersion" />
         <constructor-arg ref="crf.scriptBundleFactory" />
         <constructor-arg value="@{crf.env.resources.javascript.client.path.prefix}" />
@@ -86,7 +86,7 @@
     
     <bean id="crf.imageServletCollaboratorsMemento" 
         class="au.com.sensis.mobile.crf.presentation.ImageServlet$ImageServletCollaboratorsMemento">
-        <constructor-arg ref="crf.resourceSelector" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
     </bean>
     

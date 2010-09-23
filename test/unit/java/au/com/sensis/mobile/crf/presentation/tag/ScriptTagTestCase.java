@@ -19,7 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -40,7 +40,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
     private MockServletContext springMockServletContext;
     private WebApplicationContext mockWebApplicationContext;
-    private ResourceSelector mockResourceSelector;
+    private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
     private ScriptBundleFactory mockScriptBundleFactory;
     private final DeploymentVersionTestData deploymentVersionTestData
@@ -98,7 +98,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
     private ScriptTagCollaboratorsMemento createCollaboratorsMemento() {
         return new ScriptTagCollaboratorsMemento(
-                getMockResourceSelector(),
+                getMockResourceResolverEngine(),
                 getDeploymentVersionTestData()
                     .createDevDeploymentVersion(),
                 getMockScriptBundleFactory(),
@@ -317,19 +317,19 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the mockResourceSelector
+     * @return the mockResourceResolverEngine
      */
-    public ResourceSelector getMockResourceSelector() {
-        return mockResourceSelector;
+    public ResourceResolverEngine getMockResourceResolverEngine() {
+        return mockResourceResolverEngine;
     }
 
     /**
-     * @param mockResourceSelector
-     *            the mockResourceSelector to set
+     * @param mockResourceResolverEngine
+     *            the mockResourceResolverEngine to set
      */
-    public void setMockResourceSelector(
-            final ResourceSelector mockResourceSelector) {
-        this.mockResourceSelector = mockResourceSelector;
+    public void setMockResourceResolverEngine(
+            final ResourceResolverEngine mockResourceResolverEngine) {
+        this.mockResourceResolverEngine = mockResourceResolverEngine;
     }
 
     /**

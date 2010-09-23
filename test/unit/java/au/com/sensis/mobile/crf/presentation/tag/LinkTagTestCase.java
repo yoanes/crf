@@ -20,7 +20,7 @@ import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
 import au.com.sensis.mobile.crf.service.CssBundleFactory;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
@@ -41,7 +41,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     private MockServletContext springMockServletContext;
     private WebApplicationContext mockWebApplicationContext;
-    private ResourceSelector mockResourceSelector;
+    private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
     private CssBundleFactory mockCssBundleFactory;
     private final DeploymentVersionTestData deploymentVersionTestData
@@ -62,7 +62,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     @Before
     public void setUp() throws Exception {
         ResourceSelectorLinkTagWriterFactory
-                .changeDefaultResourceSelectorLinkTagWriterFactorySingleton(
+                .changeDefaultResourceResolverLinkTagWriterFactorySingleton(
                         getMockResourceSelectorLinkTagWriterFactory());
 
         setCollaboratorsMemento(createCollaboratorsMemento());
@@ -94,12 +94,12 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     @After
     public void tearDown() throws Exception {
         ResourceSelectorLinkTagWriterFactory
-            .restoreDefaultResourceSelectorLinkTagWriterFactorySingleton();
+            .restoreDefaultResourceResolverLinkTagWriterFactorySingleton();
     }
 
     private LinkTagCollaboratorsMemento createCollaboratorsMemento() {
         return new LinkTagCollaboratorsMemento(
-                getMockResourceSelector(),
+                getMockResourceResolverEngine(),
                 getDeploymentVersionTestData()
                     .createDevDeploymentVersion(),
                 getMockCssBundleFactory(),
@@ -314,20 +314,20 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the mockResourceSelector
+     * @return the mockResourceResolverEngine
      */
-    public ResourceSelector
-        getMockResourceSelector() {
-        return mockResourceSelector;
+    public ResourceResolverEngine
+        getMockResourceResolverEngine() {
+        return mockResourceResolverEngine;
     }
 
     /**
-     * @param mockResourceSelector
-     *            the mockResourceSelector to set
+     * @param mockResourceResolverEngine
+     *            the mockResourceResolverEngine to set
      */
-    public void setMockResourceSelector(
-            final ResourceSelector mockResourceSelector) {
-        this.mockResourceSelector = mockResourceSelector;
+    public void setMockResourceResolverEngine(
+            final ResourceResolverEngine mockResourceResolverEngine) {
+        this.mockResourceResolverEngine = mockResourceResolverEngine;
     }
 
     /**

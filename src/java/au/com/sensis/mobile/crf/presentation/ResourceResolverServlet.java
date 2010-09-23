@@ -15,7 +15,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.web.mobile.MobileContext;
 
@@ -24,20 +24,20 @@ import au.com.sensis.wireless.web.mobile.MobileContext;
  * device specific JSP paths (eg. /WEB-INF/view/jsp/HD800/detail/bdp.jsp ), then
  * dispatches the request to the concrete path. Handles both JSP forwards and includes.
  * The actual path mapping is performed by delegating to
- * {@link ResourceSelector}.
+ * {@link ResourceResolverEngine}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ResourceSelectorServlet extends HttpServletBean {
+public class ResourceResolverServlet extends HttpServletBean {
 
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOGGER =
-            Logger.getLogger(ResourceSelectorServlet.class);
+            Logger.getLogger(ResourceResolverServlet.class);
 
-    private ResourceSelector resourceSelector;
+    private ResourceResolverEngine resourceResolverEngine;
 
-    private String resourceSelectorBeanName;
+    private String resourceResolverEngineBeanName;
 
     /**
      * {@inheritDoc}
@@ -45,23 +45,23 @@ public class ResourceSelectorServlet extends HttpServletBean {
     @Override
     public void init(final ServletConfig config) throws ServletException {
         super.init(config);
-        validateResourceSelectorBeanName();
+        validateResourceResolverEngineBeanName();
 
         final WebApplicationContext webApplicationContext =
                 WebApplicationContextUtils
                         .getRequiredWebApplicationContext(config
                                 .getServletContext());
-        setResourceSelector((ResourceSelector) webApplicationContext
-                .getBean(getResourceSelectorBeanName()));
+        setResourceResolverEngine((ResourceResolverEngine) webApplicationContext
+                .getBean(getResourceResolverEngineBeanName()));
     }
 
-    private void validateResourceSelectorBeanName() {
+    private void validateResourceResolverEngineBeanName() {
         if (StringUtils
-                .isBlank(getResourceSelectorBeanName())) {
+                .isBlank(getResourceResolverEngineBeanName())) {
             throw new IllegalStateException(
-                    "resourceSelectorBeanName must be set "
+                    "resourceResolverEngineBeanName must be set "
                             + "as a non-blank Servlet init-param in your web.xml. Was: '"
-                            + getResourceSelectorBeanName()
+                            + getResourceResolverEngineBeanName()
                             + "'");
         }
     }
@@ -119,7 +119,7 @@ public class ResourceSelectorServlet extends HttpServletBean {
         }
 
         final MappedResourcePath mappedResourcePath =
-                getResourceSelector().getResourcePath(
+            getResourceResourceResolverEngine().getResourcePath(
                         getDevice(httpServletRequestInterrogator
                                 .getHttpServletRequest()),
                         httpServletRequestInterrogator.getRequestUri());
@@ -143,28 +143,28 @@ public class ResourceSelectorServlet extends HttpServletBean {
         return context.getDevice();
     }
 
-    private ResourceSelector getResourceSelector() {
-        return resourceSelector;
+    private ResourceResolverEngine getResourceResourceResolverEngine() {
+        return resourceResolverEngine;
     }
 
-    private void setResourceSelector(final ResourceSelector resourceSelector) {
-        this.resourceSelector = resourceSelector;
+    private void setResourceResolverEngine(final ResourceResolverEngine resourceResolverEngine) {
+        this.resourceResolverEngine = resourceResolverEngine;
     }
 
     /**
-     * @return the resourceSelectorBeanName
+     * @return the resourceResolverEngineBeanName
      */
-    public String getResourceSelectorBeanName() {
-        return resourceSelectorBeanName;
+    public String getResourceResolverEngineBeanName() {
+        return resourceResolverEngineBeanName;
     }
 
     /**
-     * @param resourceSelectorBeanName
-     *            Name of the {@link ResourceSelector} bean to obtain from the
+     * @param resourceResolverEngineBeanName
+     *            Name of the {@link ResourceResolverEngine} bean to obtain from the
      *            Spring context.
      */
-    public void setResourceSelectorBeanName(
-            final String resourceSelectorBeanName) {
-        this.resourceSelectorBeanName = resourceSelectorBeanName;
+    public void setResourceResolverEngineBeanName(
+            final String resourceResolverEngineBeanName) {
+        this.resourceResolverEngineBeanName = resourceResolverEngineBeanName;
     }
 }

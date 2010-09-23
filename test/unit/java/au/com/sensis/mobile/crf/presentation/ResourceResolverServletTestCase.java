@@ -21,24 +21,23 @@ import org.springframework.web.context.WebApplicationContext;
 import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 import au.com.sensis.wireless.web.mobile.MobileContext;
 
 /**
- * Unit test {@link ResourceSelectorServlet}.
+ * Unit test {@link ResourceResolverServlet}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ResourceSelectorServletTestCase extends
+public class ResourceResolverServletTestCase extends
         AbstractJUnit4TestCase {
 
-    private static final String BEAN_NAME = "resourceSelector";
+    private static final String BEAN_NAME = "resourceResolverEngine";
 
-    private ResourceSelectorServlet objectUnderTest;
-    private ResourceSelector
-        mockResourceSelector;
+    private ResourceResolverServlet objectUnderTest;
+    private ResourceResolverEngine mockResourceResolverEngine;
     private MockServletContext springMockServletContext;
     private HttpServletRequest mockHttpServletRequest;
     private MockHttpServletResponse springMockHttpServletResponse;
@@ -60,8 +59,8 @@ public class ResourceSelectorServletTestCase extends
     public void setUp() throws Exception {
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
-        setObjectUnderTest(new ResourceSelectorServlet());
-        getObjectUnderTest().setResourceSelectorBeanName(
+        setObjectUnderTest(new ResourceResolverServlet());
+        getObjectUnderTest().setResourceResolverEngineBeanName(
                 BEAN_NAME);
 
         setSpringMockServletContext(new MockServletContext());
@@ -81,12 +80,12 @@ public class ResourceSelectorServletTestCase extends
     }
 
     @Test
-    public void testInitWhenResourceSelectorBeanNameIsBlank()
+    public void testInitWhenResourceResolverEngineBeanNameIsBlank()
             throws Throwable {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             getObjectUnderTest()
-                    .setResourceSelectorBeanName(
+                    .setResourceResolverEngineBeanName(
                             testValue);
             try {
                 getObjectUnderTest().init(getSpringMockServletConfig());
@@ -97,7 +96,7 @@ public class ResourceSelectorServletTestCase extends
 
                 Assert.assertEquals(
                     "IllegalStateException has wrong message",
-                    "resourceSelectorBeanName must be set "
+                    "resourceResolverEngineBeanName must be set "
                             + "as a non-blank Servlet init-param in your web.xml. Was: '"
                             + testValue + "'",
                     e.getMessage());
@@ -143,7 +142,7 @@ public class ResourceSelectorServletTestCase extends
             final String requestedResourceServletPath) throws IOException {
 
         EasyMock.expect(
-                getMockResourceSelector().getResourcePath(getMockDevice(),
+                getMockResourceResolverEngine().getResourcePath(getMockDevice(),
                         requestedResourceServletPath)).andReturn(null)
                 .atLeastOnce();
 
@@ -301,7 +300,7 @@ public class ResourceSelectorServletTestCase extends
     private void recordGetResourcePathFromResourceSelector(
             final String requestedResourceServletPath) throws IOException {
         EasyMock.expect(
-                getMockResourceSelector()
+                getMockResourceResolverEngine()
                         .getResourcePath(getMockDevice(),
                                 requestedResourceServletPath)).andReturn(
                 getMockMappedResourcePath()).atLeastOnce();
@@ -331,14 +330,14 @@ public class ResourceSelectorServletTestCase extends
 
         EasyMock.expect(
                 getMockWebApplicationContext().getBean(BEAN_NAME))
-                .andReturn(getMockResourceSelector())
+                .andReturn(getMockResourceResolverEngine())
                 .atLeastOnce();
     }
 
     /**
      * @return the objectUnderTest
      */
-    private ResourceSelectorServlet getObjectUnderTest() {
+    private ResourceResolverServlet getObjectUnderTest() {
         return objectUnderTest;
     }
 
@@ -346,25 +345,25 @@ public class ResourceSelectorServletTestCase extends
      * @param objectUnderTest the objectUnderTest to set
      */
     private void setObjectUnderTest(
-            final ResourceSelectorServlet objectUnderTest) {
+            final ResourceResolverServlet objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 
     /**
-     * @return the mockResourceSelector
+     * @return the mockResourceResolverEngine
      */
-    public ResourceSelector
-        getMockResourceSelector() {
-        return mockResourceSelector;
+    public ResourceResolverEngine
+        getMockResourceResolverEngine() {
+        return mockResourceResolverEngine;
     }
 
     /**
-     * @param mockResourceSelector
-     *            the mockResourceSelector to set
+     * @param mockResourceResolverEngine
+     *            the mockResourceResolverEngine to set
      */
-    public void setMockResourceSelector(
-            final ResourceSelector mockResourceSelector) {
-        this.mockResourceSelector = mockResourceSelector;
+    public void setMockResourceResolverEngine(
+            final ResourceResolverEngine mockResourceResolverEngine) {
+        this.mockResourceResolverEngine = mockResourceResolverEngine;
     }
 
     /**

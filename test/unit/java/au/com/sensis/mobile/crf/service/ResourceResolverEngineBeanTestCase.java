@@ -20,14 +20,14 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link ResourceSelectorBean}.
+ * Unit test {@link ResourceResolverEngineBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ResourceSelectorBeanTestCase extends
+public class ResourceResolverEngineBeanTestCase extends
         AbstractJUnit4TestCase {
 
-    private ResourceSelectorBean objectUnderTest;
+    private ResourceResolverEngineBean objectUnderTest;
     private ConfigurationFactory mockConfigurationFactory;
     private UiConfiguration mockUiConfiguration;
     private ResourcePathMapper mockResourcePathMapper;
@@ -61,7 +61,7 @@ public class ResourceSelectorBeanTestCase extends
     public void setUp() throws Exception {
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
-        setObjectUnderTest(new ResourceSelectorBean(
+        setObjectUnderTest(new ResourceResolverEngineBean(
                 getMockConfigurationFactory(), getMockResourcePathMapper(),
                 getMockResolutionWarnLogger()));
     }
@@ -79,7 +79,7 @@ public class ResourceSelectorBeanTestCase extends
     @Test
     public void testConstructorWhenConfigurationFactoryNull() throws Throwable {
         try {
-            new ResourceSelectorBean(null,
+            new ResourceResolverEngineBean(null,
                     getMockResourcePathMapper(), getMockResolutionWarnLogger());
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
@@ -92,7 +92,7 @@ public class ResourceSelectorBeanTestCase extends
     @Test
     public void testConstructorWhenResourcePathMapperNull() throws Throwable {
         try {
-            new ResourceSelectorBean(getMockConfigurationFactory(),
+            new ResourceResolverEngineBean(getMockConfigurationFactory(),
                     null, getMockResolutionWarnLogger());
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
@@ -105,7 +105,7 @@ public class ResourceSelectorBeanTestCase extends
     @Test
     public void testConstructorWhenResourceResolutionWarnLoggerNull() throws Throwable {
         try {
-            new ResourceSelectorBean(getMockConfigurationFactory(),
+            new ResourceResolverEngineBean(getMockConfigurationFactory(),
                     getMockResourcePathMapper(), null);
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
@@ -746,7 +746,7 @@ public class ResourceSelectorBeanTestCase extends
     /**
      * @return the objectUnderTest
      */
-    private ResourceSelectorBean getObjectUnderTest() {
+    private ResourceResolverEngineBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
@@ -754,7 +754,7 @@ public class ResourceSelectorBeanTestCase extends
      * @param objectUnderTest the objectUnderTest to set
      */
     private void setObjectUnderTest(
-            final ResourceSelectorBean objectUnderTest) {
+            final ResourceResolverEngineBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

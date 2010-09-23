@@ -2,7 +2,7 @@ package au.com.sensis.mobile.crf.presentation.tag;
 
 import au.com.sensis.mobile.crf.config.DeploymentVersion;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
 /**
  * Simple memento encapsulating the singleton collaborators of a JSP tag.
@@ -12,15 +12,15 @@ import au.com.sensis.mobile.crf.service.ResourceSelector;
  */
 public class TagCollaboratorsMemento {
 
-    private final ResourceSelector
-        resourceSelector;
+    private final ResourceResolverEngine
+        resourceResolverEngine;
     private final DeploymentVersion deploymentVersion;
     private final String clientPathPrefix;
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
 
     /**
-     * @param resourceSelector
-     *            {@link ResourceSelector} to use to
+     * @param resourceResolverEngine
+     *            {@link ResourceResolverEngine} to use to
      *            map {@link #getHref()} to concrete resource(s).
      *
      * @param deploymentVersion
@@ -33,23 +33,23 @@ public class TagCollaboratorsMemento {
      *            warnings.
      */
     public TagCollaboratorsMemento(
-            final ResourceSelector
-                resourceSelector,
+            final ResourceResolverEngine
+                resourceResolverEngine,
             final DeploymentVersion deploymentVersion,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        this.resourceSelector =
-                resourceSelector;
+        this.resourceResolverEngine =
+                resourceResolverEngine;
         this.deploymentVersion = deploymentVersion;
         this.clientPathPrefix = clientPathPrefix;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
     }
 
     /**
-     * @return {@link ResourceSelector}
+     * @return {@link ResourceResolverEngine}
      */
-    public ResourceSelector getResourceSelector() {
-        return resourceSelector;
+    public ResourceResolverEngine getResourceResolverEngine() {
+        return resourceResolverEngine;
     }
 
     /**

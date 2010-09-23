@@ -14,7 +14,7 @@ import org.springframework.web.servlet.HttpServletBean;
 
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.web.mobile.MobileContext;
 
@@ -23,7 +23,7 @@ import au.com.sensis.wireless.web.mobile.MobileContext;
  * concrete, device specific image paths (eg. common/iphone/background.png),
  * then writes the image to the {@link HttpServletResponse}. The actual path
  * mapping is performed by delegating to a
- * {@link ResourceSelector}.
+ * {@link ResourceResolverEngine}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
@@ -63,7 +63,7 @@ public class ImageServlet extends HttpServletBean {
         if (requestedResourcePathHasCorrectPrefix(request)) {
 
             final MappedResourcePath mappedResourcePath =
-                    getImageServletCollaboratorsMemento().getResourceSelector()
+                    getImageServletCollaboratorsMemento().getResourceResolverEngine()
                             .getResourcePath(getDevice(request),
                                     getRequestedResourcePath(request));
 
@@ -161,33 +161,33 @@ public class ImageServlet extends HttpServletBean {
      */
     public static class ImageServletCollaboratorsMemento {
 
-        private final ResourceSelector resourceSelector;
+        private final ResourceResolverEngine resourceResolverEngine;
         private final String imagesClientPathPrefix;
 
         /**
          * Constructor.
          *
-         * @param resourceSelector
-         *            {@link ResourceSelector} to use
+         * @param resourceResolverEngine
+         *            {@link ResourceResolverEngine} to use
          *            to resolve abstract image paths to real paths.
          * @param imagesClientPathPrefix
          *            Client side prefix for all image paths.
          *            eg. "/resources/images".
          */
         public ImageServletCollaboratorsMemento(
-                final ResourceSelector resourceSelector,
+                final ResourceResolverEngine resourceResolverEngine,
                 final String imagesClientPathPrefix) {
-            this.resourceSelector = resourceSelector;
+            this.resourceResolverEngine = resourceResolverEngine;
             this.imagesClientPathPrefix = imagesClientPathPrefix;
         }
 
         /**
-         * @return resourceSelector
-         *         {@link ResourceSelector} to use to
+         * @return resourceResolverEngine
+         *         {@link ResourceResolverEngine} to use to
          *         resolve abstract image paths to real paths.
          */
-        public ResourceSelector getResourceSelector() {
-            return resourceSelector;
+        public ResourceResolverEngine getResourceResolverEngine() {
+            return resourceResolverEngine;
         }
 
         /**

@@ -14,19 +14,19 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
  * Unit test
- * {@link ChainedPathRestrictedResourceSelectorBean}.
+ * {@link ChainedPathRestrictedResourceResolverEngineBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ChainedPathRestrictedResourceSelectorBeanTestCase
+public class ChainedPathRestrictedResourceResolverEngineBeanTestCase
         extends AbstractJUnit4TestCase {
 
     private static final String BEAN_NAME = "beanName";
 
-    private ChainedPathRestrictedResourceSelectorBean objectUnderTest;
+    private ChainedPathRestrictedResourceResolverEngineBean objectUnderTest;
 
-    private ResourceSelector mockDefaultSelector;
-    private PathRestrictedResourceSelector mockPathRestrictedSelector;
+    private ResourceResolverEngine mockDefaultResourceResolverEngine;
+    private PathRestrictedResourceResolverEngine mockPathRestrictedResourceResolverEngine;
     private Object mockBean;
     private Device mockDevice;
     private final ResourcePathTestData resourcePathTestData =
@@ -41,27 +41,27 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
     @Before
     public void setUp() throws Exception {
         setObjectUnderTest(
-                new ChainedPathRestrictedResourceSelectorBean(
-                        getMockDefaultSelector()));
+                new ChainedPathRestrictedResourceResolverEngineBean(
+                        getMockDefaultResourceResolverEngine()));
         swapOutRealLoggerForMock(
-                ChainedPathRestrictedResourceSelectorBean.class);
+                ChainedPathRestrictedResourceResolverEngineBean.class);
 
     }
 
     private Logger getMockLogger() {
         return getMockLogger(
-                ChainedPathRestrictedResourceSelectorBean.class);
+                ChainedPathRestrictedResourceResolverEngineBean.class);
     }
 
     @Test
     public void testConstructorWhenDefaultSelectorIsNull() throws Throwable {
         try {
-            new ChainedPathRestrictedResourceSelectorBean(
+            new ChainedPathRestrictedResourceResolverEngineBean(
                     null);
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
             Assert.assertEquals("IllegalArgumentException has wrong message",
-                    "defaultSelector must not be null", e.getMessage());
+                    "defaultResourceResolverEngine must not be null", e.getMessage());
         }
 
     }
@@ -81,12 +81,12 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
             throws Throwable {
 
         setupForPostProcessAfterInitializationWhenBeanIsOfInterest(
-                getMockPathRestrictedSelector());
+                getMockPathRestrictedResourceResolverEngine());
 
         replay();
 
         assertForPostProcessAfterInitializationWhenBeanIsOfInterest(
-                getMockPathRestrictedSelector());
+                getMockPathRestrictedResourceResolverEngine());
 
     }
 
@@ -123,22 +123,22 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
     public void testGetResourcePathWhenPathRestrictedSelectorFound() throws Throwable {
 
         setupForPostProcessAfterInitializationWhenBeanIsOfInterest(
-                getMockPathRestrictedSelector());
+                getMockPathRestrictedResourceResolverEngine());
 
         EasyMock.expect(
-                getMockPathRestrictedSelector().isInterestedIn(
+                getMockPathRestrictedResourceResolverEngine().isInterestedIn(
                         getRequestedResourcePath())).andReturn(
                 Boolean.TRUE);
 
         EasyMock.expect(
-                getMockPathRestrictedSelector().getResourcePath(
+                getMockPathRestrictedResourceResolverEngine().getResourcePath(
                         getMockDevice(), getRequestedResourcePath()))
                 .andReturn(getExpectedMappedResourcePath());
 
         replay();
 
         assertForPostProcessAfterInitializationWhenBeanIsOfInterest(
-                getMockPathRestrictedSelector());
+                getMockPathRestrictedResourceResolverEngine());
 
         final MappedResourcePath actualMappedResourcePath =
                 getObjectUnderTest().getResourcePath(getMockDevice(),
@@ -168,7 +168,7 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
             throws Throwable {
 
         EasyMock.expect(
-                getMockDefaultSelector().getResourcePath(getMockDevice(),
+                getMockDefaultResourceResolverEngine().getResourcePath(getMockDevice(),
                         getRequestedResourcePath())).andReturn(
                 getExpectedMappedResourcePath());
 
@@ -188,22 +188,22 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
         throws Throwable {
 
         setupForPostProcessAfterInitializationWhenBeanIsOfInterest(
-                getMockPathRestrictedSelector());
+                getMockPathRestrictedResourceResolverEngine());
 
         EasyMock.expect(
-                getMockPathRestrictedSelector().isInterestedIn(
+                getMockPathRestrictedResourceResolverEngine().isInterestedIn(
                         getRequestedResourcePath())).andReturn(
                 Boolean.TRUE);
 
         EasyMock.expect(
-                getMockPathRestrictedSelector().getAllResourcePaths(
+                getMockPathRestrictedResourceResolverEngine().getAllResourcePaths(
                         getMockDevice(), getRequestedResourcePath()))
                 .andReturn(getExpectedMappedResourcePaths());
 
         replay();
 
         assertForPostProcessAfterInitializationWhenBeanIsOfInterest(
-                getMockPathRestrictedSelector());
+                getMockPathRestrictedResourceResolverEngine());
 
         final List<MappedResourcePath> actualMappedResourcePaths =
                 getObjectUnderTest().getAllResourcePaths(getMockDevice(),
@@ -219,7 +219,7 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
             throws Throwable {
 
         EasyMock.expect(
-                getMockDefaultSelector().getAllResourcePaths(getMockDevice(),
+                getMockDefaultResourceResolverEngine().getAllResourcePaths(getMockDevice(),
                         getRequestedResourcePath())).andReturn(
                 getExpectedMappedResourcePaths());
 
@@ -234,24 +234,24 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
 
     }
 
-    private ChainedPathRestrictedResourceSelectorBean
+    private ChainedPathRestrictedResourceResolverEngineBean
         getObjectUnderTest() {
         return objectUnderTest;
     }
 
     private void setObjectUnderTest(
-            final ChainedPathRestrictedResourceSelectorBean
+            final ChainedPathRestrictedResourceResolverEngineBean
                 objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 
-    public ResourceSelector getMockDefaultSelector() {
-        return mockDefaultSelector;
+    public ResourceResolverEngine getMockDefaultResourceResolverEngine() {
+        return mockDefaultResourceResolverEngine;
     }
 
-    public void setMockDefaultSelector(
-            final ResourceSelector mockDefaultSelector) {
-        this.mockDefaultSelector = mockDefaultSelector;
+    public void setMockDefaultResourceResolverEngine(
+            final ResourceResolverEngine mockDefaultResourceResolverEngine) {
+        this.mockDefaultResourceResolverEngine = mockDefaultResourceResolverEngine;
     }
 
     public Object getMockBean() {
@@ -262,15 +262,15 @@ public class ChainedPathRestrictedResourceSelectorBeanTestCase
         this.mockBean = mockBean;
     }
 
-    public PathRestrictedResourceSelector
-        getMockPathRestrictedSelector() {
-        return mockPathRestrictedSelector;
+    public PathRestrictedResourceResolverEngine
+        getMockPathRestrictedResourceResolverEngine() {
+        return mockPathRestrictedResourceResolverEngine;
     }
 
-    public void setMockPathRestrictedSelector(
-            final PathRestrictedResourceSelector
-                mockPathRestrictedSelector) {
-        this.mockPathRestrictedSelector = mockPathRestrictedSelector;
+    public void setMockPathRestrictedResourceResolverEngine(
+            final PathRestrictedResourceResolverEngine
+            mockPathRestrictedResourceResolverEngine) {
+        this.mockPathRestrictedResourceResolverEngine = mockPathRestrictedResourceResolverEngine;
     }
 
     public Device getMockDevice() {

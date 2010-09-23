@@ -300,16 +300,16 @@
     
     <!-- crf Servlet. -->
     <servlet>
-        <servlet-name>crfResourceSelectorServlet</servlet-name>
-        <servlet-class>au.com.sensis.mobile.crf.presentation.ResourceSelectorServlet</servlet-class>
+        <servlet-name>crfResourceResolverServlet</servlet-name>
+        <servlet-class>au.com.sensis.mobile.crf.presentation.ResourceResolverServlet</servlet-class>
         <init-param>
-            <param-name>resourceSelectorBeanName</param-name>
-            <param-value>crf.resourceSelector</param-value>
+            <param-name>resourceResolverEngineBeanName</param-name>
+            <param-value>crf.resourceResolverEngine</param-value>
         </init-param>
     </servlet>
     
     <servlet-mapping>
-        <servlet-name>crfResourceSelectorServlet</servlet-name>
+        <servlet-name>crfResourceResolverServlet</servlet-name>
         <url-pattern>*.crf</url-pattern>
     </servlet-mapping>
     

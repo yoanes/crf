@@ -26,7 +26,7 @@ import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
@@ -49,7 +49,7 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
     private StringWriter stringWriter;
 
     private WebApplicationContext mockWebApplicationContext;
-    private ResourceSelector mockResourceSelector;
+    private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
     private CssBundleFactory mockCssBundleFactory;
     private FileIoFacade mockFileIoFacade;
@@ -149,7 +149,7 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
     private LinkTagCollaboratorsMemento createCollaboratorsMemento(
             final TestData testData) {
         return new LinkTagCollaboratorsMemento(
-                getMockResourceSelector(),
+                getMockResourceResolverEngine(),
                 testData.getDeploymentVersion(),
                 getMockCssBundleFactory(),
                 getResourcePathTestData().getCssClientPathPrefix(),
@@ -159,7 +159,7 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
     private void recordGetMappedResourcePath(
             final List<MappedResourcePath> expectedMappedResourcePaths) throws IOException {
         EasyMock.expect(
-                getMockResourceSelector()
+                getMockResourceResolverEngine()
                         .getAllResourcePaths(getMockDevice(), getRequestedCssResourcePath()))
                         .andReturn(expectedMappedResourcePaths).atLeastOnce();
     }
@@ -223,20 +223,20 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
     }
 
     /**
-     * @return the mockResourceSelector
+     * @return the mockResourceResolverEngine
      */
-    public ResourceSelector
-        getMockResourceSelector() {
-        return mockResourceSelector;
+    public ResourceResolverEngine
+        getMockResourceResolverEngine() {
+        return mockResourceResolverEngine;
     }
 
     /**
-     * @param mockResourceSelector
-     *            the mockResourceSelector to set
+     * @param mockResourceResolverEngine
+     *            the mockResourceResolverEngine to set
      */
-    public void setMockResourceSelector(
-            final ResourceSelector mockResourceSelector) {
-        this.mockResourceSelector = mockResourceSelector;
+    public void setMockResourceResolverEngine(
+            final ResourceResolverEngine mockResourceResolverEngine) {
+        this.mockResourceResolverEngine = mockResourceResolverEngine;
     }
 
     /**

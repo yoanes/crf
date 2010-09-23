@@ -38,7 +38,7 @@ public abstract class IphoneBdpPage extends BdpPage {
 
     private void assertImg() {
         assertNumImgElements(getExpectedNumImgElements());
-        assertImg("tile_bg img not found",
+        assertImg("in.img not found",
                 "mapZoomIn", "Map Zoom In", "Map Zoom In",
                 "mapComponent-iphone-ipod/component/map/in.png");
         doAssertImg();

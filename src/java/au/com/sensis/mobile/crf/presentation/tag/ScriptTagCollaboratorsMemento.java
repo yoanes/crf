@@ -2,7 +2,7 @@ package au.com.sensis.mobile.crf.presentation.tag;
 
 import au.com.sensis.mobile.crf.config.DeploymentVersion;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
-import au.com.sensis.mobile.crf.service.ResourceSelector;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 
 /**
@@ -20,8 +20,8 @@ public class ScriptTagCollaboratorsMemento extends TagCollaboratorsMemento {
     private final ScriptBundleFactory scriptBundleFactory;
 
     /**
-     * @param resourceSelector
-     *            {@link ResourceSelector} to use to map {@link #getHref()} to
+     * @param resourceResolverEngine
+     *            {@link ResourceResolverEngine} to use to map {@link #getHref()} to
      *            concrete resource(s).
      * @param deploymentVersion
      *            {@link DeploymentVersion} of the current deployment.
@@ -35,12 +35,12 @@ public class ScriptTagCollaboratorsMemento extends TagCollaboratorsMemento {
      *            warnings.
      */
     public ScriptTagCollaboratorsMemento(
-            final ResourceSelector resourceSelector,
+            final ResourceResolverEngine resourceResolverEngine,
             final DeploymentVersion deploymentVersion,
             final ScriptBundleFactory scriptBundleFactory,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        super(resourceSelector, deploymentVersion, clientPathPrefix,
+        super(resourceResolverEngine, deploymentVersion, clientPathPrefix,
                 resourceResolutionWarnLogger);
 
         this.scriptBundleFactory = scriptBundleFactory;

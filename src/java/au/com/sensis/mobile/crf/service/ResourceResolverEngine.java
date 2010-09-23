@@ -13,7 +13,7 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  */
 //TODO: I suspect that all methods should either declare a thrown IOException or some
 // crf specific wrapper.
-public interface ResourceSelector {
+public interface ResourceResolverEngine {
 
     /**
      * Return the first concrete resource path for the requested
@@ -26,10 +26,11 @@ public interface ResourceSelector {
      *            webapp's context root.
      * @return Return the first concrete resource path for the requested
      *         abstract path. If none is found, null is returned.
-     * @throws IOException
+     * @throws IOException Thrown if an IO error occurs.
      */
     // TODO: reconsider IOException
-    MappedResourcePath getResourcePath(Device device, String requestedResourcePath) throws IOException;
+    MappedResourcePath getResourcePath(Device device, String requestedResourcePath)
+        throws IOException;
 
     /**
      * List of all concrete resource paths (not just the first found)
@@ -44,8 +45,9 @@ public interface ResourceSelector {
      * @return List of all concrete resource paths that correspond to the
      *         requested path. May not be null. If no concrete resource paths are found,
      *         an empty {@link List} is returned.
-     * @throws IOException
+     * @throws IOException Thrown if an IO error occurs.
      */
     // TODO: reconsider IOException
-    List<MappedResourcePath> getAllResourcePaths(Device device, String requestedResourcePath) throws IOException;
+    List<MappedResourcePath> getAllResourcePaths(Device device, String requestedResourcePath)
+        throws IOException;
 }
