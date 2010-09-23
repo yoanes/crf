@@ -30,7 +30,7 @@ public class ResourceResolverEngineBeanTestCase extends
     private ResourceResolverEngineBean objectUnderTest;
     private ConfigurationFactory mockConfigurationFactory;
     private UiConfiguration mockUiConfiguration;
-    private ResourcePathMapper mockResourcePathMapper;
+    private ResourceResolver mockResourceResolver;
     private FileIoFacade mockFileIoFacade;
     private Device mockDevice;
     private MappedResourcePath mockIphoneMappedResourcePath1;
@@ -62,7 +62,7 @@ public class ResourceResolverEngineBeanTestCase extends
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
         setObjectUnderTest(new ResourceResolverEngineBean(
-                getMockConfigurationFactory(), getMockResourcePathMapper(),
+                getMockConfigurationFactory(), getMockResourceResolver(),
                 getMockResolutionWarnLogger()));
     }
 
@@ -80,7 +80,7 @@ public class ResourceResolverEngineBeanTestCase extends
     public void testConstructorWhenConfigurationFactoryNull() throws Throwable {
         try {
             new ResourceResolverEngineBean(null,
-                    getMockResourcePathMapper(), getMockResolutionWarnLogger());
+                    getMockResourceResolver(), getMockResolutionWarnLogger());
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
 
@@ -90,7 +90,7 @@ public class ResourceResolverEngineBeanTestCase extends
     }
 
     @Test
-    public void testConstructorWhenResourcePathMapperNull() throws Throwable {
+    public void testConstructorWhenResourceResolverIsNull() throws Throwable {
         try {
             new ResourceResolverEngineBean(getMockConfigurationFactory(),
                     null, getMockResolutionWarnLogger());
@@ -98,7 +98,7 @@ public class ResourceResolverEngineBeanTestCase extends
         } catch (final IllegalArgumentException e) {
 
             Assert.assertEquals("IllegalArgumentException has wrong message",
-                    "resourcePathMapper must not be null", e.getMessage());
+                    "resourceResolver must not be null", e.getMessage());
         }
     }
 
@@ -106,7 +106,7 @@ public class ResourceResolverEngineBeanTestCase extends
     public void testConstructorWhenResourceResolutionWarnLoggerNull() throws Throwable {
         try {
             new ResourceResolverEngineBean(getMockConfigurationFactory(),
-                    getMockResourcePathMapper(), null);
+                    getMockResourceResolver(), null);
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
             Assert.assertEquals("IllegalArgumentException has wrong message",
@@ -198,13 +198,13 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData().getRequestedJspResourcePath(),
                             getGroupTestData().createIPhoneGroup()))
                             .andReturn(mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData().getRequestedJspResourcePath(),
                             getGroupTestData().createIPhoneGroup()))
                             .andReturn(new ArrayList<MappedResourcePath>());
@@ -219,14 +219,14 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createIPhoneGroup())).andReturn(
                     mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createIPhoneGroup())).andReturn(
@@ -243,14 +243,14 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAppleGroup())).andReturn(
                     mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAppleGroup())).andReturn(
@@ -266,14 +266,14 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createHD800Group())).andReturn(
                     mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createHD800Group())).andReturn(
@@ -290,14 +290,14 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createMediumGroup())).andReturn(
                     mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createMediumGroup())).andReturn(
@@ -314,14 +314,14 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAndroidGroup()))
                     .andReturn(mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAndroidGroup()))
@@ -337,14 +337,14 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAndroidGroup()))
                     .andReturn(mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAndroidGroup()))
@@ -384,14 +384,14 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createDefaultGroup()))
                     .andReturn(mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createDefaultGroup()))
@@ -406,14 +406,14 @@ public class ResourceResolverEngineBeanTestCase extends
 
         if (fileExists) {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createDefaultGroup()))
                     .andReturn(mapperResults);
         } else {
             EasyMock.expect(
-                    getMockResourcePathMapper().resolve(
+                    getMockResourceResolver().resolve(
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createDefaultGroup()))
@@ -802,17 +802,17 @@ public class ResourceResolverEngineBeanTestCase extends
     }
 
     /**
-     * @return the mockResourcePathMapper
+     * @return the mockResourceResolver
      */
-    public ResourcePathMapper getMockResourcePathMapper() {
-        return mockResourcePathMapper;
+    public ResourceResolver getMockResourceResolver() {
+        return mockResourceResolver;
     }
 
     /**
-     * @param mockResourcePathMapper the mockResourcePathMapper to set
+     * @param mockResourceResolver the mockResourceResolver to set
      */
-    public void setMockResourcePathMapper(final ResourcePathMapper mockResourcePathMapper) {
-        this.mockResourcePathMapper = mockResourcePathMapper;
+    public void setMockResourceResolver(final ResourceResolver mockResourceResolver) {
+        this.mockResourceResolver = mockResourceResolver;
     }
 
     /**

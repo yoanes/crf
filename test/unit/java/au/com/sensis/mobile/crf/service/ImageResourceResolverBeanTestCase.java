@@ -16,15 +16,15 @@ import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link ImageResourcePathMapper}.
+ * Unit test {@link ImageResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
+public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
     private static final String[] FILE_EXTENSION_WILDCARDS = new String[] { "*" };
 
-    private ImageResourcePathMapper objectUnderTest;
+    private ImageResourceResolverBean objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
@@ -45,7 +45,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
 
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
-        setObjectUnderTest(new ImageResourcePathMapper(
+        setObjectUnderTest(new ImageResourceResolverBean(
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
     }
@@ -66,7 +66,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new ImageResourcePathMapper(testValue, getResourcesRootDir(),
+                new ImageResourceResolverBean(testValue, getResourcesRootDir(),
                         getMockResourceResolutionWarnLogger());
 
                 Assert.fail("IllegalArgumentException expected");
@@ -85,11 +85,11 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                 new File("  "), new File("I-do-not-exist"),
                 new File(getClass().getResource(
                         "/au/com/sensis/mobile/crf/service/"
-                        + "ImageResourcePathMapperTestCase.class")
+                        + "ImageResourceResolverBeanTestCase.class")
                         .toURI()) };
         for (final File invalidPath : invalidPaths) {
             try {
-                new ImageResourcePathMapper(
+                new ImageResourceResolverBean(
                         getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
                         invalidPath, getMockResourceResolutionWarnLogger());
                 Assert.fail("IllegalArgumentException expected for invalidPath: '"
@@ -108,7 +108,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
             throws Throwable {
         try {
-            new ImageResourcePathMapper(getResourcePathTestData()
+            new ImageResourceResolverBean(getResourcePathTestData()
                     .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
                     null);
 
@@ -129,7 +129,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir(),
+            setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
             recordListFilesByExtension(getSingleMatchedPngImageArray());
@@ -181,7 +181,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir(),
+            setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
             recordListFilesByExtension(getMultipleMatchedPngImageArray());
@@ -231,7 +231,7 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new ImageResourcePathMapper(testValue, getResourcesRootDir(),
+            setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
             recordListFilesByExtension(new File[] {});
@@ -314,14 +314,14 @@ public class ImageResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the objectUnderTest
      */
-    private ImageResourcePathMapper getObjectUnderTest() {
+    private ImageResourceResolverBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final ImageResourcePathMapper objectUnderTest) {
+    private void setObjectUnderTest(final ImageResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

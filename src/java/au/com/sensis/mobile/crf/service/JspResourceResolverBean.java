@@ -8,13 +8,13 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
- * {@link ResourcePathMapper} that maps abstract JSP paths to real JSP paths.
+ * {@link ResourceResolver} that maps abstract JSP paths to real JSP paths.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JspResourcePathMapper extends AbstractResourcePathMapper {
+public class JspResourceResolverBean extends AbstractResourceResolver {
 
-    private static final Logger LOGGER = Logger.getLogger(JspResourcePathMapper.class);
+    private static final Logger LOGGER = Logger.getLogger(JspResourceResolverBean.class);
 
     private final String jspResourcesRootServletPath;
 
@@ -30,7 +30,7 @@ public class JspResourcePathMapper extends AbstractResourcePathMapper {
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger}.
      */
-    public JspResourcePathMapper(final String jspResourcesRootServletPath,
+    public JspResourceResolverBean(final String jspResourcesRootServletPath,
             final String abstractResourceExtension,
             final File rootResourcesDir,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {

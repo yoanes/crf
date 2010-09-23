@@ -6,21 +6,21 @@ import java.util.List;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
- * Maps requested resource paths to real resource paths.
+ * Resolves requested resource paths to real resource paths.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public interface ResourcePathMapper {
+public interface ResourceResolver {
 
     /**
-     * Maps a requested resource path to a path that corresponds to the given
+     * Resolves a requested resource path to a real path that corresponds to the given
      * {@link Group}.
      *
      * @param requestedResourcePath
      *            Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
      * @param group
      *            {@link Group} to perform the path mapping for.
-     * @return List of {@link MappedResourcePath} containing the results. If
+     * @return List of {@link MappedResourcePath}s containing the results. If no
      *         resources can be resolved, an empty list is returned. May not be
      *         null.
      * @throws IOException Thrown if an IO error occurs.

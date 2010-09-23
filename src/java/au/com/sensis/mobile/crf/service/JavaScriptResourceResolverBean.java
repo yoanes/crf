@@ -12,13 +12,13 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
- * {@link ResourcePathMapper} that maps abstract Script paths to real Script paths.
+ * {@link ResourceResolver} that maps abstract Script paths to real Script paths.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JavaScriptResourcePathMapper extends AbstractResourcePathMapper {
+public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
 
-    private static final Logger LOGGER = Logger.getLogger(JavaScriptResourcePathMapper.class);
+    private static final Logger LOGGER = Logger.getLogger(JavaScriptResourceResolverBean.class);
 
     /**
      * Separator character expected to be used in {@link #getOriginalResourcePath()}
@@ -38,7 +38,7 @@ public class JavaScriptResourcePathMapper extends AbstractResourcePathMapper {
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger}.
      */
-    public JavaScriptResourcePathMapper(final String abstractResourceExtension,
+    public JavaScriptResourceResolverBean(final String abstractResourceExtension,
             final File rootResourcesDir,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         super(abstractResourceExtension, rootResourcesDir,

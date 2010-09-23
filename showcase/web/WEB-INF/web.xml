@@ -318,8 +318,8 @@
         <servlet-name>crfImageServlet</servlet-name>
         <servlet-class>au.com.sensis.mobile.crf.presentation.ImageServlet</servlet-class>
         <init-param>
-            <param-name>imageServletCollaboratorsMementoBeanName</param-name>
-            <param-value>crf.imageServletCollaboratorsMemento</param-value>
+            <param-name>imageServletDependenciesBeanName</param-name>
+            <param-value>crf.imageServletDependencies</param-value>
         </init-param>
     </servlet>
 

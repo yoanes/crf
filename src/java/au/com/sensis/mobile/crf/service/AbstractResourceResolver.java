@@ -13,12 +13,12 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
- * Standard base class for {@link ResourcePathMapper}s implementing the template
+ * Standard base class for {@link ResourceResolver}s implementing the template
  * method pattern.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
+public abstract class AbstractResourceResolver implements ResourceResolver {
 
     private static final String EXTENSION_LEADING_DOT = ".";
 
@@ -43,7 +43,7 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger}.
      */
-    public AbstractResourcePathMapper(final String abstractResourceExtension,
+    public AbstractResourceResolver(final String abstractResourceExtension,
             final File rootResourcesDir,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         validateAbstractResourceExtension(abstractResourceExtension);
@@ -159,14 +159,14 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
 
     /**
      * Returns true if the requested resource path is
-     * for a recognised abstract resource that this {@link ResourcePathMapper}
+     * for a recognised abstract resource that this {@link ResourceResolver}
      * can handle. The default implementation returns true if the requested
      * resource path ends with {@link #getAbstractResourceExtension()}.
      *
      * @param requestedResourcePath
      *            The path of the resource requested.
      * @return true if the requested resource path is for a recognised abstract
-     *         resource that this {@link ResourcePathMapper} can handle.
+     *         resource that this {@link ResourceResolver} can handle.
      */
     protected boolean isRecognisedAbstractResourceRequest(
             final String requestedResourcePath) {
@@ -241,24 +241,24 @@ public abstract class AbstractResourcePathMapper implements ResourcePathMapper {
 
     /**
      * Debug friendly name of the type of resource that this
-     * {@link ResourcePathMapper} handles.
+     * {@link ResourceResolver} handles.
      *
      * @return Debug friendly name of the type of resource that this
-     *         {@link ResourcePathMapper} handles.
+     *         {@link ResourceResolver} handles.
      */
     protected abstract String getDebugResourceTypeName();
 
     /**
      * The {@link Logger} to use for this
-     * {@link ResourcePathMapper}. Allows the
+     * {@link ResourceResolver}. Allows the
      * {@link #resolve(String, Group)} to log messages that clearly
-     * indicate what the actual {@link ResourcePathMapper} implementation being
+     * indicate what the actual {@link ResourceResolver} implementation being
      * executed is.
      *
-     * @return The {@link Logger} to use for this {@link ResourcePathMapper}.
+     * @return The {@link Logger} to use for this {@link ResourceResolver}.
      *         Allows the {@link #resolve(String, Group)} to log
      *         messages that clearly indicate what the actual
-     *         {@link ResourcePathMapper} implementation being executed is.
+     *         {@link ResourceResolver} implementation being executed is.
      */
     protected abstract Logger getLogger();
 

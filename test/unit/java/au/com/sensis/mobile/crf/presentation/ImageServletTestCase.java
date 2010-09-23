@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.web.context.WebApplicationContext;
 
-import au.com.sensis.mobile.crf.presentation.ImageServlet.ImageServletCollaboratorsMemento;
+import au.com.sensis.mobile.crf.presentation.ImageServlet.ImageServletDependencies;
 import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
@@ -40,7 +40,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
     private static final String MIME_TYPE = "image/png";
 
-    private static final String BEAN_NAME = "imageServletCollaboratorsMemento";
+    private static final String BEAN_NAME = "imageServletDependencies";
 
     private ImageServlet objectUnderTest;
 
@@ -57,7 +57,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     private WebApplicationContext mockWebApplicationContext;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private File expectedMappedFile;
-    private ImageServletCollaboratorsMemento imageServletCollaboratorsMemento;
+    private ImageServletDependencies imageServletDependencies;
 
     /**
      * Setup test data.
@@ -74,7 +74,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
         setSpringMockHttpSession(new MockHttpSession());
         setObjectUnderTest(new ImageServlet());
 
-        getObjectUnderTest().setImageServletCollaboratorsMementoBeanName(
+        getObjectUnderTest().setImageServletDependenciesBeanName(
                 BEAN_NAME);
 
         // For the purposes of this test case, the expectedMappedFile must be a
@@ -85,7 +85,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
         setExpectedMappedFile(new File(getClass().getResource(
                 expectedMappedFileOnClasspath).toURI()));
 
-        setImageServletCollaboratorsMemento(new ImageServletCollaboratorsMemento(
+        setImageServletDependencies(new ImageServletDependencies(
                 getMockResourceResolverEngine(), IMAGES_CLIENT_PATH_PREFIX));
     }
 
@@ -103,7 +103,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     public void testDoGetWhenRequestStartsWithExpectedPrefixAndFileExists()
             throws Throwable {
 
-        recordGetImageServletCollaboratorsMemento();
+        recordGetImageServletDependencies();
 
         recordGetDevice();
 
@@ -134,7 +134,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     public void testDoGetWhenRequestStartsWithExpectedPrefixAndFileDoesNotExist()
             throws Throwable {
 
-        recordGetImageServletCollaboratorsMemento();
+        recordGetImageServletDependencies();
 
         recordGetDevice();
 
@@ -158,7 +158,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     public void testDoGetWhenRequestDoesNotStartWithExpectedPrefix()
             throws Throwable {
 
-        recordGetImageServletCollaboratorsMemento();
+        recordGetImageServletDependencies();
 
         recordGetServletPath(getResourcePathTestData()
                 .getMapComponentRequestedImageResourcePath());
@@ -201,14 +201,14 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
                         .getParentFile());
     }
 
-    private void recordGetImageServletCollaboratorsMemento() {
+    private void recordGetImageServletDependencies() {
         EasyMock.expect(
                 getMockServletContext().getAttribute(
                         WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE))
                 .andReturn(getMockWebApplicationContext());
 
         EasyMock.expect(getMockWebApplicationContext().getBean(BEAN_NAME))
-                .andReturn(getImageServletCollaboratorsMemento()).atLeastOnce();
+                .andReturn(getImageServletDependencies()).atLeastOnce();
     }
 
     private void recordGetDevice() {
@@ -376,12 +376,12 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
         this.springMockHttpSession = springMockHttpSession;
     }
 
-    private ImageServletCollaboratorsMemento getImageServletCollaboratorsMemento() {
-        return imageServletCollaboratorsMemento;
+    private ImageServletDependencies getImageServletDependencies() {
+        return imageServletDependencies;
     }
 
-    private void setImageServletCollaboratorsMemento(
-            final ImageServletCollaboratorsMemento imageServletCollaboratorsMemento) {
-        this.imageServletCollaboratorsMemento = imageServletCollaboratorsMemento;
+    private void setImageServletDependencies(
+            final ImageServletDependencies imageServletDependencies) {
+        this.imageServletDependencies = imageServletDependencies;
     }
 }

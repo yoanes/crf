@@ -30,12 +30,12 @@ import au.com.sensis.wireless.web.mobile.MobileContext;
 public class ImageServlet extends HttpServletBean {
 
     private static final long serialVersionUID = 1L;
-    private String imageServletCollaboratorsMementoBeanName;
-    private ImageServletCollaboratorsMemento imageServletCollaboratorsMemento;
+    private String imageServletDependenciesBeanName;
+    private ImageServletDependencies imageServletDependencies;
 
     /**
      * Lookup the {@link WebApplicationContext} and retrieve the
-     * {@link ImageServletCollaboratorsMemento} from it.
+     * {@link ImageServletDependencies} from it.
      *
      * {@inheritDoc}
      */
@@ -47,8 +47,8 @@ public class ImageServlet extends HttpServletBean {
                 WebApplicationContextUtils
                         .getRequiredWebApplicationContext(config
                                 .getServletContext());
-        setImageServletCollaboratorsMemento((ImageServletCollaboratorsMemento) webApplicationContext
-                .getBean(getImageServletCollaboratorsMementoBeanName()));
+        setImageServletDependencies((ImageServletDependencies) webApplicationContext
+                .getBean(getImageServletDependenciesBeanName()));
 
     }
 
@@ -63,7 +63,7 @@ public class ImageServlet extends HttpServletBean {
         if (requestedResourcePathHasCorrectPrefix(request)) {
 
             final MappedResourcePath mappedResourcePath =
-                    getImageServletCollaboratorsMemento().getResourceResolverEngine()
+                    getImageServletDependencies().getResourceResolverEngine()
                             .getResourcePath(getDevice(request),
                                     getRequestedResourcePath(request));
 
@@ -77,7 +77,7 @@ public class ImageServlet extends HttpServletBean {
         } else {
             throw new ServletException(
                     "Requests for abstract images should have a servlet path starting with '"
-                    + getImageServletCollaboratorsMemento()
+                    + getImageServletDependencies()
                             .getImagesClientPathPrefix()
                     + "'. However, servlet path is '" + request.getServletPath()
                     + "'");
@@ -88,7 +88,7 @@ public class ImageServlet extends HttpServletBean {
     private boolean requestedResourcePathHasCorrectPrefix(final HttpServletRequest req) {
         return (req.getServletPath() != null)
                 && req.getServletPath().startsWith(
-                        getImageServletCollaboratorsMemento()
+                        getImageServletDependencies()
                                 .getImagesClientPathPrefix());
     }
 
@@ -119,7 +119,7 @@ public class ImageServlet extends HttpServletBean {
 
     private String getRequestedResourcePath(final HttpServletRequest req) {
         return StringUtils.substringAfter(req.getServletPath(),
-                getImageServletCollaboratorsMemento()
+                getImageServletDependencies()
                         .getImagesClientPathPrefix());
     }
 
@@ -132,26 +132,25 @@ public class ImageServlet extends HttpServletBean {
 
     /**
      * @param beanName
-     *            Name of the {@link ImageServletCollaboratorsMemento} bean to
+     *            Name of the {@link ImageServletDependencies} bean to
      *            obtain from the Spring context.
      */
-    public void setImageServletCollaboratorsMementoBeanName(
+    public void setImageServletDependenciesBeanName(
             final String beanName) {
-        imageServletCollaboratorsMementoBeanName = beanName;
+        imageServletDependenciesBeanName = beanName;
     }
 
-    private String getImageServletCollaboratorsMementoBeanName() {
-        return imageServletCollaboratorsMementoBeanName;
+    private String getImageServletDependenciesBeanName() {
+        return imageServletDependenciesBeanName;
     }
 
-    private ImageServletCollaboratorsMemento getImageServletCollaboratorsMemento() {
-        return imageServletCollaboratorsMemento;
+    private ImageServletDependencies getImageServletDependencies() {
+        return imageServletDependencies;
     }
 
-    private void setImageServletCollaboratorsMemento(
-            final ImageServletCollaboratorsMemento imageServletCollaboratorsMemento) {
-        this.imageServletCollaboratorsMemento =
-                imageServletCollaboratorsMemento;
+    private void setImageServletDependencies(
+            final ImageServletDependencies imageServletDependencies) {
+        this.imageServletDependencies = imageServletDependencies;
     }
 
     /**
@@ -159,7 +158,7 @@ public class ImageServlet extends HttpServletBean {
      * {@link ImageServlet} An instance of this memento will be programmatically
      * retrieved from the Spring context.
      */
-    public static class ImageServletCollaboratorsMemento {
+    public static class ImageServletDependencies {
 
         private final ResourceResolverEngine resourceResolverEngine;
         private final String imagesClientPathPrefix;
@@ -174,7 +173,7 @@ public class ImageServlet extends HttpServletBean {
          *            Client side prefix for all image paths.
          *            eg. "/resources/images".
          */
-        public ImageServletCollaboratorsMemento(
+        public ImageServletDependencies(
                 final ResourceResolverEngine resourceResolverEngine,
                 final String imagesClientPathPrefix) {
             this.resourceResolverEngine = resourceResolverEngine;

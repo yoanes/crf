@@ -16,13 +16,13 @@ import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link JavaScriptResourcePathMapper}.
+ * Unit test {@link JavaScriptResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase {
+public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
-    private JavaScriptResourcePathMapper objectUnderTest;
+    private JavaScriptResourceResolverBean objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
@@ -40,7 +40,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
     public void setUp() throws Exception {
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
-        setObjectUnderTest(new JavaScriptResourcePathMapper(
+        setObjectUnderTest(new JavaScriptResourceResolverBean(
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
 
@@ -64,7 +64,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  "};
         for (final String testValue : testValues) {
             try {
-                new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+                new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
                         getMockResourceResolutionWarnLogger());
 
                 Assert.fail("IllegalArgumentException expected");
@@ -83,11 +83,11 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
                 new File("  "), new File("I-do-not-exist"),
                 new File(getClass().getResource(
                         "/au/com/sensis/mobile/crf/service/"
-                        + "JavaScriptResourcePathMapperTestCase.class")
+                        + "JavaScriptResourceResolverBeanTestCase.class")
                         .toURI()) };
         for (final File invalidPath : invalidPaths) {
             try {
-                new JavaScriptResourcePathMapper(
+                new JavaScriptResourceResolverBean(
                         getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                         invalidPath, getMockResourceResolutionWarnLogger());
                 Assert.fail("IllegalArgumentException expected for invalidPath: '"
@@ -106,7 +106,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
     public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
             throws Throwable {
         try {
-            new JavaScriptResourcePathMapper(
+            new JavaScriptResourceResolverBean(
                     getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                     getResourcesRootDir(), null);
 
@@ -128,7 +128,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+            setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
             // TODO: get rid of setter injection.
@@ -167,7 +167,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+            setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
             // TODO: get rid of setter injection.
@@ -200,9 +200,13 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
 
     private List<File> createExistsByFilterExpectedFileFilterResults() {
         final File expectedFile1 =
-                getResourcePathTestData().getMappedDefaultGroupBundledScriptResourcePath1().getNewResourceFile();
+                getResourcePathTestData()
+                        .getMappedDefaultGroupBundledScriptResourcePath1()
+                        .getNewResourceFile();
         final File expectedFile2 =
-                getResourcePathTestData().getMappedDefaultGroupBundledScriptResourcePath2().getNewResourceFile();
+                getResourcePathTestData()
+                        .getMappedDefaultGroupBundledScriptResourcePath2()
+                        .getNewResourceFile();
         return Arrays.asList(expectedFile1, expectedFile2);
     }
 
@@ -221,7 +225,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+            setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
             recordCheckIfNewResourcePathExists(Boolean.TRUE);
@@ -253,7 +257,7 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourcePathMapper(testValue, getResourcesRootDir(),
+            setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
             recordCheckIfNewResourcePathExists(Boolean.FALSE);
@@ -320,14 +324,14 @@ public class JavaScriptResourcePathMapperTestCase extends AbstractJUnit4TestCase
     /**
      * @return the objectUnderTest
      */
-    private JavaScriptResourcePathMapper getObjectUnderTest() {
+    private JavaScriptResourceResolverBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final JavaScriptResourcePathMapper objectUnderTest) {
+    private void setObjectUnderTest(final JavaScriptResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

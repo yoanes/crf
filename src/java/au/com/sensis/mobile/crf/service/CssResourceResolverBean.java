@@ -5,13 +5,13 @@ import java.io.File;
 import org.apache.log4j.Logger;
 
 /**
- * {@link ResourcePathMapper} that maps abstract CSS paths to real CSS paths.
+ * {@link ResourceResolver} that maps abstract CSS paths to real CSS paths.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class CssResourcePathMapper extends AbstractResourcePathMapper {
+public class CssResourceResolverBean extends AbstractResourceResolver {
 
-    private static final Logger LOGGER = Logger.getLogger(CssResourcePathMapper.class);
+    private static final Logger LOGGER = Logger.getLogger(CssResourceResolverBean.class);
 
     /**
      * Constructor.
@@ -23,7 +23,7 @@ public class CssResourcePathMapper extends AbstractResourcePathMapper {
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger}.
      */
-    public CssResourcePathMapper(final String abstractResourceExtension,
+    public CssResourceResolverBean(final String abstractResourceExtension,
             final File rootResourcesDir,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         super(abstractResourceExtension, rootResourcesDir,

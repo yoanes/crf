@@ -19,7 +19,7 @@
         <constructor-arg>
             <bean class="au.com.sensis.mobile.crf.service.ResourceResolverEngineBean">
                 <constructor-arg ref="map.configurationFactory"/>
-                <constructor-arg ref="crf.resourcePathMapper"/>
+                <constructor-arg ref="crf.resourceResolver"/>
                 <constructor-arg ref="crf.resourceResolutionWarnLogger"/>
             </bean>                
         </constructor-arg>

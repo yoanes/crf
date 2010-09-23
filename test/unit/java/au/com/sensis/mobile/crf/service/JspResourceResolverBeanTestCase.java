@@ -15,13 +15,13 @@ import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link JspResourcePathMapper}.
+ * Unit test {@link JspResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
+public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
-    private JspResourcePathMapper objectUnderTest;
+    private JspResourceResolverBean objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
@@ -38,7 +38,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     public void setUp() throws Exception {
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
-        setObjectUnderTest(new JspResourcePathMapper(
+        setObjectUnderTest(new JspResourceResolverBean(
                 getResourcePathTestData().getJspResourcesRootServletPath(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcesRootDir(),
@@ -61,7 +61,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new JspResourcePathMapper(testValue, getResourcePathTestData()
+                new JspResourceResolverBean(testValue, getResourcePathTestData()
                         .getCrfExtensionWithoutLeadingDot(),
                         getResourcesRootDir(),
                         getMockResourceResolutionWarnLogger());
@@ -84,7 +84,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new JspResourcePathMapper(getResourcePathTestData()
+                new JspResourceResolverBean(getResourcePathTestData()
                         .getJspResourcesRootServletPath(), testValue,
                         getResourcesRootDir(),
                         getMockResourceResolutionWarnLogger());
@@ -107,11 +107,11 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                 new File("  "), new File("I-do-not-exist"),
                 new File(getClass().getResource(
                         "/au/com/sensis/mobile/crf/service/"
-                        + "JspResourcePathMapperTestCase.class")
+                        + "JspResourceResolverBeanTestCase.class")
                         .toURI()) };
         for (final File invalidPath : invalidPaths) {
             try {
-                new JspResourcePathMapper(getResourcePathTestData()
+                new JspResourceResolverBean(getResourcePathTestData()
                         .getJspResourcesRootServletPath(),
                         getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                         invalidPath, getMockResourceResolutionWarnLogger());
@@ -131,7 +131,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
             throws Throwable {
         try {
-            new JspResourcePathMapper(getResourcePathTestData()
+            new JspResourceResolverBean(getResourcePathTestData()
                     .getJspResourcesRootServletPath(),
                     getResourcePathTestData()
                             .getCrfExtensionWithoutLeadingDot(),
@@ -155,7 +155,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JspResourcePathMapper(
+            setObjectUnderTest(new JspResourceResolverBean(
                     getResourcePathTestData().getJspResourcesRootServletPath(),
                     testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
 
@@ -189,7 +189,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JspResourcePathMapper(
+            setObjectUnderTest(new JspResourceResolverBean(
                     getResourcePathTestData().getJspResourcesRootServletPath(),
                     testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
 
@@ -242,7 +242,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the objectUnderTest
      */
-    private JspResourcePathMapper getObjectUnderTest() {
+    private JspResourceResolverBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
@@ -250,7 +250,7 @@ public class JspResourcePathMapperTestCase extends AbstractJUnit4TestCase {
      * @param objectUnderTest
      *            the objectUnderTest to set
      */
-    private void setObjectUnderTest(final JspResourcePathMapper objectUnderTest) {
+    private void setObjectUnderTest(final JspResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

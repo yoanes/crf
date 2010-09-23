@@ -27,7 +27,7 @@ public class ResourceResolverEngineBean implements
             ResourceResolverEngineBean.class);
 
     private final ConfigurationFactory configurationFactory;
-    private final ResourcePathMapper resourcePathMapper;
+    private final ResourceResolver resourceResolver;
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
 
     /**
@@ -36,24 +36,24 @@ public class ResourceResolverEngineBean implements
      * @param configurationFactory
      *            {@link ConfigurationFactory} to obtain
      *            the {@link au.com.sensis.mobile.crf.config.UiConfiguration} from.
-     * @param resourcePathMapper
-     *            {@link ResourcePathMapper} to map requested paths to real,
+     * @param resourceResolver
+     *            {@link ResourceResolver} to map requested paths to real,
      *            device specific paths.
      * @param resourceResolutionWarnLogger {@link ResourceResolutionWarnLogger} to
      *            use to log warnings.
      */
     public ResourceResolverEngineBean(
             final ConfigurationFactory configurationFactory,
-            final ResourcePathMapper resourcePathMapper,
+            final ResourceResolver resourceResolver,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
 
         Validate.notNull(configurationFactory, "configurationFactory must not be null");
-        Validate.notNull(resourcePathMapper, "resourcePathMapper must not be null");
+        Validate.notNull(resourceResolver, "resourceResolver must not be null");
         Validate.notNull(resourceResolutionWarnLogger,
                 "resourceResolutionWarnLogger must not be null");
 
         this.configurationFactory = configurationFactory;
-        this.resourcePathMapper = resourcePathMapper;
+        this.resourceResolver = resourceResolver;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
     }
 
@@ -163,7 +163,7 @@ public class ResourceResolverEngineBean implements
 
     private List<MappedResourcePath> getMappedResourcePath(
             final String requestedResourcePath, final Group currGroup) throws IOException {
-        return getResourcePathMapper().resolve(
+        return getResourceResolver().resolve(
                 requestedResourcePath, currGroup);
     }
 
@@ -193,10 +193,10 @@ public class ResourceResolverEngineBean implements
     }
 
     /**
-     * @return the resourcePathMapper
+     * @return the resourceResolver
      */
-    private ResourcePathMapper getResourcePathMapper() {
-        return resourcePathMapper;
+    private ResourceResolver getResourceResolver() {
+        return resourceResolver;
     }
 
     /**

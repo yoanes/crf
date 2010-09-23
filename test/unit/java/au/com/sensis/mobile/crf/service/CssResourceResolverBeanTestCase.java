@@ -14,13 +14,13 @@ import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link CssResourcePathMapper}.
+ * Unit test {@link CssResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
+public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
-    private CssResourcePathMapper objectUnderTest;
+    private CssResourceResolverBean objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
@@ -40,7 +40,7 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
 
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
-        setObjectUnderTest(new CssResourcePathMapper(getResourcePathTestData()
+        setObjectUnderTest(new CssResourceResolverBean(getResourcePathTestData()
                 .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
                 getMockResourceResolutionWarnLogger()));
     }
@@ -51,7 +51,7 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new CssResourcePathMapper(testValue, getResourcesRootDir(),
+                new CssResourceResolverBean(testValue, getResourcesRootDir(),
                         getMockResourceResolutionWarnLogger());
 
                 Assert.fail("IllegalArgumentException expected");
@@ -76,11 +76,11 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                                 getClass()
                                         .getResource(
                                                 "/au/com/sensis/mobile/crf/service/"
-                                                        + "CssResourcePathMapperTestCase.class")
+                                                        + "CssResourceResolverBeanTestCase.class")
                                         .toURI()) };
         for (final File invalidPath : invalidPaths) {
             try {
-                new CssResourcePathMapper(getResourcePathTestData()
+                new CssResourceResolverBean(getResourcePathTestData()
                         .getCssExtensionWithoutLeadingDot(), invalidPath,
                         getMockResourceResolutionWarnLogger());
                 Assert
@@ -100,7 +100,7 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
             throws Throwable {
         try {
-            new CssResourcePathMapper(getResourcePathTestData()
+            new CssResourceResolverBean(getResourcePathTestData()
                     .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
                     null);
 
@@ -126,7 +126,7 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                                 .getCssExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new CssResourcePathMapper(testValue,
+            setObjectUnderTest(new CssResourceResolverBean(testValue,
                     getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
@@ -163,7 +163,7 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
                 .getCssExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new CssResourcePathMapper(testValue,
+            setObjectUnderTest(new CssResourceResolverBean(testValue,
                     getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
@@ -232,14 +232,14 @@ public class CssResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the objectUnderTest
      */
-    private CssResourcePathMapper getObjectUnderTest() {
+    private CssResourceResolverBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final CssResourcePathMapper objectUnderTest) {
+    private void setObjectUnderTest(final CssResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

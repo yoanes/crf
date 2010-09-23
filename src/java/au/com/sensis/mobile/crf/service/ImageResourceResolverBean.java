@@ -14,21 +14,21 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
- * {@link ResourcePathMapper} that maps abstract image paths to real image
+ * {@link ResourceResolver} that maps abstract image paths to real image
  * paths. Note that the generated path will not have an extension given that
  * there is a multitude of possible image formats. The
  * {@link MappedResourcePath} returned by
- * {@link AbstractResourcePathMapper#resolve(String, au.com.sensis.mobile.crf.config.Group)}
+ * {@link AbstractResourceResolver#resolve(String, au.com.sensis.mobile.crf.config.Group)}
  * can be consulted to resolve the new path to actual files.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
 // TODo: clean up code. Current mess is due to refactoring ImageMappedResourcePathBean into oblivion
 // and pushing the code into here.
-public class ImageResourcePathMapper extends AbstractResourcePathMapper {
+public class ImageResourceResolverBean extends AbstractResourceResolver {
 
     private static final Logger LOGGER =
-            Logger.getLogger(ImageResourcePathMapper.class);
+            Logger.getLogger(ImageResourceResolverBean.class);
 
     // TODO: once we refactor into ImageGroupResourceResolver, Spring inject this.
     private static final String[] FILE_EXTENSION_WILDCARDS = new String [] {"*"};
@@ -43,7 +43,7 @@ public class ImageResourcePathMapper extends AbstractResourcePathMapper {
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger}.
      */
-    public ImageResourcePathMapper(final String abstractResourceExtension,
+    public ImageResourceResolverBean(final String abstractResourceExtension,
             final File rootResourcesDir,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         super(abstractResourceExtension, rootResourcesDir,

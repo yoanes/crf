@@ -15,15 +15,15 @@ import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link ChainedResourcePathMapper}.
+ * Unit test {@link DelegatingResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ChainedResourcePathMapperTestCase extends AbstractJUnit4TestCase {
+public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
-    private ChainedResourcePathMapper objectUnderTest;
-    private ResourcePathMapper mockRsourcePathMapper1;
-    private ResourcePathMapper mockRsourcePathMapper2;
+    private DelegatingResourceResolverBean objectUnderTest;
+    private ResourceResolver mockResourceResolver1;
+    private ResourceResolver mockResourceResolver2;
     private final GroupTestData groupTestData = new GroupTestData();
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
 
@@ -35,51 +35,51 @@ public class ChainedResourcePathMapperTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        swapOutRealLoggerForMock(ChainedResourcePathMapper.class);
+        swapOutRealLoggerForMock(DelegatingResourceResolverBean.class);
 
-        setObjectUnderTest(new ChainedResourcePathMapper(Arrays.asList(
-                getMockRsourcePathMapper1(), getMockRsourcePathMapper2())));
+        setObjectUnderTest(new DelegatingResourceResolverBean(Arrays.asList(
+                getMockResourceResolver1(), getMockResourceResolver2())));
     }
 
     @Test
-    public void testConstructorWithNullResourcePathMappers() throws Throwable {
+    public void testConstructorWithNullResourceResolvers() throws Throwable {
         try {
-            new ChainedResourcePathMapper(null);
+            new DelegatingResourceResolverBean(null);
 
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
 
             Assert.assertEquals("IllegalArgumentException has wrong message",
-                    "resourcePathMappers must not be null", e.getMessage());
+                    "resourceResolvers must not be null", e.getMessage());
         }
     }
 
     @Test
-    public void testConstructorWithEmptyResourcePathMappers() throws Throwable {
+    public void testConstructorWithEmptyResourceResolvers() throws Throwable {
 
         EasyMock.expect(
-                getMockLogger(ChainedResourcePathMapper.class).isEnabledFor(
+                getMockLogger(DelegatingResourceResolverBean.class).isEnabledFor(
                         Level.WARN)).andReturn(Boolean.TRUE);
 
-        getMockLogger(ChainedResourcePathMapper.class).warn(
-                "resourcePathMappers is empty. "
-                        + "This ChainedResourcePathMapper will always "
-                        + "return a NullMappedResourcePath.");
+        getMockLogger(DelegatingResourceResolverBean.class).warn(
+                "resourceResolvers is empty. "
+                        + "This DelegatingResourceResolverBean will always "
+                        + "return an empty list of resources.");
 
         replay();
 
-        new ChainedResourcePathMapper(new ArrayList<ResourcePathMapper>());
+        new DelegatingResourceResolverBean(new ArrayList<ResourceResolver>());
 
     }
 
     @Test
     public void testMapResourcePathWhenFound() throws Throwable {
 
-        EasyMock.expect(getMockRsourcePathMapper1().resolve(
+        EasyMock.expect(getMockResourceResolver1().resolve(
                 getRequestedPath(), getGroup()))
                 .andReturn(new ArrayList<MappedResourcePath>());
 
-        EasyMock.expect(getMockRsourcePathMapper2().resolve(
+        EasyMock.expect(getMockResourceResolver2().resolve(
                 getRequestedPath(), getGroup()))
                 .andReturn(getExpectedMappedResourcePaths());
 
@@ -97,11 +97,11 @@ public class ChainedResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     public void testMapResourcePathWhenNotFound() throws Throwable {
 
         EasyMock.expect(
-                getMockRsourcePathMapper1().resolve(getRequestedPath(),
+                getMockResourceResolver1().resolve(getRequestedPath(),
                         getGroup())).andReturn(new ArrayList<MappedResourcePath>());
 
         EasyMock.expect(
-                getMockRsourcePathMapper2().resolve(getRequestedPath(),
+                getMockResourceResolver2().resolve(getRequestedPath(),
                         getGroup())).andReturn(new ArrayList<MappedResourcePath>());
 
         replay();
@@ -132,43 +132,43 @@ public class ChainedResourcePathMapperTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the objectUnderTest
      */
-    private ChainedResourcePathMapper getObjectUnderTest() {
+    private DelegatingResourceResolverBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final ChainedResourcePathMapper objectUnderTest) {
+    private void setObjectUnderTest(final DelegatingResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 
     /**
-     * @return the mockRsourcePathMapper2
+     * @return the mockResourceResolver2
      */
-    public ResourcePathMapper getMockRsourcePathMapper2() {
-        return mockRsourcePathMapper2;
+    public ResourceResolver getMockResourceResolver2() {
+        return mockResourceResolver2;
     }
 
     /**
-     * @param mockRsourcePathMapper2 the mockRsourcePathMapper2 to set
+     * @param mockResourceResolver2 the mockResourceResolver2 to set
      */
-    public void setMockRsourcePathMapper2(final ResourcePathMapper mockRsourcePathMapper2) {
-        this.mockRsourcePathMapper2 = mockRsourcePathMapper2;
+    public void setMockResourceResolver2(final ResourceResolver mockResourceResolver) {
+        mockResourceResolver2 = mockResourceResolver;
     }
 
     /**
-     * @return the mockRsourcePathMapper1
+     * @return the mockResourceResolver1
      */
-    public ResourcePathMapper getMockRsourcePathMapper1() {
-        return mockRsourcePathMapper1;
+    public ResourceResolver getMockResourceResolver1() {
+        return mockResourceResolver1;
     }
 
     /**
-     * @param mockRsourcePathMapper1 the mockRsourcePathMapper1 to set
+     * @param mockResourceResolver1 the mockResourceResolver1 to set
      */
-    public void setMockRsourcePathMapper1(final ResourcePathMapper mockRsourcePathMapper1) {
-        this.mockRsourcePathMapper1 = mockRsourcePathMapper1;
+    public void setMockResourceResolver1(final ResourceResolver mockResourceResolver) {
+        mockResourceResolver1 = mockResourceResolver;
     }
 
     /**
