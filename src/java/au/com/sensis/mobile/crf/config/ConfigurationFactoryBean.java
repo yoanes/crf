@@ -1,5 +1,7 @@
 package au.com.sensis.mobile.crf.config;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 
 import javax.xml.transform.Source;
@@ -111,6 +113,7 @@ public class ConfigurationFactoryBean
 
     // TODO: extract this method into an interface/implementation pair.
     private void validateConfigAgainstSchema() {
+        InputStream mappingConfigurationInputStream = null;
         try {
 
             final ClassPathResource schemaClasspathResource =
@@ -118,17 +121,33 @@ public class ConfigurationFactoryBean
             final SchemaFactory factory = SchemaFactory.newInstance(
                     "http://www.w3.org/2001/XMLSchema");
             final Schema schema =
-                    factory.newSchema(schemaClasspathResource.getFile());
+                    factory.newSchema(schemaClasspathResource.getURL());
 
             final Validator validator = schema.newValidator();
+            mappingConfigurationInputStream = new ClassPathResource(
+                    getMappingConfigurationClasspath()).getInputStream();
             final Source configurationSourceToValidate =
-                new StreamSource(new ClassPathResource(
-                        getMappingConfigurationClasspath()).getFile());
+                new StreamSource(mappingConfigurationInputStream);
             validator.validate(configurationSourceToValidate);
         } catch (final Exception e) {
             throw new ContentRenderingFrameworkRuntimeException(
                     "Error loading config from classpath: '"
                             + getMappingConfigurationClasspath() + "'", e);
+        } finally {
+            closeMappingConfigurationInputStream(mappingConfigurationInputStream);
+        }
+    }
+
+    private void closeMappingConfigurationInputStream(
+            final InputStream mappingConfigurationInputStream) {
+        if (mappingConfigurationInputStream != null) {
+            try {
+                mappingConfigurationInputStream.close();
+            } catch (final IOException e) {
+                throw new ContentRenderingFrameworkRuntimeException(
+                        "Error validating config from classpath: '"
+                                + getMappingConfigurationClasspath() + "'", e);
+            }
         }
     }
 
