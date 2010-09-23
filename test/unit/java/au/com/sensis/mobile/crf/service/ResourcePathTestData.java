@@ -33,25 +33,25 @@ public class ResourcePathTestData {
         return getJspResourcesRootServletPath() + "detail/bdp.crf";
     }
 
-    public MappedResourcePath getDotNullMappedImageResourcePath() {
-        return new MappedResourcePathBean(getRequestedImageResourcePathWithoutExtension(),
+    public Resource getDotNullMappedImageResourcePath() {
+        return new ResourceBean(getRequestedImageResourcePathWithoutExtension(),
                 "extrasmall/common/unmetered.null", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedDefaultGroupResourcePath() {
-        return new MappedResourcePathBean(getRequestedJspResourcePath(),
+    public Resource getMappedDefaultGroupResourcePath() {
+        return new ResourceBean(getRequestedJspResourcePath(),
                 getJspResourcesRootServletPath() + "default/detail/bdp.jsp",
                 getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedIphoneGroupResourcePath() {
-        return new MappedResourcePathBean(getRequestedJspResourcePath(),
+    public Resource getMappedIphoneGroupResourcePath() {
+        return new ResourceBean(getRequestedJspResourcePath(),
                 getJspResourcesRootServletPath() + "iPhone/detail/bdp.jsp",
                 getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedAndroidGroupResourcePath() {
-        return new MappedResourcePathBean(getRequestedJspResourcePath(),
+    public Resource getMappedAndroidGroupResourcePath() {
+        return new ResourceBean(getRequestedJspResourcePath(),
                 getJspResourcesRootServletPath() + "Android/detail/bdp.jsp",
                 getRootResourcesPath());
     }
@@ -108,45 +108,45 @@ public class ResourcePathTestData {
         return "util/bundle";
     }
 
-    public MappedResourcePath getMappedDefaultGroupCssResourcePath() {
-        return new MappedResourcePathBean(getRequestedCssResourcePath(),
+    public Resource getMappedDefaultGroupCssResourcePath() {
+        return new ResourceBean(getRequestedCssResourcePath(),
                 "default/common/main.css", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedDefaultGroupNamedScriptResourcePath() {
-        return new MappedResourcePathBean(getRequestedNamedScriptResourcePath(),
+    public Resource getMappedDefaultGroupNamedScriptResourcePath() {
+        return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 "default/common/main.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedDefaultGroupNamedScriptBundleResourcePath() {
-        // TODO: should the method return the concrete MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedNamedScriptResourcePath(),
+    public Resource getMappedDefaultGroupNamedScriptBundleResourcePath() {
+        // TODO: should the method return the concrete ResourceBean?
+        return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 "default/common/bundle/main.js", getRootResourcesPath());
     }
 
     public String getMappedDefaultGroupNamedScriptBundleResourceHref() {
         return getScriptClientPathPrefix()
-        + getMappedDefaultGroupNamedScriptBundleResourcePath().getNewResourcePath();
+        + getMappedDefaultGroupNamedScriptBundleResourcePath().getNewPath();
     }
 
-    public MappedResourcePath getMappedDefaultGroupBundledScriptBundleResourcePath() {
-        // TODO: should the method return the concrete MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedDefaultGroupBundledScriptBundleResourcePath() {
+        // TODO: should the method return the concrete ResourceBean?
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "default/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedDefaultGroupBundledScriptResourcePath1() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedDefaultGroupBundledScriptResourcePath1() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "default/util/util1.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedDefaultGroupBundledScriptResourcePath2() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedDefaultGroupBundledScriptResourcePath2() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "default/util/util2.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedDefaultGroupCssBundleResourcePath() {
-        return new MappedResourcePathBean(getRequestedCssResourcePath(),
+    public Resource getMappedDefaultGroupCssBundleResourcePath() {
+        return new ResourceBean(getRequestedCssResourcePath(),
                 "default/common/bundle/main.css", getRootResourcesPath());
     }
 
@@ -154,110 +154,110 @@ public class ResourcePathTestData {
         return "default/common/bundle/";
     }
 
-    public MappedResourcePath getMappedIphoneGroupCssResourcePath() {
-        return new MappedResourcePathBean(getRequestedCssResourcePath(),
+    public Resource getMappedIphoneGroupCssResourcePath() {
+        return new ResourceBean(getRequestedCssResourcePath(),
                 "iPhone/common/main.css", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedIphoneGroupCssBundleResourcePath() {
-        return new MappedResourcePathBean(getRequestedCssResourcePath(),
+    public Resource getMappedIphoneGroupCssBundleResourcePath() {
+        return new ResourceBean(getRequestedCssResourcePath(),
                 "iPhone/common/bundle/main.css", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedIphoneGroupNamedScriptResourcePath() {
-        // TODO: should the method return the concrete MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedNamedScriptResourcePath(),
+    public Resource getMappedIphoneGroupNamedScriptResourcePath() {
+        // TODO: should the method return the concrete ResourceBean?
+        return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 "iPhone/common/main.js", getRootResourcesPath());
     }
 
     public String getMappedIphoneGroupNamedScriptResourceHref() {
         return getScriptClientPathPrefix()
-        + getMappedIphoneGroupNamedScriptResourcePath().getNewResourcePath();
+        + getMappedIphoneGroupNamedScriptResourcePath().getNewPath();
     }
 
-    public MappedResourcePath getMappedIphoneGroupNamedScriptBundleResourcePath() {
-        return new MappedResourcePathBean(getRequestedNamedScriptResourcePath(),
+    public Resource getMappedIphoneGroupNamedScriptBundleResourcePath() {
+        return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 "iPhone/common/bundle/main.js", getRootResourcesPath());
     }
 
     public String getMappedIphoneGroupNamedScriptBundleResourceHref() {
         return getScriptClientPathPrefix()
                 + getMappedIphoneGroupNamedScriptBundleResourcePath()
-                        .getNewResourcePath();
+                        .getNewPath();
     }
 
-    public MappedResourcePath getMappedIphoneGroupBundledScriptBundleResourcePath() {
-        // TODO: should the method return the concrete MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedIphoneGroupBundledScriptBundleResourcePath() {
+        // TODO: should the method return the concrete ResourceBean?
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "iPhone/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedIphoneGroupBundledScriptResourcePath1() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedIphoneGroupBundledScriptResourcePath1() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "iPhone/util/util1.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedIphoneGroupBundledScriptResourcePath2() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedIphoneGroupBundledScriptResourcePath2() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "iPhone/util/util2.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedAndroidGroupBundledScriptBundleResourcePath() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedAndroidGroupBundledScriptBundleResourcePath() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "android/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedAndroidGroupBundledScriptResourcePath1() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedAndroidGroupBundledScriptResourcePath1() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "android/util/util1.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedAndroidGroupBundledScriptResourcePath2() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedAndroidGroupBundledScriptResourcePath2() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "android/util/util2.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedAppleGroupBundledScriptBundleResourcePath() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedAppleGroupBundledScriptBundleResourcePath() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "apple/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedAppleGroupBundledScriptResourcePath1() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedAppleGroupBundledScriptResourcePath1() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "apple/util/util1.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedAppleGroupBundledScriptResourcePath2() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedAppleGroupBundledScriptResourcePath2() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "apple/util/util2.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedHD800GroupBundledScriptBundleResourcePath() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedHD800GroupBundledScriptBundleResourcePath() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "hd800/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedHD800GroupBundledScriptResourcePath1() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedHD800GroupBundledScriptResourcePath1() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "hd800/util/util1.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedHD800GroupBundledScriptResourcePath2() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedHD800GroupBundledScriptResourcePath2() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "hd800/util/util2.js", getRootResourcesPath());
     }
-    public MappedResourcePath getMappedMediumGroupBundledScriptBundleResourcePath() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedMediumGroupBundledScriptBundleResourcePath() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "medium/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedMediumGroupBundledScriptResourcePath1() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedMediumGroupBundledScriptResourcePath1() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "medium/util/util1.js", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedMediumGroupBundledScriptResourcePath2() {
-        return new MappedResourcePathBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedMediumGroupBundledScriptResourcePath2() {
+        return new ResourceBean(getRequestedBundledScriptResourcePath(),
                 "medium/util/util2.js", getRootResourcesPath());
     }
 
@@ -265,21 +265,21 @@ public class ResourcePathTestData {
         return "iPhone/common/bundle/";
     }
 
-    public MappedResourcePath getMappedAppleGroupResourcePath() {
-        return new MappedResourcePathBean(getRequestedJspResourcePath(),
+    public Resource getMappedAppleGroupResourcePath() {
+        return new ResourceBean(getRequestedJspResourcePath(),
                 getJspResourcesRootServletPath() + "Apple/detail/bdp.jsp",
                 getRootResourcesPath());
 
     }
 
-    public MappedResourcePath getMappedHD800GroupResourcePath() {
-        return new MappedResourcePathBean(getRequestedJspResourcePath(),
+    public Resource getMappedHD800GroupResourcePath() {
+        return new ResourceBean(getRequestedJspResourcePath(),
                 getJspResourcesRootServletPath() + "HD800/detail/bdp.jsp",
                 getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedMediumGroupResourcePath() {
-        return new MappedResourcePathBean(getRequestedJspResourcePath(),
+    public Resource getMappedMediumGroupResourcePath() {
+        return new ResourceBean(getRequestedJspResourcePath(),
                 getJspResourcesRootServletPath() + "medium/detail/bdp.jsp",
                 getRootResourcesPath());
     }
@@ -298,67 +298,67 @@ public class ResourcePathTestData {
 
     public String getMappedDefaultGroupCssResourceHref() {
         return getCssClientPathPrefix()
-            + getMappedDefaultGroupCssResourcePath().getNewResourcePath();
+            + getMappedDefaultGroupCssResourcePath().getNewPath();
     }
 
     public String getMappedDefaultGroupNamedScriptResourceHref() {
         return getScriptClientPathPrefix()
-            + getMappedDefaultGroupNamedScriptResourcePath().getNewResourcePath();
+            + getMappedDefaultGroupNamedScriptResourcePath().getNewPath();
     }
 
     public String getMappedDefaultGroupCssBundleResourceHref() {
         return getCssClientPathPrefix()
-            + getMappedDefaultGroupCssBundleResourcePath().getNewResourcePath();
+            + getMappedDefaultGroupCssBundleResourcePath().getNewPath();
     }
 
     public String getMappedIphoneGroupCssResourceHref() {
         return getCssClientPathPrefix()
-            + getMappedIphoneGroupCssResourcePath().getNewResourcePath();
+            + getMappedIphoneGroupCssResourcePath().getNewPath();
     }
 
     public String getMappedIphoneGroupCssBundleResourceHref() {
         return getCssClientPathPrefix()
-            + getMappedIphoneGroupCssBundleResourcePath().getNewResourcePath();
+            + getMappedIphoneGroupCssBundleResourcePath().getNewPath();
     }
 
-    public MappedResourcePath getMappedDefaultGroupImageResourcePath() {
-        // TODO: change return type to MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedImageResourcePath(),
+    public Resource getMappedDefaultGroupImageResourcePath() {
+        // TODO: change return type to ResourceBean?
+        return new ResourceBean(getRequestedImageResourcePath(),
                 "default/common/unmetered", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedIphoneGroupImageResourcePath() {
-        // TODO: change return type to MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedImageResourcePath(),
+    public Resource getMappedIphoneGroupImageResourcePath() {
+        // TODO: change return type to ResourceBean?
+        return new ResourceBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedDefaultGroupPngImageResourcePath() {
-        // TODO: change return type to MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedImageResourcePath(),
+    public Resource getMappedDefaultGroupPngImageResourcePath() {
+        // TODO: change return type to ResourceBean?
+        return new ResourceBean(getRequestedImageResourcePath(),
                 "default/common/unmetered.png", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedIphoneGroupPngImageResourcePath() {
-        // TODO: change return type to MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedImageResourcePath(),
+    public Resource getMappedIphoneGroupPngImageResourcePath() {
+        // TODO: change return type to ResourceBean?
+        return new ResourceBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered.png", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedIphoneGroupGifImageResourcePath() {
-        // TODO: change return type to MappedResourcePathBean?
-        return new MappedResourcePathBean(getRequestedImageResourcePath(),
+    public Resource getMappedIphoneGroupGifImageResourcePath() {
+        // TODO: change return type to ResourceBean?
+        return new ResourceBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered.gif", getRootResourcesPath());
     }
 
-    public MappedResourcePath getMappedAndroidGroupPngImageResourcePath() {
-        return new MappedResourcePathBean(getRequestedImageResourcePath(),
+    public Resource getMappedAndroidGroupPngImageResourcePath() {
+        return new ResourceBean(getRequestedImageResourcePath(),
                 "Android/common/unmetered.png", getRootResourcesPath());
     }
 
     public String getMappedDefaultGroupPngImageResourceHref() {
         return getImageClientPathPrefix()
-            + getMappedDefaultGroupPngImageResourcePath().getNewResourcePath();
+            + getMappedDefaultGroupPngImageResourcePath().getNewPath();
     }
 
     public String getMapComponentPathPrefix() {

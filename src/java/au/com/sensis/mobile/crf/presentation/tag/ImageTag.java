@@ -9,7 +9,7 @@ import javax.servlet.jsp.PageContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
+import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
@@ -31,13 +31,13 @@ public class ImageTag extends AbstractTag {
     public final void doTag() throws JspException, IOException {
         validateHrefAttribute();
 
-        final MappedResourcePath mappedResourcePath =
+        final Resource resource =
                 getResourceResolverEngine().getResourcePath(getDevice(),
                         getHref());
-        if (mappedResourcePath != null) {
-            if (!mappedResourcePath.endsWithDotNull()) {
+        if (resource != null) {
+            if (!resource.endsWithDotNull()) {
                 writeSingleImageTag(getJspContext().getOut(),
-                        mappedResourcePath);
+                        resource);
             }
         } else {
             if (getResourceResolutionWarnLogger().isWarnEnabled()) {
@@ -53,11 +53,11 @@ public class ImageTag extends AbstractTag {
     }
 
     private void writeSingleImageTag(final JspWriter jspWriter,
-            final MappedResourcePath mappedResourcePath) throws IOException {
+            final Resource resource) throws IOException {
         jspWriter.print("<img ");
 
         jspWriter.print("src=\"" + getTagDependencies().getClientPathPrefix()
-                + mappedResourcePath.getNewResourcePath() + "\" ");
+                + resource.getNewPath() + "\" ");
 
         for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
             jspWriter.print(attribute.getLocalName() + "=\""

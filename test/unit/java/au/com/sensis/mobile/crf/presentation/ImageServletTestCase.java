@@ -21,8 +21,8 @@ import org.springframework.web.context.WebApplicationContext;
 import au.com.sensis.mobile.crf.presentation.ImageServlet.ImageServletDependencies;
 import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
-import au.com.sensis.mobile.crf.service.MappedResourcePathBean;
+import au.com.sensis.mobile.crf.service.Resource;
+import au.com.sensis.mobile.crf.service.ResourceBean;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -109,9 +109,9 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         recordGetServletPath(getRequestedResourcePath());
 
-        recordGetMappedResourcePath(
+        recordGetResource(
                 getResourcePathTestData().getMapComponentRequestedImageResourcePath(),
-                getMappedResourcePath());
+                getResource());
 
         recordSetResponseContentType();
         recordSetResponseContentLength();
@@ -140,7 +140,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         recordGetServletPath(getRequestedResourcePath());
 
-        recordGetMappedResourcePath(getResourcePathTestData()
+        recordGetResource(getResourcePathTestData()
                 .getMapComponentRequestedImageResourcePath(), null);
 
         recordSetHttp404ErrorResponse();
@@ -195,8 +195,8 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
                         .getMapComponentRequestedImageResourcePath();
     }
 
-    private MappedResourcePath getMappedResourcePath() {
-        return new MappedResourcePathBean(getRequestedResourcePath(),
+    private Resource getResource() {
+        return new ResourceBean(getRequestedResourcePath(),
                 getExpectedMappedFile().getName(), getExpectedMappedFile()
                         .getParentFile());
     }
@@ -249,12 +249,12 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
         getMockHttpServletResponse().setContentType(MIME_TYPE);
     }
 
-    private void recordGetMappedResourcePath(
+    private void recordGetResource(
             final String requestedResourcePath,
-            final MappedResourcePath mappedResourcePath) throws IOException {
+            final Resource resource) throws IOException {
         EasyMock.expect(
                 getMockResourceResolverEngine().getResourcePath(getMockDevice(),
-                        requestedResourcePath)).andReturn(mappedResourcePath);
+                        requestedResourcePath)).andReturn(resource);
 
     }
 

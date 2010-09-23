@@ -81,17 +81,17 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
                         getMockDevice(),
                         getRequestedMatchedResourcePath()))
                 .andReturn(
-                        getExpectedMappedResourcePath());
+                        getExpectedResource());
         replay();
 
-        final MappedResourcePath actualMappedResourcePath =
+        final Resource actualResource =
                 getObjectUnderTest().getResourcePath(
                         getMockDevice(),
                         getRequestedMatchedResourcePath());
 
-        Assert.assertEquals("actualMappedResourcePath is wrong",
-                getExpectedMappedResourcePath(),
-                actualMappedResourcePath);
+        Assert.assertEquals("actualResource is wrong",
+                getExpectedResource(),
+                actualResource);
     }
 
     private String getRequestedMatchedResourcePath() {
@@ -101,13 +101,13 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
 
     @Test
     public void testGetResourcePathWhenPrefixDoesNotMatch() throws Throwable {
-        final MappedResourcePath actualMappedResourcePath =
+        final Resource actualResource =
                 getObjectUnderTest().getResourcePath(
                         getMockDevice(),
                         getRequestedUnmatchedResourcePath());
 
-        Assert.assertNull("actualMappedResourcePath is wrong",
-                actualMappedResourcePath);
+        Assert.assertNull("actualResource is wrong",
+                actualResource);
 
     }
 
@@ -124,40 +124,40 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
                         getMockDevice(),
                         getRequestedMatchedResourcePath()))
                 .andReturn(
-                        getExpectedMappedResourcePaths());
+                        getExpectedResources());
         replay();
 
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
                 getObjectUnderTest().getAllResourcePaths(
                         getMockDevice(),
                         getRequestedMatchedResourcePath());
 
-        Assert.assertEquals("actualMappedResourcePath is wrong",
-                getExpectedMappedResourcePaths(),
-                actualMappedResourcePaths);
+        Assert.assertEquals("actualResource is wrong",
+                getExpectedResources(),
+                actualResources);
     }
 
     @Test
     public void testGetAllResourcePathsWhenPrefixDoesNotMatch()
         throws Throwable {
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
             getObjectUnderTest().getAllResourcePaths(getMockDevice(),
                     getRequestedUnmatchedResourcePath());
 
         Assert
-        .assertEquals("actualMappedResourcePath is wrong",
-                new ArrayList<MappedResourcePath>(),
-                actualMappedResourcePaths);
+        .assertEquals("actualResource is wrong",
+                new ArrayList<Resource>(),
+                actualResources);
 
     }
 
-    private MappedResourcePath getExpectedMappedResourcePath() {
+    private Resource getExpectedResource() {
         return getResourcePathTestData()
                 .getMappedAppleGroupResourcePath();
     }
 
-    private List<MappedResourcePath> getExpectedMappedResourcePaths() {
-        return Arrays.asList(getExpectedMappedResourcePath());
+    private List<Resource> getExpectedResources() {
+        return Arrays.asList(getExpectedResource());
     }
 
     private PathPrefixRestrictedResourceResolverEngineBean getObjectUnderTest() {

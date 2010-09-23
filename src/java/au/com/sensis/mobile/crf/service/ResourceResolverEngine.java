@@ -29,7 +29,7 @@ public interface ResourceResolverEngine {
      * @throws IOException Thrown if an IO error occurs.
      */
     // TODO: reconsider IOException
-    MappedResourcePath getResourcePath(Device device, String requestedResourcePath)
+    Resource getResourcePath(Device device, String requestedResourcePath)
         throws IOException;
 
     /**
@@ -48,6 +48,6 @@ public interface ResourceResolverEngine {
      * @throws IOException Thrown if an IO error occurs.
      */
     // TODO: reconsider IOException
-    List<MappedResourcePath> getAllResourcePaths(Device device, String requestedResourcePath)
+    List<Resource> getAllResourcePaths(Device device, String requestedResourcePath)
         throws IOException;
 }

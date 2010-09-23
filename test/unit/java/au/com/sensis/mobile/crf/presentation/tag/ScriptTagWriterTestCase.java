@@ -22,7 +22,7 @@ import au.com.sensis.mobile.crf.config.DeploymentVersion;
 import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
 import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
+import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -102,7 +102,7 @@ public class ScriptTagWriterTestCase extends
             try {
                 setObjectUnderTest(createObjectUnderTest(testDataArray[i]));
 
-                recordGetMappedResourcePath(testDataArray[i].getMappedResourcePaths());
+                recordGetResource(testDataArray[i].getResources());
 
                 if (testDataArray[i].getDeploymentVersion().isDevPlatform()
                         && StringUtils.isEmpty(testDataArray[i].getOutputString())) {
@@ -114,8 +114,8 @@ public class ScriptTagWriterTestCase extends
                         recordLogResourceNotFoundWarning();
                     } else {
                         EasyMock.expect(getMockScriptBundleFactory().getBundle(
-                                testDataArray[i].getMappedResourcePaths())).andReturn(
-                                        testDataArray[i].getBundleMappedResourcePath())
+                                testDataArray[i].getResources())).andReturn(
+                                        testDataArray[i].getBundleResource())
                                 .atLeastOnce();
                     }
                 }
@@ -156,13 +156,13 @@ public class ScriptTagWriterTestCase extends
                 getMockResolutionWarnLogger());
     }
 
-    private void recordGetMappedResourcePath(
-            final List<MappedResourcePath> expectedMappedResourcePaths) throws IOException {
+    private void recordGetResource(
+            final List<Resource> expectedResources) throws IOException {
         EasyMock.expect(
                 getMockResourceResolverEngine()
                         .getAllResourcePaths(getMockDevice(),
                                 getRequestedScriptResourcePath()))
-                        .andReturn(expectedMappedResourcePaths).atLeastOnce();
+                        .andReturn(expectedResources).atLeastOnce();
     }
 
     private void recordLogResourceNotFoundWarning() {
@@ -174,7 +174,7 @@ public class ScriptTagWriterTestCase extends
                         + "' and device " + getMockDevice());
     }
 
-    private MappedResourcePath getMappedDefaultGroupScriptResourcePath() {
+    private Resource getMappedDefaultGroupScriptResourcePath() {
         return getResourcePathTestData().getMappedDefaultGroupNamedScriptResourcePath();
     }
 
@@ -182,7 +182,7 @@ public class ScriptTagWriterTestCase extends
         return getResourcePathTestData().getMappedDefaultGroupNamedScriptResourceHref();
     }
 
-    private MappedResourcePath getMappediPhoneGroupScriptResourcePath() {
+    private Resource getMappediPhoneGroupScriptResourcePath() {
         return getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath();
     }
 
@@ -470,7 +470,7 @@ public class ScriptTagWriterTestCase extends
     private TestData createTestDataNoDynamicAttributesNoMappedResourceDevMode() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                new ArrayList<MappedResourcePath>(),
+                new ArrayList<Resource>(),
                 null,
                 StringUtils.EMPTY,
                 getDeploymentVersionTestData().createDevDeploymentVersion());
@@ -479,7 +479,7 @@ public class ScriptTagWriterTestCase extends
     private TestData createTestDataNoDynamicAttributesNoMappedResourceProdMode() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                new ArrayList<MappedResourcePath>(),
+                new ArrayList<Resource>(),
                 null,
                 StringUtils.EMPTY,
                 getDeploymentVersionTestData().createProdDeploymentVersion());
@@ -495,7 +495,7 @@ public class ScriptTagWriterTestCase extends
                 getDeploymentVersionTestData().createDevDeploymentVersion());
     }
 
-    private MappedResourcePath getMappedDefaultGroupScriptBundleResourcePath() {
+    private Resource getMappedDefaultGroupScriptBundleResourcePath() {
         return getResourcePathTestData().getMappedDefaultGroupNamedScriptBundleResourcePath();
     }
 
@@ -503,7 +503,7 @@ public class ScriptTagWriterTestCase extends
         return getResourcePathTestData().getMappedDefaultGroupNamedScriptBundleResourceHref();
     }
 
-    private MappedResourcePath getMappedIphoneGroupScriptBundleResourcePath() {
+    private Resource getMappedIphoneGroupScriptBundleResourcePath() {
         return getResourcePathTestData().getMappedIphoneGroupNamedScriptBundleResourcePath();
     }
 
@@ -514,20 +514,20 @@ public class ScriptTagWriterTestCase extends
 
     private static class TestData {
         private final List<DynamicTagAttribute> dynamicAttributes;
-        private final List<MappedResourcePath> mappedResourcePaths;
-        private final MappedResourcePath bundleMappedResourcePath;
+        private final List<Resource> resources;
+        private final Resource bundleResource;
         private final String outputString;
         private final DeploymentVersion deploymentVersion;
 
         public TestData(final List<DynamicTagAttribute> dynamicAttributes,
-                final List<MappedResourcePath> mappedResourcePaths,
-                final MappedResourcePath bundlePath,
+                final List<Resource> resources,
+                final Resource bundlePath,
                 final String outputString,
                 final DeploymentVersion deploymentVersion) {
             super();
             this.dynamicAttributes = dynamicAttributes;
-            this.mappedResourcePaths = mappedResourcePaths;
-            bundleMappedResourcePath = bundlePath;
+            this.resources = resources;
+            bundleResource = bundlePath;
             this.outputString = outputString;
             this.deploymentVersion = deploymentVersion;
         }
@@ -540,10 +540,10 @@ public class ScriptTagWriterTestCase extends
         }
 
         /**
-         * @return the mappedResourcePaths
+         * @return the resources
          */
-        private List<MappedResourcePath> getMappedResourcePaths() {
-            return mappedResourcePaths;
+        private List<Resource> getResources() {
+            return resources;
         }
 
         /**
@@ -561,10 +561,10 @@ public class ScriptTagWriterTestCase extends
         }
 
         /**
-         * @return the bundleMappedResourcePath
+         * @return the bundleResource
          */
-        public MappedResourcePath getBundleMappedResourcePath() {
-            return bundleMappedResourcePath;
+        public Resource getBundleResource() {
+            return bundleResource;
         }
 
         /**
@@ -574,8 +574,8 @@ public class ScriptTagWriterTestCase extends
         public String toString() {
             final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
             toStringBuilder.append("dynamicAttributes", getDynamicAttributes());
-            toStringBuilder.append("mappedResourcePaths", getMappedResourcePaths());
-            toStringBuilder.append("bundleMappedResourcePath", getBundleMappedResourcePath());
+            toStringBuilder.append("resources", getResources());
+            toStringBuilder.append("bundleResource", getBundleResource());
             toStringBuilder.append("outputString", getOutputString());
             toStringBuilder.append("deploymentVersion", getDeploymentVersion());
             return toStringBuilder.toString();

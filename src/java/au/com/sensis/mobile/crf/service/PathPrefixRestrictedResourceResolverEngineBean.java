@@ -58,7 +58,7 @@ public class PathPrefixRestrictedResourceResolverEngineBean
      * @throws IOException
      */
     @Override
-    public List<MappedResourcePath> getAllResourcePaths(final Device device,
+    public List<Resource> getAllResourcePaths(final Device device,
             final String requestedResourcePath) throws IOException {
 
         if (isInterestedIn(requestedResourcePath)) {
@@ -69,7 +69,7 @@ public class PathPrefixRestrictedResourceResolverEngineBean
         } else {
             debugLogDisinterest(requestedResourcePath);
 
-            return new ArrayList<MappedResourcePath>();
+            return new ArrayList<Resource>();
         }
 
     }
@@ -83,7 +83,7 @@ public class PathPrefixRestrictedResourceResolverEngineBean
      * @throws IOException
      */
     @Override
-    public MappedResourcePath getResourcePath(final Device device,
+    public Resource getResourcePath(final Device device,
             final String requestedResourcePath) throws IOException {
 
         if (isInterestedIn(requestedResourcePath)) {

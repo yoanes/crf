@@ -14,13 +14,13 @@ import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
 
 /**
  * {@link JavaScriptFileFinder} for returning all JavaScript files for
- * a {@link MappedResourcePath} that corresponds to a JavaScript bundle.
+ * a {@link Resource} that corresponds to a JavaScript bundle.
  *
  * @author Adrian.Koh2@sensis.com.au
  *
  */
-// TODO: will be merged into JavaScriptGroupResourceResolver (once JavaScriptMappedResourcePathBean
-// is split into two. See comments in MappedResourcePath).
+// TODO: will be merged into JavaScriptGroupResourceResolver (once JavaScriptResourceBean
+// is split into two. See comments in Resource).
 public class JavaScriptBundlePathExpander implements JavaScriptFileFinder {
 
     private static final String ORDER_PROPERTY_SPLIT_CHAR = ",";
@@ -54,12 +54,12 @@ public class JavaScriptBundlePathExpander implements JavaScriptFileFinder {
     }
 
     /**
-     * If {@link MappedResourcePath#isBundlePath()}, then the path is expanded
+     * If {@link Resource#isBundlePath()}, then the path is expanded
      * to a list of files that correspond to the bundle. Otherwise,
-     * {@link MappedResourcePath#getNewResourceFile()} is returned.
+     * {@link Resource#getNewFile()} is returned.
      * <p>
      * Bundle expansion occurs by finding all files in
-     * {@link MappedResourcePath#getBundleParentDirFile()} that match the
+     * {@link Resource#getBundleParentDirFile()} that match the
      * {@link #getBundleOrderPropertyName()} property found in the
      * {@link #getBundlesPropertiesFileName()} properties file. If no such
      * property is found or no such file is found, then the order defaults to

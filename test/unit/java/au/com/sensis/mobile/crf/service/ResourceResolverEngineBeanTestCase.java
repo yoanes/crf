@@ -33,19 +33,19 @@ public class ResourceResolverEngineBeanTestCase extends
     private ResourceResolver mockResourceResolver;
     private FileIoFacade mockFileIoFacade;
     private Device mockDevice;
-    private MappedResourcePath mockIphoneMappedResourcePath1;
-    private MappedResourcePath mockIphoneMappedResourcePath2;
+    private Resource mockIphoneResource1;
+    private Resource mockIphoneResource2;
 
-    private MappedResourcePath mockAndroidMappedResourcePath1;
-    private MappedResourcePath mockAndroidMappedResourcePath2;
-    private MappedResourcePath mockDefaultMappedResourcePath1;
-    private MappedResourcePath mockDefaultMappedResourcePath2;
-    private MappedResourcePath mockAppleMappedResourcePath1;
-    private MappedResourcePath mockAppleMappedResourcePath2;
-    private MappedResourcePath mockHD800MappedResourcePath1;
-    private MappedResourcePath mockHD800MappedResourcePath2;
-    private MappedResourcePath mockMediumMappedResourcePath1;
-    private MappedResourcePath mockMediumMappedResourcePath2;
+    private Resource mockAndroidResource1;
+    private Resource mockAndroidResource2;
+    private Resource mockDefaultResource1;
+    private Resource mockDefaultResource2;
+    private Resource mockAppleResource1;
+    private Resource mockAppleResource2;
+    private Resource mockHD800Resource1;
+    private Resource mockHD800Resource2;
+    private Resource mockMediumResource1;
+    private Resource mockMediumResource2;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
@@ -125,12 +125,12 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final MappedResourcePath actualResourcePath =
+        final Resource actualResourcePath =
             getObjectUnderTest().getResourcePath(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong",
-                getMockIphoneMappedResourcePath1(),
+                getMockIphoneResource1(),
                 actualResourcePath);
     }
 
@@ -148,12 +148,12 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final MappedResourcePath actualResourcePath =
+        final Resource actualResourcePath =
             getObjectUnderTest().getResourcePath(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong",
-                getMockIphoneMappedResourcePath1(),
+                getMockIphoneResource1(),
                 actualResourcePath);
     }
 
@@ -164,8 +164,8 @@ public class ResourceResolverEngineBeanTestCase extends
                 + getResourcePathTestData().getRequestedJspResourcePath()
                 + "' resolved to multiple resources when only one was requested. "
                 + "Will only return the first. Total found: "
-                + Arrays.asList(getMockIphoneMappedResourcePath1(),
-                        getMockIphoneMappedResourcePath2()) + ".");
+                + Arrays.asList(getMockIphoneResource1(),
+                        getMockIphoneResource2()) + ".");
     }
 
     @Test
@@ -181,20 +181,20 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final MappedResourcePath actualResourcePath =
+        final Resource actualResourcePath =
                 getObjectUnderTest().getResourcePath(getMockDevice(),
                         getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong",
-                getMockAndroidMappedResourcePath1(),
+                getMockAndroidResource1(),
                 actualResourcePath);
     }
 
 
     private void recordCheckIfIphoneGroupHasSingleResource(final Boolean fileExists)
         throws IOException {
-        final List<MappedResourcePath> mapperResults
-            = Arrays.asList(getMockIphoneMappedResourcePath1());
+        final List<Resource> mapperResults
+            = Arrays.asList(getMockIphoneResource1());
 
         if (fileExists) {
             EasyMock.expect(
@@ -207,15 +207,15 @@ public class ResourceResolverEngineBeanTestCase extends
                     getMockResourceResolver().resolve(
                             getResourcePathTestData().getRequestedJspResourcePath(),
                             getGroupTestData().createIPhoneGroup()))
-                            .andReturn(new ArrayList<MappedResourcePath>());
+                            .andReturn(new ArrayList<Resource>());
         }
     }
 
     private void recordCheckIfIphoneGroupHasResource(final Boolean fileExists)
             throws IOException {
-        final List<MappedResourcePath> mapperResults =
-                Arrays.asList(getMockIphoneMappedResourcePath1(),
-                        getMockIphoneMappedResourcePath2());
+        final List<Resource> mapperResults =
+                Arrays.asList(getMockIphoneResource1(),
+                        getMockIphoneResource2());
 
         if (fileExists) {
             EasyMock.expect(
@@ -230,16 +230,16 @@ public class ResourceResolverEngineBeanTestCase extends
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createIPhoneGroup())).andReturn(
-                    new ArrayList<MappedResourcePath>());
+                    new ArrayList<Resource>());
         }
 
     }
 
     private void recordCheckIfAppleGroupHasResource(final Boolean fileExists)
             throws IOException {
-        final List<MappedResourcePath> mapperResults =
-                Arrays.asList(getMockAppleMappedResourcePath1(),
-                        getMockAppleMappedResourcePath2());
+        final List<Resource> mapperResults =
+                Arrays.asList(getMockAppleResource1(),
+                        getMockAppleResource2());
 
         if (fileExists) {
             EasyMock.expect(
@@ -254,15 +254,15 @@ public class ResourceResolverEngineBeanTestCase extends
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAppleGroup())).andReturn(
-                    new ArrayList<MappedResourcePath>());
+                    new ArrayList<Resource>());
         }
     }
 
     private void recordCheckIfHD800GroupHasResource(final Boolean fileExists)
             throws IOException {
-        final List<MappedResourcePath> mapperResults =
-                Arrays.asList(getMockHD800MappedResourcePath1(),
-                        getMockHD800MappedResourcePath2());
+        final List<Resource> mapperResults =
+                Arrays.asList(getMockHD800Resource1(),
+                        getMockHD800Resource2());
 
         if (fileExists) {
             EasyMock.expect(
@@ -277,16 +277,16 @@ public class ResourceResolverEngineBeanTestCase extends
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createHD800Group())).andReturn(
-                    new ArrayList<MappedResourcePath>());
+                    new ArrayList<Resource>());
         }
 
     }
 
     private void recordCheckIfMediumGroupHasResource(final Boolean fileExists)
             throws IOException {
-        final List<MappedResourcePath> mapperResults =
-                Arrays.asList(getMockMediumMappedResourcePath1(),
-                        getMockMediumMappedResourcePath2());
+        final List<Resource> mapperResults =
+                Arrays.asList(getMockMediumResource1(),
+                        getMockMediumResource2());
 
         if (fileExists) {
             EasyMock.expect(
@@ -301,16 +301,16 @@ public class ResourceResolverEngineBeanTestCase extends
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createMediumGroup())).andReturn(
-                    new ArrayList<MappedResourcePath>());
+                    new ArrayList<Resource>());
         }
 
     }
 
     private void recordCheckIfAndroidGroupHasResource(final Boolean fileExists)
             throws IOException {
-        final List<MappedResourcePath> mapperResults =
-                Arrays.asList(getMockAndroidMappedResourcePath1(),
-                        getMockAndroidMappedResourcePath2());
+        final List<Resource> mapperResults =
+                Arrays.asList(getMockAndroidResource1(),
+                        getMockAndroidResource2());
 
         if (fileExists) {
             EasyMock.expect(
@@ -325,15 +325,15 @@ public class ResourceResolverEngineBeanTestCase extends
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAndroidGroup()))
-                    .andReturn(new ArrayList<MappedResourcePath>());
+                    .andReturn(new ArrayList<Resource>());
         }
 
     }
 
     private void recordCheckIfAndroidGroupHasSingleResource(
             final Boolean fileExists) throws IOException {
-        final List<MappedResourcePath> mapperResults =
-                Arrays.asList(getMockAndroidMappedResourcePath1());
+        final List<Resource> mapperResults =
+                Arrays.asList(getMockAndroidResource1());
 
         if (fileExists) {
             EasyMock.expect(
@@ -348,7 +348,7 @@ public class ResourceResolverEngineBeanTestCase extends
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createAndroidGroup()))
-                    .andReturn(new ArrayList<MappedResourcePath>());
+                    .andReturn(new ArrayList<Resource>());
         }
     }
 
@@ -367,20 +367,20 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final MappedResourcePath actualResourcePath =
+        final Resource actualResourcePath =
             getObjectUnderTest().getResourcePath(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong",
-                getMockDefaultMappedResourcePath1(),
+                getMockDefaultResource1(),
                 actualResourcePath);
     }
 
     private void recordCheckIfDefaultGroupHasResource(final Boolean fileExists)
             throws IOException {
-        final List<MappedResourcePath> mapperResults =
-                Arrays.asList(getMockDefaultMappedResourcePath1(),
-                        getMockDefaultMappedResourcePath2());
+        final List<Resource> mapperResults =
+                Arrays.asList(getMockDefaultResource1(),
+                        getMockDefaultResource2());
 
         if (fileExists) {
             EasyMock.expect(
@@ -395,14 +395,14 @@ public class ResourceResolverEngineBeanTestCase extends
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createDefaultGroup()))
-                    .andReturn(new ArrayList<MappedResourcePath>());
+                    .andReturn(new ArrayList<Resource>());
         }
     }
 
     private void recordCheckIfDefaultGroupHasSingleResource(
             final Boolean fileExists) throws IOException {
-        final List<MappedResourcePath> mapperResults =
-                Arrays.asList(getMockDefaultMappedResourcePath1());
+        final List<Resource> mapperResults =
+                Arrays.asList(getMockDefaultResource1());
 
         if (fileExists) {
             EasyMock.expect(
@@ -417,7 +417,7 @@ public class ResourceResolverEngineBeanTestCase extends
                             getResourcePathTestData()
                                     .getRequestedJspResourcePath(),
                             getGroupTestData().createDefaultGroup()))
-                    .andReturn(new ArrayList<MappedResourcePath>());
+                    .andReturn(new ArrayList<Resource>());
         }
     }
 
@@ -436,7 +436,7 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final MappedResourcePath actualResourcePath =
+        final Resource actualResourcePath =
             getObjectUnderTest().getResourcePath(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
@@ -465,7 +465,7 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final List<MappedResourcePath> actualResourcePaths =
+        final List<Resource> actualResourcePaths =
                 getObjectUnderTest()
                         .getAllResourcePaths(
                                 getMockDevice(),
@@ -473,18 +473,18 @@ public class ResourceResolverEngineBeanTestCase extends
                                         .getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong", Arrays.asList(
-                getMockDefaultMappedResourcePath1(),
-                getMockDefaultMappedResourcePath2(),
-                getMockMediumMappedResourcePath1(),
-                getMockMediumMappedResourcePath2(),
-                getMockHD800MappedResourcePath1(),
-                getMockHD800MappedResourcePath2(),
-                getMockAppleMappedResourcePath1(),
-                getMockAppleMappedResourcePath2(),
-                getMockAndroidMappedResourcePath1(),
-                getMockAndroidMappedResourcePath2(),
-                getMockIphoneMappedResourcePath1(),
-                getMockIphoneMappedResourcePath2()),
+                getMockDefaultResource1(),
+                getMockDefaultResource2(),
+                getMockMediumResource1(),
+                getMockMediumResource2(),
+                getMockHD800Resource1(),
+                getMockHD800Resource2(),
+                getMockAppleResource1(),
+                getMockAppleResource2(),
+                getMockAndroidResource1(),
+                getMockAndroidResource2(),
+                getMockIphoneResource1(),
+                getMockIphoneResource2()),
                 actualResourcePaths);
     }
 
@@ -510,16 +510,16 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final List<MappedResourcePath> actualResourcePaths =
+        final List<Resource> actualResourcePaths =
             getObjectUnderTest().getAllResourcePaths(
                     getMockDevice(), getResourcePathTestData()
                     .getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong", Arrays.asList(
-                getMockDefaultMappedResourcePath1(),
-                getMockDefaultMappedResourcePath2(),
-                getMockMediumMappedResourcePath1(),
-                getMockMediumMappedResourcePath2()),
+                getMockDefaultResource1(),
+                getMockDefaultResource2(),
+                getMockMediumResource1(),
+                getMockMediumResource2()),
                 actualResourcePaths);
     }
 
@@ -545,19 +545,19 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final List<MappedResourcePath> actualResourcePaths =
+        final List<Resource> actualResourcePaths =
             getObjectUnderTest().getAllResourcePaths(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong", Arrays.asList(
-                getMockDefaultMappedResourcePath1(),
-                getMockDefaultMappedResourcePath2(),
-                getMockHD800MappedResourcePath1(),
-                getMockHD800MappedResourcePath2(),
-                getMockAndroidMappedResourcePath1(),
-                getMockAndroidMappedResourcePath2()),
+                getMockDefaultResource1(),
+                getMockDefaultResource2(),
+                getMockHD800Resource1(),
+                getMockHD800Resource2(),
+                getMockAndroidResource1(),
+                getMockAndroidResource2()),
                 actualResourcePaths);
     }
 
@@ -583,19 +583,19 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final List<MappedResourcePath> actualResourcePaths =
+        final List<Resource> actualResourcePaths =
             getObjectUnderTest().getAllResourcePaths(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong", Arrays.asList(
-                getMockDefaultMappedResourcePath1(),
-                getMockDefaultMappedResourcePath2(),
-                getMockHD800MappedResourcePath1(),
-                getMockHD800MappedResourcePath2(),
-                getMockAppleMappedResourcePath1(),
-                getMockAppleMappedResourcePath2()),
+                getMockDefaultResource1(),
+                getMockDefaultResource2(),
+                getMockHD800Resource1(),
+                getMockHD800Resource2(),
+                getMockAppleResource1(),
+                getMockAppleResource2()),
                 actualResourcePaths);
     }
 
@@ -621,21 +621,21 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final List<MappedResourcePath> actualResourcePaths =
+        final List<Resource> actualResourcePaths =
             getObjectUnderTest().getAllResourcePaths(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong", Arrays.asList(
-                getMockDefaultMappedResourcePath1(),
-                getMockDefaultMappedResourcePath2(),
-                getMockMediumMappedResourcePath1(),
-                getMockMediumMappedResourcePath2(),
-                getMockAppleMappedResourcePath1(),
-                getMockAppleMappedResourcePath2(),
-                getMockIphoneMappedResourcePath1(),
-                getMockIphoneMappedResourcePath2()),
+                getMockDefaultResource1(),
+                getMockDefaultResource2(),
+                getMockMediumResource1(),
+                getMockMediumResource2(),
+                getMockAppleResource1(),
+                getMockAppleResource2(),
+                getMockIphoneResource1(),
+                getMockIphoneResource2()),
                 actualResourcePaths);
     }
     @Test
@@ -660,21 +660,21 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final List<MappedResourcePath> actualResourcePaths =
+        final List<Resource> actualResourcePaths =
             getObjectUnderTest().getAllResourcePaths(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong", Arrays.asList(
-                getMockDefaultMappedResourcePath1(),
-                getMockDefaultMappedResourcePath2(),
-                getMockMediumMappedResourcePath1(),
-                getMockMediumMappedResourcePath2(),
-                getMockAndroidMappedResourcePath1(),
-                getMockAndroidMappedResourcePath2(),
-                getMockIphoneMappedResourcePath1(),
-                getMockIphoneMappedResourcePath2()),
+                getMockDefaultResource1(),
+                getMockDefaultResource2(),
+                getMockMediumResource1(),
+                getMockMediumResource2(),
+                getMockAndroidResource1(),
+                getMockAndroidResource2(),
+                getMockIphoneResource1(),
+                getMockIphoneResource2()),
                 actualResourcePaths);
     }
 
@@ -700,7 +700,7 @@ public class ResourceResolverEngineBeanTestCase extends
 
         replay();
 
-        final List<MappedResourcePath> actualResourcePaths =
+        final List<Resource> actualResourcePaths =
             getObjectUnderTest()
             .getAllResourcePaths(
                     getMockDevice(),
@@ -844,102 +844,102 @@ public class ResourceResolverEngineBeanTestCase extends
     }
 
     /**
-     * @return the mockIphoneMappedResourcePath1
+     * @return the mockIphoneResource1
      */
-    public MappedResourcePath getMockIphoneMappedResourcePath1() {
-        return mockIphoneMappedResourcePath1;
+    public Resource getMockIphoneResource1() {
+        return mockIphoneResource1;
     }
 
     /**
-     * @param mockIphoneMappedResourcePath1 the mockIphoneMappedResourcePath1 to set
+     * @param mockIphoneResource1 the mockIphoneResource1 to set
      */
-    public void setMockIphoneMappedResourcePath1(
-            final MappedResourcePath mockIphoneMappedResourcePath1) {
-        this.mockIphoneMappedResourcePath1 = mockIphoneMappedResourcePath1;
+    public void setMockIphoneResource1(
+            final Resource mockIphoneResource1) {
+        this.mockIphoneResource1 = mockIphoneResource1;
     }
 
-    public MappedResourcePath getMockIphoneMappedResourcePath2() {
-        return mockIphoneMappedResourcePath2;
+    public Resource getMockIphoneResource2() {
+        return mockIphoneResource2;
     }
 
-    public void setMockIphoneMappedResourcePath2(
-            final MappedResourcePath mockIphoneMappedResourcePath2) {
-        this.mockIphoneMappedResourcePath2 = mockIphoneMappedResourcePath2;
+    public void setMockIphoneResource2(
+            final Resource mockIphoneResource2) {
+        this.mockIphoneResource2 = mockIphoneResource2;
     }
 
     /**
-     * @return the mockAndroidMappedResourcePath1
+     * @return the mockAndroidResource1
      */
-    public MappedResourcePath getMockAndroidMappedResourcePath1() {
-        return mockAndroidMappedResourcePath1;
+    public Resource getMockAndroidResource1() {
+        return mockAndroidResource1;
     }
 
     /**
-     * @param mockAndroidMappedResourcePath1 the mockAndroidMappedResourcePath1 to set
+     * @param mockAndroidResource1 the mockAndroidResource1 to set
      */
-    public void setMockAndroidMappedResourcePath1(
-            final MappedResourcePath mockAndroidMappedResourcePath1) {
-        this.mockAndroidMappedResourcePath1 = mockAndroidMappedResourcePath1;
+    public void setMockAndroidResource1(
+            final Resource mockAndroidResource1) {
+        this.mockAndroidResource1 = mockAndroidResource1;
     }
 
     /**
-     * @return the mockDefaultMappedResourcePath1
+     * @return the mockDefaultResource1
      */
-    public MappedResourcePath getMockDefaultMappedResourcePath1() {
-        return mockDefaultMappedResourcePath1;
+    public Resource getMockDefaultResource1() {
+        return mockDefaultResource1;
     }
 
     /**
-     * @param mockDefaultMappedResourcePath1 the mockDefaultMappedResourcePath1 to set
+     * @param mockDefaultResource1 the mockDefaultResource1 to set
      */
-    public void setMockDefaultMappedResourcePath1(
-            final MappedResourcePath mockDefaultMappedResourcePath1) {
-        this.mockDefaultMappedResourcePath1 = mockDefaultMappedResourcePath1;
+    public void setMockDefaultResource1(
+            final Resource mockDefaultResource1) {
+        this.mockDefaultResource1 = mockDefaultResource1;
     }
 
     /**
-     * @return the mockAppleMappedResourcePath1
+     * @return the mockAppleResource1
      */
-    public MappedResourcePath getMockAppleMappedResourcePath1() {
-        return mockAppleMappedResourcePath1;
+    public Resource getMockAppleResource1() {
+        return mockAppleResource1;
     }
 
     /**
-     * @param mockAppleMappedResourcePath1 the mockAppleMappedResourcePath1 to set
+     * @param mockAppleResource1 the mockAppleResource1 to set
      */
-    public void setMockAppleMappedResourcePath1(
-            final MappedResourcePath mockAppleMappedResourcePath1) {
-        this.mockAppleMappedResourcePath1 = mockAppleMappedResourcePath1;
+    public void setMockAppleResource1(
+            final Resource mockAppleResource1) {
+        this.mockAppleResource1 = mockAppleResource1;
     }
 
     /**
-     * @return the mockHD800MappedResourcePath1
+     * @return the mockHD800Resource1
      */
-    public MappedResourcePath getMockHD800MappedResourcePath1() {
-        return mockHD800MappedResourcePath1;
+    public Resource getMockHD800Resource1() {
+        return mockHD800Resource1;
     }
 
     /**
-     * @param mockHD800MappedResourcePath1 the mockHD800MappedResourcePath1 to set
+     * @param mockHD800Resource1 the mockHD800Resource1 to set
      */
-    public void setMockHD800MappedResourcePath1(
-            final MappedResourcePath mockHD800MappedResourcePath1) {
-        this.mockHD800MappedResourcePath1 = mockHD800MappedResourcePath1;
+    public void setMockHD800Resource1(
+            final Resource mockHD800Resource1) {
+        this.mockHD800Resource1 = mockHD800Resource1;
     }
 
     /**
-     * @return the mockMediumMappedResourcePath1
+     * @return the mockMediumResource1
      */
-    public MappedResourcePath getMockMediumMappedResourcePath1() {
-        return mockMediumMappedResourcePath1;
+    public Resource getMockMediumResource1() {
+        return mockMediumResource1;
     }
 
     /**
-     * @param mockMediumMappedResourcePath1 the mockMediumMappedResourcePath1 to set
+     * @param mockMediumResource1 the mockMediumResource1 to set
      */
-    public void setMockMediumMappedResourcePath1(
-            final MappedResourcePath mockMediumMappedResourcePath1) {
-        this.mockMediumMappedResourcePath1 = mockMediumMappedResourcePath1;
+    public void setMockMediumResource1(
+            final Resource mockMediumResource1) {
+        this.mockMediumResource1 = mockMediumResource1;
     }
 
     /**
@@ -957,48 +957,48 @@ public class ResourceResolverEngineBeanTestCase extends
         this.mockResolutionWarnLogger = mockResolutionWarnLogger;
     }
 
-    public MappedResourcePath getMockMediumMappedResourcePath2() {
-        return mockMediumMappedResourcePath2;
+    public Resource getMockMediumResource2() {
+        return mockMediumResource2;
     }
 
-    public void setMockMediumMappedResourcePath2(
-            final MappedResourcePath mockMediumMappedResourcePath2) {
-        this.mockMediumMappedResourcePath2 = mockMediumMappedResourcePath2;
+    public void setMockMediumResource2(
+            final Resource mockMediumResource2) {
+        this.mockMediumResource2 = mockMediumResource2;
     }
 
-    public MappedResourcePath getMockAndroidMappedResourcePath2() {
-        return mockAndroidMappedResourcePath2;
+    public Resource getMockAndroidResource2() {
+        return mockAndroidResource2;
     }
 
-    public void setMockAndroidMappedResourcePath2(
-            final MappedResourcePath mockAndroidMappedResourcePath2) {
-        this.mockAndroidMappedResourcePath2 = mockAndroidMappedResourcePath2;
+    public void setMockAndroidResource2(
+            final Resource mockAndroidResource2) {
+        this.mockAndroidResource2 = mockAndroidResource2;
     }
 
-    public MappedResourcePath getMockDefaultMappedResourcePath2() {
-        return mockDefaultMappedResourcePath2;
+    public Resource getMockDefaultResource2() {
+        return mockDefaultResource2;
     }
 
-    public void setMockDefaultMappedResourcePath2(
-            final MappedResourcePath mockDefaultMappedResourcePath2) {
-        this.mockDefaultMappedResourcePath2 = mockDefaultMappedResourcePath2;
+    public void setMockDefaultResource2(
+            final Resource mockDefaultResource2) {
+        this.mockDefaultResource2 = mockDefaultResource2;
     }
 
-    public MappedResourcePath getMockAppleMappedResourcePath2() {
-        return mockAppleMappedResourcePath2;
+    public Resource getMockAppleResource2() {
+        return mockAppleResource2;
     }
 
-    public void setMockAppleMappedResourcePath2(
-            final MappedResourcePath mockAppleMappedResourcePath2) {
-        this.mockAppleMappedResourcePath2 = mockAppleMappedResourcePath2;
+    public void setMockAppleResource2(
+            final Resource mockAppleResource2) {
+        this.mockAppleResource2 = mockAppleResource2;
     }
 
-    public MappedResourcePath getMockHD800MappedResourcePath2() {
-        return mockHD800MappedResourcePath2;
+    public Resource getMockHD800Resource2() {
+        return mockHD800Resource2;
     }
 
-    public void setMockHD800MappedResourcePath2(
-            final MappedResourcePath mockHD800MappedResourcePath2) {
-        this.mockHD800MappedResourcePath2 = mockHD800MappedResourcePath2;
+    public void setMockHD800Resource2(
+            final Resource mockHD800Resource2) {
+        this.mockHD800Resource2 = mockHD800Resource2;
     }
 }

@@ -8,7 +8,7 @@ import javax.servlet.jsp.JspWriter;
 
 import au.com.sensis.mobile.crf.config.DeploymentVersion;
 import au.com.sensis.mobile.crf.service.CssBundleFactory;
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
+import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
@@ -86,27 +86,27 @@ public class LinkTagWriter implements TagWriter {
     }
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
-            final List<MappedResourcePath> allMappedResourcePaths) throws IOException {
-        if (allMappedResourcePaths.isEmpty()) {
+            final List<Resource> allResources) throws IOException {
+        if (allResources.isEmpty()) {
             logNoResourcesFoundWarning();
 
         } else {
-            for (final MappedResourcePath mappedResourcePath : allMappedResourcePaths) {
-                writeSingleLinkTag(jspWriter, mappedResourcePath);
+            for (final Resource resource : allResources) {
+                writeSingleLinkTag(jspWriter, resource);
             }
         }
     }
 
     private void writeLinkTagForBundledResources(final JspWriter jspWriter,
-            final List<MappedResourcePath> allMappedResourcePaths)
+            final List<Resource> allResources)
             throws IOException {
 
-        if (allMappedResourcePaths.isEmpty()) {
+        if (allResources.isEmpty()) {
             logNoResourcesFoundWarning();
 
         } else {
-            final MappedResourcePath bundleResourcePath =
-                    getCssBundleFactory().getBundle(allMappedResourcePaths);
+            final Resource bundleResourcePath =
+                    getCssBundleFactory().getBundle(allResources);
 
             writeSingleLinkTag(jspWriter, bundleResourcePath);
 
@@ -124,12 +124,12 @@ public class LinkTagWriter implements TagWriter {
     }
 
     private void writeSingleLinkTag(final JspWriter jspWriter,
-            final MappedResourcePath mappedResourcePath) throws IOException {
+            final Resource resource) throws IOException {
         jspWriter.print("<link ");
 
         jspWriter.print("href=\""
                 + getCollaboratorsMemento().getClientPathPrefix()
-                + mappedResourcePath.getNewResourcePath() + "\" ");
+                + resource.getNewPath() + "\" ");
 
         for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
             jspWriter.print(attribute.getLocalName() + "=\""
@@ -143,8 +143,8 @@ public class LinkTagWriter implements TagWriter {
         return getCollaboratorsMemento().getResourceResolutionWarnLogger();
     }
 
-    private List<MappedResourcePath> getAllResourcePaths() throws IOException {
-        final List<MappedResourcePath> allResourcePaths =
+    private List<Resource> getAllResourcePaths() throws IOException {
+        final List<Resource> allResourcePaths =
                 getResourceResolverEngine().getAllResourcePaths(getDevice(),
                         getHref());
 
@@ -153,7 +153,7 @@ public class LinkTagWriter implements TagWriter {
         return allResourcePaths;
     }
 
-    private void assertNotNull(final List<MappedResourcePath> allResourcePaths) {
+    private void assertNotNull(final List<Resource> allResourcePaths) {
         if (allResourcePaths == null) {
             throw new IllegalStateException(
                     "getResourceResolverEngine.getAllResourcePaths "

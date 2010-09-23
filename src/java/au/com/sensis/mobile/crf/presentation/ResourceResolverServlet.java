@@ -14,7 +14,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
+import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.web.mobile.MobileContext;
@@ -118,18 +118,18 @@ public class ResourceResolverServlet extends HttpServletBean {
                     + "]");
         }
 
-        final MappedResourcePath mappedResourcePath =
+        final Resource resource =
             getResourceResourceResolverEngine().getResourcePath(
                         getDevice(httpServletRequestInterrogator
                                 .getHttpServletRequest()),
                         httpServletRequestInterrogator.getRequestUri());
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("mappedResourcePath [" + mappedResourcePath + "].");
+            LOGGER.debug("resource [" + resource + "].");
         }
 
-        if (mappedResourcePath != null) {
-            return mappedResourcePath.getNewResourcePath();
+        if (resource != null) {
+            return resource.getNewPath();
         } else {
             throw new IOException("No concrete resource found for requested path: '"
                     + httpServletRequestInterrogator.getRequestUri() + "'");

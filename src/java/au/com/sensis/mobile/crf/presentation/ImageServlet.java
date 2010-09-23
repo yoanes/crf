@@ -13,7 +13,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
+import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.web.mobile.MobileContext;
@@ -62,14 +62,14 @@ public class ImageServlet extends HttpServletBean {
 
         if (requestedResourcePathHasCorrectPrefix(request)) {
 
-            final MappedResourcePath mappedResourcePath =
+            final Resource resource =
                     getImageServletDependencies().getResourceResolverEngine()
                             .getResourcePath(getDevice(request),
                                     getRequestedResourcePath(request));
 
-            if (mappedResourcePath != null) {
-                setResponseHeaders(response, mappedResourcePath);
-                writeImageToResponse(response, mappedResourcePath);
+            if (resource != null) {
+                setResponseHeaders(response, resource);
+                writeImageToResponse(response, resource);
             } else {
                 setFileNotFoundResponseStatus(response);
             }
@@ -97,24 +97,24 @@ public class ImageServlet extends HttpServletBean {
     }
 
     private void writeImageToResponse(final HttpServletResponse resp,
-            final MappedResourcePath mappedResourcePath) throws IOException {
+            final Resource resource) throws IOException {
         FileIoFacadeFactory.getFileIoFacadeSingleton()
                 .writeFileAndCloseStream(
-                        mappedResourcePath.getNewResourceFile(),
+                        resource.getNewFile(),
                         resp.getOutputStream());
     }
 
     private void setResponseHeaders(final HttpServletResponse resp,
-            final MappedResourcePath mappedResourcePath) {
-        resp.setContentType(getMimeType(mappedResourcePath));
-        resp.setContentLength(mappedResourcePath.getFileLengthAsInt());
-        resp.setDateHeader("Last-Modified", mappedResourcePath
-                .getNewResourceFile().lastModified());
+            final Resource resource) {
+        resp.setContentType(getMimeType(resource));
+        resp.setContentLength(resource.getNewFileLengthAsInt());
+        resp.setDateHeader("Last-Modified", resource
+                .getNewFile().lastModified());
     }
 
-    private String getMimeType(final MappedResourcePath mappedResourcePath) {
+    private String getMimeType(final Resource resource) {
         return getServletContext().getMimeType(
-                mappedResourcePath.getNewResourceFile().getPath());
+                resource.getNewFile().getPath());
     }
 
     private String getRequestedResourcePath(final HttpServletRequest req) {

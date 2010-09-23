@@ -77,20 +77,20 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
         EasyMock.expect(getMockResourceResolver1().resolve(
                 getRequestedPath(), getGroup()))
-                .andReturn(new ArrayList<MappedResourcePath>());
+                .andReturn(new ArrayList<Resource>());
 
         EasyMock.expect(getMockResourceResolver2().resolve(
                 getRequestedPath(), getGroup()))
-                .andReturn(getExpectedMappedResourcePaths());
+                .andReturn(getExpectedResources());
 
         replay();
 
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
                 getObjectUnderTest().resolve(getRequestedPath(),
                         getGroup());
 
-        Assert.assertEquals("actualMappedResourcePath is wrong",
-                getExpectedMappedResourcePaths(), actualMappedResourcePaths);
+        Assert.assertEquals("actualResource is wrong",
+                getExpectedResources(), actualResources);
     }
 
     @Test
@@ -98,25 +98,25 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
         EasyMock.expect(
                 getMockResourceResolver1().resolve(getRequestedPath(),
-                        getGroup())).andReturn(new ArrayList<MappedResourcePath>());
+                        getGroup())).andReturn(new ArrayList<Resource>());
 
         EasyMock.expect(
                 getMockResourceResolver2().resolve(getRequestedPath(),
-                        getGroup())).andReturn(new ArrayList<MappedResourcePath>());
+                        getGroup())).andReturn(new ArrayList<Resource>());
 
         replay();
 
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
                 getObjectUnderTest().resolve(getRequestedPath(),
                         getGroup());
 
-        Assert.assertNotNull("actualMappedResourcePath should not be null",
-                actualMappedResourcePaths);
-        Assert.assertTrue("actualMappedResourcePath should not be empty",
-                actualMappedResourcePaths.isEmpty());
+        Assert.assertNotNull("actualResource should not be null",
+                actualResources);
+        Assert.assertTrue("actualResource should not be empty",
+                actualResources.isEmpty());
     }
 
-    private List<MappedResourcePath> getExpectedMappedResourcePaths() {
+    private List<Resource> getExpectedResources() {
         return Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath());
     }
 

@@ -21,8 +21,8 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     private static final Logger LOGGER = Logger.getLogger(JavaScriptResourceResolverBean.class);
 
     /**
-     * Separator character expected to be used in {@link #getOriginalResourcePath()}
-     * and {@link #getNewResourceFile()}.
+     * Separator character expected to be used in {@link #getOriginalPath()}
+     * and {@link #getNewFile()}.
      */
     protected static final String SEPARATOR = "/";
 
@@ -71,7 +71,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      * @throws IOException Thrown if an IO error occurs.
      */
     @Override
-    public List<MappedResourcePath> resolve(
+    public List<Resource> resolve(
             final String requestedResourcePath, final Group group)
                 throws IOException {
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
@@ -83,18 +83,18 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
                                 + doMapResourcePath(requestedResourcePath,
                                         group) + "'");
             }
-            final MappedResourcePath mappedResourcePath =
-                createMappedResourcePath(requestedResourcePath,
+            final Resource resource =
+                createResource(requestedResourcePath,
                     doMapResourcePath(requestedResourcePath, group));
 
-            if (mappedResourcePath.isBundlePath()) {
+            if (resource.isBundlePath()) {
                 return createResults(requestedResourcePath,
-                        mappedResourcePath.getBundleParentDirFile());
+                        resource.getBundleParentDirFile());
             } else {
-                if (exists(mappedResourcePath)) {
-                    return Arrays.asList(mappedResourcePath);
+                if (exists(resource)) {
+                    return Arrays.asList(resource);
                 } else {
-                    return new ArrayList<MappedResourcePath>();
+                    return new ArrayList<Resource>();
                 }
             }
         } else {
@@ -106,36 +106,36 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
                                 + " file. Returning an empty list.");
             }
 
-            return new ArrayList<MappedResourcePath>();
+            return new ArrayList<Resource>();
         }
     }
 
     /**
-     * @param mappedResourcePath {@link MappedResourcePath} to test the existence of.
-     * @return true if the mapped path given by {@link #getNewResourcePath()}
+     * @param resource {@link Resource} to test the existence of.
+     * @return true if the mapped path given by {@link #getNewPath()}
      *         exists in {@link #getRootResourceDir()}.
      */
-    protected boolean exists(final MappedResourcePath mappedResourcePath) {
+    protected boolean exists(final Resource resource) {
         // TODO: possibly cache the result since we are accessing the file system?
         return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
-                getRootResourcesDir(), mappedResourcePath.getNewResourcePath());
+                getRootResourcesDir(), resource.getNewPath());
     }
 
-    private List<MappedResourcePath> createResults(
+    private List<Resource> createResults(
             final String requestedResourcePath,
             final File javascriptFilesBaseDir) throws IOException {
-        final List<MappedResourcePath> result =
-            new ArrayList<MappedResourcePath>();
+        final List<Resource> result =
+            new ArrayList<Resource>();
 
       final List<File> foundFiles = getPathExpander().findJavaScriptFiles(javascriptFilesBaseDir);
       if (foundFiles != null) {
         for (final File file : foundFiles) {
-            final MappedResourcePath currMappedResourcePath =
-                    new MappedResourcePathBean(
+            final Resource currResource =
+                    new ResourceBean(
                             requestedResourcePath,
                             getRootResourceDirRelativePath(file),
                             getRootResourcesDir());
-            result.add(currMappedResourcePath);
+            result.add(currResource);
         }
       }
         return result;

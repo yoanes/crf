@@ -133,29 +133,29 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
         EasyMock.expect(
                 getMockPathRestrictedResourceResolverEngine().getResourcePath(
                         getMockDevice(), getRequestedResourcePath()))
-                .andReturn(getExpectedMappedResourcePath());
+                .andReturn(getExpectedResource());
 
         replay();
 
         assertForPostProcessAfterInitializationWhenBeanIsOfInterest(
                 getMockPathRestrictedResourceResolverEngine());
 
-        final MappedResourcePath actualMappedResourcePath =
+        final Resource actualResource =
                 getObjectUnderTest().getResourcePath(getMockDevice(),
                         getRequestedResourcePath());
 
-        Assert.assertEquals("MappedResourcePath is wrong",
-                getExpectedMappedResourcePath(), actualMappedResourcePath);
+        Assert.assertEquals("Resource is wrong",
+                getExpectedResource(), actualResource);
 
     }
 
-    private MappedResourcePath getExpectedMappedResourcePath() {
+    private Resource getExpectedResource() {
         return getResourcePathTestData().getMappedDefaultGroupResourcePath();
     }
 
-    private List<MappedResourcePath> getExpectedMappedResourcePaths() {
-        final List<MappedResourcePath> list = new ArrayList<MappedResourcePath>();
-        list.add(getExpectedMappedResourcePath());
+    private List<Resource> getExpectedResources() {
+        final List<Resource> list = new ArrayList<Resource>();
+        list.add(getExpectedResource());
         return list;
     }
 
@@ -170,16 +170,16 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
         EasyMock.expect(
                 getMockDefaultResourceResolverEngine().getResourcePath(getMockDevice(),
                         getRequestedResourcePath())).andReturn(
-                getExpectedMappedResourcePath());
+                getExpectedResource());
 
         replay();
 
-        final MappedResourcePath actualMappedResourcePath =
+        final Resource actualResource =
                 getObjectUnderTest().getResourcePath(getMockDevice(),
                         getRequestedResourcePath());
 
-        Assert.assertEquals("MappedResourcePath is wrong",
-                getExpectedMappedResourcePath(), actualMappedResourcePath);
+        Assert.assertEquals("Resource is wrong",
+                getExpectedResource(), actualResource);
 
     }
 
@@ -198,19 +198,19 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
         EasyMock.expect(
                 getMockPathRestrictedResourceResolverEngine().getAllResourcePaths(
                         getMockDevice(), getRequestedResourcePath()))
-                .andReturn(getExpectedMappedResourcePaths());
+                .andReturn(getExpectedResources());
 
         replay();
 
         assertForPostProcessAfterInitializationWhenBeanIsOfInterest(
                 getMockPathRestrictedResourceResolverEngine());
 
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
                 getObjectUnderTest().getAllResourcePaths(getMockDevice(),
                         getRequestedResourcePath());
 
-        Assert.assertEquals("MappedResourcePaths are wrong",
-                getExpectedMappedResourcePaths(), actualMappedResourcePaths);
+        Assert.assertEquals("Resources are wrong",
+                getExpectedResources(), actualResources);
 
     }
 
@@ -221,16 +221,16 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
         EasyMock.expect(
                 getMockDefaultResourceResolverEngine().getAllResourcePaths(getMockDevice(),
                         getRequestedResourcePath())).andReturn(
-                getExpectedMappedResourcePaths());
+                getExpectedResources());
 
         replay();
 
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
                 getObjectUnderTest().getAllResourcePaths(
                         getMockDevice(), getRequestedResourcePath());
 
-        Assert.assertEquals("MappedResourcePaths are wrong",
-                getExpectedMappedResourcePaths(), actualMappedResourcePaths);
+        Assert.assertEquals("Resources are wrong",
+                getExpectedResources(), actualResources);
 
     }
 

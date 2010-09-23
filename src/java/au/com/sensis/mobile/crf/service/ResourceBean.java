@@ -14,62 +14,62 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class MappedResourcePathBean implements MappedResourcePath {
+public class ResourceBean implements Resource {
 
     /**
-     * Separator character expected to be used in {@link #getOriginalResourcePath()}
-     * and {@link #getNewResourceFile()}.
+     * Separator character expected to be used in {@link #getOriginalPath()}
+     * and {@link #getNewFile()}.
      */
     protected static final String SEPARATOR = "/";
 
-    private final String originalResourcePath;
-    private final String newResourcePath;
+    private final String originalPath;
+    private final String newPath;
     private final File rootResourceDir;
 
     /**
      * Default constructor.
      *
-     * @param originalResourcePath
+     * @param originalPath
      *            Original path that was requested.
-     * @param newResourcePath
-     *            New path that originalResourcePath was mapped to.
+     * @param newPath
+     *            New path that originalPath was mapped to.
      * @param rootResourceDir
-     *            Root directory which the newResourcePath is relative to.
+     *            Root directory which the newPath is relative to.
      */
-    public MappedResourcePathBean(final String originalResourcePath,
-            final String newResourcePath, final File rootResourceDir) {
-        if (StringUtils.isBlank(originalResourcePath)) {
+    public ResourceBean(final String originalPath,
+            final String newPath, final File rootResourceDir) {
+        if (StringUtils.isBlank(originalPath)) {
             throw new IllegalArgumentException(
-                    "originalResourcePath must not be blank: '"
-                            + originalResourcePath + "'");
+                    "originalPath must not be blank: '"
+                            + originalPath + "'");
         }
-        if (StringUtils.isBlank(newResourcePath)) {
+        if (StringUtils.isBlank(newPath)) {
             throw new IllegalArgumentException(
-                    "newResourcePath must not be blank: '"
-                    + newResourcePath + "'");
+                    "newPath must not be blank: '"
+                    + newPath + "'");
         }
 
-        this.originalResourcePath = originalResourcePath;
-        this.newResourcePath = newResourcePath;
+        this.originalPath = originalPath;
+        this.newPath = newPath;
         this.rootResourceDir = rootResourceDir;
     }
 
     /**
-     * @return true if {@link #getNewResourcePath()} equals
-     *         {@link #getOriginalResourcePath()}.
+     * @return true if {@link #getNewPath()} equals
+     *         {@link #getOriginalPath()}.
      */
     public boolean isIdentityMapping() {
-        return getNewResourcePath().equals(getOriginalResourcePath());
+        return getNewPath().equals(getOriginalPath());
     }
 
     /**
-     * @return true if {@link #getNewResourcePath() corresponds to a bundle
+     * @return true if {@link #getNewPath() corresponds to a bundle
      *         result artifact. ie. if the last directory equals
      *         {@link #BUNDLE_DIR_NAME}.
      */
     public boolean isBundlePath() {
-        return (getNewResourcePath() != null)
-                && FilenameUtils.getPathNoEndSeparator(getNewResourcePath())
+        return (getNewPath() != null)
+                && FilenameUtils.getPathNoEndSeparator(getNewPath())
                         .endsWith(BUNDLE_DIR_NAME);
     }
 
@@ -88,7 +88,7 @@ public class MappedResourcePathBean implements MappedResourcePath {
             // TODO: Pretty complictade way of building the File. Is there an easier
             // way.
             return new File(getRootResourceDir(),
-                    FilenameUtils.getPathNoEndSeparator(getNewResourcePath())).getParentFile();
+                    FilenameUtils.getPathNoEndSeparator(getNewPath())).getParentFile();
         } else {
             throw new IllegalStateException(
                     "Illegal to call this method when isBundlePath() is false.");
@@ -96,33 +96,33 @@ public class MappedResourcePathBean implements MappedResourcePath {
     }
 
     /**
-     * @return true if {@link #getNewResourcePath()} ends with the special
+     * @return true if {@link #getNewPath()} ends with the special
      *         extension ".null".
      */
     public boolean endsWithDotNull() {
-        return getNewResourcePath().endsWith(".null");
+        return getNewPath().endsWith(".null");
     }
 
     /**
-     * @return the originalResourcePath
+     * @return the originalPath
      */
-    public String getOriginalResourcePath() {
-        return originalResourcePath;
+    public String getOriginalPath() {
+        return originalPath;
     }
 
     /**
-     * @return the newResourcePath
+     * @return the newPath
      */
-    public String getNewResourcePath() {
-        return newResourcePath;
+    public String getNewPath() {
+        return newPath;
     }
 
     /**
      * @return {@link File} combining {@link #getRootResourceDir()} and
-     *         {@link #getNewResourcePath().
+     *         {@link #getNewPath().
      */
-    public File getNewResourceFile() {
-        return new File(getRootResourceDir(), getNewResourcePath());
+    public File getNewFile() {
+        return new File(getRootResourceDir(), getNewPath());
     }
 
     /**
@@ -138,13 +138,13 @@ public class MappedResourcePathBean implements MappedResourcePath {
             return false;
         }
 
-        final MappedResourcePathBean rhs = (MappedResourcePathBean) obj;
+        final ResourceBean rhs = (ResourceBean) obj;
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
-        equalsBuilder.append(getOriginalResourcePath(),
-                rhs.getOriginalResourcePath());
-        equalsBuilder.append(getNewResourcePath(),
-                rhs.getNewResourcePath());
+        equalsBuilder.append(getOriginalPath(),
+                rhs.getOriginalPath());
+        equalsBuilder.append(getNewPath(),
+                rhs.getNewPath());
         equalsBuilder.append(getRootResourceDir(),
                 rhs.getRootResourceDir());
         return equalsBuilder.isEquals();
@@ -156,8 +156,8 @@ public class MappedResourcePathBean implements MappedResourcePath {
     @Override
     public int hashCode() {
         final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
-        hashCodeBuilder.append(getOriginalResourcePath());
-        hashCodeBuilder.append(getNewResourcePath());
+        hashCodeBuilder.append(getOriginalPath());
+        hashCodeBuilder.append(getNewPath());
         hashCodeBuilder.append(getRootResourceDir());
         return hashCodeBuilder.toHashCode();
     }
@@ -168,8 +168,8 @@ public class MappedResourcePathBean implements MappedResourcePath {
     @Override
     public String toString() {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
-        toStringBuilder.append("originalResourcePath", getOriginalResourcePath());
-        toStringBuilder.append("newResourcePath", getNewResourcePath());
+        toStringBuilder.append("originalPath", getOriginalPath());
+        toStringBuilder.append("newPath", getNewPath());
         toStringBuilder.append("rootResourceDir", getRootResourceDir());
         return toStringBuilder.toString();
     }
@@ -182,10 +182,10 @@ public class MappedResourcePathBean implements MappedResourcePath {
     }
 
     /**
-     * @return Length of {@link #getNewResourceFile()} as an int.
+     * @return Length of {@link #getNewFile()} as an int.
      */
-    public int getFileLengthAsInt() {
-        return (int) getNewResourceFile().length();
+    public int getNewFileLengthAsInt() {
+        return (int) getNewFile().length();
     }
 
 }

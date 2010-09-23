@@ -13,8 +13,8 @@ public class ScriptBundleFactoryBean implements ScriptBundleFactory {
      * {@inheritDoc}
      */
     @Override
-    public MappedResourcePath getBundle(
-            final List<MappedResourcePath> resourcePathsToInclude) {
+    public Resource getBundle(
+            final List<Resource> resourcePathsToInclude) {
         // TODO Auto-generated method stub
         return null;
     }

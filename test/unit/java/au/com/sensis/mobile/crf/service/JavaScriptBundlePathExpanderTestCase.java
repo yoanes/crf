@@ -68,23 +68,23 @@ public class JavaScriptBundlePathExpanderTestCase extends
     public void testFindJavaScriptFiles()
             throws Throwable {
 
-        final TestData[] testData = getTestDataWhenMappedResourcePathIsForABundle();
+        final TestData[] testData = getTestDataWhenResourceIsForABundle();
         for (int i = 0; i < testData.length; i++) {
 
-            final MappedResourcePath mappedResourcePath =
+            final Resource resource =
                     getResourcePathTestData()
                             .getMappedDefaultGroupBundledScriptBundleResourcePath();
 
             EasyMock.expect(
                     getMockPropertiesLoader().loadPropertiesNotNull(
-                            new File(mappedResourcePath
+                            new File(resource
                                     .getBundleParentDirFile(),
                                     BUNDLES_PROPERTIES_FILE_NAME))).andReturn(
                     testData[i].getBundleProperties());
 
             EasyMock.expect(
                     getMockFileIoFacade().list(
-                            EasyMock.eq(mappedResourcePath
+                            EasyMock.eq(resource
                                     .getBundleParentDirFile()),
                             EasyMock.aryEq(testData[i].getWildcardOneAsArray())))
                     .andReturn(testData[i].getWildcardOnefoundFiles());
@@ -92,7 +92,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
             if (testData[i].getWildcardTwo() != null) {
                 EasyMock.expect(
                         getMockFileIoFacade().list(
-                                EasyMock.eq(mappedResourcePath
+                                EasyMock.eq(resource
                                         .getBundleParentDirFile()),
                                         EasyMock.aryEq(testData[i].getWildcardTwoAsArray())))
                                         .andReturn(testData[i].getWildcardTwofoundFiles());
@@ -101,7 +101,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
 
             final List<File> actualFiles =
                     getObjectUnderTest().findJavaScriptFiles(
-                            mappedResourcePath.getBundleParentDirFile());
+                            resource.getBundleParentDirFile());
             assertComplexObjectsEqual(
                     "Incorrect files returned for testData at index " + i
                             + ": " + testData[i], testData[i].getExpectedResult(), actualFiles);
@@ -126,12 +126,12 @@ public class JavaScriptBundlePathExpanderTestCase extends
             final Properties properties = new Properties();
             properties.setProperty(ORDER_PROPERTY_NAME, testOrderPropertyValue);
 
-            final MappedResourcePath mappedResourcePath =
+            final Resource resource =
                     getResourcePathTestData()
                             .getMappedDefaultGroupBundledScriptBundleResourcePath();
 
             final File bundlePropertiesFile =
-                    new File(mappedResourcePath.getBundleParentDirFile(),
+                    new File(resource.getBundleParentDirFile(),
                             BUNDLES_PROPERTIES_FILE_NAME);
             EasyMock.expect(
                     getMockPropertiesLoader().loadPropertiesNotNull(
@@ -141,7 +141,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
 
             try {
                 getObjectUnderTest().findJavaScriptFiles(
-                        mappedResourcePath.getBundleParentDirFile());
+                        resource.getBundleParentDirFile());
 
                 Assert
                         .fail("ConfigurationRuntimeException expected for testValue: '"
@@ -172,21 +172,21 @@ public class JavaScriptBundlePathExpanderTestCase extends
     public void testFindJavaScriptFilesWhenPropertiesLoaderThrowsException()
             throws Throwable {
 
-        final MappedResourcePath mappedResourcePath =
+        final Resource resource =
                 getResourcePathTestData()
                         .getMappedDefaultGroupBundledScriptBundleResourcePath();
 
         final IOException expectedException = new IOException("test");
         EasyMock.expect(
                 getMockPropertiesLoader().loadPropertiesNotNull(
-                        new File(mappedResourcePath.getBundleParentDirFile(),
+                        new File(resource.getBundleParentDirFile(),
                                 BUNDLES_PROPERTIES_FILE_NAME))).andThrow(
                 expectedException);
 
         replay();
 
         try {
-            getObjectUnderTest().findJavaScriptFiles(mappedResourcePath.getBundleParentDirFile());
+            getObjectUnderTest().findJavaScriptFiles(resource.getBundleParentDirFile());
 
             Assert.fail("IOException expected");
         } catch (final IOException e) {
@@ -195,17 +195,17 @@ public class JavaScriptBundlePathExpanderTestCase extends
     }
 
 //    @Test
-//    public void testExpandPathWhenMappedResourcePathIsNotForABundle()
+//    public void testExpandPathWhenResourceIsNotForABundle()
 //            throws Throwable {
-//        final MappedResourcePath mappedResourcePath =
+//        final Resource resource =
 //                getResourcePathTestData()
 //                        .getMappedDefaultGroupNamedScriptResourcePath();
 //
 //        final List<File> expectedFiles =
-//                Arrays.asList(new File(mappedResourcePath.getRootResourceDir(),
-//                        mappedResourcePath.getNewResourcePath()));
+//                Arrays.asList(new File(resource.getRootResourceDir(),
+//                        resource.getNewPath()));
 //        final List<File> actualFiles =
-//                getObjectUnderTest().findJavaScriptFiles(mappedResourcePath);
+//                getObjectUnderTest().findJavaScriptFiles(resource);
 //        assertComplexObjectsEqual(
 //                "Incorrect files returned ", expectedFiles, actualFiles);
 //
@@ -261,7 +261,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
         return properties;
     }
 
-    public TestData[] getTestDataWhenMappedResourcePathIsForABundle() {
+    public TestData[] getTestDataWhenResourceIsForABundle() {
         // TODO: detect duplicates after wild card listing. Have a bad feeling that file
         // filter does not sort correctly.
         return new TestData[] {

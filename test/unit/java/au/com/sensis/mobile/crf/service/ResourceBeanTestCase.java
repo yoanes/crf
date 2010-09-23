@@ -11,13 +11,13 @@ import org.junit.Test;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link MappedResourcePath}.
+ * Unit test {@link Resource}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
+public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
 
-    private MappedResourcePath objectUnderTest;
+    private Resource objectUnderTest;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private FileIoFacade mockFileIoFacade;
 
@@ -42,14 +42,14 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testConstructorWhenOriginalResourcePathIsBlank()
+    public void testConstructorWhenOriginalPathIsBlank()
             throws Throwable {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new MappedResourcePathBean(testValue, getResourcePathTestData()
+                new ResourceBean(testValue, getResourcePathTestData()
                         .getMappedDefaultGroupResourcePath()
-                        .getNewResourcePath(), getResourcePathTestData()
+                        .getNewPath(), getResourcePathTestData()
                         .getRootResourcesPath());
 
                 Assert.fail("IllegalArgumentException expected for testValue '"
@@ -59,7 +59,7 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testValue '"
                                 + testValue + "'",
-                        "originalResourcePath must not be blank: '" + testValue
+                        "originalPath must not be blank: '" + testValue
                                 + "'", e.getMessage());
             }
         }
@@ -67,13 +67,13 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testConstructorWhenNewResourcePathIsBlank() throws Throwable {
+    public void testConstructorWhenNewPathIsBlank() throws Throwable {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new MappedResourcePathBean(getResourcePathTestData()
+                new ResourceBean(getResourcePathTestData()
                         .getMappedDefaultGroupResourcePath()
-                        .getOriginalResourcePath(), testValue,
+                        .getOriginalPath(), testValue,
                         getResourcePathTestData().getRootResourcesPath());
 
                 Assert.fail("IllegalArgumentException expected for testValue '"
@@ -83,7 +83,7 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testValue '"
                                 + testValue + "'",
-                        "newResourcePath must not be blank: '" + testValue
+                        "newPath must not be blank: '" + testValue
                                 + "'", e.getMessage());
             }
         }
@@ -91,9 +91,9 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testEndsWithDotNullWhenTrue() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
+        final Resource resource =
                 getResourcePathTestData().getDotNullMappedImageResourcePath();
-        setObjectUnderTest(mappedResourcePath);
+        setObjectUnderTest(resource);
 
         replay();
 
@@ -104,9 +104,9 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testEndsWithDotNullWhenFalse() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
+        final Resource resource =
             getResourcePathTestData().getMappedDefaultGroupImageResourcePath();
-        setObjectUnderTest(mappedResourcePath);
+        setObjectUnderTest(resource);
 
         replay();
 
@@ -116,17 +116,17 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testGetNewResourceFile() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
+        final Resource resource =
                 getResourcePathTestData()
                         .getMappedDefaultGroupImageResourcePath();
-        setObjectUnderTest(mappedResourcePath);
+        setObjectUnderTest(resource);
 
         replay();
 
         Assert.assertEquals("getNewResourceFile() is wrong",
-                new File(mappedResourcePath.getRootResourceDir(),
-                        mappedResourcePath.getNewResourcePath()),
-                getObjectUnderTest().getNewResourceFile());
+                new File(resource.getRootResourceDir(),
+                        resource.getNewPath()),
+                getObjectUnderTest().getNewFile());
     }
 
     @Test
@@ -137,11 +137,11 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
                         "iphone/bundle/bundle-all.js", "iphone/bundle/main.js" };
 
         for (final String testValue : testValues) {
-            final MappedResourcePath mappedResourcePath =
-                    new MappedResourcePathBean(getResourcePathTestData()
+            final Resource resource =
+                    new ResourceBean(getResourcePathTestData()
                             .getRequestedNamedScriptResourcePath(), testValue,
                             getResourcePathTestData().getRootResourcesPath());
-            setObjectUnderTest(mappedResourcePath);
+            setObjectUnderTest(resource);
 
             Assert.assertTrue("isBundlePath() is wrong for testValue: '"
                     + testValue + "'", getObjectUnderTest().isBundlePath());
@@ -155,11 +155,11 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
             "iphone/bundl/main.js", "default/util.js" };
 
         for (final String testValue : testValues) {
-            final MappedResourcePath mappedResourcePath =
-                    new MappedResourcePathBean(getResourcePathTestData()
+            final Resource resource =
+                    new ResourceBean(getResourcePathTestData()
                             .getRequestedNamedScriptResourcePath(), testValue,
                             getResourcePathTestData().getRootResourcesPath());
-            setObjectUnderTest(mappedResourcePath);
+            setObjectUnderTest(resource);
 
             Assert.assertFalse("isBundlePath() is wrong for testValue: '"
                     + testValue + "'", getObjectUnderTest().isBundlePath());
@@ -168,23 +168,23 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testGetBundleParentDirWhenIsBundlePathTrue() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
+        final Resource resource =
                 getResourcePathTestData()
                         .getMappedDefaultGroupBundledScriptBundleResourcePath();
 
         Assert.assertEquals("getBundleParentDir() is wrong",
-                new File(mappedResourcePath.getRootResourceDir(), "default/util"),
-                mappedResourcePath.getBundleParentDirFile());
+                new File(resource.getRootResourceDir(), "default/util"),
+                resource.getBundleParentDirFile());
     }
 
     @Test
     public void testGetBundleParentDirWhenIsBundlePathFalse() throws Throwable {
-        final MappedResourcePath mappedResourcePath =
+        final Resource resource =
                 getResourcePathTestData()
                         .getMappedDefaultGroupNamedScriptResourcePath();
 
         try {
-            mappedResourcePath.getBundleParentDirFile();
+            resource.getBundleParentDirFile();
 
             Assert.fail("IllegalStateException expected");
         } catch (final IllegalStateException e) {
@@ -198,14 +198,14 @@ public class MappedResourcePathBeanTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the objectUnderTest
      */
-    private MappedResourcePath getObjectUnderTest() {
+    private Resource getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final MappedResourcePath objectUnderTest) {
+    private void setObjectUnderTest(final Resource objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

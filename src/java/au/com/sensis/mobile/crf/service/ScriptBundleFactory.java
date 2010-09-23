@@ -13,16 +13,16 @@ import java.util.List;
 public interface ScriptBundleFactory {
 
     /**
-     * Gets a {@link MappedResourcePath} formed from bundling/combining the
+     * Gets a {@link Resource} formed from bundling/combining the
      * contents of all of the given files.
      *
      * @param resourcePathsToInclude
-     *            {@link MappedResourcePath} of each file to include in the
+     *            {@link Resource} of each file to include in the
      *            bundle.
-     * @return {@link MappedResourcePath} of the bundle. If no bundle is created
+     * @return {@link Resource} of the bundle. If no bundle is created
      *         (because none of the given resourcePathsToInclude exists), null
      *         is returned.
      */
-    MappedResourcePath getBundle(List<MappedResourcePath> resourcePathsToInclude);
+    Resource getBundle(List<Resource> resourcePathsToInclude);
 
 }

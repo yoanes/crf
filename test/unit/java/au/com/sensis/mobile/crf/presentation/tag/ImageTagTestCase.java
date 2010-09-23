@@ -23,7 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
 import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
+import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -56,7 +56,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private ImageTagDependencies imageTagDependencies;
     private FileIoFacade mockFileIoFacade;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private MappedResourcePath mockMappedResourcePath;
+    private Resource mockResource;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
 
@@ -141,11 +141,11 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 recordGetImageTagDependencies();
 
                 recordLookupRequestedResourceWhenFound(testDataArray[i]
-                        .getMappedResourcePath());
+                        .getResource());
 
                 if (StringUtils.isNotEmpty(testDataArray[i].getOutputString())) {
-                    recordMappedResourcePathEndsWithDotNull(Boolean.FALSE);
-                    recordGetMappedResourcePathNewPath();
+                    recordResourceEndsWithDotNull(Boolean.FALSE);
+                    recordGetResourceNewPath();
                     recordGetJspWriter();
                 } else {
                     recordLogResourceNotFoundWarning();
@@ -180,13 +180,13 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenDotNullMappedResourcePath() throws Throwable {
+    public void testDoTagWhenDotNullResource() throws Throwable {
 
         recordGetImageTagDependencies();
 
-        recordLookupRequestedResourceWhenFound(getMockMappedResourcePath());
+        recordLookupRequestedResourceWhenFound(getMockResource());
 
-        recordMappedResourcePathEndsWithDotNull(Boolean.TRUE);
+        recordResourceEndsWithDotNull(Boolean.TRUE);
 
         replay();
 
@@ -197,8 +197,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     }
 
-    private void recordMappedResourcePathEndsWithDotNull(final Boolean endsWithDotNull) {
-        EasyMock.expect(getMockMappedResourcePath().endsWithDotNull())
+    private void recordResourceEndsWithDotNull(final Boolean endsWithDotNull) {
+        EasyMock.expect(getMockResource().endsWithDotNull())
                 .andReturn(endsWithDotNull);
     }
 
@@ -228,27 +228,27 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         setMockJspWriter(new MockJspWriter(getStringWriter()));
     }
 
-    private void recordGetMappedResourcePathNewPath() {
+    private void recordGetResourceNewPath() {
 
-        EasyMock.expect(getMockMappedResourcePath().getNewResourcePath())
+        EasyMock.expect(getMockResource().getNewPath())
                 .andReturn(
                         getMappedDefaultGroupPngImageResourcePath()
-                                .getNewResourcePath()).atLeastOnce();
+                                .getNewPath()).atLeastOnce();
     }
 
-    private MappedResourcePath getMappedDefaultGroupPngImageResourcePath() {
+    private Resource getMappedDefaultGroupPngImageResourcePath() {
         return getResourcePathTestData().getMappedDefaultGroupPngImageResourcePath();
     }
 
     private void recordLookupRequestedResourceWhenFound(
-            final MappedResourcePath mappedResourcePath) throws IOException {
+            final Resource resource) throws IOException {
 
         EasyMock.expect(
                 getMockResourceResolverEngine().getResourcePath(
                         getMockDevice(),
                         getResourcePathTestData()
                                 .getRequestedImageResourcePath())).andReturn(
-                mappedResourcePath);
+                resource);
     }
 
     private void recordGetImageTagDependencies() {
@@ -444,7 +444,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private TestData createTestDataNoDynamicAttributesSingleMappedResource() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                getMockMappedResourcePath(),
+                getMockResource(),
                 "<img src=\"" + getMappedDefaultGroupPngImageResourceHref()
                     + "\" " + "/>\n");
     }
@@ -452,7 +452,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private TestData createTestDataOneDynamicAttributeSingleMappedResource() {
         return new TestData(
                 Arrays.asList(createTitleDynamicAttribute()),
-                getMockMappedResourcePath(),
+                getMockResource(),
                 "<img src=\""
                 + getMappedDefaultGroupPngImageResourceHref()
                 + "\" title=\"unmetered usage\" />\n");
@@ -461,7 +461,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private TestData createTestDataTwoDynamicAttributesSingleMappedResource() {
         return new TestData(
                 Arrays.asList(createTitleDynamicAttribute(), createAltDynamicAttribute()),
-                getMockMappedResourcePath(),
+                getMockResource(),
                 "<img src=\""
                 + getMappedDefaultGroupPngImageResourceHref()
                 + "\" title=\"unmetered usage\" alt=\"unmetered\" />\n");
@@ -488,15 +488,15 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private static class TestData {
         private final List<DynamicTagAttribute> dynamicAttributes;
-        private final MappedResourcePath mappedResourcePath;
+        private final Resource resource;
         private final String outputString;
 
         public TestData(final List<DynamicTagAttribute> dynamicAttributes,
-                final MappedResourcePath mappedResourcePath,
+                final Resource resource,
                 final String outputString) {
             super();
             this.dynamicAttributes = dynamicAttributes;
-            this.mappedResourcePath = mappedResourcePath;
+            this.resource = resource;
             this.outputString = outputString;
         }
 
@@ -515,10 +515,10 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         }
 
         /**
-         * @return the mappedResourcePath
+         * @return the resource
          */
-        private MappedResourcePath getMappedResourcePath() {
-            return mappedResourcePath;
+        private Resource getResource() {
+            return resource;
         }
 
         /**
@@ -528,24 +528,24 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         public String toString() {
             final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
             toStringBuilder.append("dynamicAttributes", getDynamicAttributes());
-            toStringBuilder.append("mappedResourcePath", getMappedResourcePath());
+            toStringBuilder.append("resource", getResource());
             toStringBuilder.append("outputString", getOutputString());
             return toStringBuilder.toString();
         }
     }
 
     /**
-     * @return the mockMappedResourcePath
+     * @return the mockResource
      */
-    public MappedResourcePath getMockMappedResourcePath() {
-        return mockMappedResourcePath;
+    public Resource getMockResource() {
+        return mockResource;
     }
 
     /**
-     * @param mockMappedResourcePath the mockMappedResourcePath to set
+     * @param mockResource the mockResource to set
      */
-    public void setMockMappedResourcePath(final MappedResourcePath mockMappedResourcePath) {
-        this.mockMappedResourcePath = mockMappedResourcePath;
+    public void setMockResource(final Resource mockResource) {
+        this.mockResource = mockResource;
     }
 
     /**

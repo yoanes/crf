@@ -20,7 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
+import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
@@ -48,7 +48,7 @@ public class ResourceResolverServletTestCase extends
     private WebApplicationContext mockWebApplicationContext;
     private Device mockDevice;
     private FileIoFacade mockFileIoFacade;
-    private MappedResourcePath mockMappedResourcePath;
+    private Resource mockResource;
 
     /**
      * Setup test data.
@@ -106,7 +106,7 @@ public class ResourceResolverServletTestCase extends
     }
 
     @Test
-    public void testDoGetWhenNoMappedResourcePathFound() throws Throwable {
+    public void testDoGetWhenNoResourceFound() throws Throwable {
         recordGetResourceResolverEngine();
 
         recordGetDevice();
@@ -180,7 +180,7 @@ public class ResourceResolverServletTestCase extends
 
         final String actualResourceServletPath =
             "/WEB-INF/view/master/home/home.jsp";
-        recordGetNewResourcePath(actualResourceServletPath);
+        recordGetNewPath(actualResourceServletPath);
 
         recordGetRequestDispatcher(actualResourceServletPath);
 
@@ -191,10 +191,10 @@ public class ResourceResolverServletTestCase extends
         getObjectUnderTest().init(getSpringMockServletConfig());
     }
 
-    private void recordGetNewResourcePath(final String newResourcePath) {
+    private void recordGetNewPath(final String newPath) {
 
-        EasyMock.expect(getMockMappedResourcePath().getNewResourcePath())
-                .andReturn(newResourcePath);
+        EasyMock.expect(getMockResource().getNewPath())
+                .andReturn(newPath);
     }
 
     @Test
@@ -233,7 +233,7 @@ public class ResourceResolverServletTestCase extends
 
         final String actualResourceServletPath =
             "/WEB-INF/view/master/common/logo.jsp";
-        recordGetNewResourcePath(actualResourceServletPath);
+        recordGetNewPath(actualResourceServletPath);
 
         recordGetRequestDispatcher(actualResourceServletPath);
 
@@ -303,7 +303,7 @@ public class ResourceResolverServletTestCase extends
                 getMockResourceResolverEngine()
                         .getResourcePath(getMockDevice(),
                                 requestedResourceServletPath)).andReturn(
-                getMockMappedResourcePath()).atLeastOnce();
+                getMockResource()).atLeastOnce();
     }
 
     private void recordGetRequestServletPath(
@@ -512,16 +512,16 @@ public class ResourceResolverServletTestCase extends
     }
 
     /**
-     * @return the mockMappedResourcePath
+     * @return the mockResource
      */
-    public MappedResourcePath getMockMappedResourcePath() {
-        return mockMappedResourcePath;
+    public Resource getMockResource() {
+        return mockResource;
     }
 
     /**
-     * @param mockMappedResourcePath the mockMappedResourcePath to set
+     * @param mockResource the mockResource to set
      */
-    public void setMockMappedResourcePath(final MappedResourcePath mockMappedResourcePath) {
-        this.mockMappedResourcePath = mockMappedResourcePath;
+    public void setMockResource(final Resource mockResource) {
+        this.mockResource = mockResource;
     }
 }

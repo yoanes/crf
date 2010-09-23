@@ -130,20 +130,20 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                     getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
-            recordCheckIfNewResourcePathExists(Boolean.TRUE);
+            recordCheckIfNewPathExists(Boolean.TRUE);
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                     getObjectUnderTest().resolve(
                             getResourcePathTestData()
                                     .getRequestedCssResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
-            Assert.assertEquals("actualMappedResourcePaths is wrong",
+            Assert.assertEquals("actualResources is wrong",
                     Arrays.asList(getResourcePathTestData()
                             .getMappedIphoneGroupCssResourcePath()),
-                    actualMappedResourcePaths);
+                    actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -167,20 +167,20 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                     getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
-            recordCheckIfNewResourcePathExists(Boolean.FALSE);
+            recordCheckIfNewPathExists(Boolean.FALSE);
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData()
                         .getRequestedCssResourcePath(),
                         getGroupTestData().createIPhoneGroup());
 
-            Assert.assertNotNull("actualMappedResourcePaths should not be null",
-                    actualMappedResourcePaths);
-            Assert.assertTrue("actualMappedResourcePaths should be empty",
-                    actualMappedResourcePaths.isEmpty());
+            Assert.assertNotNull("actualResources should not be null",
+                    actualResources);
+            Assert.assertTrue("actualResources should be empty",
+                    actualResources.isEmpty());
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -189,29 +189,29 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
     }
 
-    private void recordCheckIfNewResourcePathExists(final Boolean exists) {
+    private void recordCheckIfNewPathExists(final Boolean exists) {
         EasyMock.expect(
                 getMockFileIoFacade().fileExists(
                         getResourcePathTestData().getRootResourcesPath(),
                         getResourcePathTestData()
                                 .getMappedIphoneGroupCssResourcePath()
-                                .getNewResourcePath())).andReturn(exists);
+                                .getNewPath())).andReturn(exists);
 
     }
 
     @Test
     public void testResolveWhenNoMappingPerformed() throws Throwable {
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
                 getObjectUnderTest()
                         .resolve(
                                 getResourcePathTestData()
                                         .getRequestedJspResourcePath(),
                                 getGroupTestData().createIPhoneGroup());
 
-        Assert.assertNotNull("actualMappedResourcePaths should not be null",
-                actualMappedResourcePaths);
-        Assert.assertTrue("actualMappedResourcePaths should be empty",
-                actualMappedResourcePaths.isEmpty());
+        Assert.assertNotNull("actualResources should not be null",
+                actualResources);
+        Assert.assertTrue("actualResources should be empty",
+                actualResources.isEmpty());
 
     }
 

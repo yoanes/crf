@@ -136,15 +136,15 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                     getObjectUnderTest().resolve(
                             getResourcePathTestData()
                                     .getRequestedImageResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
-            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+            assertComplexObjectsEqual("actualResources is wrong",
                     Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
-                        actualMappedResourcePaths);
+                        actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -155,21 +155,21 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
     private File[] getSingleMatchedPngImageArray() {
         return new File[] {
-                getMappedIPhonePngImageResourcePath().getNewResourceFile() };
+                getMappedIPhonePngImageResourcePath().getNewFile() };
     }
 
     private File[] getMultipleMatchedPngImageArray() {
         return new File[] {
-                        getMappedIPhonePngImageResourcePath().getNewResourceFile(),
-                        getMappedIPhoneGroupGifImageResourcePath().getNewResourceFile() };
+                        getMappedIPhonePngImageResourcePath().getNewFile(),
+                        getMappedIPhoneGroupGifImageResourcePath().getNewFile() };
     }
 
-    private MappedResourcePath getMappedIPhonePngImageResourcePath() {
+    private Resource getMappedIPhonePngImageResourcePath() {
         return getResourcePathTestData()
                 .getMappedIphoneGroupPngImageResourcePath();
     }
 
-    private MappedResourcePath getMappedIPhoneGroupGifImageResourcePath() {
+    private Resource getMappedIPhoneGroupGifImageResourcePath() {
         return getResourcePathTestData()
                 .getMappedIphoneGroupGifImageResourcePath();
     }
@@ -190,15 +190,15 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                     getObjectUnderTest().resolve(
                             getResourcePathTestData()
                                     .getRequestedImageResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
-            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+            assertComplexObjectsEqual("actualResources is wrong",
                     Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
-                        actualMappedResourcePaths);
+                        actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -217,8 +217,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                     + "' resolved to multiple real resources with extensions matching "
                     + ArrayUtils.toString(FILE_EXTENSION_WILDCARDS)
                     + ". Will only return the first resource. Total found: ["
-                    + getMappedIPhonePngImageResourcePath().getNewResourceFile()
-                    + ", " + getMappedIPhoneGroupGifImageResourcePath().getNewResourceFile()
+                    + getMappedIPhonePngImageResourcePath().getNewFile()
+                    + ", " + getMappedIPhoneGroupGifImageResourcePath().getNewFile()
                     + "].");
     }
 
@@ -238,16 +238,16 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData()
                         .getRequestedImageResourcePath(),
                         getGroupTestData().createIPhoneGroup());
 
-            Assert.assertNotNull("actualMappedResourcePaths should not be null",
-                    actualMappedResourcePaths);
-            Assert.assertTrue("actualMappedResourcePaths should be empty",
-                    actualMappedResourcePaths.isEmpty());
+            Assert.assertNotNull("actualResources should not be null",
+                    actualResources);
+            Assert.assertTrue("actualResources should be empty",
+                    actualResources.isEmpty());
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -261,18 +261,18 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                 getMockFileIoFacade().list(
                         EasyMock.eq(getRootResourcesDir()),
                         EasyMock.eq(getMappedIphoneGroupImageResourcePath()
-                                .getNewResourcePath()),
+                                .getNewPath()),
                         EasyMock.aryEq(FILE_EXTENSION_WILDCARDS))).andReturn(
                 files);
 
     }
 
-    private MappedResourcePath getMappedIphoneGroupImageResourcePath() {
+    private Resource getMappedIphoneGroupImageResourcePath() {
         return getResourcePathTestData()
         .getMappedIphoneGroupImageResourcePath();
     }
 
-    private MappedResourcePath getMappedIphoneGroupPngImageResourcePath() {
+    private Resource getMappedIphoneGroupPngImageResourcePath() {
         return getResourcePathTestData()
                 .getMappedIphoneGroupPngImageResourcePath();
     }
@@ -283,17 +283,17 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testResolveWhenNoMappingPerformed() throws Throwable {
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
                 getObjectUnderTest()
                         .resolve(
                                 getResourcePathTestData()
                                         .getRequestedImageResourcePath(),
                                 getGroupTestData().createIPhoneGroup());
 
-        Assert.assertNotNull("actualMappedResourcePaths should not be null",
-                actualMappedResourcePaths);
-        Assert.assertTrue("actualMappedResourcePaths should be empty",
-                actualMappedResourcePaths.isEmpty());
+        Assert.assertNotNull("actualResources should not be null",
+                actualResources);
+        Assert.assertTrue("actualResources should be empty",
+                actualResources.isEmpty());
 
     }
 

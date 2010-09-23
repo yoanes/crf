@@ -23,7 +23,7 @@ import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
 import au.com.sensis.mobile.crf.service.CssBundleFactory;
 import au.com.sensis.mobile.crf.service.FileIoFacade;
 import au.com.sensis.mobile.crf.service.FileIoFacadeFactory;
-import au.com.sensis.mobile.crf.service.MappedResourcePath;
+import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -101,7 +101,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
             try {
                 setObjectUnderTest(createObjectUnderTest(testDataArray[i]));
 
-                recordGetMappedResourcePath(testDataArray[i].getMappedResourcePaths());
+                recordGetResource(testDataArray[i].getResources());
 
                 if (testDataArray[i].getDeploymentVersion().isDevPlatform()
                         && StringUtils.isEmpty(testDataArray[i].getOutputString())) {
@@ -113,8 +113,8 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                         recordLogResourceNotFoundWarning();
                     } else {
                         EasyMock.expect(getMockCssBundleFactory().getBundle(
-                              testDataArray[i].getMappedResourcePaths())).andReturn(
-                                      testDataArray[i].getBundleMappedResourcePath()).atLeastOnce();
+                              testDataArray[i].getResources())).andReturn(
+                                      testDataArray[i].getBundleResource()).atLeastOnce();
                     }
                 }
 
@@ -156,12 +156,12 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMockResolutionWarnLogger());
     }
 
-    private void recordGetMappedResourcePath(
-            final List<MappedResourcePath> expectedMappedResourcePaths) throws IOException {
+    private void recordGetResource(
+            final List<Resource> expectedResources) throws IOException {
         EasyMock.expect(
                 getMockResourceResolverEngine()
                         .getAllResourcePaths(getMockDevice(), getRequestedCssResourcePath()))
-                        .andReturn(expectedMappedResourcePaths).atLeastOnce();
+                        .andReturn(expectedResources).atLeastOnce();
     }
 
     private void recordLogResourceNotFoundWarning() {
@@ -173,7 +173,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                         + "' and device " + getMockDevice());
     }
 
-    private MappedResourcePath getMappedDefaultGroupCssResourcePath() {
+    private Resource getMappedDefaultGroupCssResourcePath() {
         return getResourcePathTestData().getMappedDefaultGroupCssResourcePath();
     }
 
@@ -181,7 +181,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         return getResourcePathTestData().getMappedDefaultGroupCssResourceHref();
     }
 
-    private MappedResourcePath getMappediPhoneGroupCssResourcePath() {
+    private Resource getMappediPhoneGroupCssResourcePath() {
         return getResourcePathTestData().getMappedIphoneGroupCssResourcePath();
     }
 
@@ -469,7 +469,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
     private TestData createTestDataNoDynamicAttributesNoMappedResourceDevMode() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                new ArrayList<MappedResourcePath>(),
+                new ArrayList<Resource>(),
                 null,
                 StringUtils.EMPTY,
                 getDeploymentVersionTestData().createDevDeploymentVersion());
@@ -478,7 +478,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
     private TestData createTestDataNoDynamicAttributesNoMappedResourceProdMode() {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
-                new ArrayList<MappedResourcePath>(),
+                new ArrayList<Resource>(),
                 null,
                 StringUtils.EMPTY,
                 getDeploymentVersionTestData().createProdDeploymentVersion());
@@ -494,7 +494,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getDeploymentVersionTestData().createDevDeploymentVersion());
     }
 
-    private MappedResourcePath getMappedDefaultGroupCssBundleResourcePath() {
+    private Resource getMappedDefaultGroupCssBundleResourcePath() {
         return getResourcePathTestData().getMappedDefaultGroupCssBundleResourcePath();
     }
 
@@ -502,7 +502,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         return getResourcePathTestData().getMappedDefaultGroupCssBundleResourceHref();
     }
 
-    private MappedResourcePath getMappedIphoneGroupCssBundleResourcePath() {
+    private Resource getMappedIphoneGroupCssBundleResourcePath() {
         return getResourcePathTestData().getMappedIphoneGroupCssBundleResourcePath();
     }
 
@@ -513,20 +513,20 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
     private static class TestData {
         private final List<DynamicTagAttribute> dynamicAttributes;
-        private final List<MappedResourcePath> mappedResourcePaths;
-        private final MappedResourcePath bundleMappedResourcePath;
+        private final List<Resource> resources;
+        private final Resource bundleResource;
         private final String outputString;
         private final DeploymentVersion deploymentVersion;
 
         public TestData(final List<DynamicTagAttribute> dynamicAttributes,
-                final List<MappedResourcePath> mappedResourcePaths,
-                final MappedResourcePath bundlePath,
+                final List<Resource> resources,
+                final Resource bundlePath,
                 final String outputString,
                 final DeploymentVersion deploymentVersion) {
             super();
             this.dynamicAttributes = dynamicAttributes;
-            this.mappedResourcePaths = mappedResourcePaths;
-            bundleMappedResourcePath = bundlePath;
+            this.resources = resources;
+            bundleResource = bundlePath;
             this.outputString = outputString;
             this.deploymentVersion = deploymentVersion;
         }
@@ -539,10 +539,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         }
 
         /**
-         * @return the mappedResourcePaths
+         * @return the resources
          */
-        private List<MappedResourcePath> getMappedResourcePaths() {
-            return mappedResourcePaths;
+        private List<Resource> getResources() {
+            return resources;
         }
 
         /**
@@ -560,10 +560,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         }
 
         /**
-         * @return the bundleMappedResourcePath
+         * @return the bundleResource
          */
-        public MappedResourcePath getBundleMappedResourcePath() {
-            return bundleMappedResourcePath;
+        public Resource getBundleResource() {
+            return bundleResource;
         }
 
         /**
@@ -573,8 +573,8 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         public String toString() {
             final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
             toStringBuilder.append("dynamicAttributes", getDynamicAttributes());
-            toStringBuilder.append("mappedResourcePaths", getMappedResourcePaths());
-            toStringBuilder.append("bundleMappedResourcePath", getBundleMappedResourcePath());
+            toStringBuilder.append("resources", getResources());
+            toStringBuilder.append("bundleResource", getBundleResource());
             toStringBuilder.append("outputString", getOutputString());
             toStringBuilder.append("deploymentVersion", getDeploymentVersion());
             return toStringBuilder.toString();

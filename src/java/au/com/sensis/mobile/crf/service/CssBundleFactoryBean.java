@@ -15,7 +15,7 @@ public class CssBundleFactoryBean implements CssBundleFactory {
      * {@inheritDoc}
      */
     @Override
-    public MappedResourcePath getBundle(final List<MappedResourcePath> resourcePathsToInclude) {
+    public Resource getBundle(final List<Resource> resourcePathsToInclude) {
         //TODO
         return null;
     }
@@ -24,17 +24,17 @@ public class CssBundleFactoryBean implements CssBundleFactory {
 //    LinkTagWriter but
 // TDD applied to LinkTagWriter caused them to be simplified out.
 // I think they will belong in this CssBundleFactoryBean class instead.
-//    private String createBundleOutputDirPath(final List<MappedResourcePath> list) {
+//    private String createBundleOutputDirPath(final List<Resource> list) {
 //        final String baseResourcePath = getLastElement(list);
 //
 //        return StringUtils.substringBeforeLast(baseResourcePath, "/")
 //                + "/bundle/";
 //    }
 //
-//    private String getLastElement(final List<MappedResourcePath> list) {
+//    private String getLastElement(final List<Resource> list) {
 //        String foundResourcePath = null;
-//        for (final MappedResourcePath resourcePath : list) {
-//            foundResourcePath = resourcePath.getNewResourcePath();
+//        for (final Resource resourcePath : list) {
+//            foundResourcePath = resourcePath.getNewPath();
 //        }
 //        return foundResourcePath;
 //    }

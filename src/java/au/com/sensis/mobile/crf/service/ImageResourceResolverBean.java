@@ -17,13 +17,13 @@ import au.com.sensis.mobile.crf.config.Group;
  * {@link ResourceResolver} that maps abstract image paths to real image
  * paths. Note that the generated path will not have an extension given that
  * there is a multitude of possible image formats. The
- * {@link MappedResourcePath} returned by
+ * {@link Resource} returned by
  * {@link AbstractResourceResolver#resolve(String, au.com.sensis.mobile.crf.config.Group)}
  * can be consulted to resolve the new path to actual files.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-// TODo: clean up code. Current mess is due to refactoring ImageMappedResourcePathBean into oblivion
+// TODo: clean up code. Current mess is due to refactoring ImageResourceBean into oblivion
 // and pushing the code into here.
 public class ImageResourceResolverBean extends AbstractResourceResolver {
 
@@ -60,7 +60,7 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      *             Thrown if an IO error occurs.
      */
     @Override
-    public List<MappedResourcePath> resolve(final String requestedResourcePath,
+    public List<Resource> resolve(final String requestedResourcePath,
             final Group group) throws IOException {
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
             if (getLogger().isDebugEnabled()) {
@@ -71,11 +71,11 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
                                 + doMapResourcePath(requestedResourcePath,
                                         group) + "'");
             }
-            final MappedResourcePath mappedResourcePath =
-                    createMappedResourcePath(requestedResourcePath,
+            final Resource resource =
+                    createResource(requestedResourcePath,
                             doMapResourcePath(requestedResourcePath, group));
 
-            return doResolve(mappedResourcePath);
+            return doResolve(resource);
         } else {
 
             if (getLogger().isDebugEnabled()) {
@@ -86,7 +86,7 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
                                 + " file. Returning an empty list.");
             }
 
-            return new ArrayList<MappedResourcePath>();
+            return new ArrayList<Resource>();
         }
     }
 
@@ -96,38 +96,38 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      *
      * {@inheritDoc}
      *
-     * @param mappedResourcePath
+     * @param resource
      */
-    private List<MappedResourcePath> doResolve(
-            final MappedResourcePath mappedResourcePath) {
+    private List<Resource> doResolve(
+            final Resource resource) {
         // TODO: possibly cache the result since we are accessing the file
         // system?
         final File[] matchedFiles =
                 FileIoFacadeFactory.getFileIoFacadeSingleton().list(
-                        mappedResourcePath.getRootResourceDir(),
-                        mappedResourcePath.getNewResourcePath(),
+                        resource.getRootResourceDir(),
+                        resource.getNewPath(),
                         FILE_EXTENSION_WILDCARDS);
 
-        warnIfMultipleResourcesWithExtensionsFound(mappedResourcePath
-                .getOriginalResourcePath(), matchedFiles);
+        warnIfMultipleResourcesWithExtensionsFound(resource
+                .getOriginalPath(), matchedFiles);
 
         // TODO: clean this up once we've refactored it into a ResourceResolver.
         if (matchedFiles.length > 0) {
             return Arrays
-                    .asList((MappedResourcePath) new MappedResourcePathBean(
-                            mappedResourcePath.getOriginalResourcePath(),
-                            getNewResourcePathPlusFileExtension(
-                                    matchedFiles[0], mappedResourcePath),
-                            mappedResourcePath.getRootResourceDir()));
+                    .asList((Resource) new ResourceBean(
+                            resource.getOriginalPath(),
+                            getNewPathPlusFileExtension(
+                                    matchedFiles[0], resource),
+                            resource.getRootResourceDir()));
         } else {
-            return new ArrayList<MappedResourcePath>();
+            return new ArrayList<Resource>();
         }
     }
 
-    private String getNewResourcePathPlusFileExtension(final File matchedFile,
-            final MappedResourcePath mappedResourcePath) {
+    private String getNewPathPlusFileExtension(final File matchedFile,
+            final Resource resource) {
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(mappedResourcePath.getNewResourcePath());
+        stringBuilder.append(resource.getNewPath());
         stringBuilder.append(".");
         stringBuilder.append(FilenameUtils.getExtension(matchedFile.getName()));
         return stringBuilder.toString();
@@ -154,8 +154,8 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("[");
         int i = 0;
-        for (final File mappedResourcePath : matchedFiles) {
-            stringBuilder.append(mappedResourcePath);
+        for (final File currFile : matchedFiles) {
+            stringBuilder.append(currFile);
             if (i < matchedFiles.length - 1) {
                 stringBuilder.append(", ");
             }

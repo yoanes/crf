@@ -61,7 +61,7 @@ public class ResourceResolverEngineBean implements
      * {@inheritDoc}
      * @throws IOException
      */
-    public MappedResourcePath getResourcePath(final Device device,
+    public Resource getResourcePath(final Device device,
             final String requestedResourcePath) throws IOException {
 
         if (LOGGER.isDebugEnabled()) {
@@ -76,15 +76,15 @@ public class ResourceResolverEngineBean implements
 
             debugLogCheckingGroup(currGroup);
 
-            final List<MappedResourcePath> mappedResourcePaths =
-                    getMappedResourcePath(requestedResourcePath, currGroup);
+            final List<Resource> resources =
+                    getResource(requestedResourcePath, currGroup);
 
-            if (!mappedResourcePaths.isEmpty()) {
-                debugLogResourcesFound(mappedResourcePaths);
+            if (!resources.isEmpty()) {
+                debugLogResourcesFound(resources);
 
-                warnIfMultipleResourcesFound(requestedResourcePath, mappedResourcePaths);
+                warnIfMultipleResourcesFound(requestedResourcePath, resources);
 
-                return mappedResourcePaths.get(0);
+                return resources.get(0);
             }
         }
 
@@ -101,15 +101,15 @@ public class ResourceResolverEngineBean implements
 
     private void warnIfMultipleResourcesFound(
             final String requestedResourcePath,
-            final List<MappedResourcePath> mappedResourcePaths) {
-        if ((mappedResourcePaths.size() > 1)
+            final List<Resource> resources) {
+        if ((resources.size() > 1)
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "Requested resource '"
                     + requestedResourcePath
                     + "' resolved to multiple resources when only one was requested. "
                     + "Will only return the first. Total found: "
-                    + mappedResourcePaths + ".");
+                    + resources + ".");
         }
     }
 
@@ -118,10 +118,10 @@ public class ResourceResolverEngineBean implements
      * @throws IOException
      */
     @Override
-    public List<MappedResourcePath> getAllResourcePaths(final Device device,
+    public List<Resource> getAllResourcePaths(final Device device,
             final String requestedResourcePath) throws IOException {
 
-        final Deque<MappedResourcePath> allResourcePaths = new ArrayDeque<MappedResourcePath>();
+        final Deque<Resource> allResourcePaths = new ArrayDeque<Resource>();
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Looking for resource '" + requestedResourcePath
@@ -136,18 +136,18 @@ public class ResourceResolverEngineBean implements
             debugLogCheckingGroup(currGroup);
 
             accumulateGroupResources(
-                    getMappedResourcePath(requestedResourcePath, currGroup),
+                    getResource(requestedResourcePath, currGroup),
                     allResourcePaths);
         }
 
         debugLogNoResourcesFound(requestedResourcePath);
 
-        return new ArrayList<MappedResourcePath>(allResourcePaths);
+        return new ArrayList<Resource>(allResourcePaths);
     }
 
     private void accumulateGroupResources(
-            final List<MappedResourcePath> resolvedPaths,
-            final Deque<MappedResourcePath> allResourcePaths) {
+            final List<Resource> resolvedPaths,
+            final Deque<Resource> allResourcePaths) {
 
         if (!resolvedPaths.isEmpty()) {
 
@@ -155,25 +155,25 @@ public class ResourceResolverEngineBean implements
 
             Collections.reverse(resolvedPaths);
 
-            for (final MappedResourcePath currPath : resolvedPaths) {
+            for (final Resource currPath : resolvedPaths) {
                 allResourcePaths.push(currPath);
             }
         }
     }
 
-    private List<MappedResourcePath> getMappedResourcePath(
+    private List<Resource> getResource(
             final String requestedResourcePath, final Group currGroup) throws IOException {
         return getResourceResolver().resolve(
                 requestedResourcePath, currGroup);
     }
 
     private void debugLogResourcesFound(
-            final List<MappedResourcePath> mappedResourcePaths) {
+            final List<Resource> resources) {
 
         if (LOGGER.isDebugEnabled()) {
-            for (final MappedResourcePath mappedResourcePath : mappedResourcePaths) {
+            for (final Resource resource : resources) {
                 LOGGER.debug("Resource found: '"
-                        + mappedResourcePath.getNewResourcePath() + "'");
+                        + resource.getNewPath() + "'");
             }
         }
     }

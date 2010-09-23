@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Callback interface to be passed to {@link #findJavaScriptFiles(MappedResourcePath)}.
+ * Callback interface to be passed to {@link #findJavaScriptFiles(Resource)}.
  */
 public interface JavaScriptFileFinder {
 

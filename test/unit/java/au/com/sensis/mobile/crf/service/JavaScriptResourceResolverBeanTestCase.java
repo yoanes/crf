@@ -142,7 +142,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                     getObjectUnderTest().resolve(
                             getResourcePathTestData()
                                     .getRequestedBundledScriptResourcePath(),
@@ -152,9 +152,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
             verify();
             reset();
 
-            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
-                    createExistsByFilterExpectedMappedResourcePaths(),
-                        actualMappedResourcePaths);
+            assertComplexObjectsEqual("actualResources is wrong",
+                    createExistsByFilterExpectedResources(),
+                        actualResources);
         }
 
     }
@@ -181,7 +181,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData()
                         .getRequestedBundledScriptResourcePath(),
@@ -191,9 +191,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
             verify();
             reset();
 
-            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
-                    new ArrayList<MappedResourcePath>(),
-                    actualMappedResourcePaths);
+            assertComplexObjectsEqual("actualResources is wrong",
+                    new ArrayList<Resource>(),
+                    actualResources);
         }
 
     }
@@ -202,15 +202,15 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         final File expectedFile1 =
                 getResourcePathTestData()
                         .getMappedDefaultGroupBundledScriptResourcePath1()
-                        .getNewResourceFile();
+                        .getNewFile();
         final File expectedFile2 =
                 getResourcePathTestData()
                         .getMappedDefaultGroupBundledScriptResourcePath2()
-                        .getNewResourceFile();
+                        .getNewFile();
         return Arrays.asList(expectedFile1, expectedFile2);
     }
 
-    private List<MappedResourcePath> createExistsByFilterExpectedMappedResourcePaths() {
+    private List<Resource> createExistsByFilterExpectedResources() {
         return Arrays.asList(
             getResourcePathTestData()
                     .getMappedDefaultGroupBundledScriptResourcePath1(),
@@ -228,11 +228,11 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
             setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
-            recordCheckIfNewResourcePathExists(Boolean.TRUE);
+            recordCheckIfNewPathExists(Boolean.TRUE);
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData()
                         .getRequestedNamedScriptResourcePath(),
@@ -242,10 +242,10 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
             verify();
             reset();
 
-            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
+            assertComplexObjectsEqual("actualResources is wrong",
                     Arrays.asList(getResourcePathTestData()
                             .getMappedIphoneGroupNamedScriptResourcePath()),
-                    actualMappedResourcePaths);
+                    actualResources);
         }
 
     }
@@ -260,11 +260,11 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
             setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
                     getMockResourceResolutionWarnLogger()));
 
-            recordCheckIfNewResourcePathExists(Boolean.FALSE);
+            recordCheckIfNewPathExists(Boolean.FALSE);
 
             replay();
 
-            final List<MappedResourcePath> actualMappedResourcePaths =
+            final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData()
                         .getRequestedNamedScriptResourcePath(),
@@ -274,36 +274,36 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
             verify();
             reset();
 
-            assertComplexObjectsEqual("actualMappedResourcePaths is wrong",
-                    new ArrayList<MappedResourcePath>(),
-                            actualMappedResourcePaths);
+            assertComplexObjectsEqual("actualResources is wrong",
+                    new ArrayList<Resource>(),
+                            actualResources);
         }
 
     }
 
     @Test
     public void testResolveWhenNoMappingPerformed() throws Throwable {
-        final List<MappedResourcePath> actualMappedResourcePaths =
+        final List<Resource> actualResources =
                 getObjectUnderTest()
                         .resolve(
                                 getResourcePathTestData()
                                         .getRequestedJspResourcePath(),
                                 getGroupTestData().createIPhoneGroup());
 
-        Assert.assertNotNull("actualMappedResourcePaths should not be null",
-                actualMappedResourcePaths);
-        Assert.assertTrue("actualMappedResourcePaths should be empty",
-                actualMappedResourcePaths.isEmpty());
+        Assert.assertNotNull("actualResources should not be null",
+                actualResources);
+        Assert.assertTrue("actualResources should be empty",
+                actualResources.isEmpty());
 
     }
 
-    private void recordCheckIfNewResourcePathExists(final Boolean exists) {
+    private void recordCheckIfNewPathExists(final Boolean exists) {
         EasyMock.expect(
                 getMockFileIoFacade().fileExists(
                         getResourcePathTestData().getRootResourcesPath(),
                         getResourcePathTestData()
                                 .getMappedIphoneGroupNamedScriptResourcePath()
-                                .getNewResourcePath())).andReturn(exists);
+                                .getNewPath())).andReturn(exists);
 
     }
 

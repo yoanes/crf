@@ -70,7 +70,7 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
      * @throws IOException
      */
     @Override
-    public List<MappedResourcePath> getAllResourcePaths(final Device device,
+    public List<Resource> getAllResourcePaths(final Device device,
             final String requestedResourcePath) throws IOException {
 
         for (final PathRestrictedResourceResolverEngine resourceResolverEngine
@@ -94,7 +94,7 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
      * @throws IOException
      */
     @Override
-    public MappedResourcePath getResourcePath(final Device device,
+    public Resource getResourcePath(final Device device,
             final String requestedResourcePath) throws IOException {
 
         for (final PathRestrictedResourceResolverEngine resourceResolverEngine

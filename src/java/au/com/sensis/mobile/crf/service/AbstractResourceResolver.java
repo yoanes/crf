@@ -96,7 +96,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @throws IOException Thrown if an IO error occurs.
      */
     @Override
-    public List<MappedResourcePath> resolve(
+    public List<Resource> resolve(
             final String requestedResourcePath, final Group group)
                 throws IOException {
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
@@ -108,14 +108,14 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
                                 + doMapResourcePath(requestedResourcePath,
                                         group) + "'");
             }
-            final MappedResourcePath mappedResourcePath =
-                createMappedResourcePath(requestedResourcePath,
+            final Resource resource =
+                createResource(requestedResourcePath,
                     doMapResourcePath(requestedResourcePath, group));
             // TODO: refactor so that we check existance before we instantiate the Resource?
-            if (exists(mappedResourcePath)) {
-                return Arrays.asList(mappedResourcePath);
+            if (exists(resource)) {
+                return Arrays.asList(resource);
             } else {
-                return new ArrayList<MappedResourcePath>();
+                return new ArrayList<Resource>();
             }
         } else {
 
@@ -126,35 +126,35 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
                                 + " file. Returning an empty list.");
             }
 
-            return new ArrayList<MappedResourcePath>();
+            return new ArrayList<Resource>();
         }
     }
 
     /**
-     * @return true if the mapped path given by {@link #getNewResourcePath()}
+     * @return true if the mapped path given by {@link #getNewPath()}
      *         exists in {@link #getRootResourceDir()}.
      */
-    private boolean exists(final MappedResourcePath mappedResourcePath) {
+    private boolean exists(final Resource resource) {
         // TODO: possibly cache the result since we are accessing the file system?
         return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
-                mappedResourcePath.getRootResourceDir(), mappedResourcePath.getNewResourcePath());
+                resource.getRootResourceDir(), resource.getNewPath());
     }
 
     /**
-     * Returns a new instance of a {@link MappedResourcePath}. The default
-     * implementation returned is {@link MappedResourcePathBean}.
+     * Returns a new instance of a {@link Resource}. The default
+     * implementation returned is {@link ResourceBean}.
      *
      * @param requestedResourcePath
      *            The path of the resource requested.
-     * @param newResourcePath
+     * @param newPath
      *            The new resource path that the requested path maps to.
-     * @return a new instance of a {@link MappedResourcePath}. The default
-     *         implementation returned is {@link MappedResourcePathBean}.
+     * @return a new instance of a {@link Resource}. The default
+     *         implementation returned is {@link ResourceBean}.
      */
-    protected MappedResourcePath createMappedResourcePath(
-            final String requestedResourcePath, final String newResourcePath) {
-        return new MappedResourcePathBean(requestedResourcePath,
-                newResourcePath, getRootResourcesDir());
+    protected Resource createResource(
+            final String requestedResourcePath, final String newPath) {
+        return new ResourceBean(requestedResourcePath,
+                newPath, getRootResourcesDir());
     }
 
     /**

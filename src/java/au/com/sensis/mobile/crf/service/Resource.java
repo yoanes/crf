@@ -4,13 +4,11 @@ import java.io.File;
 
 
 /**
- * Simple pair resulting from a mapping of an original resource path to a new path.
+ * Represents a resolved resource that is known to exist.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-// TODO: will be split into two: 1. GroupResourceResolver will handle the current "exist*" methods
-// but renamed to "resolve*" 2. Resource will represent a physical resource that is known to exist.
-public interface MappedResourcePath {
+public interface Resource {
 
     /**
      * Reserved name for directories storing bundle result artifacts.
@@ -18,7 +16,7 @@ public interface MappedResourcePath {
     String BUNDLE_DIR_NAME = "bundle";
 
     /**
-     * @return true if {@link #getNewResourcePath() corresponds to a bundle
+     * @return true if {@link #getNewPath() corresponds to a bundle
      *         result artifact. ie. if the last directory equals
      *         {@link #BUNDLE_DIR_NAME}.
      */
@@ -37,26 +35,26 @@ public interface MappedResourcePath {
     File getBundleParentDirFile() throws IllegalStateException;
 
     /**
-     * @return true if {@link #getNewResourcePath()} ends with the special
+     * @return true if {@link #getNewPath()} ends with the special
      *         extension ".null".
      */
     boolean endsWithDotNull();
 
     /**
-     * @return the originalResourcePath
+     * @return the originalPath
      */
-    String getOriginalResourcePath();
+    String getOriginalPath();
 
     /**
-     * @return the newResourcePath
+     * @return the newPath
      */
-    String getNewResourcePath();
+    String getNewPath();
 
     /**
      * @return {@link File} combining {@link #getRootResourceDir()} and
-     *         {@link #getNewResourcePath().
+     *         {@link #getNewPath().
      */
-    File getNewResourceFile();
+    File getNewFile();
 
     /**
      * @return the rootResourceDir
@@ -64,8 +62,8 @@ public interface MappedResourcePath {
     File getRootResourceDir();
 
     /**
-     * @return Length of {@link #getNewResourceFile()} as an int.
+     * @return Length of {@link #getNewFile()} as an int.
      */
-    int getFileLengthAsInt();
+    int getNewFileLengthAsInt();
 
 }

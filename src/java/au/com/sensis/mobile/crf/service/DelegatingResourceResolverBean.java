@@ -46,7 +46,7 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
      * Delegates to each {@link ResourceResolver} from a chain of
      * responsibility. The chain stops when either of the following occurs:
      * <ol>
-     * <li>A non-null {@link MappedResourcePath}is found.</li>
+     * <li>A non-null {@link Resource}is found.</li>
      * <li>The end of the chain is reached without the previous condition being
      * reached. In this case, null is returned.</li>
      * </ol>
@@ -54,18 +54,18 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    public List<MappedResourcePath> resolve(
+    public List<Resource> resolve(
             final String requestedResourcePath, final Group group) throws IOException {
         for (final ResourceResolver resourceResolver : getResourceResolvers()) {
             // TODO: needs to check if resourceResolver is interested instead of checking
             // foundResourcePaths.isEmpty?.
-            final List<MappedResourcePath> foundResourcePaths
+            final List<Resource> foundResourcePaths
                 = resourceResolver.resolve(requestedResourcePath, group);
             if (!foundResourcePaths.isEmpty()) {
                 return foundResourcePaths;
             }
         }
-        return new ArrayList<MappedResourcePath>();
+        return new ArrayList<Resource>();
     }
 
 

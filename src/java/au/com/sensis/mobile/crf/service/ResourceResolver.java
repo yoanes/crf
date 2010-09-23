@@ -20,11 +20,11 @@ public interface ResourceResolver {
      *            Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
      * @param group
      *            {@link Group} to perform the path mapping for.
-     * @return List of {@link MappedResourcePath}s containing the results. If no
+     * @return List of {@link Resource}s containing the results. If no
      *         resources can be resolved, an empty list is returned. May not be
      *         null.
      * @throws IOException Thrown if an IO error occurs.
      */
-    List<MappedResourcePath> resolve(String requestedResourcePath, Group group) throws IOException;
+    List<Resource> resolve(String requestedResourcePath, Group group) throws IOException;
 
 }
