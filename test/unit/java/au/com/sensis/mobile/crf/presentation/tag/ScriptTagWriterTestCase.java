@@ -32,16 +32,16 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link ResourceSelectorScriptTagWriter}.
+ * Unit test {@link ScriptTagWriter}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ResourceSelectorScriptTagWriterTestCase extends
+public class ScriptTagWriterTestCase extends
         AbstractJUnit4TestCase {
 
     private static final String DYN_ATTR_URI = "http://www.w3.org/2002/06/xhtml2";
 
-    private ResourceSelectorScriptTagWriter objectUnderTest;
+    private ScriptTagWriter objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final DeploymentVersionTestData deploymentVersionTestData
@@ -140,9 +140,9 @@ public class ResourceSelectorScriptTagWriterTestCase extends
         }
     }
 
-    private ResourceSelectorScriptTagWriter createObjectUnderTest(
+    private ScriptTagWriter createObjectUnderTest(
             final TestData testData) {
-        return new ResourceSelectorScriptTagWriter(getMockDevice(),
+        return new ScriptTagWriter(getMockDevice(),
                 testData.getDynamicAttributes(),
                 getRequestedScriptResourcePath(),
                 createCollaboratorsMemento(testData));
@@ -197,7 +197,7 @@ public class ResourceSelectorScriptTagWriterTestCase extends
     /**
      * @return the objectUnderTest
      */
-    public ResourceSelectorScriptTagWriter getObjectUnderTest() {
+    public ScriptTagWriter getObjectUnderTest() {
         return objectUnderTest;
     }
 
@@ -205,7 +205,7 @@ public class ResourceSelectorScriptTagWriterTestCase extends
      * @param objectUnderTest the objectUnderTest to set
      */
     public void setObjectUnderTest(
-            final ResourceSelectorScriptTagWriter objectUnderTest) {
+            final ScriptTagWriter objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

@@ -21,7 +21,7 @@ import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
  * @author Adrian.Koh2@sensis.com.au
  */
 // TODO: refactor so that href attribute is src.
-public class ImageTag extends AbstractResourceSelectorTag {
+public class ImageTag extends AbstractTag {
 
     /**
      * {@inheritDoc}

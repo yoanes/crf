@@ -13,7 +13,7 @@ import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
  * particular attribute is resolved via a
  * {@link au.com.sensis.mobile.crf.service.ResourceResolverEngine}.
  */
-public interface ResourceSelectorTagWriter {
+public interface TagWriter {
 
     /**
      * @return The unique identifier to associate with this writer. This may be

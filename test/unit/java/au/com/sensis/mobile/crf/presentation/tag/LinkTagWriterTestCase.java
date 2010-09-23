@@ -32,15 +32,15 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link ResourceSelectorLinkTagWriter}.
+ * Unit test {@link LinkTagWriter}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCase {
+public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
     private static final String DYN_ATTR_URI = "http://www.w3.org/2002/06/xhtml2";
 
-    private ResourceSelectorLinkTagWriter objectUnderTest;
+    private LinkTagWriter objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final DeploymentVersionTestData deploymentVersionTestData
@@ -138,9 +138,9 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
         }
     }
 
-    private ResourceSelectorLinkTagWriter createObjectUnderTest(
+    private LinkTagWriter createObjectUnderTest(
             final TestData testData) {
-        return new ResourceSelectorLinkTagWriter(getMockDevice(),
+        return new LinkTagWriter(getMockDevice(),
                 testData.getDynamicAttributes(),
                 getRequestedCssResourcePath(),
                 createCollaboratorsMemento(testData));
@@ -196,7 +196,7 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
     /**
      * @return the objectUnderTest
      */
-    public ResourceSelectorLinkTagWriter getObjectUnderTest() {
+    public LinkTagWriter getObjectUnderTest() {
         return objectUnderTest;
     }
 
@@ -204,7 +204,7 @@ public class ResourceSelectorLinkTagWriterTestCase extends AbstractJUnit4TestCas
      * @param objectUnderTest the objectUnderTest to set
      */
     public void setObjectUnderTest(
-            final ResourceSelectorLinkTagWriter objectUnderTest) {
+            final LinkTagWriter objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

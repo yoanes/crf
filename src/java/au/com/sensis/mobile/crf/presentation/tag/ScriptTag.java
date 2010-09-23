@@ -19,11 +19,11 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * @author Adrian.Koh2@sensis.com.au
  */
 // TODO: refactor so that href attribute is src.
-public class ScriptTag extends AbstractDuplicatePreventingResourceSelectorTag {
+public class ScriptTag extends AbstractDuplicatePreventingTag {
 
     /**
-     * Attribute name used to store a map of ({@link ResourceSelectorTagWriter#getId()},
-     * {@link ResourceSelectorTagWriter}) pairs.
+     * Attribute name used to store a map of ({@link TagWriter#getId()},
+     * {@link TagWriter}) pairs.
      */
     public static final String SCRIPT_WRITER_MAP_ATTRIBUTE_NAME =
             ScriptTag.class.getName() + ".scriptTagWriterMap";
@@ -32,10 +32,10 @@ public class ScriptTag extends AbstractDuplicatePreventingResourceSelectorTag {
      * {@inheritDoc}
      */
     @Override
-    protected ResourceSelectorTagWriter createResourceSelectorTagWriter() {
-        return ResourceSelectorScriptTagWriterFactory
-            .getResourceSelectorScriptTagWriterFactorySingleton()
-                .createResourceSelectorScriptTagWriter(getDevice(),
+    protected TagWriter createTagWriter() {
+        return ScriptTagWriterFactory
+            .getSingletonInstance()
+                .createScriptTagWriter(getDevice(),
                         getDynamicAttributes(), getHref(),
                         getCollaboratorsMemento());
     }
@@ -54,7 +54,7 @@ public class ScriptTag extends AbstractDuplicatePreventingResourceSelectorTag {
      * {@inheritDoc}
      */
     @Override
-    public String getResourceSelectorTagWriterMapAttributeName() {
+    public String getTagWriterMapAttributeName() {
         return SCRIPT_WRITER_MAP_ATTRIBUTE_NAME;
     }
 }

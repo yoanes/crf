@@ -37,7 +37,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private LinkTag objectUnderTest;
     private PageContext mockPageContext;
     private JspWriter mockJspWriter;
-    private Map<String, ResourceSelectorTagWriter> linkTagWriterMap;
+    private Map<String, TagWriter> linkTagWriterMap;
 
     private MockServletContext springMockServletContext;
     private WebApplicationContext mockWebApplicationContext;
@@ -48,9 +48,9 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
         = new DeploymentVersionTestData();
     private LinkTagDependencies linkTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private ResourceSelectorLinkTagWriter mockResourceSelectorLinkTagWriter;
-    private ResourceSelectorLinkTagWriterFactory
-        mockResourceSelectorLinkTagWriterFactory;
+    private LinkTagWriter mockLinkTagWriter;
+    private LinkTagWriterFactory
+        mockLinkTagWriterFactory;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
     /**
@@ -61,9 +61,9 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        ResourceSelectorLinkTagWriterFactory
-                .changeDefaultResourceResolverLinkTagWriterFactorySingleton(
-                        getMockResourceSelectorLinkTagWriterFactory());
+        LinkTagWriterFactory
+                .changeDefaultLinkTagWriterFactorySingleton(
+                        getMockLinkTagWriterFactory());
 
         setCollaboratorsMemento(createCollaboratorsMemento());
         setObjectUnderTest(new LinkTag());
@@ -83,7 +83,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
         setSpringMockServletContext(new MockServletContext());
 
-        setLinkTagWriterMap(new HashMap<String, ResourceSelectorTagWriter>());
+        setLinkTagWriterMap(new HashMap<String, TagWriter>());
     }
 
     /**
@@ -93,8 +93,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
      */
     @After
     public void tearDown() throws Exception {
-        ResourceSelectorLinkTagWriterFactory
-            .restoreDefaultResourceResolverLinkTagWriterFactorySingleton();
+        LinkTagWriterFactory
+            .restoreDefaultLinkTagWriterFactorySingleton();
     }
 
     private LinkTagDependencies createCollaboratorsMemento() {
@@ -168,24 +168,24 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordConstructNewLinkTagWriter() {
 
-        EasyMock.expect(getMockResourceSelectorLinkTagWriterFactory()
-                .createResourceSelectorLinkTagWriter(getMockDevice(),
+        EasyMock.expect(getMockLinkTagWriterFactory()
+                .createLinkTagWriter(getMockDevice(),
                         Arrays.asList(createRelDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
                         getRequestedCssResourcePath(),
                         getCollaboratorsMemento()))
-                .andReturn(getMockResourceSelectorLinkTagWriter());
+                .andReturn(getMockLinkTagWriter());
     }
 
     private void recordCheckIfLinkTagWriterSeenBefore() {
 
-        EasyMock.expect(getMockResourceSelectorLinkTagWriter().getId()).andReturn(
+        EasyMock.expect(getMockLinkTagWriter().getId()).andReturn(
                 getRequestedCssResourcePath()).atLeastOnce();
     }
 
     private void recordLinkTagWriterDelegation() throws Exception {
 
-        getMockResourceSelectorLinkTagWriter().writeTag(getMockJspWriter());
+        getMockLinkTagWriter().writeTag(getMockJspWriter());
     }
 
     private void recordGetJspWriter() {
@@ -223,7 +223,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     private void setupExistingSimpleLinkTagWriter() {
         getLinkTagWriterMap().put(getRequestedCssResourcePath(),
-                new ResourceSelectorLinkTagWriter(getMockDevice(),
+                new LinkTagWriter(getMockDevice(),
                     null, getRequestedCssResourcePath(), createCollaboratorsMemento()));
     }
 
@@ -287,14 +287,14 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the linkTagWriterMap
      */
-    public Map<String, ResourceSelectorTagWriter> getLinkTagWriterMap() {
+    public Map<String, TagWriter> getLinkTagWriterMap() {
         return linkTagWriterMap;
     }
 
     /**
      * @param linkTagWriterMap the linkTagWriterMap to set
      */
-    public void setLinkTagWriterMap(final Map<String, ResourceSelectorTagWriter> linkTagWriterMap) {
+    public void setLinkTagWriterMap(final Map<String, TagWriter> linkTagWriterMap) {
         this.linkTagWriterMap = linkTagWriterMap;
     }
 
@@ -404,38 +404,38 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the mockResourceSelectorLinkTagWriter
+     * @return the mockLinkTagWriter
      */
-    public ResourceSelectorLinkTagWriter
-        getMockResourceSelectorLinkTagWriter() {
-        return mockResourceSelectorLinkTagWriter;
+    public LinkTagWriter
+        getMockLinkTagWriter() {
+        return mockLinkTagWriter;
     }
 
     /**
-     * @param mockResourceSelectorLinkTagWriter
-     *            the mockResourceSelectorLinkTagWriter to set
+     * @param mockLinkTagWriter
+     *            the mockLinkTagWriter to set
      */
-    public void setMockResourceSelectorLinkTagWriter(
-            final ResourceSelectorLinkTagWriter mockResourceSelectorLinkTagWriter) {
-        this.mockResourceSelectorLinkTagWriter =
-                mockResourceSelectorLinkTagWriter;
+    public void setMockLinkTagWriter(
+            final LinkTagWriter mockLinkTagWriter) {
+        this.mockLinkTagWriter =
+                mockLinkTagWriter;
     }
 
     /**
-     * @return the mockResourceSelectorLinkTagWriterFactory
+     * @return the mockLinkTagWriterFactory
      */
-    public ResourceSelectorLinkTagWriterFactory getMockResourceSelectorLinkTagWriterFactory() {
-        return mockResourceSelectorLinkTagWriterFactory;
+    public LinkTagWriterFactory getMockLinkTagWriterFactory() {
+        return mockLinkTagWriterFactory;
     }
 
     /**
-     * @param mockResourceSelectorLinkTagWriterFactory
-     *            the mockResourceSelectorLinkTagWriterFactory to
+     * @param mockLinkTagWriterFactory
+     *            the mockLinkTagWriterFactory to
      *            set
      */
-    public void setMockResourceSelectorLinkTagWriterFactory(
-            final ResourceSelectorLinkTagWriterFactory mockResourceSelectorLinkTagWriterFactory) {
-        this.mockResourceSelectorLinkTagWriterFactory = mockResourceSelectorLinkTagWriterFactory;
+    public void setMockLinkTagWriterFactory(
+            final LinkTagWriterFactory mockLinkTagWriterFactory) {
+        this.mockLinkTagWriterFactory = mockLinkTagWriterFactory;
     }
 
     public DynamicTagAttribute createRelDynamicAttribute() {

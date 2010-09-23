@@ -107,7 +107,7 @@ public class ResourceResolverServletTestCase extends
 
     @Test
     public void testDoGetWhenNoMappedResourcePathFound() throws Throwable {
-        recordGetResourceSelector();
+        recordGetResourceResolverEngine();
 
         recordGetDevice();
 
@@ -117,7 +117,7 @@ public class ResourceResolverServletTestCase extends
                 "/WEB-INF/view/home/home.jsp";
         recordGetRequestServletPath(requestedResourceServletPath);
 
-        recordGetNullResourcePathFromResourceSelector(
+        recordGetNullResourcePathFromResourceResolverEngine(
                 requestedResourceServletPath);
 
         replay();
@@ -138,7 +138,7 @@ public class ResourceResolverServletTestCase extends
 
     }
 
-    private void recordGetNullResourcePathFromResourceSelector(
+    private void recordGetNullResourcePathFromResourceResolverEngine(
             final String requestedResourceServletPath) throws IOException {
 
         EasyMock.expect(
@@ -165,7 +165,7 @@ public class ResourceResolverServletTestCase extends
 
     private void setupForRequestViaForward() throws ServletException,
             IOException {
-        recordGetResourceSelector();
+        recordGetResourceResolverEngine();
 
         recordGetDevice();
 
@@ -175,7 +175,7 @@ public class ResourceResolverServletTestCase extends
                 "/WEB-INF/view/home/home.jsp";
         recordGetRequestServletPath(requestedResourceServletPath);
 
-        recordGetResourcePathFromResourceSelector(
+        recordGetResourceFromResourceResolverEngine(
                 requestedResourceServletPath);
 
         final String actualResourceServletPath =
@@ -215,7 +215,7 @@ public class ResourceResolverServletTestCase extends
 
     private void setupForRequestViaInclude() throws ServletException,
             IOException {
-        recordGetResourceSelector();
+        recordGetResourceResolverEngine();
 
         recordGetDevice();
 
@@ -228,7 +228,7 @@ public class ResourceResolverServletTestCase extends
 
         recordGetRequestContextPath(webappContextPath);
 
-        recordGetResourcePathFromResourceSelector(
+        recordGetResourceFromResourceResolverEngine(
                 includedResourceServletPathWithoutContext);
 
         final String actualResourceServletPath =
@@ -297,7 +297,7 @@ public class ResourceResolverServletTestCase extends
                 getMockRequestDispatcher()).atLeastOnce();
     }
 
-    private void recordGetResourcePathFromResourceSelector(
+    private void recordGetResourceFromResourceResolverEngine(
             final String requestedResourceServletPath) throws IOException {
         EasyMock.expect(
                 getMockResourceResolverEngine()
@@ -323,7 +323,7 @@ public class ResourceResolverServletTestCase extends
                 getMockDevice()).atLeastOnce();
     }
 
-    private void recordGetResourceSelector() {
+    private void recordGetResourceResolverEngine() {
         getSpringMockServletContext().setAttribute(
                 WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
                 getMockWebApplicationContext());

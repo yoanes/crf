@@ -73,17 +73,17 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
     public List<MappedResourcePath> getAllResourcePaths(final Device device,
             final String requestedResourcePath) throws IOException {
 
-        for (final PathRestrictedResourceResolverEngine resourceSelector
+        for (final PathRestrictedResourceResolverEngine resourceResolverEngine
                 : getPathRestrictedResourceResolverEngines()) {
 
-            if (resourceSelector.isInterestedIn(requestedResourcePath)) {
-                debugLogFoundInterestedSelector(requestedResourcePath, resourceSelector);
+            if (resourceResolverEngine.isInterestedIn(requestedResourcePath)) {
+                debugLogFoundInterestedEngine(requestedResourcePath, resourceResolverEngine);
 
-                return resourceSelector.getAllResourcePaths(device, requestedResourcePath);
+                return resourceResolverEngine.getAllResourcePaths(device, requestedResourcePath);
             }
         }
 
-        debugLogNoInterestedSelectorFound(requestedResourcePath);
+        debugLogNoInterestedEngineFound(requestedResourcePath);
 
         return getDefaultResourceResolverEngine().getAllResourcePaths(device,
                 requestedResourcePath);
@@ -97,17 +97,17 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
     public MappedResourcePath getResourcePath(final Device device,
             final String requestedResourcePath) throws IOException {
 
-        for (final PathRestrictedResourceResolverEngine resourceSelector
+        for (final PathRestrictedResourceResolverEngine resourceResolverEngine
                 : getPathRestrictedResourceResolverEngines()) {
 
-            if (resourceSelector.isInterestedIn(requestedResourcePath)) {
-                debugLogFoundInterestedSelector(requestedResourcePath, resourceSelector);
+            if (resourceResolverEngine.isInterestedIn(requestedResourcePath)) {
+                debugLogFoundInterestedEngine(requestedResourcePath, resourceResolverEngine);
 
-                return resourceSelector.getResourcePath(device, requestedResourcePath);
+                return resourceResolverEngine.getResourcePath(device, requestedResourcePath);
             }
         }
 
-        debugLogNoInterestedSelectorFound(requestedResourcePath);
+        debugLogNoInterestedEngineFound(requestedResourcePath);
 
         return getDefaultResourceResolverEngine().getResourcePath(device,
                 requestedResourcePath);
@@ -158,22 +158,22 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
         return pathRestrictedResourceResolverEngines;
     }
 
-    private void debugLogFoundInterestedSelector(final String requestedResourcePath,
-            final PathRestrictedResourceResolverEngine selector) {
+    private void debugLogFoundInterestedEngine(final String requestedResourcePath,
+            final PathRestrictedResourceResolverEngine resourceResolverEngine) {
         if (logger.isDebugEnabled()) {
             logger
-                    .debug("Found a resourceSelector interested in requested path: '"
+                    .debug("Found a resourceResolverEngine interested in requested path: '"
                             + requestedResourcePath
-                            + "'. Selector: "
-                            + selector);
+                            + "'. Engine: "
+                            + resourceResolverEngine);
         }
     }
 
-    private void debugLogNoInterestedSelectorFound(
+    private void debugLogNoInterestedEngineFound(
             final String requestedResourcePath) {
         if (logger.isDebugEnabled()) {
             logger
-                    .debug("No interested resourceSelector was found for requested path: '"
+                    .debug("No interested resourceResolverEngine was found for requested path: '"
                             + requestedResourcePath
                             + "'. Delegating to defaultResourceResolverEngine: "
                             + getDefaultResourceResolverEngine());

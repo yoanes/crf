@@ -7,26 +7,26 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
 import au.com.sensis.mobile.crf.config.DeploymentVersion;
+import au.com.sensis.mobile.crf.service.CssBundleFactory;
 import au.com.sensis.mobile.crf.service.MappedResourcePath;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
- * Simple implementation of {@link ResourceSelectorTagWriter} that outputs a link tag in the
+ * Simple implementation of {@link TagWriter} that outputs a link tag in the
  * default namespace.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWriter {
+public class LinkTagWriter implements TagWriter {
 
     private final Device device;
     private final List<DynamicTagAttribute> dynamicAttributes;
     private final String href;
 
-    private final ScriptTagDependencies scriptTagDependencies;
+    private final LinkTagDependencies linkTagDependencies;
 
     /**
      * Default constructor.
@@ -38,18 +38,17 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
      *            tag attributes to be written out.
      * @param href
      *            Href attribute of the tag to be written.
-     * @param scriptTagDependencies Singleton collaborators.
+     * @param linkTagDependencies Singleton collaborators.
      */
-    public ResourceSelectorScriptTagWriter(
+    public LinkTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes, final String href,
-            final ScriptTagDependencies scriptTagDependencies) {
+            final LinkTagDependencies linkTagDependencies) {
         this.device = device;
         this.dynamicAttributes = dynamicAttributes;
         this.href = href;
-        this.scriptTagDependencies = scriptTagDependencies;
+        this.linkTagDependencies = linkTagDependencies;
     }
-
 
     /**
      * {@inheritDoc}
@@ -75,8 +74,9 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void writeTag(final JspWriter jspWriter) throws IOException, JspException {
+    public void writeTag(final JspWriter jspWriter) throws IOException,
+            JspException {
+
         if (getDeploymentVersion().isDevPlatform()) {
             writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
         } else {
@@ -87,7 +87,6 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
             final List<MappedResourcePath> allMappedResourcePaths) throws IOException {
-
         if (allMappedResourcePaths.isEmpty()) {
             logNoResourcesFoundWarning();
 
@@ -104,12 +103,15 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
 
         if (allMappedResourcePaths.isEmpty()) {
             logNoResourcesFoundWarning();
+
         } else {
             final MappedResourcePath bundleResourcePath =
-                    getScriptBundleFactory().getBundle(allMappedResourcePaths);
+                    getCssBundleFactory().getBundle(allMappedResourcePaths);
 
             writeSingleLinkTag(jspWriter, bundleResourcePath);
+
         }
+
     }
 
     private void logNoResourcesFoundWarning() {
@@ -123,9 +125,9 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
 
     private void writeSingleLinkTag(final JspWriter jspWriter,
             final MappedResourcePath mappedResourcePath) throws IOException {
-        jspWriter.print("<script ");
+        jspWriter.print("<link ");
 
-        jspWriter.print("src=\""
+        jspWriter.print("href=\""
                 + getCollaboratorsMemento().getClientPathPrefix()
                 + mappedResourcePath.getNewResourcePath() + "\" ");
 
@@ -134,7 +136,7 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
                     + attribute.getValue() + "\" ");
         }
 
-        jspWriter.print("></script>\n");
+        jspWriter.print("/>\n");
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
@@ -143,7 +145,7 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
 
     private List<MappedResourcePath> getAllResourcePaths() throws IOException {
         final List<MappedResourcePath> allResourcePaths =
-                getResourceSelector().getAllResourcePaths(getDevice(),
+                getResourceResolverEngine().getAllResourcePaths(getDevice(),
                         getHref());
 
         assertNotNull(allResourcePaths);
@@ -154,8 +156,8 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
     private void assertNotNull(final List<MappedResourcePath> allResourcePaths) {
         if (allResourcePaths == null) {
             throw new IllegalStateException(
-                    "getResourceSelector.getAllResourcePaths "
-                            + "returned no results for '" + getHref() + ". "
+                    "getResourceResolverEngine.getAllResourcePaths "
+                            + "returned null for '" + getHref() + ". "
                             + "This should never happen !!!");
         }
     }
@@ -163,8 +165,7 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
     /**
      * @return the {@link ResourceResolverEngine}.
      */
-    private ResourceResolverEngine
-        getResourceSelector() {
+    private ResourceResolverEngine getResourceResolverEngine() {
         return getCollaboratorsMemento().getResourceResolverEngine();
     }
 
@@ -178,8 +179,8 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
     /**
      * @return the cssBundleFactory
      */
-    private ScriptBundleFactory getScriptBundleFactory() {
-        return getCollaboratorsMemento().getScriptBundleFactory();
+    private CssBundleFactory getCssBundleFactory() {
+        return getCollaboratorsMemento().getCssBundleFactory();
     }
 
     private DeploymentVersion getDeploymentVersion() {
@@ -187,10 +188,9 @@ public class ResourceSelectorScriptTagWriter implements ResourceSelectorTagWrite
     }
 
     /**
-     * @return the {@link ScriptTagDependencies}
+     * @return the linkTagDependencies
      */
-    private ScriptTagDependencies getCollaboratorsMemento() {
-        return scriptTagDependencies;
+    private LinkTagDependencies getCollaboratorsMemento() {
+        return linkTagDependencies;
     }
-
 }

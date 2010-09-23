@@ -21,8 +21,8 @@ public class CssBundleFactoryBean implements CssBundleFactory {
     }
 
 // TODO: these methods may be resurrected. They were originally in
-//    ResourceSelectorLinkTagWriter but
-// TDD applied to ResourceSelectorLinkTagWriter caused them to be simplified out.
+//    LinkTagWriter but
+// TDD applied to LinkTagWriter caused them to be simplified out.
 // I think they will belong in this CssBundleFactoryBean class instead.
 //    private String createBundleOutputDirPath(final List<MappedResourcePath> list) {
 //        final String baseResourcePath = getLastElement(list);

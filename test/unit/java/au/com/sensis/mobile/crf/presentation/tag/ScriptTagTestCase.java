@@ -36,7 +36,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     private ScriptTag objectUnderTest;
     private PageContext mockPageContext;
     private JspWriter mockJspWriter;
-    private Map<String, ResourceSelectorTagWriter> scriptTagWriterMap;
+    private Map<String, TagWriter> scriptTagWriterMap;
 
     private MockServletContext springMockServletContext;
     private WebApplicationContext mockWebApplicationContext;
@@ -47,9 +47,9 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
         = new DeploymentVersionTestData();
     private ScriptTagDependencies scriptTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private ResourceSelectorScriptTagWriter mockResourceSelectorScriptTagWriter;
-    private ResourceSelectorScriptTagWriterFactory
-        mockResourceSelectorScriptTagWriterFactory;
+    private ScriptTagWriter mockScriptTagWriter;
+    private ScriptTagWriterFactory
+        mockScriptTagWriterFactory;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
     /**
@@ -60,9 +60,9 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        ResourceSelectorScriptTagWriterFactory
-                .changeDefaultResourceSelectorScriptTagWriterFactorySingleton(
-                        getMockResourceSelectorScriptTagWriterFactory());
+        ScriptTagWriterFactory
+                .changeDefaultScriptTagWriterFactorySingleton(
+                        getMockScriptTagWriterFactory());
 
         setCollaboratorsMemento(createCollaboratorsMemento());
         setObjectUnderTest(new ScriptTag());
@@ -82,7 +82,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
         setSpringMockServletContext(new MockServletContext());
 
-        setResourceSelectorTagWriterMap(new HashMap<String, ResourceSelectorTagWriter>());
+        setTagWriterMap(new HashMap<String, TagWriter>());
     }
 
     /**
@@ -92,8 +92,8 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
      */
     @After
     public void tearDown() throws Exception {
-        ResourceSelectorScriptTagWriterFactory
-            .restoreDefaultResourceSelectorScriptTagWriterFactorySingleton();
+        ScriptTagWriterFactory
+            .restoreDefaultScriptTagWriterFactorySingleton();
     }
 
     private ScriptTagDependencies createCollaboratorsMemento() {
@@ -167,24 +167,24 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordConstructNewScriptTagWriter() {
 
-        EasyMock.expect(getMockResourceSelectorScriptTagWriterFactory()
-                .createResourceSelectorScriptTagWriter(getMockDevice(),
+        EasyMock.expect(getMockScriptTagWriterFactory()
+                .createScriptTagWriter(getMockDevice(),
                         Arrays.asList(createTitleDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
                         getRequestedJavaScriptResourcePath(),
                         getCollaboratorsMemento()))
-                .andReturn(getMockResourceSelectorScriptTagWriter());
+                .andReturn(getMockScriptTagWriter());
     }
 
     private void recordCheckIfScriptTagWriterSeenBefore() {
 
-        EasyMock.expect(getMockResourceSelectorScriptTagWriter().getId()).andReturn(
+        EasyMock.expect(getMockScriptTagWriter().getId()).andReturn(
                 getRequestedJavaScriptResourcePath()).atLeastOnce();
     }
 
     private void recordScriptTagWriterDelegation() throws Exception {
 
-        getMockResourceSelectorScriptTagWriter().writeTag(getMockJspWriter());
+        getMockScriptTagWriter().writeTag(getMockJspWriter());
     }
 
     private void recordGetJspWriter() {
@@ -198,7 +198,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                         ScriptTag.SCRIPT_WRITER_MAP_ATTRIBUTE_NAME,
                         PageContext.REQUEST_SCOPE)).andReturn(null);
         getMockPageContext().setAttribute(
-                ScriptTag.SCRIPT_WRITER_MAP_ATTRIBUTE_NAME, getResourceSelectorTagWriterMap(),
+                ScriptTag.SCRIPT_WRITER_MAP_ATTRIBUTE_NAME, getTagWriterMap(),
                 PageContext.REQUEST_SCOPE);
         recordGetExistingScriptWriterMap();
     }
@@ -221,9 +221,9 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     }
 
     private void setupExistingTagWriter() {
-        getResourceSelectorTagWriterMap().put(
+        getTagWriterMap().put(
                 getRequestedJavaScriptResourcePath(),
-                new ResourceSelectorScriptTagWriter(getMockDevice(), null,
+                new ScriptTagWriter(getMockDevice(), null,
                         getRequestedJavaScriptResourcePath(),
                         createCollaboratorsMemento()));
     }
@@ -239,7 +239,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
         EasyMock.expect(
                 getMockPageContext().getAttribute(
                         ScriptTag.SCRIPT_WRITER_MAP_ATTRIBUTE_NAME,
-                        PageContext.REQUEST_SCOPE)).andReturn(getResourceSelectorTagWriterMap())
+                        PageContext.REQUEST_SCOPE)).andReturn(getTagWriterMap())
                 .atLeastOnce();
     }
 
@@ -288,7 +288,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the scriptTagWriterMap
      */
-    public Map<String, ResourceSelectorTagWriter> getResourceSelectorTagWriterMap() {
+    public Map<String, TagWriter> getTagWriterMap() {
         return scriptTagWriterMap;
     }
 
@@ -296,8 +296,8 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
      * @param scriptTagWriterMap
      *            the scriptTagWriterMap to set
      */
-    public void setResourceSelectorTagWriterMap(
-            final Map<String, ResourceSelectorTagWriter> scriptTagWriterMap) {
+    public void setTagWriterMap(
+            final Map<String, TagWriter> scriptTagWriterMap) {
         this.scriptTagWriterMap = scriptTagWriterMap;
     }
 
@@ -406,39 +406,39 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the mockResourceSelectorScriptTagWriter
+     * @return the mockScriptTagWriter
      */
-    public ResourceSelectorScriptTagWriter
-        getMockResourceSelectorScriptTagWriter() {
-        return mockResourceSelectorScriptTagWriter;
+    public ScriptTagWriter
+        getMockScriptTagWriter() {
+        return mockScriptTagWriter;
     }
 
     /**
-     * @param mockResourceSelectorScriptTagWriter
-     *            the mockResourceSelectorScriptTagWriter to set
+     * @param mockScriptTagWriter
+     *            the mockScriptTagWriter to set
      */
-    public void setMockResourceSelectorScriptTagWriter(
-            final ResourceSelectorScriptTagWriter mockResourceSelectorScriptTagWriter) {
-        this.mockResourceSelectorScriptTagWriter =
-                mockResourceSelectorScriptTagWriter;
+    public void setMockScriptTagWriter(
+            final ScriptTagWriter mockScriptTagWriter) {
+        this.mockScriptTagWriter =
+                mockScriptTagWriter;
     }
 
     /**
-     * @return the mockResourceSelectorScriptTagWriterFactory
+     * @return the mockScriptTagWriterFactory
      */
-    public ResourceSelectorScriptTagWriterFactory getMockResourceSelectorScriptTagWriterFactory() {
-        return mockResourceSelectorScriptTagWriterFactory;
+    public ScriptTagWriterFactory getMockScriptTagWriterFactory() {
+        return mockScriptTagWriterFactory;
     }
 
     /**
-     * @param mockResourceSelectorScriptTagWriterFactory
-     *            the mockResourceSelectorScriptTagWriterFactory to set
+     * @param mockScriptTagWriterFactory
+     *            the mockScriptTagWriterFactory to set
      */
-    public void setMockResourceSelectorScriptTagWriterFactory(
-            final ResourceSelectorScriptTagWriterFactory
-                mockResourceSelectorScriptTagWriterFactory) {
-        this.mockResourceSelectorScriptTagWriterFactory =
-                mockResourceSelectorScriptTagWriterFactory;
+    public void setMockScriptTagWriterFactory(
+            final ScriptTagWriterFactory
+                mockScriptTagWriterFactory) {
+        this.mockScriptTagWriterFactory =
+                mockScriptTagWriterFactory;
     }
 
     public DynamicTagAttribute createTitleDynamicAttribute() {

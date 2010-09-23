@@ -18,7 +18,7 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public abstract class AbstractResourceSelectorTag extends
+public abstract class AbstractTag extends
         SimpleTagSupport implements DynamicAttributes {
 
     private String href;

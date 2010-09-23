@@ -20,11 +20,11 @@ import au.com.sensis.mobile.web.component.core.tag.ScriptTag;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class LinkTag extends AbstractDuplicatePreventingResourceSelectorTag {
+public class LinkTag extends AbstractDuplicatePreventingTag {
 
     /**
-     * Attribute name used to store a map of ({@link ResourceSelectorTagWriter#getId()},
-     * {@link ResourceSelectorTagWriter}) pairs.
+     * Attribute name used to store a map of ({@link TagWriter#getId()},
+     * {@link TagWriter}) pairs.
      */
     public static final String LINK_WRITER_MAP_ATTRIBUTE_NAME =
             ScriptTag.class.getName() + ".linkTagWriterMap";
@@ -33,10 +33,10 @@ public class LinkTag extends AbstractDuplicatePreventingResourceSelectorTag {
      * {@inheritDoc}
      */
     @Override
-    protected ResourceSelectorTagWriter createResourceSelectorTagWriter() {
-        return ResourceSelectorLinkTagWriterFactory
-                .getResourceResolverLinkTagWriterFactorySingleton()
-                .createResourceSelectorLinkTagWriter(
+    protected TagWriter createTagWriter() {
+        return LinkTagWriterFactory
+                .getSingletonInstance()
+                .createLinkTagWriter(
                         getDevice(), getDynamicAttributes(), getHref(),
                         getCollaboratorsMemento());
     }
@@ -55,7 +55,7 @@ public class LinkTag extends AbstractDuplicatePreventingResourceSelectorTag {
      * {@inheritDoc}
      */
     @Override
-    public String getResourceSelectorTagWriterMapAttributeName() {
+    public String getTagWriterMapAttributeName() {
         return LINK_WRITER_MAP_ATTRIBUTE_NAME;
     }
 }
