@@ -17,7 +17,7 @@ import au.com.sensis.mobile.crf.util.PropertiesLoader;
 
 /**
  * {@link JavaScriptFileFinder} for returning all JavaScript files for
- * a {@link Resource} that corresponds to a JavaScript bundle.
+ * a {@link Resource} that corresponds to a JavaScript package.
  *
  * @author Adrian.Koh2@sensis.com.au
  *
@@ -29,8 +29,8 @@ public class JavaScriptFileFinderBean implements JavaScriptFileFinder {
     private static final String ORDER_PROPERTY_DEFAULT_VALUE = "*.js";
 
     private final PropertiesLoader propertiesLoader;
-    private final String bundlesPropertiesFileName;
-    private final String bundleOrderPropertyName;
+    private final String packagePropertiesFileName;
+    private final String packageOrderPropertyName;
 
     /**
      * Constructor.
@@ -38,37 +38,33 @@ public class JavaScriptFileFinderBean implements JavaScriptFileFinder {
      * @param propertiesLoader
      *            {@link PropertiesLoader} to use to load {@link Properties}
      *            from {@link File}s.
-     * @param bundlesPropertiesFileName
-     *            Name of the properties file for controlling bundling
+     * @param packagePropertiesFileName
+     *            Name of the properties file for controlling packaging
      *            parameters.
-     * @param bundleOrderPropertyName
+     * @param packageOrderPropertyName
      *            Name of the property for controlling the order of files added
-     *            to bundles.
+     *            to packages.
      */
     public JavaScriptFileFinderBean(
             final PropertiesLoader propertiesLoader,
-            final String bundlesPropertiesFileName,
-            final String bundleOrderPropertyName) {
+            final String packagePropertiesFileName,
+            final String packageOrderPropertyName) {
         this.propertiesLoader = propertiesLoader;
-        this.bundlesPropertiesFileName = bundlesPropertiesFileName;
-        this.bundleOrderPropertyName = bundleOrderPropertyName;
+        this.packagePropertiesFileName = packagePropertiesFileName;
+        this.packageOrderPropertyName = packageOrderPropertyName;
     }
 
     /**
-     * The path is expanded
-     * to a list of files that correspond to the bundle. Otherwise,
-     * {@link Resource#getNewFile()} is returned.
-     * <p>
-     * Bundle expansion occurs by finding all files in
-     * the given dir that match the
-     * {@link #getBundleOrderPropertyName()} property found in the
-     * {@link #getBundlesPropertiesFileName()} properties file. If no such
+     * All JavaScript files in the given dir are found. The order of the files
+     * is controlled by the file that matches the
+     * {@link #getPackageOrderPropertyName()} property found in the
+     * {@link #getPackagePropertiesFileName()} properties file. If no such
      * property is found or no such file is found, then the order defaults to
      * {@link #ORDER_PROPERTY_DEFAULT_VALUE}. This default relies on the
      * JVM/platform default for file ordering.
-     * </p>
      *
      * @return May not be null.
+     *
      * {@inheritDoc}
      */
     @Override
@@ -78,8 +74,7 @@ public class JavaScriptFileFinderBean implements JavaScriptFileFinder {
         final LinkedHashSet<File> foundFilesSet = new LinkedHashSet<File>();
         for (final String wildcard : createWildcards(bundleOrderProperty)) {
             // We treat each wildcard separately because the order of returned
-            // files
-            // is significant.
+            // files is significant.
             final File[] foundFiles =
                     getFileIoFacade().list(dir,
                             new String[] { wildcard.trim() });
@@ -94,7 +89,7 @@ public class JavaScriptFileFinderBean implements JavaScriptFileFinder {
     private String getBundleOrderProperty(
             final File dir) throws IOException {
         return loadBundlesPropertiesWithDefaults(dir).getProperty(
-                getBundleOrderPropertyName());
+                getPackageOrderPropertyName());
     }
 
     private String[] createWildcards(final String bundleOrderProperty) {
@@ -109,21 +104,21 @@ public class JavaScriptFileFinderBean implements JavaScriptFileFinder {
     private Properties loadBundlesPropertiesWithDefaults(
             final File dir) throws IOException {
 
-        final File bundlePropertiesFile =
-                createBundlePropertiesFile(dir);
+        final File packagePropertiesFile =
+                createPackagePropertiesFile(dir);
         final Properties properties =
                 getPropertiesLoader().loadPropertiesNotNull(
-                        bundlePropertiesFile);
+                        packagePropertiesFile);
 
-        if (properties.getProperty(getBundleOrderPropertyName()) == null) {
+        if (properties.getProperty(getPackageOrderPropertyName()) == null) {
             setDefaultOrderProperty(properties);
         } else {
             validateOrderProperty(properties
-                    .getProperty(getBundleOrderPropertyName()),
-                    bundlePropertiesFile);
+                    .getProperty(getPackageOrderPropertyName()),
+                    packagePropertiesFile);
         }
 
-        if (!properties.getProperty(getBundleOrderPropertyName()).trim()
+        if (!properties.getProperty(getPackageOrderPropertyName()).trim()
                 .endsWith(ORDER_PROPERTY_DEFAULT_VALUE)) {
             appendDefaultOrderPropertyValue(properties);
         }
@@ -131,13 +126,13 @@ public class JavaScriptFileFinderBean implements JavaScriptFileFinder {
     }
 
     private void validateOrderProperty(final String property,
-            final File bundlePropertiesFile) {
+            final File packagePropertiesFile) {
         final String[] splitProperty = createWildcards(property);
         for (final String wildcard : splitProperty) {
             if (StringUtils.isBlank(wildcard)) {
                 throw new ConfigurationRuntimeException(
                         "Configuration file "
-                                + bundlePropertiesFile
+                                + packagePropertiesFile
                                 + " contains an error. order property "
                                 + "must be a comma separated list "
                                 + "of file patterns (with optional * and ? wildcards). Was: '"
@@ -147,31 +142,31 @@ public class JavaScriptFileFinderBean implements JavaScriptFileFinder {
     }
 
     private void appendDefaultOrderPropertyValue(final Properties properties) {
-        final String orderProperty = properties.getProperty(getBundleOrderPropertyName());
-        properties.setProperty(getBundleOrderPropertyName(),
+        final String orderProperty = properties.getProperty(getPackageOrderPropertyName());
+        properties.setProperty(getPackageOrderPropertyName(),
                 orderProperty + ORDER_PROPERTY_SPLIT_CHAR + ORDER_PROPERTY_DEFAULT_VALUE);
 
     }
 
     private void setDefaultOrderProperty(final Properties properties) {
-        properties.setProperty(getBundleOrderPropertyName(),
+        properties.setProperty(getPackageOrderPropertyName(),
                 ORDER_PROPERTY_DEFAULT_VALUE);
     }
 
-    private File createBundlePropertiesFile(final File dir) {
-        return new File(dir, getBundlesPropertiesFileName());
+    private File createPackagePropertiesFile(final File dir) {
+        return new File(dir, getPackagePropertiesFileName());
     }
 
     private PropertiesLoader getPropertiesLoader() {
         return propertiesLoader;
     }
 
-    private String getBundlesPropertiesFileName() {
-        return bundlesPropertiesFileName;
+    private String getPackagePropertiesFileName() {
+        return packagePropertiesFileName;
     }
 
-    private String getBundleOrderPropertyName() {
-        return bundleOrderPropertyName;
+    private String getPackageOrderPropertyName() {
+        return packageOrderPropertyName;
     }
 
 }

@@ -17,7 +17,7 @@ public interface JavaScriptFileFinder {
      * @param dir
      *            Directory to find the files in.
      * @return all JavaScript files in the given directory, sorted according to
-     *         the dependencies of the files.
+     *         the dependencies of the files. May not be null.
      * @throws IOException
      *             Thrown if any IO error occurs.
      */
