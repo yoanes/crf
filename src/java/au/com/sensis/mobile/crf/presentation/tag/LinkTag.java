@@ -22,6 +22,8 @@ import au.com.sensis.mobile.web.component.core.tag.ScriptTag;
  */
 public class LinkTag extends AbstractDuplicatePreventingTag {
 
+    private String href;
+    
     /**
      * Attribute name used to store a map of ({@link TagWriter#getId()},
      * {@link TagWriter}) pairs.
@@ -57,5 +59,26 @@ public class LinkTag extends AbstractDuplicatePreventingTag {
     @Override
     public String getTagWriterMapAttributeName() {
         return LINK_WRITER_MAP_ATTRIBUTE_NAME;
+    }
+    
+    /**
+     * @return the href
+     */
+    public final String getPathAttribute() {
+        return getHref();
+    }
+    
+    /**
+     * @return the href
+     */
+    public final String getHref() {
+        return href;
+    }
+
+    /**
+     * @param href the href to set
+     */
+    public final void setHref(final String href) {
+        this.href = href;
     }
 }

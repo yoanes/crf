@@ -140,7 +140,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testHref: '"
                                 + testHref + "'",
-                        "href must not start with '..' or '/'. Was: '" + testHref + "'",
+                        "path must not start with '..' or '/'. Was: '" + testHref + "'",
                         e.getMessage());
             }
         }

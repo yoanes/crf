@@ -27,7 +27,7 @@ public abstract class AbstractDuplicatePreventingTag extends
      */
     @Override
     public final void doTag() throws JspException, IOException {
-        validateHrefAttribute();
+        validatePathAttribute(getPathAttribute());
 
         initTagWriterMapInJspContextIfRequired();
 
@@ -58,6 +58,11 @@ public abstract class AbstractDuplicatePreventingTag extends
      */
     protected abstract TagWriter createTagWriter();
 
+    /**
+     * @return the value of the path attribute (either href or src, depending on the tag).-
+     */
+    protected abstract String getPathAttribute();
+    
     /**
      * If ({@link #getTagWriterMapFromJspContext()} returns
      * null, creates a new Map and sets it into the request.

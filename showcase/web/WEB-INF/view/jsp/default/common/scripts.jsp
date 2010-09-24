@@ -33,11 +33,11 @@
   -         resources/js/webkit/common/decorations.js  
   -         resources/js/applewebkit/common/decorations.js
   --%>
-<crf:script href="common/main.js" type="text/javascript" device="${context.device}"/> 
-<crf:script href="common/columns.js" type="text/javascript" device="${context.device}"/> 
-<crf:script href="results/results.js" type="text/javascript"  device="${context.device}"/> 
-<crf:script href="common/jazz.js" type="text/javascript" device="${context.device}"/> 
-<crf:script href="common/decorations.js" type="text/javascript"  device="${context.device}"/>
+<crf:script src="common/main.js" type="text/javascript" device="${context.device}"/> 
+<crf:script src="common/columns.js" type="text/javascript" device="${context.device}"/> 
+<crf:script src="results/results.js" type="text/javascript"  device="${context.device}"/> 
+<crf:script src="common/jazz.js" type="text/javascript" device="${context.device}"/> 
+<crf:script src="common/decorations.js" type="text/javascript"  device="${context.device}"/>
 
 <%-- 
   - Acceptance criteria covered by the links on this page (Jira CRF-31).
@@ -81,8 +81,8 @@
   -         resources/js/webkit/animation/animation1.js
   -         resources/js/webkit/animation/animation2.js
   --%>
-<crf:script href="fielddecorators/package" type="text/javascript" device="${context.device}"/> 
-<crf:script href="grid/package" type="text/javascript" device="${context.device}"/> 
-<crf:script href="component/map/package" type="text/javascript" device="${context.device}"/> 
-<crf:script href="layers/package" type="text/javascript" device="${context.device}"/> 
-<crf:script href="animation/package" type="text/javascript" device="${context.device}"/> 
+<crf:script src="fielddecorators/package" type="text/javascript" device="${context.device}"/> 
+<crf:script src="grid/package" type="text/javascript" device="${context.device}"/> 
+<crf:script src="component/map/package" type="text/javascript" device="${context.device}"/> 
+<crf:script src="layers/package" type="text/javascript" device="${context.device}"/> 
+<crf:script src="animation/package" type="text/javascript" device="${context.device}"/> 

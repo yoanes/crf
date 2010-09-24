@@ -21,24 +21,9 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 public abstract class AbstractTag extends
         SimpleTagSupport implements DynamicAttributes {
 
-    private String href;
     private Device device;
     private final List<DynamicTagAttribute> dynamicAttributes
         = new ArrayList<DynamicTagAttribute>();
-
-    /**
-     * @return the href
-     */
-    public final String getHref() {
-        return href;
-    }
-
-    /**
-     * @param href the href to set
-     */
-    public final void setHref(final String href) {
-        this.href = href;
-    }
 
     /**
      * {@inheritDoc}
@@ -71,21 +56,20 @@ public abstract class AbstractTag extends
     }
 
     /**
-     * Validate {@link #getHref()}.
+     * Validate the tag attribute for the path (either src or href).
      *
      * @throws IllegalArgumentException
-     *             Thrown if {@link #getHref()} is invalid.
+     *             Thrown if path is invalid.
      */
-    protected final void validateHrefAttribute()
+    protected final void validatePathAttribute(String path)
             throws IllegalArgumentException {
         // NOTE: we prefer this simple approach to validation over using the JEE
         // TagExtraInfo approach since we do not see a need for translation time
         // validation.
-        if (StringUtils.isBlank(getHref()) || getHref().startsWith("..")
-                || getHref().startsWith("/")) {
+        if (StringUtils.isBlank(path) || path.startsWith("..")
+                || path.startsWith("/")) {
             throw new IllegalArgumentException(
-                    "href must not start with '..' or '/'. Was: '" + getHref()
-                            + "'");
+                    "path must not start with '..' or '/'. Was: '" + path + "'");
         }
 
     }

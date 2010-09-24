@@ -76,7 +76,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().setDevice(getMockDevice());
         getObjectUnderTest().setJspContext(getMockPageContext());
-        getObjectUnderTest().setHref(getResourcePathTestData()
+        getObjectUnderTest().setSrc(getResourcePathTestData()
                 .getRequestedImageResourcePath());
 
         setSpringMockServletContext(new MockServletContext());
@@ -107,24 +107,24 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testDoTagWithInvalidHref() throws Throwable {
-        final String[] testHrefs =
+        final String[] testSrcs =
                 { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
                         "  " };
 
-        for (final String testHref : testHrefs) {
+        for (final String testSrc : testSrcs) {
             try {
-                getObjectUnderTest().setHref(testHref);
+                getObjectUnderTest().setSrc(testSrc);
                 getObjectUnderTest().doTag();
 
-                Assert.fail("IllegalArgumentException expected for testHref: '"
-                        + testHref + "'");
+                Assert.fail("IllegalArgumentException expected for testSrc: '"
+                        + testSrc + "'");
             } catch (final IllegalArgumentException e) {
 
                 Assert.assertEquals(
-                        "IllegalArgumentException has wrong message for testHref: '"
-                                + testHref + "'",
-                        "href must not start with '..' or '/'. Was: '"
-                                + testHref + "'", e.getMessage());
+                        "IllegalArgumentException has wrong message for testSrc: '"
+                                + testSrc + "'",
+                        "path must not start with '..' or '/'. Was: '"
+                                + testSrc + "'", e.getMessage());
             }
         }
 
@@ -209,7 +209,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().setDevice(getMockDevice());
         getObjectUnderTest().setJspContext(getMockPageContext());
-        getObjectUnderTest().setHref(
+        getObjectUnderTest().setSrc(
                 getResourcePathTestData().getRequestedImageResourcePath());
 
         for (final DynamicTagAttribute dynamicTagAttribute : testData

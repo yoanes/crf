@@ -18,9 +18,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-// TODO: refactor so that href attribute is src.
 public class ScriptTag extends AbstractDuplicatePreventingTag {
 
+    private String src;
+    
     /**
      * Attribute name used to store a map of ({@link TagWriter#getId()},
      * {@link TagWriter}) pairs.
@@ -36,7 +37,7 @@ public class ScriptTag extends AbstractDuplicatePreventingTag {
         return ScriptTagWriterFactory
             .getSingletonInstance()
                 .createScriptTagWriter(getDevice(),
-                        getDynamicAttributes(), getHref(),
+                        getDynamicAttributes(), getSrc(),
                         getCollaboratorsMemento());
     }
 
@@ -57,5 +58,26 @@ public class ScriptTag extends AbstractDuplicatePreventingTag {
     public String getTagWriterMapAttributeName() {
         return SCRIPT_WRITER_MAP_ATTRIBUTE_NAME;
     }
+    
+    /**
+     * @return the src
+     */
+    public final String getPathAttribute() {
+        return getSrc();
+    }
+    
+    /**
+     * @return the src
+     */
+    public final String getSrc() {
+        return src;
+    }
+
+    /**
+     * @param href the src to set
+     */
+    public final void setSrc(final String src) {
+        this.src = src;
+    }    
 }
 

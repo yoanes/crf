@@ -20,20 +20,21 @@ import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-// TODO: refactor so that href attribute is src.
 public class ImageTag extends AbstractTag {
 
+    private String src;
+    
     /**
      * {@inheritDoc}
      */
     @Override
     // TODO: validate that abstract path has correct extension.
     public final void doTag() throws JspException, IOException {
-        validateHrefAttribute();
+        validatePathAttribute(getSrc());
 
         final Resource resource =
                 getResourceResolverEngine().getResourcePath(getDevice(),
-                        getHref());
+                        getSrc());
         if (resource != null) {
             if (!resource.newPathEndsWithDotNull()) {
                 writeSingleImageTag(getJspContext().getOut(),
@@ -43,7 +44,7 @@ public class ImageTag extends AbstractTag {
             if (getResourceResolutionWarnLogger().isWarnEnabled()) {
                 getResourceResolutionWarnLogger().warn(
                         "No resource was found for requested resource '"
-                                + getHref() + "' and device " + getDevice());
+                                + getSrc() + "' and device " + getDevice());
             }
         }
     }
@@ -83,4 +84,19 @@ public class ImageTag extends AbstractTag {
     private ResourceResolverEngine getResourceResolverEngine() {
         return getTagDependencies().getResourceResolverEngine();
     }
+
+    /**
+     * @return the src
+     */
+    public final String getSrc() {
+        return src;
+    }
+
+    /**
+     * @param href the src to set
+     */
+    public final void setSrc(final String src) {
+        this.src = src;
+    }
+    
 }

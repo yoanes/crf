@@ -30,5 +30,5 @@
   -         resources/images/applewebkit/common/app_store.png
   --%>
 
-<div><crf:image href="common/unmetered.image" id="unmeteredImg" alt="Unmetered" title="Unmetered" device="${context.device}"/></div>
-<div><crf:image href="common/app_store.image" id="appStoreImg" alt="App Store" title="App Store" device="${context.device}"/></div>
+<div><crf:img src="common/unmetered.image" id="unmeteredImg" alt="Unmetered" title="Unmetered" device="${context.device}"/></div>
+<div><crf:img src="common/app_store.image" id="appStoreImg" alt="App Store" title="App Store" device="${context.device}"/></div>

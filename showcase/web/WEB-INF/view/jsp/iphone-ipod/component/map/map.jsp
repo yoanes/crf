@@ -15,7 +15,7 @@
   - All other devices:
   -     no img tag output.
   --%>
-<div><crf:image href="component/map/in.image" id="mapZoomIn" alt="Map Zoom In" title="Map Zoom In" device="${context.device}"/></div>
+<div><crf:img src="component/map/in.image" id="mapZoomIn" alt="Map Zoom In" title="Map Zoom In" device="${context.device}"/></div>
 
 <%--
   - Acceptance criteria covered by the following div (Jira CRF-27):

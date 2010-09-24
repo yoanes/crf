@@ -33,8 +33,8 @@
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.ScriptTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
-            <name>href</name>
-            <description>The href of the script resource.</description>
+            <name>src</name>
+            <description>The src of the script resource.</description>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -48,13 +48,13 @@
         <dynamic-attributes>true</dynamic-attributes>
     </tag>
     <tag>
-        <name>image</name>
+        <name>img</name>
         <description>Render an img tag.</description>
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.ImageTag</tag-class>
         <body-content>empty</body-content>
         <attribute>
-            <name>href</name>
-            <description>The href of the img resource.</description>
+            <name>src</name>
+            <description>The src of the img resource.</description>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
