@@ -16,35 +16,39 @@ import au.com.sensis.wireless.web.mobile.HeaderInterpreter;
  */
 public class ContextSetUpFIlterThatWorks extends MobileContextSetUpFilter {
 
-	private HeaderInterpreter headerInterpreter;
+    private HeaderInterpreter headerInterpreter;
 
-	/**
+    /**
      * This method is called by the server before the filter goes into service.
      *
-     * @param config    the {@link FilterConfig} passed by the servlet engine.
+     * @param filterConfig
+     *            the {@link FilterConfig} passed by the servlet engine.
      *
-     * @throws ServletException if the config doesn't contain mandatory params.
+     * @throws ServletException
+     *             if the config doesn't contain mandatory params.
      */
     @Override
-    public void init(final FilterConfig filterConfig)
-            throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
 
         setServletContext(filterConfig.getServletContext());
 
-//        setDeviceRecognition(new VolantisDeviceRecognition());
+        // setDeviceRecognition(new VolantisDeviceRecognition());
         setHeaderInterpreter(newHeaderInterpreter());
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected HeaderInterpreter newHeaderInterpreter() {
 
         return getHeaderInterpreter();
-        //return new WhereisMobileHeaderInterpreter();
+        // return new WhereisMobileHeaderInterpreter();
     }
 
     /**
-     * @param headerInterpreter the headerInterpreter to set.
+     * @param headerInterpreter
+     *            the headerInterpreter to set.
      */
     @Override
     public void setHeaderInterpreter(final HeaderInterpreter headerInterpreter) {
@@ -53,7 +57,7 @@ public class ContextSetUpFIlterThatWorks extends MobileContextSetUpFilter {
     }
 
     /**
-     * @return  the headerInterpreter.
+     * @return the headerInterpreter.
      */
     @Override
     public HeaderInterpreter getHeaderInterpreter() {
@@ -61,8 +65,8 @@ public class ContextSetUpFIlterThatWorks extends MobileContextSetUpFilter {
         return headerInterpreter;
     }
 
-    /* (non-Javadoc)
-     * @see au.com.sensis.wireless.web.filter.MobileContextSetUpFilter#setDeviceRecognition(au.com.sensis.wireless.common.volantis.devicerepository.api.DeviceRecognition)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public void setDeviceRecognition(final DeviceRecognition deviceRecognition) {

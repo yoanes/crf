@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import au.com.sensis.mobile.crf.presentation.HttpServletRequestInterrogator;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**

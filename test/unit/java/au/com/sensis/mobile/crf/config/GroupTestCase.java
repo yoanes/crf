@@ -9,7 +9,6 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 
-import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.GroupEvaluationRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.ImageCategory;

@@ -1,8 +1,5 @@
 package au.com.sensis.mobile.crf.config;
 
-import au.com.sensis.mobile.crf.config.DefaultGroup;
-import au.com.sensis.mobile.crf.config.Group;
-
 /**
  * Test data for the {@link Group} class.
  *
