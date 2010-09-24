@@ -1,8 +1,8 @@
 package au.com.sensis.mobile.crf.service;
 
-import java.io.IOException;
 import java.util.List;
 
+import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -11,8 +11,6 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-//TODO: I suspect that all methods should either declare a thrown IOException or some
-// crf specific wrapper.
 public interface ResourceResolverEngine {
 
     /**
@@ -25,11 +23,10 @@ public interface ResourceResolverEngine {
      *            Path of the resource requested.
      * @return Return the first concrete resource path for the requested
      *         abstract path. If none is found, null is returned.
-     * @throws IOException Thrown if an IO error occurs.
+     * @throws ResourceResolutionRuntimeException Thrown if an IO error occurs.
      */
-    // TODO: reconsider IOException
     Resource getResourcePath(Device device, String requestedResourcePath)
-        throws IOException;
+        throws ResourceResolutionRuntimeException;
 
     /**
      * List of all concrete resource paths (not just the first found)
@@ -42,9 +39,8 @@ public interface ResourceResolverEngine {
      * @return List of all concrete resource paths that correspond to the
      *         requested path. May not be null. If no concrete resource paths are found,
      *         an empty {@link List} is returned.
-     * @throws IOException Thrown if an IO error occurs.
+     * @throws ResourceResolutionRuntimeException Thrown if an IO error occurs.
      */
-    // TODO: reconsider IOException
     List<Resource> getAllResourcePaths(Device device, String requestedResourcePath)
-        throws IOException;
+        throws ResourceResolutionRuntimeException;
 }

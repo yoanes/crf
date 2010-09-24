@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.GroupTestData;
+import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
@@ -340,6 +342,34 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
                 actualResources);
         Assert.assertTrue("actualResources should be empty",
                 actualResources.isEmpty());
+
+    }
+
+    @Test
+    public void testResolveWhenPackageRequestedAndIOExceptionWhenFindingFiles()
+        throws Throwable {
+
+            final IOException expectedWrappedException = new IOException("test");
+            EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
+                    getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
+                        .getNewFile())).andThrow(expectedWrappedException);
+
+            replay();
+
+            try {
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData()
+                                .getRequestedPackageScriptResourcePath(),
+                        getGroupTestData().createIPhoneGroup());
+
+                Assert.fail("ResourceResolutionRuntimeException expected");
+            } catch (final ResourceResolutionRuntimeException e) {
+                Assert.assertEquals("ResourceResolutionRuntimeException has wrong message",
+                        "Unexpected error when resolving requested resource '"
+                        + getResourcePathTestData().getRequestedPackageScriptResourcePath()
+                        + "' for group " + getGroupTestData().createIPhoneGroup(),
+                        e.getMessage());
+            }
 
     }
 

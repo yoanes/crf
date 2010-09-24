@@ -1,6 +1,5 @@
 package au.com.sensis.mobile.crf.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -58,7 +58,7 @@ public class PathPrefixRestrictedResourceResolverEngineBean
      */
     @Override
     public List<Resource> getAllResourcePaths(final Device device,
-            final String requestedResourcePath) throws IOException {
+            final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         if (isInterestedIn(requestedResourcePath)) {
             debugLogInterest(requestedResourcePath);
@@ -82,7 +82,7 @@ public class PathPrefixRestrictedResourceResolverEngineBean
      */
     @Override
     public Resource getResourcePath(final Device device,
-            final String requestedResourcePath) throws IOException {
+            final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         if (isInterestedIn(requestedResourcePath)) {
             debugLogInterest(requestedResourcePath);

@@ -9,9 +9,6 @@ package au.com.sensis.mobile.crf.showcase.selenium;
 public abstract class AbstractSeleniumIntegrationTestCase
     extends au.com.sensis.wireless.test.selenium.AbstractSeleniumIntegrationTestCase {
 
-    /**
-     * TODO: shouldn't have to override.
-     */
     @Override
     protected void openHome() {
         openUrl("http://localhost:8080/bdp.action");

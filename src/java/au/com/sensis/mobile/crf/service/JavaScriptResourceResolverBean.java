@@ -11,6 +11,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 
 /**
  * {@link ResourceResolver} that maps abstract Script paths to real Script paths.
@@ -98,12 +99,10 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      */
     @Override
     protected List<Resource> doResolve(final String requestedResourcePath,
-            final Group group) throws IOException {
+            final Group group) throws ResourceResolutionRuntimeException {
 
         if (isPackageRequested(requestedResourcePath)) {
-            final File packageDir = getPackageDir(requestedResourcePath, group);
-            return findBundleResources(requestedResourcePath, packageDir);
-
+            return findBundleResources(requestedResourcePath, group);
         } else {
             return super.doResolve(requestedResourcePath, group);
         }
@@ -119,18 +118,31 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     }
 
     private List<Resource> findBundleResources(
+            final String requestedResourcePath, final Group group) {
+
+        try {
+            final File packageDir = getPackageDir(requestedResourcePath, group);
+            return doFindBundleResources(requestedResourcePath, packageDir);
+        } catch (final IOException e) {
+            throw new ResourceResolutionRuntimeException(
+                    "Unexpected error when resolving requested resource '"
+                            + requestedResourcePath + "' for group " + group, e);
+        }
+    }
+
+    private List<Resource> doFindBundleResources(
             final String requestedResourcePath,
             final File javascriptFilesBaseDir) throws IOException {
 
         final List<Resource> result = new ArrayList<Resource>();
 
         final List<File> foundFiles =
-                getJavaScriptFileFinder().findFiles(javascriptFilesBaseDir);
+            getJavaScriptFileFinder().findFiles(javascriptFilesBaseDir);
         if (foundFiles != null) {
             for (final File file : foundFiles) {
                 final Resource currResource =
-                        createResource(requestedResourcePath,
-                                getRootResourceDirRelativePath(file));
+                    createResource(requestedResourcePath,
+                            getRootResourceDirRelativePath(file));
                 result.add(currResource);
             }
         }

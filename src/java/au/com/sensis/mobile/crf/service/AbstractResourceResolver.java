@@ -1,7 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +10,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 
 /**
@@ -95,7 +95,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      */
     @Override
     public List<Resource> resolve(final String requestedResourcePath,
-            final Group group) throws IOException {
+            final Group group) throws ResourceResolutionRuntimeException {
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
 
             debugLogAttemptingResolution(requestedResourcePath);
@@ -131,11 +131,11 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            for the current request belongs to.
      *
      * @return {@link List} of {@link Resource}s that exist.
-     * @throws IOException
-     *             Thrown if any IO error occurs.
+     * @throws ResourceResolutionRuntimeException
+     *             Thrown if any error occurs.
      */
     protected List<Resource> doResolve(final String requestedResourcePath,
-            final Group group) throws IOException {
+            final Group group) throws ResourceResolutionRuntimeException {
         final String newResourcePath =
                 createNewResourcePath(requestedResourcePath, group);
 

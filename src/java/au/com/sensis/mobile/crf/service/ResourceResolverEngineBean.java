@@ -1,6 +1,5 @@
 package au.com.sensis.mobile.crf.service;
 
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -61,7 +61,7 @@ public class ResourceResolverEngineBean implements
      * {@inheritDoc}
      */
     public Resource getResourcePath(final Device device,
-            final String requestedResourcePath) throws IOException {
+            final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Looking for resource '" + requestedResourcePath
@@ -117,7 +117,7 @@ public class ResourceResolverEngineBean implements
      */
     @Override
     public List<Resource> getAllResourcePaths(final Device device,
-            final String requestedResourcePath) throws IOException {
+            final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         final Deque<Resource> allResourcePaths = new ArrayDeque<Resource>();
 
@@ -162,7 +162,7 @@ public class ResourceResolverEngineBean implements
     }
 
     private List<Resource> getResource(
-            final String requestedResourcePath, final Group currGroup) throws IOException {
+            final String requestedResourcePath, final Group currGroup) {
         return getResourceResolver().resolve(
                 requestedResourcePath, currGroup);
     }

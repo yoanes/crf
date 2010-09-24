@@ -4,9 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.mobile.crf.config.DefaultGroup;
-import au.com.sensis.mobile.crf.config.Group;
-
 /**
  * Unit test {@link DefaultGroup}.
  *

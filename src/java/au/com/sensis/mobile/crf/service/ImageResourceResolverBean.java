@@ -1,7 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 
 /**
@@ -84,7 +84,7 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
     @Override
     protected List<Resource> doResolve(
             final String requestedResourcePath, final Group group)
-            throws IOException {
+            throws ResourceResolutionRuntimeException {
 
         final String newResourcesBasePath = createNewResourcePath(requestedResourcePath, group);
 
