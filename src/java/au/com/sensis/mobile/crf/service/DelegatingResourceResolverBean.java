@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
- * {@link ResourceResolver} that delegates to a chain of responsibility list of other
+ * {@link ResourceResolver} that delegates to a list of other
  * {@link ResourceResolver}s.
  *
  * @author Adrian.Koh2@sensis.com.au
@@ -24,7 +24,7 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
 
     /**
      * @param resourceResolvers
-     *            Chain of responsibility list of {@link ResourceResolver}s.
+     *            List of {@link ResourceResolver}s to delegate to.
      */
     public DelegatingResourceResolverBean(
             final List<ResourceResolver> resourceResolvers) {
@@ -43,12 +43,12 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
 
 
     /**
-     * Delegates to each {@link ResourceResolver} from a chain of
-     * responsibility. The chain stops when either of the following occurs:
+     * Delegates to each {@link ResourceResolver} from the List that was passed
+     * to the constructor. The process stops when either of the following occurs:
      * <ol>
-     * <li>A non-null {@link Resource}is found.</li>
-     * <li>The end of the chain is reached without the previous condition being
-     * reached. In this case, null is returned.</li>
+     * <li>A non-empty list of {@link Resource}s is found.</li>
+     * <li>The end of the list is reached without the previous condition being
+     * reached. In this case, an empty list is returned.</li>
      * </ol>
      *
      * {@inheritDoc}
@@ -70,7 +70,7 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
 
 
     /**
-     * @return the resourceResolvers
+     * @return the resourceResolvers passed to the constructor.
      */
     private List<ResourceResolver> getResourceResolvers() {
         return resourceResolvers;

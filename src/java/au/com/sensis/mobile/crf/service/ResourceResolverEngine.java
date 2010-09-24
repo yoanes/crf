@@ -22,8 +22,7 @@ public interface ResourceResolverEngine {
      * @param device
      *            {@link Device} for the request.
      * @param requestedResourcePath
-     *            Path of the resource requested. This should be relative to the
-     *            webapp's context root.
+     *            Path of the resource requested.
      * @return Return the first concrete resource path for the requested
      *         abstract path. If none is found, null is returned.
      * @throws IOException Thrown if an IO error occurs.
@@ -34,14 +33,12 @@ public interface ResourceResolverEngine {
 
     /**
      * List of all concrete resource paths (not just the first found)
-     * that correspond to the requested abstract path. May not be null or empty.
-     *
+     * that correspond to the requested abstract path. May not be null.
      *
      * @param device
      *            {@link Device} for the request.
      * @param requestedResourcePath
-     *            Path of the resource requested. This should be relative to the
-     *            webapp's context root.
+     *            Path of the resource requested.
      * @return List of all concrete resource paths that correspond to the
      *         requested path. May not be null. If no concrete resource paths are found,
      *         an empty {@link List} is returned.

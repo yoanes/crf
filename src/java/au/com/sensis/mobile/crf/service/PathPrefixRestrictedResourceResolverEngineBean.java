@@ -55,7 +55,6 @@ public class PathPrefixRestrictedResourceResolverEngineBean
      * constructor. Else an empty {@link List} is returned.
      *
      * {@inheritDoc}
-     * @throws IOException
      */
     @Override
     public List<Resource> getAllResourcePaths(final Device device,
@@ -67,7 +66,7 @@ public class PathPrefixRestrictedResourceResolverEngineBean
             return getResourceResolverEngine().getAllResourcePaths(device,
                     requestedResourcePath);
         } else {
-            debugLogDisinterest(requestedResourcePath);
+            debugLogDisinterestReturningEmptyList(requestedResourcePath);
 
             return new ArrayList<Resource>();
         }
@@ -80,7 +79,6 @@ public class PathPrefixRestrictedResourceResolverEngineBean
      * constructor. Else null is returned.
      *
      * {@inheritDoc}
-     * @throws IOException
      */
     @Override
     public Resource getResourcePath(final Device device,
@@ -92,7 +90,7 @@ public class PathPrefixRestrictedResourceResolverEngineBean
             return getResourceResolverEngine().getResourcePath(device,
                     requestedResourcePath);
         } else {
-            debugLogDisinterest(requestedResourcePath);
+            debugLogDisinterestReturningNull(requestedResourcePath);
 
             return null;
         }
@@ -137,10 +135,17 @@ public class PathPrefixRestrictedResourceResolverEngineBean
         }
     }
 
-    private void debugLogDisinterest(final String requestedResourcePath) {
+    private void debugLogDisinterestReturningNull(final String requestedResourcePath) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(requestedResourcePath
                     + " is NOT of interest. Returning null.");
+        }
+    }
+
+    private void debugLogDisinterestReturningEmptyList(final String requestedResourcePath) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(requestedResourcePath
+                    + " is NOT of interest. Returning empty list.");
         }
     }
 }

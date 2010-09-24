@@ -67,7 +67,6 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
 
     /**
      * {@inheritDoc}
-     * @throws IOException
      */
     @Override
     public List<Resource> getAllResourcePaths(final Device device,
@@ -91,7 +90,6 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
 
     /**
      * {@inheritDoc}
-     * @throws IOException
      */
     @Override
     public Resource getResourcePath(final Device device,

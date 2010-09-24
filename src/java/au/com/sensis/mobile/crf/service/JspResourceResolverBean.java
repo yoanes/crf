@@ -21,19 +21,22 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
     /**
      * Constructor.
      *
+     * @param abstractResourceExtension
+     *            Extension of resources (eg. "css" or "crf") that this class
+     *            knows how to resolve.
+     * @param rootResourcesDir
+     *            Root directory where the real resources that this resolver
+     *            handles are stored.
+     * @param resourceResolutionWarnLogger
+     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
      * @param jspResourcesRootServletPath
      *            Root of JSP resources, relative to the servlet context root.
-     * @param abstractResourceExtension
-     *            Abstract extension for resources.
-     * @param rootResourcesDir
-     *            Root directory where the concrete resources are stored.
-     * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger}.
      */
-    public JspResourceResolverBean(final String jspResourcesRootServletPath,
+    public JspResourceResolverBean(
             final String abstractResourceExtension,
             final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final String jspResourcesRootServletPath) {
         super(abstractResourceExtension, rootResourcesDir,
                 resourceResolutionWarnLogger);
 

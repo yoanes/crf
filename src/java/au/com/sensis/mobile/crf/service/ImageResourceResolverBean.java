@@ -15,12 +15,7 @@ import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 
 /**
- * {@link ResourceResolver} that maps abstract image paths to real image
- * paths. Note that the generated path will not have an extension given that
- * there is a multitude of possible image formats. The
- * {@link Resource} returned by
- * {@link AbstractResourceResolver#resolve(String, au.com.sensis.mobile.crf.config.Group)}
- * can be consulted to resolve the new path to actual files.
+ * {@link ResourceResolver} that resolves abstract image paths to real image paths.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
@@ -35,11 +30,13 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      * Constructor.
      *
      * @param abstractResourceExtension
-     *            Abstract extension for resources.
+     *            Extension of resources (eg. "css" or "crf") that this class
+     *            knows how to resolve.
      * @param rootResourcesDir
-     *            Root directory where the concrete resources are stored.
+     *            Root directory where the real resources that this resolver
+     *            handles are stored.
      * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger}.
+     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
      * @param fileExtensionWildcards
      *            Array of image file extensions to match. Wildcards supported
      *            are '*' as per standard Unix/Windows command line
@@ -83,8 +80,6 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      * and that has an acceptable image file extension.
      *
      * {@inheritDoc}
-     *
-     * @param resource
      */
     @Override
     protected List<Resource> doResolve(

@@ -9,7 +9,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /**
- * Simple pair resulting from a mapping of an original resource path to a new path.
+ * Default {@link Resource} implementation.
  *
  * @author Adrian.Koh2@sensis.com.au
  */

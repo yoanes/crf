@@ -37,8 +37,8 @@ public class ResourceResolverEngineBean implements
      *            {@link ConfigurationFactory} to obtain
      *            the {@link au.com.sensis.mobile.crf.config.UiConfiguration} from.
      * @param resourceResolver
-     *            {@link ResourceResolver} to map requested paths to real,
-     *            device specific paths.
+     *            {@link ResourceResolver} to resolve requested resource paths
+     *            to real resource paths for a specific group.
      * @param resourceResolutionWarnLogger {@link ResourceResolutionWarnLogger} to
      *            use to log warnings.
      */
@@ -59,7 +59,6 @@ public class ResourceResolverEngineBean implements
 
     /**
      * {@inheritDoc}
-     * @throws IOException
      */
     public Resource getResourcePath(final Device device,
             final String requestedResourcePath) throws IOException {
@@ -115,7 +114,6 @@ public class ResourceResolverEngineBean implements
 
     /**
      * {@inheritDoc}
-     * @throws IOException
      */
     @Override
     public List<Resource> getAllResourcePaths(final Device device,
@@ -185,23 +183,14 @@ public class ResourceResolverEngineBean implements
         }
     }
 
-    /**
-     * @return the configurationFactory
-     */
     private ConfigurationFactory getConfigurationFactory() {
         return configurationFactory;
     }
 
-    /**
-     * @return the resourceResolver
-     */
     private ResourceResolver getResourceResolver() {
         return resourceResolver;
     }
 
-    /**
-     * @return the resourceResolutionWarnLogger
-     */
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
         return resourceResolutionWarnLogger;
     }

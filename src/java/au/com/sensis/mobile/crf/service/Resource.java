@@ -33,7 +33,7 @@ public interface Resource {
     File getNewFile();
 
     /**
-     * @return the rootResourceDir
+     * @return the rootResourceDir which {@link #getNewPath()} is relative to.
      */
     File getRootResourceDir();
 

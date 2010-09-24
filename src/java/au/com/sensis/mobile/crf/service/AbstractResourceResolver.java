@@ -14,8 +14,7 @@ import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 
 /**
- * Standard base class for {@link ResourceResolver}s implementing the template
- * method pattern.
+ * Standard base class for {@link ResourceResolver}s.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
@@ -36,13 +35,13 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * Constructor.
      *
      * @param abstractResourceExtension
-     *            Extension of resourcs (eg. "css" or "crf") that this class
-     *            knows how to map.
+     *            Extension of resources (eg. "css" or "crf") that this class
+     *            knows how to resolve.
      * @param rootResourcesDir
-     *            Root directory where the real resources that this mapper
+     *            Root directory where the real resources that this resolver
      *            handles are stored.
      * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger}.
+     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
      */
     public AbstractResourceResolver(final String abstractResourceExtension,
             final File rootResourcesDir,
@@ -90,13 +89,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
-     * Template method for mapping requested resource paths to real resource
-     * paths.
+     * Template method for resolving requested resource paths to {@link Resource}s.
      *
      * {@inheritDoc}
-     *
-     * @throws IOException
-     *             Thrown if an IO error occurs.
      */
     @Override
     public List<Resource> resolve(final String requestedResourcePath,
@@ -137,11 +132,16 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * the requested resource path to one or more {@link Resource}s if they
      * exist. Returns an empty list if none are found. The default
      * implementation simply creates a new {@link Resource} from the given
-     * parameters if newResourcePath exists.
+     * parameters if the path created by
+     * {@link #createNewResourcePath(String, Group)} exists.
      *
      * @param requestedResourcePath
      *            The original resource that was requested.
-     * @param group {@link Group} for the request.
+     * @param group
+     *            {@link Group} that the
+     *            {@link au.com.sensis.wireless.common.volantis.devicerepository.api.Device}
+     *            for the current request belongs to.
+     *
      * @return {@link List} of {@link Resource}s that exist.
      * @throws IOException
      *             Thrown if any IO error occurs.
@@ -171,10 +171,21 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
                 getRootResourcesDir(), newResourcePath);
     }
 
-    private  Resource createResource(
-            final String requestedResourcePath, final String newPath) {
-        return new ResourceBean(requestedResourcePath,
-                newPath, getRootResourcesDir());
+    /**
+     * Create a {@link Resource} from the requested path and the new path that
+     * it maps to.
+     *
+     * @param requestedResourcePath
+     *            Requested path.
+     * @param newPath
+     *            New path that the requested path maps to.
+     * @return new {@link Resource} created from the requested path and the new
+     *         path that it maps to.
+     */
+    protected final Resource createResource(final String requestedResourcePath,
+            final String newPath) {
+        return new ResourceBean(requestedResourcePath, newPath,
+                getRootResourcesDir());
     }
 
     /**
@@ -198,7 +209,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * candidate real resource path. Will only ever be called if
      * {@link #isRecognisedAbstractResourceRequest(String)} returns true. The
      * default implementation invokes
-     * {@link #insertGroupNameIntoPath(String, Group)} the replaces the
+     * {@link #insertGroupNameIntoPath(String, Group)} then replaces the
      * {@link #getAbstractResourceExtension()} with
      * {@link #getRealResourcePathExtension()}.
      *
@@ -226,7 +237,8 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
-     * @return the abstractResourceExtension
+     * @return the extension of resources (eg. "css" or "crf") that this class
+     *         knows how to resolve.
      */
     protected final String getAbstractResourceExtension() {
         return abstractResourceExtension;
@@ -284,14 +296,15 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     protected abstract Logger getLogger();
 
     /**
-     * @return the rootResourcesDir
+     * @return the rootResourcesDir Root directory where the real resources that
+     *         this resolver handles are stored.
      */
     protected File getRootResourcesDir() {
         return rootResourcesDir;
     }
 
     /**
-     * @return the {@link ResourceResolutionWarnLogger}.
+     * @return the {@link ResourceResolutionWarnLogger} to use to log warnings.
      */
     protected final ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
         return resourceResolutionWarnLogger;

@@ -29,10 +29,10 @@
         <constructor-arg>
             <list>
                 <bean class="au.com.sensis.mobile.crf.service.JspResourceResolverBean">
-                    <constructor-arg value="@{crf.resources.jsp.root.servlet.path}"/>
                     <constructor-arg value="@{crf.resources.jsp.abstract.extension}"/>
                     <constructor-arg value="@{crf.env.resources.jsp.root.dir}"/>
                     <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+                    <constructor-arg value="@{crf.resources.jsp.root.servlet.path}"/>
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.CssResourceResolverBean">
                     <constructor-arg value="@{crf.resources.css.abstract.path.extension}"/>

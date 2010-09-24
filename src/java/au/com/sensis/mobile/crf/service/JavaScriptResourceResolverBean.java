@@ -34,11 +34,13 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      * Constructor.
      *
      * @param abstractResourceExtension
-     *            Abstract extension for resources.
+     *            Extension of resources (eg. "css" or "crf") that this class
+     *            knows how to resolve.
      * @param rootResourcesDir
-     *            Root directory where the concrete resources are stored.
+     *            Root directory where the real resources that this resolver
+     *            handles are stored.
      * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger}.
+     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
      * @param abstractPathPackageKeyword
      *            Keyword recognised at the end of abstract paths that signifies
      *            a "package" of JavaScript is being requested.
@@ -127,9 +129,8 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
         if (foundFiles != null) {
             for (final File file : foundFiles) {
                 final Resource currResource =
-                        new ResourceBean(requestedResourcePath,
-                                getRootResourceDirRelativePath(file),
-                                getRootResourcesDir());
+                        createResource(requestedResourcePath,
+                                getRootResourceDirRelativePath(file));
                 result.add(currResource);
             }
         }

@@ -41,10 +41,10 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
         setObjectUnderTest(new JspResourceResolverBean(
-                getResourcePathTestData().getJspResourcesRootServletPath(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger()));
+                getMockResourceResolutionWarnLogger(),
+                getResourcePathTestData().getJspResourcesRootServletPath()));
     }
 
     /**
@@ -63,10 +63,11 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new JspResourceResolverBean(testValue, getResourcePathTestData()
+                new JspResourceResolverBean(getResourcePathTestData()
                         .getCrfExtensionWithoutLeadingDot(),
                         getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger());
+                        getMockResourceResolutionWarnLogger(),
+                        testValue);
 
                 Assert
                         .fail("IllegalArgumentException expected for testValue: '"
@@ -86,10 +87,10 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new JspResourceResolverBean(getResourcePathTestData()
-                        .getJspResourcesRootServletPath(), testValue,
-                        getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger());
+                new JspResourceResolverBean(testValue, getResourcesRootDir(),
+                        getMockResourceResolutionWarnLogger(),
+                        getResourcePathTestData()
+                                .getJspResourcesRootServletPath());
 
                 Assert
                         .fail("IllegalArgumentException expected for testValue: '"
@@ -113,10 +114,11 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                         .toURI()) };
         for (final File invalidPath : invalidPaths) {
             try {
-                new JspResourceResolverBean(getResourcePathTestData()
-                        .getJspResourcesRootServletPath(),
+                new JspResourceResolverBean(
                         getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
-                        invalidPath, getMockResourceResolutionWarnLogger());
+                        invalidPath, getMockResourceResolutionWarnLogger(),
+                        getResourcePathTestData()
+                        .getJspResourcesRootServletPath());
                 Assert.fail("IllegalArgumentException expected for invalidPath: '"
                       + invalidPath + "'");
             } catch (final IllegalArgumentException e) {
@@ -133,11 +135,11 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
     public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
             throws Throwable {
         try {
-            new JspResourceResolverBean(getResourcePathTestData()
-                    .getJspResourcesRootServletPath(),
+            new JspResourceResolverBean(
                     getResourcePathTestData()
                             .getCrfExtensionWithoutLeadingDot(),
-                    getResourcesRootDir(), null);
+                    getResourcesRootDir(), null,
+                    getResourcePathTestData().getJspResourcesRootServletPath());
 
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
@@ -158,8 +160,8 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new JspResourceResolverBean(
-                    getResourcePathTestData().getJspResourcesRootServletPath(),
-                    testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
+                    testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                    getResourcePathTestData().getJspResourcesRootServletPath()));
 
             recordCheckIfNewPathExists(Boolean.TRUE);
 
@@ -192,8 +194,8 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new JspResourceResolverBean(
-                    getResourcePathTestData().getJspResourcesRootServletPath(),
-                    testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
+                    testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                    getResourcePathTestData().getJspResourcesRootServletPath()));
 
             recordCheckIfNewPathExists(Boolean.FALSE);
 
