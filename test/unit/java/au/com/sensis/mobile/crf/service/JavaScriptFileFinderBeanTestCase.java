@@ -16,6 +16,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
+import au.com.sensis.mobile.crf.util.FileIoFacade;
+import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
+import au.com.sensis.mobile.crf.util.PropertiesLoader;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -260,8 +263,6 @@ public class JavaScriptFileFinderBeanTestCase extends
     }
 
     public TestData[] getTestDataWhenResourceIsForABundle() {
-        // TODO: detect duplicates after wild card listing. Have a bad feeling that file
-        // filter does not sort correctly.
         return new TestData[] {
                 new TestData(createBundleProperties("grid2.js, *.js"),
                         "grid2.js",

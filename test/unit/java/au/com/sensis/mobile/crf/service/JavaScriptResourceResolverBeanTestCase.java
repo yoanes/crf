@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.GroupTestData;
+import au.com.sensis.mobile.crf.util.FileIoFacade;
+import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**

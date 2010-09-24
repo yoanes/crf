@@ -11,6 +11,9 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 
 import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
+import au.com.sensis.mobile.crf.util.FileIoFacade;
+import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
+import au.com.sensis.mobile.crf.util.PropertiesLoader;
 
 /**
  * {@link JavaScriptFileFinder} for returning all JavaScript files for

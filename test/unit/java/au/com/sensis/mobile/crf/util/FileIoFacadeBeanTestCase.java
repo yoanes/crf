@@ -1,4 +1,4 @@
-package au.com.sensis.mobile.crf.service;
+package au.com.sensis.mobile.crf.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -23,14 +23,14 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     private FileIoFacadeBean objectUnderTest;
 
     private static final String EXPECTED_FIND_ME_FILE_ON_CLASSPATH =
-        "/au/com/sensis/mobile/crf/service/fileIoFacadeBeanTestData/level1/level2/findMe.png";
+        "/au/com/sensis/mobile/crf/util/fileIoFacadeBeanTestData/level1/level2/findMe.png";
 
     private static final String EXPECTED_ANOTHER_FIND_ME_PNG_FILE_ON_CLASSPATH =
-        "/au/com/sensis/mobile/crf/service/fileIoFacadeBeanTestData/level1/"
+        "/au/com/sensis/mobile/crf/util/fileIoFacadeBeanTestData/level1/"
         + "level2/anotherFindMe.png";
 
     private static final String EXPECTED_ANOTHER_FIND_ME_GIF_FILE_ON_CLASSPATH =
-        "/au/com/sensis/mobile/crf/service/fileIoFacadeBeanTestData/level1/"
+        "/au/com/sensis/mobile/crf/util/fileIoFacadeBeanTestData/level1/"
         + "level2/anotherFindMe.gif";
 
     private File expectedFindMeFile;
@@ -59,17 +59,17 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
 
         setWithExtensionsParentDirectory(
                 new File(this.getClass().getResource(
-                    "/au/com/sensis/mobile/crf/service/fileIoFacadeBeanTestData").toURI()));
+                    "/au/com/sensis/mobile/crf/util/fileIoFacadeBeanTestData").toURI()));
         setListByWildcardsTestDataDirectory(
                 new File(this.getClass().getResource(
-                    "/au/com/sensis/mobile/crf/service/fileIoFacadeBeanTestData/level1/level2")
+                    "/au/com/sensis/mobile/crf/util/fileIoFacadeBeanTestData/level1/level2")
                         .toURI()));
     }
 
     @Test
     public void testFileExistsWhenTrue() throws Throwable {
         final URL url = this.getClass().getResource(
-                "/au/com/sensis/mobile/crf/service/FileIoFacadeBeanTestCase.class");
+                "/au/com/sensis/mobile/crf/util/FileIoFacadeBeanTestCase.class");
 
         Assert.assertTrue("fileExists should be true",
                 getObjectUnderTest().fileExists(url.getPath()));
@@ -87,7 +87,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     public void testParentDirAndFileExistsWhenTrue() throws Throwable {
         final URL url =
                 this.getClass().getResource(
-                        "/au/com/sensis/mobile/crf/service/");
+                        "/au/com/sensis/mobile/crf/util/");
 
         Assert.assertTrue("fileExists should be true", getObjectUnderTest()
                 .fileExists(new File(url.toURI()),
@@ -99,7 +99,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     public void testParentDirAndFileExistsWhenFalse() throws Throwable {
         final URL url =
             this.getClass().getResource(
-                    "/au/com/sensis/mobile/crf/service/");
+                    "/au/com/sensis/mobile/crf/util/");
 
         Assert.assertFalse("fileExists should be false", getObjectUnderTest()
                 .fileExists(new File(url.toURI()),

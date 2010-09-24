@@ -119,7 +119,6 @@ public class ResourcePathTestData {
     }
 
     public Resource getMappedDefaultGroupNamedScriptBundleResourcePath() {
-        // TODO: should the method return the concrete ResourceBean?
         return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 "default/common/bundle/main.js", getRootResourcesPath());
     }
@@ -130,7 +129,6 @@ public class ResourcePathTestData {
     }
 
     public Resource getMappedDefaultGroupBundledScriptBundleResourcePath() {
-        // TODO: should the method return the concrete ResourceBean?
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "default/util/", getRootResourcesPath());
     }
@@ -165,7 +163,6 @@ public class ResourcePathTestData {
     }
 
     public Resource getMappedIphoneGroupNamedScriptResourcePath() {
-        // TODO: should the method return the concrete ResourceBean?
         return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 "iPhone/common/main.js", getRootResourcesPath());
     }
@@ -187,7 +184,6 @@ public class ResourcePathTestData {
     }
 
     public Resource getMappedIphoneGroupPackagedScriptBundleResourcePath() {
-        // TODO: should the method return the concrete ResourceBean?
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "iPhone/util/", getRootResourcesPath());
     }
@@ -322,31 +318,26 @@ public class ResourcePathTestData {
     }
 
     public Resource getMappedDefaultGroupImageResourcePath() {
-        // TODO: change return type to ResourceBean?
         return new ResourceBean(getRequestedImageResourcePath(),
                 "default/common/unmetered", getRootResourcesPath());
     }
 
     public Resource getMappedIphoneGroupImageResourcePath() {
-        // TODO: change return type to ResourceBean?
         return new ResourceBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered", getRootResourcesPath());
     }
 
     public Resource getMappedDefaultGroupPngImageResourcePath() {
-        // TODO: change return type to ResourceBean?
         return new ResourceBean(getRequestedImageResourcePath(),
                 "default/common/unmetered.png", getRootResourcesPath());
     }
 
     public Resource getMappedIphoneGroupPngImageResourcePath() {
-        // TODO: change return type to ResourceBean?
         return new ResourceBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered.png", getRootResourcesPath());
     }
 
     public Resource getMappedIphoneGroupGifImageResourcePath() {
-        // TODO: change return type to ResourceBean?
         return new ResourceBean(getRequestedImageResourcePath(),
                 "iPhone/common/unmetered.gif", getRootResourcesPath());
     }

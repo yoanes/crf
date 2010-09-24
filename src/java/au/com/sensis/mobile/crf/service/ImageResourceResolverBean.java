@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 
 /**
  * {@link ResourceResolver} that maps abstract image paths to real image

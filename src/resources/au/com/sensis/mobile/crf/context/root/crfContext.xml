@@ -57,7 +57,7 @@
                     <constructor-arg>
                         <bean class="au.com.sensis.mobile.crf.service.JavaScriptFileFinderBean">
                             <constructor-arg>
-                                <bean class="au.com.sensis.mobile.crf.service.PropertiesLoaderBean"/>
+                                <bean class="au.com.sensis.mobile.crf.util.PropertiesLoaderBean"/>
                             </constructor-arg>
                             <constructor-arg value="@{crf.resources.javascript.package.properties.name}"/>
                             <constructor-arg value="@{crf.resources.javascript.package.order.property.name}"/>

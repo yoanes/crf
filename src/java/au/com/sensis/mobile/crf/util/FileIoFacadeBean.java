@@ -1,4 +1,4 @@
-package au.com.sensis.mobile.crf.service;
+package au.com.sensis.mobile.crf.util;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.WildcardFilter;
+
 
 
 /**

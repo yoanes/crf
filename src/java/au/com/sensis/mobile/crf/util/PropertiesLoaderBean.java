@@ -1,4 +1,4 @@
-package au.com.sensis.mobile.crf.service;
+package au.com.sensis.mobile.crf.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+
 
 /**
  * Default {@link PropertiesLoader} implementation.

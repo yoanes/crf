@@ -1,4 +1,4 @@
-package au.com.sensis.mobile.crf.service;
+package au.com.sensis.mobile.crf.util;
 
 import java.io.File;
 import java.util.Properties;
@@ -31,7 +31,7 @@ public class PropertiesLoaderBeanTestCase extends AbstractJUnit4TestCase {
         setObjectUnderTest(new PropertiesLoaderBean());
 
         setTestDataDir(new File(this.getClass().getResource(
-            "/au/com/sensis/mobile/crf/service/propertiesLoaderBeanTestData").toURI()));
+            "/au/com/sensis/mobile/crf/util/propertiesLoaderBeanTestData").toURI()));
     }
 
     @Test

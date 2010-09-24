@@ -1,4 +1,5 @@
-package au.com.sensis.mobile.crf.service;
+package au.com.sensis.mobile.crf.util;
+
 
 
 

@@ -11,6 +11,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 
 /**
  * Standard base class for {@link ResourceResolver}s implementing the template

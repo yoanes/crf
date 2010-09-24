@@ -1,4 +1,4 @@
-package au.com.sensis.mobile.crf.service;
+package au.com.sensis.mobile.crf.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import java.util.Properties;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-//TODO: move to util package.
 public interface PropertiesLoader {
 
     /**
