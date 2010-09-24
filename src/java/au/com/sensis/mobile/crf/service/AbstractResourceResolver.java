@@ -97,30 +97,18 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     public List<Resource> resolve(final String requestedResourcePath,
             final Group group) throws IOException {
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
-                        "Attempting to resolve requested resource '"
-                                + requestedResourcePath + "'");
-            }
+
+            debugLogAttemptingResolution(requestedResourcePath);
 
             final List<Resource> resolvedResources =
                     doResolve(requestedResourcePath, group);
 
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
-                        "Resolved requested resource '" + requestedResourcePath
-                                + "' to '" + resolvedResources + "'");
-            }
+            debugLogResolutionResults(requestedResourcePath, resolvedResources);
+
             return resolvedResources;
         } else {
 
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
-                        "Requested resource '" + requestedResourcePath
-                                + "' is not for a "
-                                + getDebugResourceTypeName()
-                                + " file. Ignoring the request.");
-            }
+            debugLogRequestIgnored(requestedResourcePath);
 
             return new ArrayList<Resource>();
         }
@@ -310,4 +298,30 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         return resourceResolutionWarnLogger;
     }
 
+    private void debugLogAttemptingResolution(final String requestedResourcePath) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug(
+                    "Attempting to resolve requested resource '"
+                    + requestedResourcePath + "'");
+        }
+    }
+
+    private void debugLogResolutionResults(final String requestedResourcePath,
+            final List<Resource> resolvedResources) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug(
+                    "Resolved requested resource '" + requestedResourcePath
+                            + "' to '" + resolvedResources + "'");
+        }
+    }
+
+    private void debugLogRequestIgnored(final String requestedResourcePath) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug(
+                    "Requested resource '" + requestedResourcePath
+                    + "' is not for a "
+                    + getDebugResourceTypeName()
+                    + " file. Ignoring the request.");
+        }
+    }
 }
