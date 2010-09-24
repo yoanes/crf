@@ -6,7 +6,7 @@ import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 
 /**
- * Simple memento encapsulating the singleton collaborators of a {@link ScriptTag}.
+ * Simple encapsulation of the singleton collaborators of a {@link ScriptTag}.
  * The {@link ScriptTag} will retrieve this from the Spring context.
  *
  * @author Adrian.Koh2@sensis.com.au
@@ -21,7 +21,7 @@ public class ScriptTagDependencies extends TagDependencies {
 
     /**
      * @param resourceResolverEngine
-     *            {@link ResourceResolverEngine} to use to map {@link #getHref()} to
+     *            {@link ResourceResolverEngine} to use to resolve {@link #getHref()} to
      *            concrete resource(s).
      * @param deploymentVersion
      *            {@link DeploymentVersion} of the current deployment.

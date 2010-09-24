@@ -15,7 +15,7 @@ import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
- * Simple implementation of {@link TagWriter} that outputs a link tag in the
+ * Simple implementation of {@link TagWriter} that outputs a script tag in the
  * default namespace.
  *
  * @author Adrian.Koh2@sensis.com.au

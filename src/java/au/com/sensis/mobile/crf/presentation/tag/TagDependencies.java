@@ -21,8 +21,7 @@ public class TagDependencies {
     /**
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to
-     *            map {@link #getHref()} to concrete resource(s).
-     *
+     *            resolve {@link #getHref()} to concrete resource(s).
      * @param deploymentVersion
      *            {@link DeploymentVersion} of the current deployment.
      * @param clientPathPrefix

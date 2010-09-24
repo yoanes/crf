@@ -1,11 +1,11 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
 import au.com.sensis.mobile.crf.config.DeploymentVersion;
-import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
+import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
 /**
- * Simple memento encapsulating the singleton collaborators of a {@link LinkTag}.
+ * Simple encapsulation of the singleton collaborators of an {@link ImageTag}.
  * The {@link LinkTag} will retrieve this from the Spring context.
  *
  * @author Adrian.Koh2@sensis.com.au
@@ -19,8 +19,7 @@ public class ImageTagDependencies extends TagDependencies {
     /**
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to
-     *            map {@link #getHref()} to concrete resource(s).
-     *
+     *            resolve {@link #getHref()} to concrete resource(s).
      * @param deploymentVersion
      *            {@link DeploymentVersion} of the current deployment.
      * @param clientPathPrefix Prefix to be used for the final paths

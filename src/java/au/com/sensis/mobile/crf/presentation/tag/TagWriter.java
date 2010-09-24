@@ -9,9 +9,7 @@ import javax.servlet.jsp.JspWriter;
 import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 
 /**
- * Interface that knows how to write out a tag for which the value of a
- * particular attribute is resolved via a
- * {@link au.com.sensis.mobile.crf.service.ResourceResolverEngine}.
+ * Interface that knows how to write out a tag to a {@link JspWriter}.
  */
 public interface TagWriter {
 
@@ -23,18 +21,18 @@ public interface TagWriter {
     String getId();
 
     /**
-     * @return href attribute of the link tag that this writer is to output.
+     * @return href attribute of the tag that this writer is to output.
      */
     String getHref();
 
     /**
-     * @return List of the {@link DynamicTagAttribute}s for the link tag to be
+     * @return List of the {@link DynamicTagAttribute}s for the tag to be
      *         written.
      */
     List<DynamicTagAttribute> getDynamicAttributes();
 
     /**
-     * Writes out a link tag.
+     * Writes out the tag.
      *
      * @param jspWriter
      *            {@link JspWriter} to write to.
