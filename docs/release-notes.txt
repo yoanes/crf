@@ -1,3 +1,27 @@
+==== Version 0.1.1 (tag: contentRenderingFramework_v0_1_1) ==== 
+
+Closing off iteration 0.1.1. Jira issues:
+* [CRF-1] - Dir structure and build scripts
+* [CRF-2] - ContentRenderingPlatformConfigurationFactory
+* [CRF-7] - Basic file selection: stop at first found (used for JSP resolution)
+* [CRF-8] - Advanced file selection: find all matches for specific file + extension (used for CSS resolution)
+* [CRF-9] - Advanced file selection: find all matches for list of {specific file basename + set of acceptable extensions} and return first  (used for Images)
+* [CRF-10] - Find *.<type> in each group but order of files in each group controlled by bundles.properties (Used for JavaScript resolution)
+* [CRF-12] - Support multiple, independent crf-config.xml files
+* [CRF-16] - ContentRenderingPlatformServlet
+* [CRF-20] - crf:link CSS tag - no bundling
+* [CRF-23] - crf:image JSP tag - basic file look up
+* [CRF-27] - ImageServlet
+* [CRF-30] - crf:script tag - [name].js - no bundling
+* [CRF-31] - crf:script tag - *.js - no bundling
+* [CRF-37] - CVS module creation (inc. crp migration to crf)
+* [CRF-44] - NEW: JSP Resolution - showcase selenium test
+* [CRF-46] - NEW: CSS Resolution - showcase selenium test
+* [CRF-47] - NEW: crf:link and crf:script tags - ensure no duplicates output
+* [CRF-51] - NEW: Image Resolution - showcase selenium test
+* [CRF-52] - NEW: selenium tests - update to spoof user agents
+* [CRF-56] - NEW: Refactor ResourceSelectorBean, ResourcePathMapper and MappedResourcePath responsibilities
+ 
 ==== Version 0.0.3 (tag: contentRenderingFramework_v0_0_3) ==== 
 
 Tagging initial commit under contentRenderingFramework. This was copied from the previous, temporary CVS
