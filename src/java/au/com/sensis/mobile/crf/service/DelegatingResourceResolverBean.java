@@ -43,31 +43,38 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
 
 
     /**
-     * Delegates to each {@link ResourceResolver} from the List that was passed
-     * to the constructor. The process stops when either of the following occurs:
-     * <ol>
-     * <li>A non-empty list of {@link Resource}s is found.</li>
-     * <li>The end of the list is reached without the previous condition being
-     * reached. In this case, an empty list is returned.</li>
-     * </ol>
+     * Delegates to the first {@link ResourceResolver} from the List for which
+     * {@link ResourceResolver#supports(String)} returns true.
      *
      * {@inheritDoc}
      */
     @Override
-    public List<Resource> resolve(
-            final String requestedResourcePath, final Group group) throws IOException {
+    public List<Resource> resolve(final String requestedResourcePath,
+            final Group group) throws IOException {
         for (final ResourceResolver resourceResolver : getResourceResolvers()) {
-            // TODO: needs to check if resourceResolver is interested instead of checking
-            // foundResourcePaths.isEmpty?.
-            final List<Resource> foundResourcePaths
-                = resourceResolver.resolve(requestedResourcePath, group);
-            if (!foundResourcePaths.isEmpty()) {
-                return foundResourcePaths;
+            if (resourceResolver.supports(requestedResourcePath)) {
+                return resourceResolver.resolve(requestedResourcePath, group);
             }
         }
         return new ArrayList<Resource>();
     }
 
+    /**
+     * Returns true if any of the resolvers passed to the constructor support the requested
+     * path.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean supports(final String requestedResourcePath) {
+        for (final ResourceResolver resourceResolver : getResourceResolvers()) {
+            if (resourceResolver.supports(requestedResourcePath)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * @return the resourceResolvers passed to the constructor.

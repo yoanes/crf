@@ -73,11 +73,33 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     }
 
     @Test
-    public void testMapResourcePathWhenFound() throws Throwable {
+    public void testResolveWhenFirstSecondResolverSupportsRequestedPathFound() throws Throwable {
+
+        EasyMock.expect(getMockResourceResolver1().supports(getRequestedPath()))
+            .andReturn(Boolean.TRUE);
 
         EasyMock.expect(getMockResourceResolver1().resolve(
                 getRequestedPath(), getGroup()))
-                .andReturn(new ArrayList<Resource>());
+                .andReturn(getExpectedResources());
+
+        replay();
+
+        final List<Resource> actualResources =
+            getObjectUnderTest().resolve(getRequestedPath(),
+                    getGroup());
+
+        Assert.assertEquals("actualResource is wrong",
+                getExpectedResources(), actualResources);
+    }
+
+    @Test
+    public void testResolveWhenSecondResolverSupportsRequestedPathFound() throws Throwable {
+
+        EasyMock.expect(getMockResourceResolver1().supports(getRequestedPath()))
+            .andReturn(Boolean.FALSE);
+
+        EasyMock.expect(getMockResourceResolver2().supports(getRequestedPath()))
+            .andReturn(Boolean.TRUE);
 
         EasyMock.expect(getMockResourceResolver2().resolve(
                 getRequestedPath(), getGroup()))
@@ -94,26 +116,72 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     }
 
     @Test
-    public void testMapResourcePathWhenNotFound() throws Throwable {
+    public void testResolveWhenNoResolverSupports() throws Throwable {
 
-        EasyMock.expect(
-                getMockResourceResolver1().resolve(getRequestedPath(),
-                        getGroup())).andReturn(new ArrayList<Resource>());
+        EasyMock
+                .expect(getMockResourceResolver1().supports(getRequestedPath()))
+                .andReturn(Boolean.FALSE);
 
-        EasyMock.expect(
-                getMockResourceResolver2().resolve(getRequestedPath(),
-                        getGroup())).andReturn(new ArrayList<Resource>());
+        EasyMock
+                .expect(getMockResourceResolver2().supports(getRequestedPath()))
+                .andReturn(Boolean.FALSE);
 
         replay();
 
         final List<Resource> actualResources =
-                getObjectUnderTest().resolve(getRequestedPath(),
-                        getGroup());
+                getObjectUnderTest().resolve(getRequestedPath(), getGroup());
 
         Assert.assertNotNull("actualResource should not be null",
                 actualResources);
-        Assert.assertTrue("actualResource should not be empty",
-                actualResources.isEmpty());
+        Assert.assertTrue("actualResource should not be empty", actualResources
+                .isEmpty());
+    }
+
+    @Test
+    public void testSupportsWhenFirstResolverSupportsTrue() throws Throwable {
+
+        EasyMock
+                .expect(getMockResourceResolver1().supports(getRequestedPath()))
+                .andReturn(Boolean.TRUE);
+
+        replay();
+
+        Assert.assertTrue("supports should be true", getObjectUnderTest()
+                .supports(getRequestedPath()));
+    }
+
+    @Test
+    public void testSupportsWhenSecondResolverSupportsTrue() throws Throwable {
+
+        EasyMock
+                .expect(getMockResourceResolver1().supports(getRequestedPath()))
+                .andReturn(Boolean.FALSE);
+
+        EasyMock
+                .expect(getMockResourceResolver2().supports(getRequestedPath()))
+                .andReturn(Boolean.TRUE);
+
+        replay();
+
+        Assert.assertTrue("supports should be true", getObjectUnderTest()
+                .supports(getRequestedPath()));
+    }
+
+    @Test
+    public void testSupportsWhenFalse() throws Throwable {
+
+        EasyMock
+                .expect(getMockResourceResolver1().supports(getRequestedPath()))
+                .andReturn(Boolean.FALSE);
+
+        EasyMock
+                .expect(getMockResourceResolver2().supports(getRequestedPath()))
+                .andReturn(Boolean.FALSE);
+
+        replay();
+
+        Assert.assertFalse("supports should be false", getObjectUnderTest()
+                .supports(getRequestedPath()));
     }
 
     private List<Resource> getExpectedResources() {

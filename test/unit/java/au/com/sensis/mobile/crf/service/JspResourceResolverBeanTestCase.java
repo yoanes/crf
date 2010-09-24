@@ -152,7 +152,7 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testMapResourcePathWhenMappingPerformedAndResourceExists() throws Throwable {
+    public void testResolveWhenMappingPerformedAndResourceExists() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getCrfExtensionWithLeadingDot()
@@ -185,7 +185,7 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testMapResourcePathWhenMappingPerformedAndResourceDoesNotExist()
+    public void testResolveWhenMappingPerformedAndResourceDoesNotExist()
         throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
@@ -228,8 +228,9 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                                 .getNewPath())).andReturn(exists);
 
     }
+
     @Test
-    public void testMapResourcePathWhenNoMappingPerformed() throws Throwable {
+    public void testResolveWhenNoMappingPerformed() throws Throwable {
         final List<Resource> actualResources =
                 getObjectUnderTest()
                         .resolve(
@@ -241,6 +242,20 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                 actualResources);
         Assert.assertTrue("actualResources should be empty",
                 actualResources.isEmpty());
+    }
+
+    @Test
+    public void testSupportsWhenTrue() throws Throwable {
+        Assert.assertTrue("supports should be true",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedJspResourcePath()));
+    }
+
+    @Test
+    public void testSupportsWhenFalse() throws Throwable {
+        Assert.assertFalse("supports should be false",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedCssResourcePath()));
     }
 
     /**

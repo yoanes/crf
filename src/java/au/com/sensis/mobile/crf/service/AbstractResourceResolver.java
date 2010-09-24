@@ -177,6 +177,14 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean supports(final String requestedResourcePath) {
+        return isRecognisedAbstractResourceRequest(requestedResourcePath);
+    }
+
+    /**
      * Returns true if the requested resource path is
      * for a recognised abstract resource that this {@link ResourceResolver}
      * can handle. The default implementation returns true if the requested

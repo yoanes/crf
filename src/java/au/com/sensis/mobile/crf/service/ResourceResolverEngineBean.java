@@ -73,7 +73,7 @@ public class ResourceResolverEngineBean implements
 
             final Group currGroup = matchingGroupIterator.next();
 
-            debugLogCheckingGroup(currGroup);
+            debugLogCheckingGroup(requestedResourcePath, currGroup);
 
             final List<Resource> resources =
                     getResource(requestedResourcePath, currGroup);
@@ -131,14 +131,16 @@ public class ResourceResolverEngineBean implements
 
             final Group currGroup = matchingGroupIterator.next();
 
-            debugLogCheckingGroup(currGroup);
+            debugLogCheckingGroup(requestedResourcePath, currGroup);
 
             accumulateGroupResources(
                     getResource(requestedResourcePath, currGroup),
                     allResourcePaths);
         }
 
-        debugLogNoResourcesFound(requestedResourcePath);
+        if (allResourcePaths.isEmpty()) {
+            debugLogNoResourcesFound(requestedResourcePath);
+        }
 
         return new ArrayList<Resource>(allResourcePaths);
     }
@@ -178,7 +180,7 @@ public class ResourceResolverEngineBean implements
 
     private void debugLogNoResourcesFound(final String requestedResourcePath) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("No resources found for requsted path: '"
+            LOGGER.debug("No resources found for requested path: '"
                     + requestedResourcePath + "'");
         }
     }
@@ -195,9 +197,11 @@ public class ResourceResolverEngineBean implements
         return resourceResolutionWarnLogger;
     }
 
-    private void debugLogCheckingGroup(final Group currGroup) {
+    private void debugLogCheckingGroup(final String requestedResourcePath,
+            final Group currGroup) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Looking for resource in matching group: " + currGroup);
+            LOGGER.debug("Looking for '" + requestedResourcePath
+                    + "' in matching group: " + currGroup);
         }
     }
 }

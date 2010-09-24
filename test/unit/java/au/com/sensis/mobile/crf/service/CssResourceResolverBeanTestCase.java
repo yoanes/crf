@@ -217,6 +217,21 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
     }
 
+    @Test
+    public void testSupportsWhenTrue() throws Throwable {
+        Assert.assertTrue("supports should be true",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedCssResourcePath()));
+    }
+
+    @Test
+    public void testSupportsWhenFalse() throws Throwable {
+        Assert.assertFalse("supports should be false",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedJspResourcePath()));
+    }
+
+
     /**
      * @return the groupTestData
      */

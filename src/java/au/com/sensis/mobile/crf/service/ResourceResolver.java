@@ -27,4 +27,15 @@ public interface ResourceResolver {
      */
     List<Resource> resolve(String requestedResourcePath, Group group) throws IOException;
 
+    /**
+     * Returns true if this {@link ResourceResolver} supports resolution of the
+     * requested resource.
+     *
+     * @param requestedResourcePath
+     *            Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
+     * @return true if this {@link ResourceResolver} supports resolution of the
+     *         requested resource.
+     */
+    boolean supports(String requestedResourcePath);
+
 }

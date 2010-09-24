@@ -48,7 +48,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
         setObjectUnderTest(new ImageResourceResolverBean(
-                getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
                 FILE_EXTENSION_WILDCARDS));
     }
@@ -322,7 +322,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                 getObjectUnderTest()
                         .resolve(
                                 getResourcePathTestData()
-                                        .getRequestedImageResourcePath(),
+                                        .getRequestedCssResourcePath(),
                                 getGroupTestData().createIPhoneGroup());
 
         Assert.assertNotNull("actualResources should not be null",
@@ -331,6 +331,21 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                 actualResources.isEmpty());
 
     }
+
+    @Test
+    public void testSupportsWhenTrue() throws Throwable {
+        Assert.assertTrue("supports should be true",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedImageResourcePath()));
+    }
+
+    @Test
+    public void testSupportsWhenFalse() throws Throwable {
+        Assert.assertFalse("supports should be false",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedCssResourcePath()));
+    }
+
 
     /**
      * @return the groupTestData

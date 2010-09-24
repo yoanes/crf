@@ -343,6 +343,28 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
     }
 
+    @Test
+    public void testSupportsTrueWhenPackageRequested() throws Throwable {
+        Assert.assertTrue("supports should be true",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedPackageScriptResourcePath()));
+    }
+
+    @Test
+    public void testSupportsTrueWhenPackageNotRequested() throws Throwable {
+        Assert.assertTrue("supports should be true",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedNamedScriptResourcePath()));
+    }
+
+    @Test
+    public void testSupportsWhenFalse() throws Throwable {
+        Assert.assertFalse("supports should be false",
+                getObjectUnderTest().supports(
+                        getResourcePathTestData().getRequestedCssResourcePath()));
+    }
+
+
     private void recordCheckIfNewPathExists(final Boolean exists) {
         EasyMock.expect(
                 getMockFileIoFacade().fileExists(
