@@ -40,10 +40,10 @@ public class LinkTag extends AbstractDuplicatePreventingTag {
                 .getSingletonInstance()
                 .createLinkTagWriter(
                         getDevice(), getDynamicAttributes(), getHref(),
-                        getCollaboratorsMemento());
+                        getTagDependencies());
     }
 
-    private LinkTagDependencies getCollaboratorsMemento() {
+    private LinkTagDependencies getTagDependencies() {
         final PageContext pc = (PageContext) getJspContext();
 
         final WebApplicationContext webApplicationContext =

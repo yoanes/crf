@@ -145,10 +145,10 @@ public class ScriptTagWriterTestCase extends
         return new ScriptTagWriter(getMockDevice(),
                 testData.getDynamicAttributes(),
                 getRequestedScriptResourcePath(),
-                createCollaboratorsMemento(testData));
+                createTagDependencies(testData));
     }
 
-    private ScriptTagDependencies createCollaboratorsMemento(
+    private ScriptTagDependencies createTagDependencies(
             final TestData testData) {
         return new ScriptTagDependencies(getMockResourceResolverEngine(),
                 testData.getDeploymentVersion(), getMockScriptBundleFactory(),

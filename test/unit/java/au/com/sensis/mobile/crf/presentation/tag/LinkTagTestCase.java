@@ -65,7 +65,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                 .changeDefaultLinkTagWriterFactorySingleton(
                         getMockLinkTagWriterFactory());
 
-        setCollaboratorsMemento(createCollaboratorsMemento());
+        setTagDepedencies(createTagDependencies());
         setObjectUnderTest(new LinkTag());
 
         getObjectUnderTest().setDevice(getMockDevice());
@@ -97,7 +97,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
             .restoreDefaultLinkTagWriterFactorySingleton();
     }
 
-    private LinkTagDependencies createCollaboratorsMemento() {
+    private LinkTagDependencies createTagDependencies() {
         return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
                 getDeploymentVersionTestData()
@@ -107,7 +107,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                 getMockResolutionWarnLogger());
     }
 
-    private void recordGetCollaboratorsMemento() {
+    private void recordGetTagDependencies() {
 
         EasyMock.expect(getMockPageContext().getServletContext()).andReturn(
                 getSpringMockServletContext()).atLeastOnce();
@@ -118,7 +118,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
         EasyMock.expect(
                 getMockWebApplicationContext().getBean(LinkTagDependencies.BEAN_NAME))
-                .andReturn(getCollaboratorsMemento())
+                .andReturn(getTagDependencies())
                 .atLeastOnce();
     }
 
@@ -149,7 +149,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testDoTagWhenTagIsWritten() throws Throwable {
-        recordGetCollaboratorsMemento();
+        recordGetTagDependencies();
 
         recordGetNewLinkWriterMap();
 
@@ -173,7 +173,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                         Arrays.asList(createRelDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
                         getRequestedCssResourcePath(),
-                        getCollaboratorsMemento()))
+                        getTagDependencies()))
                 .andReturn(getMockLinkTagWriter());
     }
 
@@ -208,7 +208,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     public void testDoTagWhenDuplicate() throws Throwable {
         setupExistingSimpleLinkTagWriter();
 
-        recordGetCollaboratorsMemento();
+        recordGetTagDependencies();
 
         recordGetExistingLinkWriterMap();
 
@@ -224,7 +224,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private void setupExistingSimpleLinkTagWriter() {
         getLinkTagWriterMap().put(getRequestedCssResourcePath(),
                 new LinkTagWriter(getMockDevice(),
-                    null, getRequestedCssResourcePath(), createCollaboratorsMemento()));
+                    null, getRequestedCssResourcePath(), createTagDependencies()));
     }
 
     /**
@@ -369,7 +369,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the linkTagDependencies
      */
-    private LinkTagDependencies getCollaboratorsMemento() {
+    private LinkTagDependencies getTagDependencies() {
         return linkTagDependencies;
     }
 
@@ -377,7 +377,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
      * @param linkTagDependencies
      *            the linkTagDependencies to set
      */
-    private void setCollaboratorsMemento(
+    private void setTagDepedencies(
             final LinkTagDependencies linkTagDependencies) {
         this.linkTagDependencies = linkTagDependencies;
     }

@@ -64,7 +64,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                 .changeDefaultScriptTagWriterFactorySingleton(
                         getMockScriptTagWriterFactory());
 
-        setCollaboratorsMemento(createCollaboratorsMemento());
+        setTagDependencies(createTagDependencies());
         setObjectUnderTest(new ScriptTag());
 
         getObjectUnderTest().setDevice(getMockDevice());
@@ -96,7 +96,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
             .restoreDefaultScriptTagWriterFactorySingleton();
     }
 
-    private ScriptTagDependencies createCollaboratorsMemento() {
+    private ScriptTagDependencies createTagDependencies() {
         return new ScriptTagDependencies(
                 getMockResourceResolverEngine(),
                 getDeploymentVersionTestData()
@@ -106,7 +106,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                 getMockResolutionWarnLogger());
     }
 
-    private void recordGetCollaboratorsMemento() {
+    private void recordGetTagDependencies() {
 
         EasyMock.expect(getMockPageContext().getServletContext()).andReturn(
                 getSpringMockServletContext()).atLeastOnce();
@@ -117,7 +117,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
         EasyMock.expect(
                 getMockWebApplicationContext().getBean(ScriptTagDependencies.BEAN_NAME))
-                .andReturn(getCollaboratorsMemento())
+                .andReturn(getTagDependencies())
                 .atLeastOnce();
     }
 
@@ -148,7 +148,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testDoTagWhenTagIsWritten() throws Throwable {
-        recordGetCollaboratorsMemento();
+        recordGetTagDependencies();
 
         recordGetNewScriptWriterMap();
 
@@ -172,7 +172,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                         Arrays.asList(createTitleDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
                         getRequestedJavaScriptResourcePath(),
-                        getCollaboratorsMemento()))
+                        getTagDependencies()))
                 .andReturn(getMockScriptTagWriter());
     }
 
@@ -207,7 +207,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     public void testDoTagWhenDuplicate() throws Throwable {
         setupExistingTagWriter();
 
-        recordGetCollaboratorsMemento();
+        recordGetTagDependencies();
 
         recordGetExistingScriptWriterMap();
 
@@ -225,7 +225,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                 getRequestedJavaScriptResourcePath(),
                 new ScriptTagWriter(getMockDevice(), null,
                         getRequestedJavaScriptResourcePath(),
-                        createCollaboratorsMemento()));
+                        createTagDependencies()));
     }
 
     /**
@@ -371,7 +371,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the scriptTagDependencies
      */
-    private ScriptTagDependencies getCollaboratorsMemento() {
+    private ScriptTagDependencies getTagDependencies() {
         return scriptTagDependencies;
     }
 
@@ -379,7 +379,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
      * @param scriptTagDependencies
      *            the scriptTagDependencies to set
      */
-    private void setCollaboratorsMemento(
+    private void setTagDependencies(
             final ScriptTagDependencies scriptTagDependencies) {
         this.scriptTagDependencies = scriptTagDependencies;
     }

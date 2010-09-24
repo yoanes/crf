@@ -126,7 +126,7 @@ public class ScriptTagWriter implements TagWriter {
         jspWriter.print("<script ");
 
         jspWriter.print("src=\""
-                + getCollaboratorsMemento().getClientPathPrefix()
+                + getTagDependencies().getClientPathPrefix()
                 + resource.getNewPath() + "\" ");
 
         for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
@@ -138,7 +138,7 @@ public class ScriptTagWriter implements TagWriter {
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
-        return getCollaboratorsMemento().getResourceResolutionWarnLogger();
+        return getTagDependencies().getResourceResolutionWarnLogger();
     }
 
     private List<Resource> getAllResourcePaths() throws IOException {
@@ -164,7 +164,7 @@ public class ScriptTagWriter implements TagWriter {
      * @return the {@link ResourceResolverEngine}.
      */
     private ResourceResolverEngine getResourceResolverEngine() {
-        return getCollaboratorsMemento().getResourceResolverEngine();
+        return getTagDependencies().getResourceResolverEngine();
     }
 
     /**
@@ -178,17 +178,17 @@ public class ScriptTagWriter implements TagWriter {
      * @return the cssBundleFactory
      */
     private ScriptBundleFactory getScriptBundleFactory() {
-        return getCollaboratorsMemento().getScriptBundleFactory();
+        return getTagDependencies().getScriptBundleFactory();
     }
 
     private DeploymentVersion getDeploymentVersion() {
-        return getCollaboratorsMemento().getDeploymentVersion();
+        return getTagDependencies().getDeploymentVersion();
     }
 
     /**
      * @return the {@link ScriptTagDependencies}
      */
-    private ScriptTagDependencies getCollaboratorsMemento() {
+    private ScriptTagDependencies getTagDependencies() {
         return scriptTagDependencies;
     }
 

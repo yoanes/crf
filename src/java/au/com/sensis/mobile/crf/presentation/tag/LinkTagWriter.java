@@ -128,7 +128,7 @@ public class LinkTagWriter implements TagWriter {
         jspWriter.print("<link ");
 
         jspWriter.print("href=\""
-                + getCollaboratorsMemento().getClientPathPrefix()
+                + getTagDependencies().getClientPathPrefix()
                 + resource.getNewPath() + "\" ");
 
         for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
@@ -140,7 +140,7 @@ public class LinkTagWriter implements TagWriter {
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
-        return getCollaboratorsMemento().getResourceResolutionWarnLogger();
+        return getTagDependencies().getResourceResolutionWarnLogger();
     }
 
     private List<Resource> getAllResourcePaths() throws IOException {
@@ -166,7 +166,7 @@ public class LinkTagWriter implements TagWriter {
      * @return the {@link ResourceResolverEngine}.
      */
     private ResourceResolverEngine getResourceResolverEngine() {
-        return getCollaboratorsMemento().getResourceResolverEngine();
+        return getTagDependencies().getResourceResolverEngine();
     }
 
     /**
@@ -180,17 +180,17 @@ public class LinkTagWriter implements TagWriter {
      * @return the cssBundleFactory
      */
     private CssBundleFactory getCssBundleFactory() {
-        return getCollaboratorsMemento().getCssBundleFactory();
+        return getTagDependencies().getCssBundleFactory();
     }
 
     private DeploymentVersion getDeploymentVersion() {
-        return getCollaboratorsMemento().getDeploymentVersion();
+        return getTagDependencies().getDeploymentVersion();
     }
 
     /**
      * @return the linkTagDependencies
      */
-    private LinkTagDependencies getCollaboratorsMemento() {
+    private LinkTagDependencies getTagDependencies() {
         return linkTagDependencies;
     }
 }

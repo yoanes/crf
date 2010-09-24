@@ -38,10 +38,10 @@ public class ScriptTag extends AbstractDuplicatePreventingTag {
             .getSingletonInstance()
                 .createScriptTagWriter(getDevice(),
                         getDynamicAttributes(), getSrc(),
-                        getCollaboratorsMemento());
+                        getTagDependencies());
     }
 
-    private ScriptTagDependencies getCollaboratorsMemento() {
+    private ScriptTagDependencies getTagDependencies() {
         final PageContext pc = (PageContext) getJspContext();
 
         final WebApplicationContext webApplicationContext =

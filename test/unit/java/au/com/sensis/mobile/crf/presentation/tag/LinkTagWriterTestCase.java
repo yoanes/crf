@@ -143,10 +143,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         return new LinkTagWriter(getMockDevice(),
                 testData.getDynamicAttributes(),
                 getRequestedCssResourcePath(),
-                createCollaboratorsMemento(testData));
+                createTagDependencies(testData));
     }
 
-    private LinkTagDependencies createCollaboratorsMemento(
+    private LinkTagDependencies createTagDependencies(
             final TestData testData) {
         return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
