@@ -39,3 +39,9 @@
 <crf:link href="results/results.css" rel="stylesheet"  type="text/css"  device="${context.device}"/> 
 <crf:link href="common/jazz.css" rel="stylesheet"  type="text/css" device="${context.device}"/> 
 <crf:link href="common/decorations.css" rel="stylesheet"  type="text/css"  device="${context.device}"/> 
+
+<%--
+  - Acceptance criteria for CRF-47: This duplicate of the same link above will not result in
+  - duplicate links being output to the page.   
+  --%>
+<crf:link href="common/main.css" rel="stylesheet"  type="text/css" device="${context.device}"/>

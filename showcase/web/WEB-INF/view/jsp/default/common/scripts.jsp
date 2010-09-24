@@ -39,6 +39,12 @@
 <crf:script src="common/jazz.js" type="text/javascript" device="${context.device}"/> 
 <crf:script src="common/decorations.js" type="text/javascript"  device="${context.device}"/>
 
+<%--
+  - Acceptance criteria for CRF-47: This duplicate of the same script above will not result in
+  - duplicate links being output to the page.   
+  --%>
+<crf:script src="common/main.js" type="text/javascript" device="${context.device}"/>
+
 <%-- 
   - Acceptance criteria covered by the links on this page (Jira CRF-31).
   -
