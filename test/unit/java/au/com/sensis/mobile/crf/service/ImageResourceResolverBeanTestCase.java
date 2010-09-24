@@ -47,7 +47,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
         setObjectUnderTest(new ImageResourceResolverBean(
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                FILE_EXTENSION_WILDCARDS));
     }
 
     /**
@@ -67,7 +68,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
         for (final String testValue : testValues) {
             try {
                 new ImageResourceResolverBean(testValue, getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger());
+                        getMockResourceResolutionWarnLogger(),
+                        FILE_EXTENSION_WILDCARDS);
 
                 Assert.fail("IllegalArgumentException expected");
             } catch (final IllegalArgumentException e) {
@@ -91,7 +93,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
             try {
                 new ImageResourceResolverBean(
                         getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        invalidPath, getMockResourceResolutionWarnLogger());
+                        invalidPath, getMockResourceResolutionWarnLogger(),
+                        FILE_EXTENSION_WILDCARDS);
                 Assert.fail("IllegalArgumentException expected for invalidPath: '"
                       + invalidPath + "'");
             } catch (final IllegalArgumentException e) {
@@ -110,7 +113,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
         try {
             new ImageResourceResolverBean(getResourcePathTestData()
                     .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                    null);
+                    null, FILE_EXTENSION_WILDCARDS);
 
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
@@ -123,6 +126,36 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
+    public void testConstructorWhenFileExtensionWildcardsIsInvalid()
+    throws Throwable {
+        final List<String []> testVaues = Arrays.asList(
+                null,
+                new String [] {},
+                new String [] { null },
+                new String [] { StringUtils.EMPTY },
+                new String [] { " " },
+                new String [] { "  " }
+        );
+
+        for (final String [] testValue : testVaues) {
+            try {
+                new ImageResourceResolverBean(getResourcePathTestData()
+                        .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                        getMockResourceResolutionWarnLogger(), testValue);
+
+                Assert.fail("IllegalArgumentException expected for testValue: '"
+                        + ArrayUtils.toString(testValue) + "'");
+            } catch (final IllegalArgumentException e) {
+
+                Assert.assertEquals("IllegalArgumentException has wrong message",
+                        "fileExtensionWildcards must be an array of non-blank Strings but was: '"
+                        + ArrayUtils.toString(testValue) + "'", e.getMessage());
+            }
+        }
+
+    }
+
+    @Test
     public void testResolveWhenMappingPerformedAndSingleResourceFound() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
@@ -130,7 +163,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+                    getMockResourceResolutionWarnLogger(), FILE_EXTENSION_WILDCARDS));
 
             recordListFilesByExtension(getSingleMatchedPngImageArray());
 
@@ -182,7 +215,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+                    getMockResourceResolutionWarnLogger(), FILE_EXTENSION_WILDCARDS));
 
             recordListFilesByExtension(getMultipleMatchedPngImageArray());
 
@@ -232,7 +265,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+                    getMockResourceResolutionWarnLogger(), FILE_EXTENSION_WILDCARDS));
 
             recordListFilesByExtension(new File[] {});
 

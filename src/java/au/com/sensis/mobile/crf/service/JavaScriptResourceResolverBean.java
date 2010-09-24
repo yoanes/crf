@@ -3,10 +3,11 @@ package au.com.sensis.mobile.crf.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
@@ -26,7 +27,8 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      */
     protected static final String SEPARATOR = "/";
 
-    private JavaScriptFileFinder javaScriptFileFinder;
+    private final String abstractPathPackageKeyword;
+    private final JavaScriptFileFinder javaScriptFileFinder;
 
     /**
      * Constructor.
@@ -37,128 +39,43 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      *            Root directory where the concrete resources are stored.
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger}.
+     * @param abstractPathPackageKeyword
+     *            Keyword recognised at the end of abstract paths that signifies
+     *            a "package" of JavaScript is being requested.
+     * @param javaScriptFileFinder
+     *            {@link JavaScriptFileFinder} delegate to use to find a list of
+     *            JavaScript files in a directory.
      */
-    public JavaScriptResourceResolverBean(final String abstractResourceExtension,
+    public JavaScriptResourceResolverBean(
+            final String abstractResourceExtension,
             final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final String abstractPathPackageKeyword,
+            final JavaScriptFileFinder javaScriptFileFinder) {
         super(abstractResourceExtension, rootResourcesDir,
                 resourceResolutionWarnLogger);
 
-        javaScriptFileFinder =
-            new JavaScriptBundlePathExpander(new PropertiesLoaderBean(),
-                    "bundles.properties", "order");
+        validateAbstractPathPackageKeyword(abstractPathPackageKeyword);
+        validateJavaScriptFileFinder(javaScriptFileFinder);
 
-    }
-
-    // TODO: temp hack for testing. JavaScriptFileFinder will be refactored into oblivion, anyway.
-    /**
-     * @param javaScriptFileFinder the JavaScriptFileFinder.
-     */
-    public void setPathExpander(final JavaScriptFileFinder javaScriptFileFinder) {
+        this.abstractPathPackageKeyword = abstractPathPackageKeyword;
         this.javaScriptFileFinder = javaScriptFileFinder;
     }
 
-    private JavaScriptFileFinder getPathExpander() {
-        return javaScriptFileFinder;
-    }
 
-
-    /**
-     * Template method for mapping requested resource paths to real resource
-     * paths.
-     *
-     * {@inheritDoc}
-     * @throws IOException Thrown if an IO error occurs.
-     */
-    @Override
-    public List<Resource> resolve(
-            final String requestedResourcePath, final Group group)
-                throws IOException {
-        if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
-                        "Mapping '"
-                                + requestedResourcePath
-                                + "' to '"
-                                + doMapResourcePath(requestedResourcePath,
-                                        group) + "'");
-            }
-            final Resource resource =
-                createResource(requestedResourcePath,
-                    doMapResourcePath(requestedResourcePath, group));
-
-            if (resource.isBundlePath()) {
-                return createResults(requestedResourcePath,
-                        resource.getBundleParentDirFile());
-            } else {
-                if (exists(resource)) {
-                    return Arrays.asList(resource);
-                } else {
-                    return new ArrayList<Resource>();
-                }
-            }
-        } else {
-
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
-                        "Requested resource '" + requestedResourcePath
-                                + "' is not for a " + getDebugResourceTypeName()
-                                + " file. Returning an empty list.");
-            }
-
-            return new ArrayList<Resource>();
+    private void validateAbstractPathPackageKeyword(
+            final String abstractPathPackageKeyword) {
+        if (StringUtils.isBlank(abstractPathPackageKeyword)) {
+            throw new IllegalArgumentException(
+                    "abstractPathPackageKeyword must not be blank: '"
+                            + abstractPathPackageKeyword + "'");
         }
     }
 
-    /**
-     * @param resource {@link Resource} to test the existence of.
-     * @return true if the mapped path given by {@link #getNewPath()}
-     *         exists in {@link #getRootResourceDir()}.
-     */
-    protected boolean exists(final Resource resource) {
-        // TODO: possibly cache the result since we are accessing the file system?
-        return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
-                getRootResourcesDir(), resource.getNewPath());
-    }
-
-    private List<Resource> createResults(
-            final String requestedResourcePath,
-            final File javascriptFilesBaseDir) throws IOException {
-        final List<Resource> result =
-            new ArrayList<Resource>();
-
-      final List<File> foundFiles = getPathExpander().findJavaScriptFiles(javascriptFilesBaseDir);
-      if (foundFiles != null) {
-        for (final File file : foundFiles) {
-            final Resource currResource =
-                    new ResourceBean(
-                            requestedResourcePath,
-                            getRootResourceDirRelativePath(file),
-                            getRootResourcesDir());
-            result.add(currResource);
-        }
-      }
-        return result;
-    }
-
-    private String getRootResourceDirRelativePath(final File file) {
-        final String rootResourceDirRelativePath = StringUtils.substringAfter(file.getPath(),
-                getRootResourcesDir().getPath()).replace(File.separator, SEPARATOR);
-        return StringUtils.substringAfter(rootResourceDirRelativePath, SEPARATOR);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String doMapResourcePath(final String requestedResourcePath, final Group group) {
-        // TODO: "bundle" name creation will probably change. We want "package" or something
-        // instead? Hard code for now.
-        if (isBundleRequested(requestedResourcePath)) {
-            return insertGroupNameIntoPath(requestedResourcePath, group) + "/bundle-all.js";
-        } else {
-            return super.doMapResourcePath(requestedResourcePath, group);
-        }
+    private void validateJavaScriptFileFinder(
+            final JavaScriptFileFinder javaScriptFileFinder) {
+        Validate.notNull(javaScriptFileFinder,
+                "javaScriptFileFinder must not be null");
     }
 
     /**
@@ -168,18 +85,75 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     protected boolean isRecognisedAbstractResourceRequest(
             final String requestedResourcePath) {
         return super.isRecognisedAbstractResourceRequest(requestedResourcePath)
-            || isBundleRequested(requestedResourcePath);
+            || isPackageRequested(requestedResourcePath);
     }
 
+    /**
+     * Performs resolution in both cases where
+     * {@link #isPackageRequested(String)} is true and when it is not.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    protected List<Resource> doResolve(final String requestedResourcePath,
+            final Group group) throws IOException {
 
+        if (isPackageRequested(requestedResourcePath)) {
+            final File packageDir = getPackageDir(requestedResourcePath, group);
+            return findBundleResources(requestedResourcePath, packageDir);
 
-    private boolean isBundleRequested(final String requestedResourcePath) {
-        // TODO: "bundle" checking will probably change. We want "package" or something instead?
-        // Hard code for now.
-        return requestedResourcePath.endsWith("bundle");
+        } else {
+            return super.doResolve(requestedResourcePath, group);
+        }
     }
 
+    private File getPackageDir(final String requestedResourcePath,
+            final Group group) throws IllegalStateException {
 
+        final String requestedGroupResourcePath =
+                insertGroupNameIntoPath(requestedResourcePath, group);
+        return new File(getRootResourcesDir(), FilenameUtils
+                .getPath(requestedGroupResourcePath));
+    }
+
+    private List<Resource> findBundleResources(
+            final String requestedResourcePath,
+            final File javascriptFilesBaseDir) throws IOException {
+
+        final List<Resource> result = new ArrayList<Resource>();
+
+        final List<File> foundFiles =
+                getJavaScriptFileFinder().findFiles(javascriptFilesBaseDir);
+        if (foundFiles != null) {
+            for (final File file : foundFiles) {
+                final Resource currResource =
+                        new ResourceBean(requestedResourcePath,
+                                getRootResourceDirRelativePath(file),
+                                getRootResourcesDir());
+                result.add(currResource);
+            }
+        }
+        return result;
+    }
+
+    private String getRootResourceDirRelativePath(final File file) {
+        String rootResourceDirRelativePath =
+                StringUtils.substringAfter(file.getPath(),
+                        getRootResourcesDir().getPath());
+        rootResourceDirRelativePath =
+                rootResourceDirRelativePath.replace(File.separator, SEPARATOR);
+
+        if (rootResourceDirRelativePath.startsWith(SEPARATOR)) {
+            return StringUtils.substringAfter(rootResourceDirRelativePath,
+                    SEPARATOR);
+        } else {
+            return rootResourceDirRelativePath;
+        }
+    }
+
+    private boolean isPackageRequested(final String requestedResourcePath) {
+        return requestedResourcePath.endsWith(getAbstractPathPackageKeyword());
+    }
 
     /**
      * {@inheritDoc}
@@ -188,7 +162,6 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     protected String getRealResourcePathExtension() {
         return ".js";
     }
-
 
     /**
      * {@inheritDoc}
@@ -204,5 +177,13 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     @Override
     protected String getDebugResourceTypeName() {
         return "JavaScript";
+    }
+
+    private JavaScriptFileFinder getJavaScriptFileFinder() {
+        return javaScriptFileFinder;
+    }
+
+    private String getAbstractPathPackageKeyword() {
+        return abstractPathPackageKeyword;
     }
 }

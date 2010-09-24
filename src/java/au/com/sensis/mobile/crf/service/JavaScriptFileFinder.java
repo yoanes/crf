@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Callback interface to be passed to {@link #findJavaScriptFiles(Resource)}.
+ * Simple interface for finding JavaScript files in a directory whilst preserving the dependency order
+ * of those files.
  */
 public interface JavaScriptFileFinder {
 
@@ -18,5 +19,5 @@ public interface JavaScriptFileFinder {
      * the files.
      * @throws IOException Thrown if any IO error occurs.
      */
-    List<File> findJavaScriptFiles(File dir) throws IOException;
+    List<File> findFiles(File dir) throws IOException;
 }

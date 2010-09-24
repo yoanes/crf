@@ -22,6 +22,8 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
  */
 public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
+    private static final String ABSTRACT_PATH_PACKAGE_KEYWORD = "package";
+
     private JavaScriptResourceResolverBean objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
@@ -42,10 +44,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
         setObjectUnderTest(new JavaScriptResourceResolverBean(
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger()));
-
-        // TODO: get rid of setter injection.
-        getObjectUnderTest().setPathExpander(getMockJavaScriptFileFinder());
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                ABSTRACT_PATH_PACKAGE_KEYWORD,
+                getMockJavaScriptFileFinder()));
     }
 
     /**
@@ -65,7 +66,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         for (final String testValue : testValues) {
             try {
                 new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger());
+                        getMockResourceResolutionWarnLogger(),
+                        ABSTRACT_PATH_PACKAGE_KEYWORD,
+                        getMockJavaScriptFileFinder());
 
                 Assert.fail("IllegalArgumentException expected");
             } catch (final IllegalArgumentException e) {
@@ -89,7 +92,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
             try {
                 new JavaScriptResourceResolverBean(
                         getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                        invalidPath, getMockResourceResolutionWarnLogger());
+                        invalidPath, getMockResourceResolutionWarnLogger(),
+                        ABSTRACT_PATH_PACKAGE_KEYWORD,
+                        getMockJavaScriptFileFinder());
                 Assert.fail("IllegalArgumentException expected for invalidPath: '"
                       + invalidPath + "'");
             } catch (final IllegalArgumentException e) {
@@ -108,7 +113,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         try {
             new JavaScriptResourceResolverBean(
                     getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                    getResourcesRootDir(), null);
+                    getResourcesRootDir(), null,
+                    ABSTRACT_PATH_PACKAGE_KEYWORD,
+                    getMockJavaScriptFileFinder());
 
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
@@ -121,7 +128,50 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     }
 
     @Test
-    public void testResolveWhenBundleRequestedAndResourcesFound()
+    public void testConstructorWithBlankAbstractPathPackageKeyword()
+            throws Throwable {
+        final String[] testValues = { null, StringUtils.EMPTY, " ", "  "};
+        for (final String testValue : testValues) {
+            try {
+                new JavaScriptResourceResolverBean(
+                        getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
+                        getResourcesRootDir(),
+                        getMockResourceResolutionWarnLogger(),
+                        testValue,
+                        getMockJavaScriptFileFinder());
+
+                Assert.fail("IllegalArgumentException expected");
+            } catch (final IllegalArgumentException e) {
+
+                Assert.assertEquals(" has wrong message",
+                        "abstractPathPackageKeyword must not be blank: '"
+                                + testValue + "'", e.getMessage());
+            }
+        }
+    }
+
+    @Test
+    public void testConstructorWhenJavaScriptFileFinderIsNull()
+    throws Throwable {
+        try {
+            new JavaScriptResourceResolverBean(
+                    getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
+                    getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                    ABSTRACT_PATH_PACKAGE_KEYWORD,
+                    null);
+
+            Assert.fail("IllegalArgumentException expected");
+        } catch (final IllegalArgumentException e) {
+
+            Assert.assertEquals("IllegalArgumentException has wrong message",
+                    "javaScriptFileFinder must not be null", e
+                    .getMessage());
+        }
+
+    }
+
+    @Test
+    public void testResolveWhenPackageRequestedAndResourcesFound()
         throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getScriptExtensionWithLeadingDot(),
@@ -129,23 +179,19 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+                    getMockResourceResolutionWarnLogger(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                    getMockJavaScriptFileFinder()));
 
-            // TODO: get rid of setter injection.
-            getObjectUnderTest().setPathExpander(getMockJavaScriptFileFinder());
-
-
-            EasyMock.expect(getMockJavaScriptFileFinder().findJavaScriptFiles(
-                    getResourcePathTestData().getMappedIphoneGroupBundledScriptBundleResourcePath()
-                        .getBundleParentDirFile())).andReturn(
-                    createExistsByFilterExpectedFileFilterResults());
+            EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
+                    getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
+                        .getNewFile())).andReturn(createExistsByFilterExpectedFileFilterResults());
 
             replay();
 
             final List<Resource> actualResources =
                     getObjectUnderTest().resolve(
                             getResourcePathTestData()
-                                    .getRequestedBundledScriptResourcePath(),
+                                    .getRequestedPackageScriptResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
             // Explicit verify and reset since we are in a loop.
@@ -160,7 +206,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     }
 
     @Test
-    public void testResolveWhenBundleRequestedAndNoResourcesFound()
+    public void testResolveWhenPackageRequestedAndNoResourcesFound()
         throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getScriptExtensionWithLeadingDot(),
@@ -168,23 +214,19 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+                    getMockResourceResolutionWarnLogger(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                    getMockJavaScriptFileFinder()));
 
-            // TODO: get rid of setter injection.
-            getObjectUnderTest().setPathExpander(getMockJavaScriptFileFinder());
-
-
-            EasyMock.expect(getMockJavaScriptFileFinder().findJavaScriptFiles(
-                    getResourcePathTestData().getMappedIphoneGroupBundledScriptBundleResourcePath()
-                    .getBundleParentDirFile())).andReturn(
-                            new ArrayList<File>());
+            EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
+                    getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
+                        .getNewFile())).andReturn(new ArrayList<File>());
 
             replay();
 
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData()
-                        .getRequestedBundledScriptResourcePath(),
+                        .getRequestedPackageScriptResourcePath(),
                         getGroupTestData().createIPhoneGroup());
 
             // Explicit verify and reset since we are in a loop.
@@ -201,11 +243,11 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     private List<File> createExistsByFilterExpectedFileFilterResults() {
         final File expectedFile1 =
                 getResourcePathTestData()
-                        .getMappedDefaultGroupBundledScriptResourcePath1()
+                        .getMappedDefaultGroupPackagedScriptResourcePath1()
                         .getNewFile();
         final File expectedFile2 =
                 getResourcePathTestData()
-                        .getMappedDefaultGroupBundledScriptResourcePath2()
+                        .getMappedDefaultGroupPackagedScriptResourcePath2()
                         .getNewFile();
         return Arrays.asList(expectedFile1, expectedFile2);
     }
@@ -213,20 +255,21 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     private List<Resource> createExistsByFilterExpectedResources() {
         return Arrays.asList(
             getResourcePathTestData()
-                    .getMappedDefaultGroupBundledScriptResourcePath1(),
+                    .getMappedDefaultGroupPackagedScriptResourcePath1(),
             getResourcePathTestData()
-                    .getMappedDefaultGroupBundledScriptResourcePath2());
+                    .getMappedDefaultGroupPackagedScriptResourcePath2());
     }
 
     @Test
-    public void testResolveWhenBundleNotRequestedAndResourcesFound() throws Throwable {
+    public void testResolveWhenPackageNotRequestedAndResourcesFound() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getScriptExtensionWithLeadingDot(),
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+                    getMockResourceResolutionWarnLogger(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                    getMockJavaScriptFileFinder()));
 
             recordCheckIfNewPathExists(Boolean.TRUE);
 
@@ -251,14 +294,15 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     }
 
     @Test
-    public void testResolveWhenBundleNotRequestedAndNoResourcesFound() throws Throwable {
+    public void testResolveWhenPackageNotRequestedAndNoResourcesFound() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getScriptExtensionWithLeadingDot(),
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
             setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+                    getMockResourceResolutionWarnLogger(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                    getMockJavaScriptFileFinder()));
 
             recordCheckIfNewPathExists(Boolean.FALSE);
 
@@ -366,5 +410,11 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
     public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
         this.mockFileIoFacade = mockFileIoFacade;
+    }
+
+
+    @Override
+    public void verify() {
+        // Override to prevent auto verify.
     }
 }

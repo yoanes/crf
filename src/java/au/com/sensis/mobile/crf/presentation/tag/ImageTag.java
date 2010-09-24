@@ -35,7 +35,7 @@ public class ImageTag extends AbstractTag {
                 getResourceResolverEngine().getResourcePath(getDevice(),
                         getHref());
         if (resource != null) {
-            if (!resource.endsWithDotNull()) {
+            if (!resource.newPathEndsWithDotNull()) {
                 writeSingleImageTag(getJspContext().getOut(),
                         resource);
             }

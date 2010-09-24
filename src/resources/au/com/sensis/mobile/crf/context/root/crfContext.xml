@@ -43,11 +43,26 @@
                     <constructor-arg value="@{crf.resources.image.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.images.root.dir}"/>
                     <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+                    <constructor-arg>
+                        <list>
+                            <value>*</value>
+                        </list>
+                    </constructor-arg>
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.JavaScriptResourceResolverBean">
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.javascript.root.dir}"/>
                     <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+                    <constructor-arg value="@{crf.resources.javascript.abstract.path.package.keyword}" />
+                    <constructor-arg>
+                        <bean class="au.com.sensis.mobile.crf.service.JavaScriptFileFinderBean">
+                            <constructor-arg>
+                                <bean class="au.com.sensis.mobile.crf.service.PropertiesLoaderBean"/>
+                            </constructor-arg>
+                            <constructor-arg value="@{crf.resources.javascript.package.properties.name}"/>
+                            <constructor-arg value="@{crf.resources.javascript.package.order.property.name}"/>
+                        </bean>
+                    </constructor-arg>
                 </bean>
             </list>
         </constructor-arg>

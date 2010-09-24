@@ -19,9 +19,7 @@ import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
  * @author Adrian.Koh2@sensis.com.au
  *
  */
-// TODO: will be merged into JavaScriptGroupResourceResolver (once JavaScriptResourceBean
-// is split into two. See comments in Resource).
-public class JavaScriptBundlePathExpander implements JavaScriptFileFinder {
+public class JavaScriptFileFinderBean implements JavaScriptFileFinder {
 
     private static final String ORDER_PROPERTY_SPLIT_CHAR = ",";
 
@@ -44,7 +42,7 @@ public class JavaScriptBundlePathExpander implements JavaScriptFileFinder {
      *            Name of the property for controlling the order of files added
      *            to bundles.
      */
-    public JavaScriptBundlePathExpander(
+    public JavaScriptFileFinderBean(
             final PropertiesLoader propertiesLoader,
             final String bundlesPropertiesFileName,
             final String bundleOrderPropertyName) {
@@ -54,12 +52,12 @@ public class JavaScriptBundlePathExpander implements JavaScriptFileFinder {
     }
 
     /**
-     * If {@link Resource#isBundlePath()}, then the path is expanded
+     * The path is expanded
      * to a list of files that correspond to the bundle. Otherwise,
      * {@link Resource#getNewFile()} is returned.
      * <p>
      * Bundle expansion occurs by finding all files in
-     * {@link Resource#getBundleParentDirFile()} that match the
+     * the given dir that match the
      * {@link #getBundleOrderPropertyName()} property found in the
      * {@link #getBundlesPropertiesFileName()} properties file. If no such
      * property is found or no such file is found, then the order defaults to
@@ -71,7 +69,7 @@ public class JavaScriptBundlePathExpander implements JavaScriptFileFinder {
      * {@inheritDoc}
      */
     @Override
-    public List<File> findJavaScriptFiles(final File dir) throws IOException {
+    public List<File> findFiles(final File dir) throws IOException {
         final String bundleOrderProperty = getBundleOrderProperty(dir);
 
         final LinkedHashSet<File> foundFilesSet = new LinkedHashSet<File>();

@@ -81,8 +81,8 @@
   -         resources/js/webkit/animation/animation1.js
   -         resources/js/webkit/animation/animation2.js
   --%>
-<crf:script href="fielddecorators/bundle" type="text/javascript" device="${context.device}"/> 
-<crf:script href="grid/bundle" type="text/javascript" device="${context.device}"/> 
-<crf:script href="component/map/bundle" type="text/javascript" device="${context.device}"/> 
-<crf:script href="layers/bundle" type="text/javascript" device="${context.device}"/> 
-<crf:script href="animation/bundle" type="text/javascript" device="${context.device}"/> 
+<crf:script href="fielddecorators/package" type="text/javascript" device="${context.device}"/> 
+<crf:script href="grid/package" type="text/javascript" device="${context.device}"/> 
+<crf:script href="component/map/package" type="text/javascript" device="${context.device}"/> 
+<crf:script href="layers/package" type="text/javascript" device="${context.device}"/> 
+<crf:script href="animation/package" type="text/javascript" device="${context.device}"/> 

@@ -98,7 +98,7 @@ public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
         replay();
 
         Assert.assertTrue("endsWithDotNull() should return true", getObjectUnderTest()
-                .endsWithDotNull());
+                .newPathEndsWithDotNull());
 
     }
 
@@ -111,7 +111,7 @@ public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
         replay();
 
         Assert.assertFalse("endsWithDotNull() should return false", getObjectUnderTest()
-                .endsWithDotNull());
+                .newPathEndsWithDotNull());
     }
 
     @Test
@@ -127,72 +127,6 @@ public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
                 new File(resource.getRootResourceDir(),
                         resource.getNewPath()),
                 getObjectUnderTest().getNewFile());
-    }
-
-    @Test
-    public void testIsBundlePathWhenTrue() throws Throwable {
-        final String[] testValues =
-                { "default/util/bundle/bundle-all.js",
-                        "default/util/bundle/main.js",
-                        "iphone/bundle/bundle-all.js", "iphone/bundle/main.js" };
-
-        for (final String testValue : testValues) {
-            final Resource resource =
-                    new ResourceBean(getResourcePathTestData()
-                            .getRequestedNamedScriptResourcePath(), testValue,
-                            getResourcePathTestData().getRootResourcesPath());
-            setObjectUnderTest(resource);
-
-            Assert.assertTrue("isBundlePath() is wrong for testValue: '"
-                    + testValue + "'", getObjectUnderTest().isBundlePath());
-        }
-    }
-
-    @Test
-    public void testIsBundlePathWhenFalse() throws Throwable {
-        final String[] testValues = { "default/util/bundl/bundle-all.js",
-            "default/util/bundl/main.js", "iphone/bundl/bundle-all.js",
-            "iphone/bundl/main.js", "default/util.js" };
-
-        for (final String testValue : testValues) {
-            final Resource resource =
-                    new ResourceBean(getResourcePathTestData()
-                            .getRequestedNamedScriptResourcePath(), testValue,
-                            getResourcePathTestData().getRootResourcesPath());
-            setObjectUnderTest(resource);
-
-            Assert.assertFalse("isBundlePath() is wrong for testValue: '"
-                    + testValue + "'", getObjectUnderTest().isBundlePath());
-        }
-    }
-
-    @Test
-    public void testGetBundleParentDirWhenIsBundlePathTrue() throws Throwable {
-        final Resource resource =
-                getResourcePathTestData()
-                        .getMappedDefaultGroupBundledScriptBundleResourcePath();
-
-        Assert.assertEquals("getBundleParentDir() is wrong",
-                new File(resource.getRootResourceDir(), "default/util"),
-                resource.getBundleParentDirFile());
-    }
-
-    @Test
-    public void testGetBundleParentDirWhenIsBundlePathFalse() throws Throwable {
-        final Resource resource =
-                getResourcePathTestData()
-                        .getMappedDefaultGroupNamedScriptResourcePath();
-
-        try {
-            resource.getBundleParentDirFile();
-
-            Assert.fail("IllegalStateException expected");
-        } catch (final IllegalStateException e) {
-
-            Assert.assertEquals("IllegalStateException has wrong message",
-                    "Illegal to call this method when isBundlePath() is false.",
-                    e.getMessage());
-        }
     }
 
     /**

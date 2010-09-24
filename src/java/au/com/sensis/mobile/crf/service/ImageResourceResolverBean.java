@@ -23,15 +23,12 @@ import au.com.sensis.mobile.crf.config.Group;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-// TODo: clean up code. Current mess is due to refactoring ImageResourceBean into oblivion
-// and pushing the code into here.
 public class ImageResourceResolverBean extends AbstractResourceResolver {
 
     private static final Logger LOGGER =
             Logger.getLogger(ImageResourceResolverBean.class);
 
-    // TODO: once we refactor into ImageGroupResourceResolver, Spring inject this.
-    private static final String[] FILE_EXTENSION_WILDCARDS = new String [] {"*"};
+    private final String [] fileExtensionWildcards;
 
     /**
      * Constructor.
@@ -42,52 +39,42 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      *            Root directory where the concrete resources are stored.
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger}.
+     * @param fileExtensionWildcards
+     *            Array of image file extensions to match. Wildcards supported
+     *            are '*' as per standard Unix/Windows command line
+     *            semantics.
      */
     public ImageResourceResolverBean(final String abstractResourceExtension,
             final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final String[] fileExtensionWildcards) {
         super(abstractResourceExtension, rootResourcesDir,
                 resourceResolutionWarnLogger);
+
+        validateFileExtensionWildcards(fileExtensionWildcards);
+
+        this.fileExtensionWildcards = fileExtensionWildcards;
     }
 
-    /**
-     * Template method for mapping requested resource paths to real resource
-     * paths.
-     *
-     * {@inheritDoc}
-     *
-     * @throws IOException
-     *             Thrown if an IO error occurs.
-     */
-    @Override
-    public List<Resource> resolve(final String requestedResourcePath,
-            final Group group) throws IOException {
-        if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
-                        "Mapping '"
-                                + requestedResourcePath
-                                + "' to '"
-                                + doMapResourcePath(requestedResourcePath,
-                                        group) + "'");
-            }
-            final Resource resource =
-                    createResource(requestedResourcePath,
-                            doMapResourcePath(requestedResourcePath, group));
-
-            return doResolve(resource);
-        } else {
-
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug(
-                        "Requested resource '" + requestedResourcePath
-                                + "' is not for a "
-                                + getDebugResourceTypeName()
-                                + " file. Returning an empty list.");
-            }
-
-            return new ArrayList<Resource>();
+    private void validateFileExtensionWildcards(
+            final String[] fileExtensionWildcards) {
+        if ((fileExtensionWildcards == null)
+                || (fileExtensionWildcards.length == 0)
+                || containsBlanks(fileExtensionWildcards)) {
+            throw new IllegalArgumentException(
+                    "fileExtensionWildcards must be an array of non-blank Strings but was: '"
+                            + ArrayUtils.toString(fileExtensionWildcards) + "'");
         }
+    }
+
+    private boolean containsBlanks(final String[] fileExtensionWildcards) {
+        for (final String wildcard : fileExtensionWildcards) {
+            if (StringUtils.isBlank(wildcard)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -98,36 +85,43 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      *
      * @param resource
      */
-    private List<Resource> doResolve(
-            final Resource resource) {
+    @Override
+    protected List<Resource> doResolve(
+            final String requestedResourcePath, final Group group)
+            throws IOException {
+
+        final String newResourcesBasePath = createNewResourcePath(requestedResourcePath, group);
+
         // TODO: possibly cache the result since we are accessing the file
         // system?
         final File[] matchedFiles =
                 FileIoFacadeFactory.getFileIoFacadeSingleton().list(
-                        resource.getRootResourceDir(),
-                        resource.getNewPath(),
-                        FILE_EXTENSION_WILDCARDS);
+                        getRootResourcesDir(),
+                        newResourcesBasePath,
+                        getFileExtensionWildcards());
 
-        warnIfMultipleResourcesWithExtensionsFound(resource
-                .getOriginalPath(), matchedFiles);
+        warnIfMultipleResourcesWithExtensionsFound(requestedResourcePath, matchedFiles);
 
-        // TODO: clean this up once we've refactored it into a ResourceResolver.
         if (matchedFiles.length > 0) {
             return Arrays
-                    .asList((Resource) new ResourceBean(
-                            resource.getOriginalPath(),
-                            getNewPathPlusFileExtension(
-                                    matchedFiles[0], resource),
-                            resource.getRootResourceDir()));
+                    .asList(createFoundResource(requestedResourcePath, newResourcesBasePath,
+                            matchedFiles[0]));
         } else {
             return new ArrayList<Resource>();
         }
     }
 
-    private String getNewPathPlusFileExtension(final File matchedFile,
-            final Resource resource) {
+    private Resource createFoundResource(final String requestedResourcePath,
+            final String newResourcePath, final File foundFile) {
+        return new ResourceBean(requestedResourcePath,
+                getNewResourcePathPlusFileExtension(foundFile, newResourcePath),
+                getRootResourcesDir());
+    }
+
+    private String getNewResourcePathPlusFileExtension(final File matchedFile,
+            final String newResourcePath) {
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(resource.getNewPath());
+        stringBuilder.append(newResourcePath);
         stringBuilder.append(".");
         stringBuilder.append(FilenameUtils.getExtension(matchedFile.getName()));
         return stringBuilder.toString();
@@ -142,7 +136,7 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
                     "Requested resource '"
                     + requestedResourcePath
                     + "' resolved to multiple real resources with extensions matching "
-                    + ArrayUtils.toString(FILE_EXTENSION_WILDCARDS)
+                    + ArrayUtils.toString(getFileExtensionWildcards())
                     + ". Will only return the first resource. Total found: "
                     + nonEmptyArrayToString(matchedFiles)
                     + ".");
@@ -187,6 +181,10 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
     @Override
     protected String getRealResourcePathExtension() {
         return StringUtils.EMPTY;
+    }
+
+    private String[] getFileExtensionWildcards() {
+        return fileExtensionWildcards;
     }
 
 }

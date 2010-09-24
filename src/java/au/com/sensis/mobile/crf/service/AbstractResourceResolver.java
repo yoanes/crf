@@ -77,7 +77,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     private void validateResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         Validate.notNull(resourceResolutionWarnLogger,
-        "resourceResolutionWarnLogger must not be null");
+            "resourceResolutionWarnLogger must not be null");
     }
 
     private String prefixWithLeadingDotIfRequired(final String path) {
@@ -93,37 +93,37 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * paths.
      *
      * {@inheritDoc}
-     * @throws IOException Thrown if an IO error occurs.
+     *
+     * @throws IOException
+     *             Thrown if an IO error occurs.
      */
     @Override
-    public List<Resource> resolve(
-            final String requestedResourcePath, final Group group)
-                throws IOException {
+    public List<Resource> resolve(final String requestedResourcePath,
+            final Group group) throws IOException {
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug(
-                        "Mapping '"
-                                + requestedResourcePath
-                                + "' to '"
-                                + doMapResourcePath(requestedResourcePath,
-                                        group) + "'");
+                        "Attempting to resolve requested resource '"
+                                + requestedResourcePath + "'");
             }
-            final Resource resource =
-                createResource(requestedResourcePath,
-                    doMapResourcePath(requestedResourcePath, group));
-            // TODO: refactor so that we check existance before we instantiate the Resource?
-            if (exists(resource)) {
-                return Arrays.asList(resource);
-            } else {
-                return new ArrayList<Resource>();
+
+            final List<Resource> resolvedResources =
+                    doResolve(requestedResourcePath, group);
+
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug(
+                        "Resolved requested resource '" + requestedResourcePath
+                                + "' to '" + resolvedResources + "'");
             }
+            return resolvedResources;
         } else {
 
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug(
                         "Requested resource '" + requestedResourcePath
-                                + "' is not for a " + getDebugResourceTypeName()
-                                + " file. Returning an empty list.");
+                                + "' is not for a "
+                                + getDebugResourceTypeName()
+                                + " file. Ignoring the request.");
             }
 
             return new ArrayList<Resource>();
@@ -131,27 +131,46 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
-     * @return true if the mapped path given by {@link #getNewPath()}
-     *         exists in {@link #getRootResourceDir()}.
+     * Workhorse method that is only called if
+     * {@link #isRecognisedAbstractResourceRequest(String)} is true. Resolves
+     * the requested resource path to one or more {@link Resource}s if they
+     * exist. Returns an empty list if none are found. The default
+     * implementation simply creates a new {@link Resource} from the given
+     * parameters if newResourcePath exists.
+     *
+     * @param requestedResourcePath
+     *            The original resource that was requested.
+     * @param group {@link Group} for the request.
+     * @return {@link List} of {@link Resource}s that exist.
+     * @throws IOException
+     *             Thrown if any IO error occurs.
      */
-    private boolean exists(final Resource resource) {
-        // TODO: possibly cache the result since we are accessing the file system?
-        return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
-                resource.getRootResourceDir(), resource.getNewPath());
+    protected List<Resource> doResolve(final String requestedResourcePath,
+            final Group group) throws IOException {
+        final String newResourcePath =
+                createNewResourcePath(requestedResourcePath, group);
+
+        if (exists(newResourcePath)) {
+            return Arrays.asList(createResource(requestedResourcePath,
+                    newResourcePath));
+        } else {
+            return new ArrayList<Resource>();
+        }
     }
 
     /**
-     * Returns a new instance of a {@link Resource}. The default
-     * implementation returned is {@link ResourceBean}.
-     *
-     * @param requestedResourcePath
-     *            The path of the resource requested.
-     * @param newPath
-     *            The new resource path that the requested path maps to.
-     * @return a new instance of a {@link Resource}. The default
-     *         implementation returned is {@link ResourceBean}.
+     * @param newResourcePath Path to test.
+     * @return true if the given new path exists in
+     *         {@link #getRootResourceDir()}.
      */
-    protected Resource createResource(
+    protected final boolean exists(final String newResourcePath) {
+        // TODO: possibly cache the result since we are accessing the file
+        // system?
+        return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
+                getRootResourcesDir(), newResourcePath);
+    }
+
+    private  Resource createResource(
             final String requestedResourcePath, final String newPath) {
         return new ResourceBean(requestedResourcePath,
                 newPath, getRootResourcesDir());
@@ -174,8 +193,8 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
-     * The actual algorithm for mapping the requested resource path to the real
-     * resource path. Will only ever be called if
+     * The actual algorithm for mapping the requested resource path to the
+     * candidate real resource path. Will only ever be called if
      * {@link #isRecognisedAbstractResourceRequest(String)} returns true. The
      * default implementation invokes
      * {@link #insertGroupNameIntoPath(String, Group)} the replaces the
@@ -188,11 +207,12 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            {@link Group} that the
      *            {@link au.com.sensis.wireless.common.volantis.devicerepository.api.Device}
      *            for the current request belongs to.
-     * @return The real resource path that the requested resource path maps to.
-     *         May not be null.
+     * @return The candidate real resource path that the requested resource path
+     *         maps to. May not be null.
      */
-    protected String doMapResourcePath(final String requestedResourcePath,
+    protected String createNewResourcePath(final String requestedResourcePath,
             final Group group) {
+
         return replaceAbstractResourceExtensionWithReal(insertGroupNameIntoPath(
                 requestedResourcePath, group));
     }

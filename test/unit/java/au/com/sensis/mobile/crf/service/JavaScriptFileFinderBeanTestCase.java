@@ -19,18 +19,18 @@ import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link JavaScriptBundlePathExpander}.
+ * Unit test {@link JavaScriptFileFinderBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JavaScriptBundlePathExpanderTestCase extends
+public class JavaScriptFileFinderBeanTestCase extends
         AbstractJUnit4TestCase {
 
     private static final String ORDER_PROPERTY_NAME = "order";
 
     private static final String BUNDLES_PROPERTIES_FILE_NAME = "bundles.properties";
 
-    private JavaScriptBundlePathExpander objectUnderTest;
+    private JavaScriptFileFinderBean objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private FileIoFacade mockFileIoFacade;
@@ -49,7 +49,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
         FileIoFacadeFactory
                 .changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
-        setObjectUnderTest(new JavaScriptBundlePathExpander(
+        setObjectUnderTest(new JavaScriptFileFinderBean(
                 getMockPropertiesLoader(), BUNDLES_PROPERTIES_FILE_NAME,
                 ORDER_PROPERTY_NAME));
     }
@@ -65,8 +65,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
     }
 
     @Test
-    public void testFindJavaScriptFiles()
-            throws Throwable {
+    public void testFindJavaScriptFiles() throws Throwable {
 
         final TestData[] testData = getTestDataWhenResourceIsForABundle();
         for (int i = 0; i < testData.length; i++) {
@@ -77,34 +76,35 @@ public class JavaScriptBundlePathExpanderTestCase extends
 
             EasyMock.expect(
                     getMockPropertiesLoader().loadPropertiesNotNull(
-                            new File(resource
-                                    .getBundleParentDirFile(),
+                            new File(resource.getNewFile(),
                                     BUNDLES_PROPERTIES_FILE_NAME))).andReturn(
                     testData[i].getBundleProperties());
 
             EasyMock.expect(
-                    getMockFileIoFacade().list(
-                            EasyMock.eq(resource
-                                    .getBundleParentDirFile()),
-                            EasyMock.aryEq(testData[i].getWildcardOneAsArray())))
+                    getMockFileIoFacade()
+                            .list(
+                                    EasyMock.eq(resource.getNewFile()),
+                                    EasyMock.aryEq(testData[i]
+                                            .getWildcardOneAsArray())))
                     .andReturn(testData[i].getWildcardOnefoundFiles());
 
             if (testData[i].getWildcardTwo() != null) {
                 EasyMock.expect(
                         getMockFileIoFacade().list(
-                                EasyMock.eq(resource
-                                        .getBundleParentDirFile()),
-                                        EasyMock.aryEq(testData[i].getWildcardTwoAsArray())))
-                                        .andReturn(testData[i].getWildcardTwofoundFiles());
+                                EasyMock.eq(resource.getNewFile()),
+                                EasyMock.aryEq(testData[i]
+                                        .getWildcardTwoAsArray()))).andReturn(
+                        testData[i].getWildcardTwofoundFiles());
             }
             replay();
 
             final List<File> actualFiles =
-                    getObjectUnderTest().findJavaScriptFiles(
-                            resource.getBundleParentDirFile());
+                    getObjectUnderTest().findFiles(
+                            resource.getNewFile());
             assertComplexObjectsEqual(
                     "Incorrect files returned for testData at index " + i
-                            + ": " + testData[i], testData[i].getExpectedResult(), actualFiles);
+                            + ": " + testData[i], testData[i]
+                            .getExpectedResult(), actualFiles);
 
             // Explicit verification since we are in a loop.
             verify();
@@ -119,8 +119,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
             throws Throwable {
 
         final String[] testOrderPropertyValues =
-                { " ", "  ", " , ", ",", "grid2.js, ",
-                        " , grid2.js" };
+                { " ", "  ", " , ", ",", "grid2.js, ", " , grid2.js" };
 
         for (final String testOrderPropertyValue : testOrderPropertyValues) {
             final Properties properties = new Properties();
@@ -131,7 +130,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
                             .getMappedDefaultGroupBundledScriptBundleResourcePath();
 
             final File bundlePropertiesFile =
-                    new File(resource.getBundleParentDirFile(),
+                    new File(resource.getNewFile(),
                             BUNDLES_PROPERTIES_FILE_NAME);
             EasyMock.expect(
                     getMockPropertiesLoader().loadPropertiesNotNull(
@@ -140,8 +139,7 @@ public class JavaScriptBundlePathExpanderTestCase extends
             replay();
 
             try {
-                getObjectUnderTest().findJavaScriptFiles(
-                        resource.getBundleParentDirFile());
+                getObjectUnderTest().findFiles(resource.getNewFile());
 
                 Assert
                         .fail("ConfigurationRuntimeException expected for testValue: '"
@@ -179,14 +177,14 @@ public class JavaScriptBundlePathExpanderTestCase extends
         final IOException expectedException = new IOException("test");
         EasyMock.expect(
                 getMockPropertiesLoader().loadPropertiesNotNull(
-                        new File(resource.getBundleParentDirFile(),
+                        new File(resource.getNewFile(),
                                 BUNDLES_PROPERTIES_FILE_NAME))).andThrow(
                 expectedException);
 
         replay();
 
         try {
-            getObjectUnderTest().findJavaScriptFiles(resource.getBundleParentDirFile());
+            getObjectUnderTest().findFiles(resource.getNewFile());
 
             Assert.fail("IOException expected");
         } catch (final IOException e) {
@@ -211,11 +209,11 @@ public class JavaScriptBundlePathExpanderTestCase extends
 //
 //    }
 
-    private JavaScriptBundlePathExpander getObjectUnderTest() {
+    private JavaScriptFileFinderBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
-    private void setObjectUnderTest(final JavaScriptBundlePathExpander objectUnderTest) {
+    private void setObjectUnderTest(final JavaScriptFileFinderBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

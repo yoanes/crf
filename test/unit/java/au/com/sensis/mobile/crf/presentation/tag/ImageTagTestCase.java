@@ -198,7 +198,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     }
 
     private void recordResourceEndsWithDotNull(final Boolean endsWithDotNull) {
-        EasyMock.expect(getMockResource().endsWithDotNull())
+        EasyMock.expect(getMockResource().newPathEndsWithDotNull())
                 .andReturn(endsWithDotNull);
     }
 

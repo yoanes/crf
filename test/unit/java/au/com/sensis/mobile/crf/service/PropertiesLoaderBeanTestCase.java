@@ -16,7 +16,7 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
  */
 public class PropertiesLoaderBeanTestCase extends AbstractJUnit4TestCase {
 
-    private static final String BUNDLES_PROPERTIES_FILENAME = "bundles.properties";
+    private static final String PACKAGE_PROPERTIES_FILENAME = "package.properties";
     private PropertiesLoaderBean objectUnderTest;
     private File testDataDir;
 
@@ -38,7 +38,7 @@ public class PropertiesLoaderBeanTestCase extends AbstractJUnit4TestCase {
     public void testLoadPropertiesWhenFileFound() throws Throwable {
         final Properties properties =
             getObjectUnderTest().loadPropertiesNotNull(
-                    new File(getTestDataDir(), BUNDLES_PROPERTIES_FILENAME));
+                    new File(getTestDataDir(), PACKAGE_PROPERTIES_FILENAME));
 
         Assert.assertNotNull("properties should not be null", properties);
         Assert.assertEquals("order property is wrong", "*.js", properties.getProperty("order"));

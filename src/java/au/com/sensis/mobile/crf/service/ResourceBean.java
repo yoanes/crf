@@ -2,7 +2,6 @@ package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -55,51 +54,10 @@ public class ResourceBean implements Resource {
     }
 
     /**
-     * @return true if {@link #getNewPath()} equals
-     *         {@link #getOriginalPath()}.
-     */
-    public boolean isIdentityMapping() {
-        return getNewPath().equals(getOriginalPath());
-    }
-
-    /**
-     * @return true if {@link #getNewPath() corresponds to a bundle
-     *         result artifact. ie. if the last directory equals
-     *         {@link #BUNDLE_DIR_NAME}.
-     */
-    public boolean isBundlePath() {
-        return (getNewPath() != null)
-                && FilenameUtils.getPathNoEndSeparator(getNewPath())
-                        .endsWith(BUNDLE_DIR_NAME);
-    }
-
-    /**
-     * If {@link #isBundlePath()} is true, returns the part of the path before
-     * the {@link #BUNDLE_DIR_NAME} directory. Else, throw
-     * {@link IllegalStateException}.
-     *
-     * @return the part of the path before the {@link #BUNDLE_DIR_NAME}
-     *         directory.
-     * @throws IllegalStateException
-     *             Thrown if {@link #isBundlePath()} is false.
-     */
-    public File getBundleParentDirFile() throws IllegalStateException {
-        if (isBundlePath()) {
-            // TODO: Pretty complictade way of building the File. Is there an easier
-            // way.
-            return new File(getRootResourceDir(),
-                    FilenameUtils.getPathNoEndSeparator(getNewPath())).getParentFile();
-        } else {
-            throw new IllegalStateException(
-                    "Illegal to call this method when isBundlePath() is false.");
-        }
-    }
-
-    /**
      * @return true if {@link #getNewPath()} ends with the special
      *         extension ".null".
      */
-    public boolean endsWithDotNull() {
+    public boolean newPathEndsWithDotNull() {
         return getNewPath().endsWith(".null");
     }
 

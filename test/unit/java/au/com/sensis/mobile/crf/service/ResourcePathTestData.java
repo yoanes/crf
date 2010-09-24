@@ -104,8 +104,8 @@ public class ResourcePathTestData {
         return "common/main.js";
     }
 
-    public String getRequestedBundledScriptResourcePath() {
-        return "util/bundle";
+    public String getRequestedPackageScriptResourcePath() {
+        return "util/package";
     }
 
     public Resource getMappedDefaultGroupCssResourcePath() {
@@ -131,17 +131,17 @@ public class ResourcePathTestData {
 
     public Resource getMappedDefaultGroupBundledScriptBundleResourcePath() {
         // TODO: should the method return the concrete ResourceBean?
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
-                "default/util/bundle/bundle-all.js", getRootResourcesPath());
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
+                "default/util/", getRootResourcesPath());
     }
 
-    public Resource getMappedDefaultGroupBundledScriptResourcePath1() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedDefaultGroupPackagedScriptResourcePath1() {
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "default/util/util1.js", getRootResourcesPath());
     }
 
-    public Resource getMappedDefaultGroupBundledScriptResourcePath2() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+    public Resource getMappedDefaultGroupPackagedScriptResourcePath2() {
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "default/util/util2.js", getRootResourcesPath());
     }
 
@@ -186,78 +186,78 @@ public class ResourcePathTestData {
                         .getNewPath();
     }
 
-    public Resource getMappedIphoneGroupBundledScriptBundleResourcePath() {
+    public Resource getMappedIphoneGroupPackagedScriptBundleResourcePath() {
         // TODO: should the method return the concrete ResourceBean?
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
-                "iPhone/util/bundle/bundle-all.js", getRootResourcesPath());
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
+                "iPhone/util/", getRootResourcesPath());
     }
 
     public Resource getMappedIphoneGroupBundledScriptResourcePath1() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "iPhone/util/util1.js", getRootResourcesPath());
     }
 
     public Resource getMappedIphoneGroupBundledScriptResourcePath2() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "iPhone/util/util2.js", getRootResourcesPath());
     }
 
     public Resource getMappedAndroidGroupBundledScriptBundleResourcePath() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "android/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
     public Resource getMappedAndroidGroupBundledScriptResourcePath1() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "android/util/util1.js", getRootResourcesPath());
     }
 
     public Resource getMappedAndroidGroupBundledScriptResourcePath2() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "android/util/util2.js", getRootResourcesPath());
     }
 
     public Resource getMappedAppleGroupBundledScriptBundleResourcePath() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "apple/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
     public Resource getMappedAppleGroupBundledScriptResourcePath1() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "apple/util/util1.js", getRootResourcesPath());
     }
 
     public Resource getMappedAppleGroupBundledScriptResourcePath2() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "apple/util/util2.js", getRootResourcesPath());
     }
 
     public Resource getMappedHD800GroupBundledScriptBundleResourcePath() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "hd800/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
     public Resource getMappedHD800GroupBundledScriptResourcePath1() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "hd800/util/util1.js", getRootResourcesPath());
     }
 
     public Resource getMappedHD800GroupBundledScriptResourcePath2() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "hd800/util/util2.js", getRootResourcesPath());
     }
     public Resource getMappedMediumGroupBundledScriptBundleResourcePath() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "medium/util/bundle/bundle-all.js", getRootResourcesPath());
     }
 
     public Resource getMappedMediumGroupBundledScriptResourcePath1() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "medium/util/util1.js", getRootResourcesPath());
     }
 
     public Resource getMappedMediumGroupBundledScriptResourcePath2() {
-        return new ResourceBean(getRequestedBundledScriptResourcePath(),
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 "medium/util/util2.js", getRootResourcesPath());
     }
 
