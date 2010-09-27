@@ -18,8 +18,8 @@ import org.junit.Test;
 import org.springframework.mock.web.MockJspWriter;
 import org.springframework.web.context.WebApplicationContext;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersion;
-import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
@@ -43,8 +43,8 @@ public class ScriptTagWriterTestCase extends
     private ScriptTagWriter objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private final DeploymentVersionTestData deploymentVersionTestData
-        = new DeploymentVersionTestData();
+    private final DeploymentMetadataTestData deploymentMetadataTestData
+        = new DeploymentMetadataTestData();
     private JspWriter mockJspWriter;
     private StringWriter stringWriter;
 
@@ -103,12 +103,12 @@ public class ScriptTagWriterTestCase extends
 
                 recordGetResource(testDataArray[i].getResources());
 
-                if (testDataArray[i].getDeploymentVersion().isDevPlatform()
+                if (testDataArray[i].getDeploymentMetadata().isDevPlatform()
                         && StringUtils.isEmpty(testDataArray[i].getOutputString())) {
                     recordLogResourceNotFoundWarning();
                 }
 
-                if (testDataArray[i].getDeploymentVersion().isProdPlatform()) {
+                if (testDataArray[i].getDeploymentMetadata().isProdPlatform()) {
                     if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
                         recordLogResourceNotFoundWarning();
                     } else {
@@ -150,7 +150,7 @@ public class ScriptTagWriterTestCase extends
     private ScriptTagDependencies createTagDependencies(
             final TestData testData) {
         return new ScriptTagDependencies(getMockResourceResolverEngine(),
-                testData.getDeploymentVersion(), getMockScriptBundleFactory(),
+                testData.getDeploymentMetadata(), getMockScriptBundleFactory(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());
     }
@@ -290,10 +290,10 @@ public class ScriptTagWriterTestCase extends
     }
 
     /**
-     * @return the deploymentVersionTestData
+     * @return the deploymentMetadataTestData
      */
-    private DeploymentVersionTestData getDeploymentVersionTestData() {
-        return deploymentVersionTestData;
+    private DeploymentMetadataTestData getDeploymentMetadataTestData() {
+        return deploymentMetadataTestData;
     }
 
     /**
@@ -346,7 +346,7 @@ public class ScriptTagWriterTestCase extends
                 + "<script src=\""
                 + getMappediPhoneGroupScriptResourceHref()
                 + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataTwoDynamicAttributesMultipleMappedResourcesProdMode() {
@@ -358,7 +358,7 @@ public class ScriptTagWriterTestCase extends
                         "<script src=\""
                         + getMappedIphoneGroupScriptBundleResourceHref()
                         + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
-                        getDeploymentVersionTestData().createProdDeploymentVersion());
+                        getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeMultipleMappedResourcesDevMode() {
@@ -373,7 +373,7 @@ public class ScriptTagWriterTestCase extends
                 + "<script src=\""
                 + getMappediPhoneGroupScriptResourceHref()
                 + "\" title=\"My Image\" ></script>\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeMultipleMappedResourcesProdMode() {
@@ -385,7 +385,7 @@ public class ScriptTagWriterTestCase extends
                         "<script src=\""
                         + getMappedIphoneGroupScriptBundleResourceHref()
                         + "\" title=\"My Image\" ></script>\n",
-                        getDeploymentVersionTestData().createProdDeploymentVersion());
+                        getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesMultipleMappedResourcesDevMode() {
@@ -398,7 +398,7 @@ public class ScriptTagWriterTestCase extends
                 + "\" " + "></script>\n"
                 + "<script src=\"" + getMappediPhoneGroupScriptResourceHref()
                     + "\" " + "></script>\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesMultipleMappedResourcesProdMode() {
@@ -409,7 +409,7 @@ public class ScriptTagWriterTestCase extends
                 getMappedIphoneGroupScriptBundleResourcePath(),
                 "<script src=\"" + getMappedIphoneGroupScriptBundleResourceHref()
                 + "\" " + "></script>\n",
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataTwoDynamicAttributesSingleMappedResourceDevMode() {
@@ -420,7 +420,7 @@ public class ScriptTagWriterTestCase extends
                 "<script src=\""
                 + getMappedDefaultGroupScriptResourceHref()
                 + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataTwoDynamicAttributesSingleMappedResourceProdMode() {
@@ -431,7 +431,7 @@ public class ScriptTagWriterTestCase extends
                 "<script src=\""
                 + getMappedDefaultGroupScriptBundleResourceHref()
                 + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeSingleMappedResourceProdMode() {
@@ -442,7 +442,7 @@ public class ScriptTagWriterTestCase extends
                 "<script src=\""
                 + getMappedDefaultGroupScriptBundleResourceHref()
                 + "\" title=\"My Image\" ></script>\n",
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeSingleMappedResourceDevMode() {
@@ -453,7 +453,7 @@ public class ScriptTagWriterTestCase extends
                 "<script src=\""
                 + getMappedDefaultGroupScriptResourceHref()
                 + "\" title=\"My Image\" ></script>\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesSingleMappedResourceProdMode() {
@@ -463,7 +463,7 @@ public class ScriptTagWriterTestCase extends
                 getMappedDefaultGroupScriptBundleResourcePath(),
                 "<script src=\"" + getMappedDefaultGroupScriptBundleResourceHref()
                 + "\" " + "></script>\n",
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResourceDevMode() {
@@ -472,7 +472,7 @@ public class ScriptTagWriterTestCase extends
                 new ArrayList<Resource>(),
                 null,
                 StringUtils.EMPTY,
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResourceProdMode() {
@@ -481,7 +481,7 @@ public class ScriptTagWriterTestCase extends
                 new ArrayList<Resource>(),
                 null,
                 StringUtils.EMPTY,
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesSingleMappedResourceDevMode() {
@@ -491,7 +491,7 @@ public class ScriptTagWriterTestCase extends
                 null,
                 "<script src=\"" + getMappedDefaultGroupScriptResourceHref()
                     + "\" " + "></script>\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private Resource getMappedDefaultGroupScriptBundleResourcePath() {
@@ -516,19 +516,19 @@ public class ScriptTagWriterTestCase extends
         private final List<Resource> resources;
         private final Resource bundleResource;
         private final String outputString;
-        private final DeploymentVersion deploymentVersion;
+        private final DeploymentMetadata deploymentMetadata;
 
         public TestData(final List<DynamicTagAttribute> dynamicAttributes,
                 final List<Resource> resources,
                 final Resource bundlePath,
                 final String outputString,
-                final DeploymentVersion deploymentVersion) {
+                final DeploymentMetadata deploymentMetadata) {
             super();
             this.dynamicAttributes = dynamicAttributes;
             this.resources = resources;
             bundleResource = bundlePath;
             this.outputString = outputString;
-            this.deploymentVersion = deploymentVersion;
+            this.deploymentMetadata = deploymentMetadata;
         }
 
         /**
@@ -553,10 +553,10 @@ public class ScriptTagWriterTestCase extends
         }
 
         /**
-         * @return the deploymentVersion
+         * @return the deploymentMetadata
          */
-        public DeploymentVersion getDeploymentVersion() {
-            return deploymentVersion;
+        public DeploymentMetadata getDeploymentMetadata() {
+            return deploymentMetadata;
         }
 
         /**
@@ -576,7 +576,7 @@ public class ScriptTagWriterTestCase extends
             toStringBuilder.append("resources", getResources());
             toStringBuilder.append("bundleResource", getBundleResource());
             toStringBuilder.append("outputString", getOutputString());
-            toStringBuilder.append("deploymentVersion", getDeploymentVersion());
+            toStringBuilder.append("deploymentMetadata", getDeploymentMetadata());
             return toStringBuilder.toString();
         }
 

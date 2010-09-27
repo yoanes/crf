@@ -1,6 +1,6 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersion;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
@@ -14,7 +14,7 @@ public class TagDependencies {
 
     private final ResourceResolverEngine
         resourceResolverEngine;
-    private final DeploymentVersion deploymentVersion;
+    private final DeploymentMetadata deploymentMetadata;
     private final String clientPathPrefix;
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
 
@@ -22,8 +22,8 @@ public class TagDependencies {
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to
      *            resolve {@link #getHref()} to concrete resource(s).
-     * @param deploymentVersion
-     *            {@link DeploymentVersion} of the current deployment.
+     * @param deploymentMetadata
+     *            {@link DeploymentMetadata} of the current deployment.
      * @param clientPathPrefix
      *            Prefix to be used for the final paths that a client (web
      *            browser) will see.
@@ -34,12 +34,12 @@ public class TagDependencies {
     public TagDependencies(
             final ResourceResolverEngine
                 resourceResolverEngine,
-            final DeploymentVersion deploymentVersion,
+            final DeploymentMetadata deploymentMetadata,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         this.resourceResolverEngine =
                 resourceResolverEngine;
-        this.deploymentVersion = deploymentVersion;
+        this.deploymentMetadata = deploymentMetadata;
         this.clientPathPrefix = clientPathPrefix;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
     }
@@ -52,10 +52,10 @@ public class TagDependencies {
     }
 
     /**
-     * @return {@link DeploymentVersion}
+     * @return {@link DeploymentMetadata}
      */
-    public DeploymentVersion getDeploymentVersion() {
-        return deploymentVersion;
+    public DeploymentMetadata getDeploymentMetadata() {
+        return deploymentMetadata;
     }
 
     /**

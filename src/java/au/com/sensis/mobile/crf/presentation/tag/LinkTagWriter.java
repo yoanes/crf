@@ -6,7 +6,7 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersion;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.CssBundleFactory;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
@@ -76,7 +76,7 @@ public class LinkTagWriter implements TagWriter {
     public void writeTag(final JspWriter jspWriter) throws IOException,
             JspException {
 
-        if (getDeploymentVersion().isDevPlatform()) {
+        if (getDeploymentMetadata().isDevPlatform()) {
             writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
         } else {
             writeLinkTagForBundledResources(jspWriter, getAllResourcePaths());
@@ -182,8 +182,8 @@ public class LinkTagWriter implements TagWriter {
         return getTagDependencies().getCssBundleFactory();
     }
 
-    private DeploymentVersion getDeploymentVersion() {
-        return getTagDependencies().getDeploymentVersion();
+    private DeploymentMetadata getDeploymentMetadata() {
+        return getTagDependencies().getDeploymentMetadata();
     }
 
     /**

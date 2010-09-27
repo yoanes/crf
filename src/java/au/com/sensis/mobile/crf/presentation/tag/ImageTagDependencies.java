@@ -1,6 +1,6 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersion;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
@@ -20,8 +20,8 @@ public class ImageTagDependencies extends TagDependencies {
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to
      *            resolve {@link #getHref()} to concrete resource(s).
-     * @param deploymentVersion
-     *            {@link DeploymentVersion} of the current deployment.
+     * @param deploymentMetadata
+     *            {@link DeploymentMetadata} of the current deployment.
      * @param clientPathPrefix Prefix to be used for the final paths
      *            that a client (web browser) will see.
      * @param resourceResolutionWarnLogger
@@ -31,10 +31,10 @@ public class ImageTagDependencies extends TagDependencies {
     public ImageTagDependencies(
             final ResourceResolverEngine
                 resourceResolverEngine,
-            final DeploymentVersion deploymentVersion,
+            final DeploymentMetadata deploymentMetadata,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        super(resourceResolverEngine, deploymentVersion, clientPathPrefix,
+        super(resourceResolverEngine, deploymentMetadata, clientPathPrefix,
                 resourceResolutionWarnLogger);
     }
 

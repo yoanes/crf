@@ -73,7 +73,7 @@
     <bean id="crf.linkTagDependencies" 
         class="au.com.sensis.mobile.crf.presentation.tag.LinkTagDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
-        <constructor-arg ref="crf.deploymentVersion" />
+        <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg ref="crf.cssBundleFactory" />
         <constructor-arg value="@{crf.env.resources.css.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
@@ -82,7 +82,7 @@
     <bean id="crf.imageTagDependencies" 
         class="au.com.sensis.mobile.crf.presentation.tag.ImageTagDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
-        <constructor-arg ref="crf.deploymentVersion" />
+        <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
     </bean>
@@ -90,7 +90,7 @@
     <bean id="crf.scriptTagDependencies" 
         class="au.com.sensis.mobile.crf.presentation.tag.ScriptTagDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
-        <constructor-arg ref="crf.deploymentVersion" />
+        <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg ref="crf.scriptBundleFactory" />
         <constructor-arg value="@{crf.env.resources.javascript.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
@@ -106,11 +106,11 @@
     </bean>
     
     
-    <!-- TODO: extract this global deploymentVersion bean (and its class) into somewhere more common? -->
-    <bean id="crf.deploymentVersion" class="au.com.sensis.mobile.crf.config.DeploymentVersion">
+    <!-- TODO: extract this global deploymentMetadata bean (and its class) into somewhere more common? -->
+    <bean id="crf.deploymentMetadata" class="au.com.sensis.mobile.crf.config.DeploymentMetadata">
         <property name="platform"> 
             <!-- TODO: in future, the platform will be set from a properties file. For now, only DEV is supported. -->
-            <util:constant static-field="au.com.sensis.mobile.crf.config.DeploymentVersion$Platform.DEVELEOPMENT" />
+            <util:constant static-field="au.com.sensis.mobile.crf.config.DeploymentMetadata$Platform.DEVELEOPMENT" />
         </property>
     </bean>
 </beans>

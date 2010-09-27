@@ -20,7 +20,7 @@ import org.springframework.mock.web.MockJspWriter;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
+import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
@@ -46,8 +46,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private JspWriter mockJspWriter;
     private StringWriter stringWriter;
 
-    private final DeploymentVersionTestData deploymentVersionTestData
-        = new DeploymentVersionTestData();
+    private final DeploymentMetadataTestData deploymentMetadataTestData
+        = new DeploymentMetadataTestData();
 
     private MockServletContext springMockServletContext;
     private WebApplicationContext mockWebApplicationContext;
@@ -99,7 +99,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private ImageTagDependencies createImageTagDependencies() {
         return new ImageTagDependencies(
                 getMockResourceResolverEngine(),
-                getDeploymentVersionTestData().createDevDeploymentVersion(),
+                getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getImageClientPathPrefix(),
                 getMockResolutionWarnLogger());
     }
@@ -424,10 +424,10 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the deploymentVersionTestData
+     * @return the deploymentMetadataTestData
      */
-    private DeploymentVersionTestData getDeploymentVersionTestData() {
-        return deploymentVersionTestData;
+    private DeploymentMetadataTestData getDeploymentMetadataTestData() {
+        return deploymentMetadataTestData;
     }
 
     private TestData[] getTestData() {

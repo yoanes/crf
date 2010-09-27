@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
+import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -42,8 +42,8 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
     private ScriptBundleFactory mockScriptBundleFactory;
-    private final DeploymentVersionTestData deploymentVersionTestData
-        = new DeploymentVersionTestData();
+    private final DeploymentMetadataTestData deploymentMetadataTestData
+        = new DeploymentMetadataTestData();
     private ScriptTagDependencies scriptTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private ScriptTagWriter mockScriptTagWriter;
@@ -98,8 +98,8 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     private ScriptTagDependencies createTagDependencies() {
         return new ScriptTagDependencies(
                 getMockResourceResolverEngine(),
-                getDeploymentVersionTestData()
-                    .createDevDeploymentVersion(),
+                getDeploymentMetadataTestData()
+                    .createDevDeploymentMetadata(),
                 getMockScriptBundleFactory(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());
@@ -361,10 +361,10 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the deploymentVersionTestData
+     * @return the deploymentMetadataTestData
      */
-    private DeploymentVersionTestData getDeploymentVersionTestData() {
-        return deploymentVersionTestData;
+    private DeploymentMetadataTestData getDeploymentMetadataTestData() {
+        return deploymentMetadataTestData;
     }
 
     /**

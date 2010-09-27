@@ -18,8 +18,8 @@ import org.junit.Test;
 import org.springframework.mock.web.MockJspWriter;
 import org.springframework.web.context.WebApplicationContext;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersion;
-import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.CssBundleFactory;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
@@ -42,8 +42,8 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
     private LinkTagWriter objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private final DeploymentVersionTestData deploymentVersionTestData
-        = new DeploymentVersionTestData();
+    private final DeploymentMetadataTestData deploymentMetadataTestData
+        = new DeploymentMetadataTestData();
     private JspWriter mockJspWriter;
     private StringWriter stringWriter;
 
@@ -102,12 +102,12 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
                 recordGetResource(testDataArray[i].getResources());
 
-                if (testDataArray[i].getDeploymentVersion().isDevPlatform()
+                if (testDataArray[i].getDeploymentMetadata().isDevPlatform()
                         && StringUtils.isEmpty(testDataArray[i].getOutputString())) {
                     recordLogResourceNotFoundWarning();
                 }
 
-                if (testDataArray[i].getDeploymentVersion().isProdPlatform()) {
+                if (testDataArray[i].getDeploymentMetadata().isProdPlatform()) {
                     if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
                         recordLogResourceNotFoundWarning();
                     } else {
@@ -149,7 +149,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
             final TestData testData) {
         return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
-                testData.getDeploymentVersion(),
+                testData.getDeploymentMetadata(),
                 getMockCssBundleFactory(),
                 getResourcePathTestData().getCssClientPathPrefix(),
                 getMockResolutionWarnLogger());
@@ -289,10 +289,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the deploymentVersionTestData
+     * @return the deploymentMetadataTestData
      */
-    private DeploymentVersionTestData getDeploymentVersionTestData() {
-        return deploymentVersionTestData;
+    private DeploymentMetadataTestData getDeploymentMetadataTestData() {
+        return deploymentMetadataTestData;
     }
 
     /**
@@ -345,7 +345,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 + "<link href=\""
                 + getMappediPhoneGroupCssResourceHref()
                 + "\" rel=\"stylesheet\" type=\"text/css\" />\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataTwoDynamicAttributesMultipleMappedResourcesProdMode() {
@@ -357,7 +357,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                         "<link href=\""
                         + getMappedIphoneGroupCssBundleResourceHref()
                         + "\" rel=\"stylesheet\" type=\"text/css\" />\n",
-                        getDeploymentVersionTestData().createProdDeploymentVersion());
+                        getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeMultipleMappedResourcesDevMode() {
@@ -372,7 +372,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 + "<link href=\""
                 + getMappediPhoneGroupCssResourceHref()
                 + "\" rel=\"stylesheet\" />\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeMultipleMappedResourcesProdMode() {
@@ -384,7 +384,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                         "<link href=\""
                         + getMappedIphoneGroupCssBundleResourceHref()
                         + "\" rel=\"stylesheet\" />\n",
-                        getDeploymentVersionTestData().createProdDeploymentVersion());
+                        getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesMultipleMappedResourcesDevMode() {
@@ -397,7 +397,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 + "\" " + "/>\n"
                 + "<link href=\"" + getMappediPhoneGroupCssResourceHref()
                     + "\" " + "/>\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesMultipleMappedResourcesProdMode() {
@@ -408,7 +408,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMappedIphoneGroupCssBundleResourcePath(),
                 "<link href=\"" + getMappedIphoneGroupCssBundleResourceHref()
                 + "\" " + "/>\n",
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataTwoDynamicAttributesSingleMappedResourceDevMode() {
@@ -419,7 +419,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 "<link href=\""
                 + getMappedDefaultGroupCssResourceHref()
                 + "\" rel=\"stylesheet\" type=\"text/css\" />\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataTwoDynamicAttributesSingleMappedResourceProdMode() {
@@ -430,7 +430,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 "<link href=\""
                 + getMappedDefaultGroupCssBundleResourceHref()
                 + "\" rel=\"stylesheet\" type=\"text/css\" />\n",
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeSingleMappedResourceProdMode() {
@@ -441,7 +441,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 "<link href=\""
                 + getMappedDefaultGroupCssBundleResourceHref()
                 + "\" rel=\"stylesheet\" />\n",
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeSingleMappedResourceDevMode() {
@@ -452,7 +452,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 "<link href=\""
                 + getMappedDefaultGroupCssResourceHref()
                 + "\" rel=\"stylesheet\" />\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesSingleMappedResourceProdMode() {
@@ -462,7 +462,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMappedDefaultGroupCssBundleResourcePath(),
                 "<link href=\"" + getMappedDefaultGroupCssBundleResourceHref()
                 + "\" " + "/>\n",
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResourceDevMode() {
@@ -471,7 +471,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 new ArrayList<Resource>(),
                 null,
                 StringUtils.EMPTY,
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResourceProdMode() {
@@ -480,7 +480,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 new ArrayList<Resource>(),
                 null,
                 StringUtils.EMPTY,
-                getDeploymentVersionTestData().createProdDeploymentVersion());
+                getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesSingleMappedResourceDevMode() {
@@ -490,7 +490,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 null,
                 "<link href=\"" + getMappedDefaultGroupCssResourceHref()
                     + "\" " + "/>\n",
-                getDeploymentVersionTestData().createDevDeploymentVersion());
+                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private Resource getMappedDefaultGroupCssBundleResourcePath() {
@@ -515,19 +515,19 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         private final List<Resource> resources;
         private final Resource bundleResource;
         private final String outputString;
-        private final DeploymentVersion deploymentVersion;
+        private final DeploymentMetadata deploymentMetadata;
 
         public TestData(final List<DynamicTagAttribute> dynamicAttributes,
                 final List<Resource> resources,
                 final Resource bundlePath,
                 final String outputString,
-                final DeploymentVersion deploymentVersion) {
+                final DeploymentMetadata deploymentMetadata) {
             super();
             this.dynamicAttributes = dynamicAttributes;
             this.resources = resources;
             bundleResource = bundlePath;
             this.outputString = outputString;
-            this.deploymentVersion = deploymentVersion;
+            this.deploymentMetadata = deploymentMetadata;
         }
 
         /**
@@ -552,10 +552,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         }
 
         /**
-         * @return the deploymentVersion
+         * @return the deploymentMetadata
          */
-        public DeploymentVersion getDeploymentVersion() {
-            return deploymentVersion;
+        public DeploymentMetadata getDeploymentMetadata() {
+            return deploymentMetadata;
         }
 
         /**
@@ -575,7 +575,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
             toStringBuilder.append("resources", getResources());
             toStringBuilder.append("bundleResource", getBundleResource());
             toStringBuilder.append("outputString", getOutputString());
-            toStringBuilder.append("deploymentVersion", getDeploymentVersion());
+            toStringBuilder.append("deploymentMetadata", getDeploymentMetadata());
             return toStringBuilder.toString();
         }
 

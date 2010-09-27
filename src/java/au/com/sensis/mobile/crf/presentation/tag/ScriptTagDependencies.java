@@ -1,6 +1,6 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersion;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
@@ -23,8 +23,8 @@ public class ScriptTagDependencies extends TagDependencies {
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to resolve {@link #getHref()} to
      *            concrete resource(s).
-     * @param deploymentVersion
-     *            {@link DeploymentVersion} of the current deployment.
+     * @param deploymentMetadata
+     *            {@link DeploymentMetadata} of the current deployment.
      * @param scriptBundleFactory
      *            {@link ScriptBundleFactory} to use to get Script Bundles.
      * @param clientPathPrefix
@@ -36,11 +36,11 @@ public class ScriptTagDependencies extends TagDependencies {
      */
     public ScriptTagDependencies(
             final ResourceResolverEngine resourceResolverEngine,
-            final DeploymentVersion deploymentVersion,
+            final DeploymentMetadata deploymentMetadata,
             final ScriptBundleFactory scriptBundleFactory,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        super(resourceResolverEngine, deploymentVersion, clientPathPrefix,
+        super(resourceResolverEngine, deploymentMetadata, clientPathPrefix,
                 resourceResolutionWarnLogger);
 
         this.scriptBundleFactory = scriptBundleFactory;

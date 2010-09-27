@@ -3,11 +3,11 @@ package au.com.sensis.mobile.crf.config;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * Holder of deployment version info.
+ * Holder of deployment metadata for the currently deployed app.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class DeploymentVersion {
+public class DeploymentMetadata {
 
     /**
      * Flags indicating the deployment platform.

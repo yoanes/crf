@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
-import au.com.sensis.mobile.crf.config.DeploymentVersionTestData;
+import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.CssBundleFactory;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
@@ -43,8 +43,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
     private CssBundleFactory mockCssBundleFactory;
-    private final DeploymentVersionTestData deploymentVersionTestData
-        = new DeploymentVersionTestData();
+    private final DeploymentMetadataTestData deploymentMetadataTestData
+        = new DeploymentMetadataTestData();
     private LinkTagDependencies linkTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private LinkTagWriter mockLinkTagWriter;
@@ -99,8 +99,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private LinkTagDependencies createTagDependencies() {
         return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
-                getDeploymentVersionTestData()
-                    .createDevDeploymentVersion(),
+                getDeploymentMetadataTestData()
+                    .createDevDeploymentMetadata(),
                 getMockCssBundleFactory(),
                 getResourcePathTestData().getCssClientPathPrefix(),
                 getMockResolutionWarnLogger());
@@ -359,10 +359,10 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the deploymentVersionTestData
+     * @return the deploymentMetadataTestData
      */
-    private DeploymentVersionTestData getDeploymentVersionTestData() {
-        return deploymentVersionTestData;
+    private DeploymentMetadataTestData getDeploymentMetadataTestData() {
+        return deploymentMetadataTestData;
     }
 
     /**
