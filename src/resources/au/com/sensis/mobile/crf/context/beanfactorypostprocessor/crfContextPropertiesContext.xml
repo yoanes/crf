@@ -38,7 +38,7 @@
     <bean id="crf.properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <value>classpath:/au/com/sensis/mobile/crf/crf-component.properties</value>
+                <value>classpath:/au/com/sensis/mobile/crf/crf.properties</value>
                 
                 <!-- Load a platform dependent environment properties file. -->
                 <value>classpath:/au/com/sensis/mobile/crf/crf-environment.properties.@{global.platform}</value>
@@ -60,7 +60,7 @@
         <!-- Optional properties provided by the client of this component to override the default properties. -->
         <property name="locations">
             <list>
-                <value>classpath:/crf-component.properties</value>
+                <value>classpath:/crf.properties</value>
                 <value>classpath:/crf-environment.properties</value>
             </list>
         </property>
