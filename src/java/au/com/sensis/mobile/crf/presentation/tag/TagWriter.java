@@ -6,8 +6,6 @@ import java.util.List;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
-import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
-
 /**
  * Interface that knows how to write out a tag to a {@link JspWriter}.
  */

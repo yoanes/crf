@@ -2,7 +2,6 @@ package au.com.sensis.mobile.crf.presentation.tag;
 
 import java.util.List;
 
-import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 

@@ -6,8 +6,6 @@ import javax.servlet.jsp.PageContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import au.com.sensis.mobile.web.component.core.tag.ScriptTag;
-
 /**
  * Facade to a link tag that uses the Content Rendering Framework to resolve the
  * resource path set into {@link #setHref(String)}.
@@ -23,13 +21,13 @@ import au.com.sensis.mobile.web.component.core.tag.ScriptTag;
 public class LinkTag extends AbstractDuplicatePreventingTag {
 
     private String href;
-    
+
     /**
      * Attribute name used to store a map of ({@link TagWriter#getId()},
      * {@link TagWriter}) pairs.
      */
     public static final String LINK_WRITER_MAP_ATTRIBUTE_NAME =
-            ScriptTag.class.getName() + ".linkTagWriterMap";
+        LinkTag.class.getName() + ".linkTagWriterMap";
 
     /**
      * {@inheritDoc}
@@ -60,14 +58,15 @@ public class LinkTag extends AbstractDuplicatePreventingTag {
     public String getTagWriterMapAttributeName() {
         return LINK_WRITER_MAP_ATTRIBUTE_NAME;
     }
-    
+
     /**
      * @return the href
      */
+    @Override
     public final String getPathAttribute() {
         return getHref();
     }
-    
+
     /**
      * @return the href
      */

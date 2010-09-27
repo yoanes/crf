@@ -9,7 +9,6 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.commons.lang.StringUtils;
 
-import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -61,7 +60,7 @@ public abstract class AbstractTag extends
      * @throws IllegalArgumentException
      *             Thrown if path is invalid.
      */
-    protected final void validatePathAttribute(String path)
+    protected final void validatePathAttribute(final String path)
             throws IllegalArgumentException {
         // NOTE: we prefer this simple approach to validation over using the JEE
         // TagExtraInfo approach since we do not see a need for translation time

@@ -142,56 +142,6 @@
         <url-pattern>*.action</url-pattern>
     </filter-mapping>
     
-    <!--
-      - (Optional) BundleExploderActivatonFilter from the core component.
-      - 
-      - Thanks to the OptionalTargetBeanDelegatingFilterProxy, this filter
-      - will not fail if the target bean is not found. Thus, the testbed has no
-      - hard dependency on the core component.
-      -->
-    <filter>
-        <filter-name>bundleExploderActivatonFilter</filter-name>
-        <filter-class>au.com.sensis.mobile.web.testbed.presentation.framework.OptionalTargetBeanDelegatingFilterProxy</filter-class>
-        <init-param>
-            <param-name>targetBeanName</param-name>
-            <param-value>core.comp.bundleExploderActivatonFilter</param-value>
-        </init-param>
-        <init-param>
-            <param-name>targetFilterLifecycle</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>bundleExploderActivatonFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    
-    <!--
-      - (Optional) JsonLeadingAndTrailingWhitespaceTrimmingFilter from the core component.
-      - 
-      - Thanks to the OptionalTargetBeanDelegatingFilterProxy, this filter
-      - will not fail if the target bean is not found. Thus, the testbed has no
-      - hard dependency on the core component.
-      -->
-    <filter>
-        <filter-name>jsonLeadingAndTrailingWhitespaceTrimmingFilter</filter-name>
-        <filter-class>au.com.sensis.mobile.web.testbed.presentation.framework.OptionalTargetBeanDelegatingFilterProxy</filter-class>
-        <init-param>
-            <param-name>targetBeanName</param-name>
-            <param-value>core.comp.jsonLeadingAndTrailingWhitespaceTrimmingFilter</param-value>
-        </init-param>
-        <init-param>
-            <param-name>targetFilterLifecycle</param-name>
-            <param-value>true</param-value>
-        </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>jsonLeadingAndTrailingWhitespaceTrimmingFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    
     <!-- Struts2 Filter -->
     <filter>
         <filter-name>struts2</filter-name>

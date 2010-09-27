@@ -9,6 +9,30 @@
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
                 
     <!-- ================================================================================================ -->                
+    <!-- Load the global build version properties. -->
+    
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="placeholderPrefix" value="@{global."/>
+        
+        <!-- 
+          - Ensure that this PropertyPlaceholderConfigurer is applied before any other PropertyPlaceholderConfigurer.
+          - Particularly important for the following scenario:
+          - 1. A PropertiesFactoryBean is configured to load a platform specific properties file 
+          -    (ie. the file name is parameterised by the @{global.platform} placeholder.
+          - 2. Another PropertyPlaceholderConfigurer depends on the aforementioned properties file. 
+          -->
+        <property name="order" value="0" />
+        
+        <property name="location">
+            <!--
+              - Load the host application's gloabl-version.properties so that we have access to the 
+              - build version information. 
+              -->
+            <value>classpath:/global-version.properties</value>
+        </property>
+    </bean>
+                    
+    <!-- ================================================================================================ -->                
     
     <!-- Load properties from mandatory file provided by this component.-->            
     <bean id="crf.properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -27,7 +51,7 @@
       - TODO: LazyPropertiesInjectingPropertyPlaceholderConfigurer is currently in the core component. 
       - Should be in sdpcommon instead. 
       -->
-    <bean class="au.com.sensis.mobile.web.component.core.spring.LazyPropertiesInjectingPropertyPlaceholderConfigurer">
+    <bean class="au.com.sensis.mobile.crf.spring.LazyPropertiesInjectingPropertyPlaceholderConfigurer">
         <!-- Default properties provided by this component. -->
         <property name="propertiesBeanName" value="crf.properties"/>
         

@@ -114,6 +114,7 @@
         <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>        
         <dependency org="com.sensis" name="sdpCommon-web" rev="1.6-020" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-manager" rev="1.0-050" conf="default"/>
+        <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-010" conf="default"/>
 
         <!-- EMS dependencies -->
         <dependency org="com.sensis" name="ems-cxf-client" rev="1.6" conf="showcase->default"/>
@@ -146,12 +147,6 @@
         
         <dependency org="com.vladium" name="emma" rev="2.0" conf="test->default"/>
 
-        <!--
-          - Dependencies on components.
-          -->
-        <!-- TODO: should not depend on core component. -->
-        <dependency org="com.sensis" name="wl-core-component" rev="1.1.5" conf="default,test"/>
-        
         <!-- Testbed depedency. -->
         <dependency org="com.sensis" name="wl-webapp-testbed" rev="1.0.9" conf="showcase->default"/>        
     </dependencies>

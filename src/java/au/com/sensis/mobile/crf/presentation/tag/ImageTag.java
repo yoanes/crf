@@ -12,7 +12,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 
 /**
  * Facade to an image tag that uses the Content Rendering Framework to resolve
@@ -23,7 +22,7 @@ import au.com.sensis.mobile.web.component.core.tag.DynamicTagAttribute;
 public class ImageTag extends AbstractTag {
 
     private String src;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -98,5 +97,5 @@ public class ImageTag extends AbstractTag {
     public final void setSrc(final String src) {
         this.src = src;
     }
-    
+
 }

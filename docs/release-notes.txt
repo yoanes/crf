@@ -1,3 +1,31 @@
+==== PENDING: Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
+
+Upgrade notes:
+- The core component needs to remove the following bean definition from coreComponentPropertiesContext.xml 
+  as this is now provided by crf:
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="placeholderPrefix" value="@{global."/>
+        
+        <!-- 
+          - Ensure that this PropertyPlaceholderConfigurer is applied before any other PropertyPlaceholderConfigurer.
+          - Particularly important for the following scenario:
+          - 1. A PropertiesFactoryBean is configured to load a platform specific properties file 
+          -    (ie. the file name is parameterised by the @{global.platform} placeholder.
+          - 2. Another PropertyPlaceholderConfigurer depends on the aforementioned properties file. 
+          -->
+        <property name="order" value="0" />
+        
+        <property name="location">
+            <!--
+              - Load the host application's gloabl-version.properties so that we have access to the 
+              - build version information. 
+              -->
+            <value>classpath:/global-version.properties</value>
+        </property>
+    </bean>
+
+
 ==== Version 0.1.1 (tag: contentRenderingFramework_v0_1_1) ==== 
 
 Closing off iteration 0.1.1. Jira issues:
