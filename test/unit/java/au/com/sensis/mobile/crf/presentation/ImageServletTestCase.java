@@ -253,7 +253,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
             final String requestedResourcePath,
             final Resource resource) throws IOException {
         EasyMock.expect(
-                getMockResourceResolverEngine().getResourcePath(getMockDevice(),
+                getMockResourceResolverEngine().getResource(getMockDevice(),
                         requestedResourcePath)).andReturn(resource);
 
     }

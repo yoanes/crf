@@ -60,7 +60,7 @@ public class ResourceResolverEngineBean implements
     /**
      * {@inheritDoc}
      */
-    public Resource getResourcePath(final Device device,
+    public Resource getResource(final Device device,
             final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         if (LOGGER.isDebugEnabled()) {
@@ -76,7 +76,7 @@ public class ResourceResolverEngineBean implements
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
             final List<Resource> resources =
-                    getResource(requestedResourcePath, currGroup);
+                    resolve(requestedResourcePath, currGroup);
 
             if (!resources.isEmpty()) {
                 debugLogResourcesFound(resources);
@@ -116,7 +116,7 @@ public class ResourceResolverEngineBean implements
      * {@inheritDoc}
      */
     @Override
-    public List<Resource> getAllResourcePaths(final Device device,
+    public List<Resource> getAllResources(final Device device,
             final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         final Deque<Resource> allResourcePaths = new ArrayDeque<Resource>();
@@ -134,7 +134,7 @@ public class ResourceResolverEngineBean implements
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
             accumulateGroupResources(
-                    getResource(requestedResourcePath, currGroup),
+                    resolve(requestedResourcePath, currGroup),
                     allResourcePaths);
         }
 
@@ -161,7 +161,7 @@ public class ResourceResolverEngineBean implements
         }
     }
 
-    private List<Resource> getResource(
+    private List<Resource> resolve(
             final String requestedResourcePath, final Group currGroup) {
         return getResourceResolver().resolve(
                 requestedResourcePath, currGroup);

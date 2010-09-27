@@ -69,7 +69,7 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
      * {@inheritDoc}
      */
     @Override
-    public List<Resource> getAllResourcePaths(final Device device,
+    public List<Resource> getAllResources(final Device device,
             final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         for (final PathRestrictedResourceResolverEngine resourceResolverEngine
@@ -78,13 +78,13 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
             if (resourceResolverEngine.isInterestedIn(requestedResourcePath)) {
                 debugLogFoundInterestedEngine(requestedResourcePath, resourceResolverEngine);
 
-                return resourceResolverEngine.getAllResourcePaths(device, requestedResourcePath);
+                return resourceResolverEngine.getAllResources(device, requestedResourcePath);
             }
         }
 
         debugLogNoInterestedEngineFound(requestedResourcePath);
 
-        return getDefaultResourceResolverEngine().getAllResourcePaths(device,
+        return getDefaultResourceResolverEngine().getAllResources(device,
                 requestedResourcePath);
     }
 
@@ -92,7 +92,7 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
      * {@inheritDoc}
      */
     @Override
-    public Resource getResourcePath(final Device device,
+    public Resource getResource(final Device device,
             final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         for (final PathRestrictedResourceResolverEngine resourceResolverEngine
@@ -101,13 +101,13 @@ public class DelegatingPathRestrictedResourceResolverEngineBean
             if (resourceResolverEngine.isInterestedIn(requestedResourcePath)) {
                 debugLogFoundInterestedEngine(requestedResourcePath, resourceResolverEngine);
 
-                return resourceResolverEngine.getResourcePath(device, requestedResourcePath);
+                return resourceResolverEngine.getResource(device, requestedResourcePath);
             }
         }
 
         debugLogNoInterestedEngineFound(requestedResourcePath);
 
-        return getDefaultResourceResolverEngine().getResourcePath(device,
+        return getDefaultResourceResolverEngine().getResource(device,
                 requestedResourcePath);
     }
 

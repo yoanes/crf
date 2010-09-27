@@ -142,7 +142,7 @@ public class ResourceResolverServletTestCase extends
             final String requestedResourceServletPath) throws IOException {
 
         EasyMock.expect(
-                getMockResourceResolverEngine().getResourcePath(getMockDevice(),
+                getMockResourceResolverEngine().getResource(getMockDevice(),
                         requestedResourceServletPath)).andReturn(null)
                 .atLeastOnce();
 
@@ -301,7 +301,7 @@ public class ResourceResolverServletTestCase extends
             final String requestedResourceServletPath) throws IOException {
         EasyMock.expect(
                 getMockResourceResolverEngine()
-                        .getResourcePath(getMockDevice(),
+                        .getResource(getMockDevice(),
                                 requestedResourceServletPath)).andReturn(
                 getMockResource()).atLeastOnce();
     }

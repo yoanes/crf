@@ -77,7 +77,7 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
     public void testGetResourcePathWhenPrefixMatches() throws Throwable {
 
         EasyMock.expect(
-                getMockResourceResolverEngine().getResourcePath(
+                getMockResourceResolverEngine().getResource(
                         getMockDevice(),
                         getRequestedMatchedResourcePath()))
                 .andReturn(
@@ -85,7 +85,7 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
         replay();
 
         final Resource actualResource =
-                getObjectUnderTest().getResourcePath(
+                getObjectUnderTest().getResource(
                         getMockDevice(),
                         getRequestedMatchedResourcePath());
 
@@ -102,7 +102,7 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
     @Test
     public void testGetResourcePathWhenPrefixDoesNotMatch() throws Throwable {
         final Resource actualResource =
-                getObjectUnderTest().getResourcePath(
+                getObjectUnderTest().getResource(
                         getMockDevice(),
                         getRequestedUnmatchedResourcePath());
 
@@ -120,7 +120,7 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
     public void testGetAllResourcePathsWhenPrefixMatches() throws Throwable {
 
         EasyMock.expect(
-                getMockResourceResolverEngine().getAllResourcePaths(
+                getMockResourceResolverEngine().getAllResources(
                         getMockDevice(),
                         getRequestedMatchedResourcePath()))
                 .andReturn(
@@ -128,7 +128,7 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
         replay();
 
         final List<Resource> actualResources =
-                getObjectUnderTest().getAllResourcePaths(
+                getObjectUnderTest().getAllResources(
                         getMockDevice(),
                         getRequestedMatchedResourcePath());
 
@@ -141,7 +141,7 @@ public class PathPrefixRestrictedResourceResolverEngineBeanTestCase
     public void testGetAllResourcePathsWhenPrefixDoesNotMatch()
         throws Throwable {
         final List<Resource> actualResources =
-            getObjectUnderTest().getAllResourcePaths(getMockDevice(),
+            getObjectUnderTest().getAllResources(getMockDevice(),
                     getRequestedUnmatchedResourcePath());
 
         Assert

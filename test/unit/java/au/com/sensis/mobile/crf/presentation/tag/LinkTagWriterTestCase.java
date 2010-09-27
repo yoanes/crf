@@ -159,7 +159,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
             final List<Resource> expectedResources) throws IOException {
         EasyMock.expect(
                 getMockResourceResolverEngine()
-                        .getAllResourcePaths(getMockDevice(), getRequestedCssResourcePath()))
+                        .getAllResources(getMockDevice(), getRequestedCssResourcePath()))
                         .andReturn(expectedResources).atLeastOnce();
     }
 

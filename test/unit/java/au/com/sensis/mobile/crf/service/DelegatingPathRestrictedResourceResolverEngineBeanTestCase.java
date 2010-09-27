@@ -131,7 +131,7 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
                 Boolean.TRUE);
 
         EasyMock.expect(
-                getMockPathRestrictedResourceResolverEngine().getResourcePath(
+                getMockPathRestrictedResourceResolverEngine().getResource(
                         getMockDevice(), getRequestedResourcePath()))
                 .andReturn(getExpectedResource());
 
@@ -141,7 +141,7 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
                 getMockPathRestrictedResourceResolverEngine());
 
         final Resource actualResource =
-                getObjectUnderTest().getResourcePath(getMockDevice(),
+                getObjectUnderTest().getResource(getMockDevice(),
                         getRequestedResourcePath());
 
         Assert.assertEquals("Resource is wrong",
@@ -168,14 +168,14 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
             throws Throwable {
 
         EasyMock.expect(
-                getMockDefaultResourceResolverEngine().getResourcePath(getMockDevice(),
+                getMockDefaultResourceResolverEngine().getResource(getMockDevice(),
                         getRequestedResourcePath())).andReturn(
                 getExpectedResource());
 
         replay();
 
         final Resource actualResource =
-                getObjectUnderTest().getResourcePath(getMockDevice(),
+                getObjectUnderTest().getResource(getMockDevice(),
                         getRequestedResourcePath());
 
         Assert.assertEquals("Resource is wrong",
@@ -196,7 +196,7 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
                 Boolean.TRUE);
 
         EasyMock.expect(
-                getMockPathRestrictedResourceResolverEngine().getAllResourcePaths(
+                getMockPathRestrictedResourceResolverEngine().getAllResources(
                         getMockDevice(), getRequestedResourcePath()))
                 .andReturn(getExpectedResources());
 
@@ -206,7 +206,7 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
                 getMockPathRestrictedResourceResolverEngine());
 
         final List<Resource> actualResources =
-                getObjectUnderTest().getAllResourcePaths(getMockDevice(),
+                getObjectUnderTest().getAllResources(getMockDevice(),
                         getRequestedResourcePath());
 
         Assert.assertEquals("Resources are wrong",
@@ -219,14 +219,14 @@ public class DelegatingPathRestrictedResourceResolverEngineBeanTestCase
             throws Throwable {
 
         EasyMock.expect(
-                getMockDefaultResourceResolverEngine().getAllResourcePaths(getMockDevice(),
+                getMockDefaultResourceResolverEngine().getAllResources(getMockDevice(),
                         getRequestedResourcePath())).andReturn(
                 getExpectedResources());
 
         replay();
 
         final List<Resource> actualResources =
-                getObjectUnderTest().getAllResourcePaths(
+                getObjectUnderTest().getAllResources(
                         getMockDevice(), getRequestedResourcePath());
 
         Assert.assertEquals("Resources are wrong",

@@ -243,7 +243,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
             final Resource resource) throws IOException {
 
         EasyMock.expect(
-                getMockResourceResolverEngine().getResourcePath(
+                getMockResourceResolverEngine().getResource(
                         getMockDevice(),
                         getResourcePathTestData()
                                 .getRequestedImageResourcePath())).andReturn(

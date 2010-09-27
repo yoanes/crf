@@ -25,7 +25,7 @@ public interface ResourceResolverEngine {
      *         abstract path. If none is found, null is returned.
      * @throws ResourceResolutionRuntimeException Thrown if an IO error occurs.
      */
-    Resource getResourcePath(Device device, String requestedResourcePath)
+    Resource getResource(Device device, String requestedResourcePath)
         throws ResourceResolutionRuntimeException;
 
     /**
@@ -41,6 +41,6 @@ public interface ResourceResolverEngine {
      *         an empty {@link List} is returned.
      * @throws ResourceResolutionRuntimeException Thrown if an IO error occurs.
      */
-    List<Resource> getAllResourcePaths(Device device, String requestedResourcePath)
+    List<Resource> getAllResources(Device device, String requestedResourcePath)
         throws ResourceResolutionRuntimeException;
 }

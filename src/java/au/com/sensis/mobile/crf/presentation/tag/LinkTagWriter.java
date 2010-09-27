@@ -144,7 +144,7 @@ public class LinkTagWriter implements TagWriter {
 
     private List<Resource> getAllResourcePaths() throws IOException {
         final List<Resource> allResourcePaths =
-                getResourceResolverEngine().getAllResourcePaths(getDevice(),
+                getResourceResolverEngine().getAllResources(getDevice(),
                         getHref());
 
         assertNotNull(allResourcePaths);

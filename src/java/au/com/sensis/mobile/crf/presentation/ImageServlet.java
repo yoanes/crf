@@ -64,7 +64,7 @@ public class ImageServlet extends HttpServletBean {
 
             final Resource resource =
                     getImageServletDependencies().getResourceResolverEngine()
-                            .getResourcePath(getDevice(request),
+                            .getResource(getDevice(request),
                                     getRequestedResourcePath(request));
 
             if (resource != null) {

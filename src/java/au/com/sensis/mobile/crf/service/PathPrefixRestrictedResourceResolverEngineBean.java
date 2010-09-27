@@ -57,13 +57,13 @@ public class PathPrefixRestrictedResourceResolverEngineBean
      * {@inheritDoc}
      */
     @Override
-    public List<Resource> getAllResourcePaths(final Device device,
+    public List<Resource> getAllResources(final Device device,
             final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         if (isInterestedIn(requestedResourcePath)) {
             debugLogInterest(requestedResourcePath);
 
-            return getResourceResolverEngine().getAllResourcePaths(device,
+            return getResourceResolverEngine().getAllResources(device,
                     requestedResourcePath);
         } else {
             debugLogDisinterestReturningEmptyList(requestedResourcePath);
@@ -81,13 +81,13 @@ public class PathPrefixRestrictedResourceResolverEngineBean
      * {@inheritDoc}
      */
     @Override
-    public Resource getResourcePath(final Device device,
+    public Resource getResource(final Device device,
             final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
         if (isInterestedIn(requestedResourcePath)) {
             debugLogInterest(requestedResourcePath);
 
-            return getResourceResolverEngine().getResourcePath(device,
+            return getResourceResolverEngine().getResource(device,
                     requestedResourcePath);
         } else {
             debugLogDisinterestReturningNull(requestedResourcePath);

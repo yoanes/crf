@@ -128,7 +128,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final Resource actualResourcePath =
-            getObjectUnderTest().getResourcePath(getMockDevice(),
+            getObjectUnderTest().getResource(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong",
@@ -151,7 +151,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final Resource actualResourcePath =
-            getObjectUnderTest().getResourcePath(getMockDevice(),
+            getObjectUnderTest().getResource(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong",
@@ -184,7 +184,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final Resource actualResourcePath =
-                getObjectUnderTest().getResourcePath(getMockDevice(),
+                getObjectUnderTest().getResource(getMockDevice(),
                         getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong",
@@ -370,7 +370,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final Resource actualResourcePath =
-            getObjectUnderTest().getResourcePath(getMockDevice(),
+            getObjectUnderTest().getResource(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals("resourcePath is wrong",
@@ -439,7 +439,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final Resource actualResourcePath =
-            getObjectUnderTest().getResourcePath(getMockDevice(),
+            getObjectUnderTest().getResource(getMockDevice(),
                     getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertNull("resourcePath is wrong", actualResourcePath);
@@ -469,7 +469,7 @@ public class ResourceResolverEngineBeanTestCase extends
 
         final List<Resource> actualResourcePaths =
                 getObjectUnderTest()
-                        .getAllResourcePaths(
+                        .getAllResources(
                                 getMockDevice(),
                                 getResourcePathTestData()
                                         .getRequestedJspResourcePath());
@@ -513,7 +513,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final List<Resource> actualResourcePaths =
-            getObjectUnderTest().getAllResourcePaths(
+            getObjectUnderTest().getAllResources(
                     getMockDevice(), getResourcePathTestData()
                     .getRequestedJspResourcePath());
 
@@ -548,7 +548,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final List<Resource> actualResourcePaths =
-            getObjectUnderTest().getAllResourcePaths(
+            getObjectUnderTest().getAllResources(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
@@ -586,7 +586,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final List<Resource> actualResourcePaths =
-            getObjectUnderTest().getAllResourcePaths(
+            getObjectUnderTest().getAllResources(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
@@ -624,7 +624,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final List<Resource> actualResourcePaths =
-            getObjectUnderTest().getAllResourcePaths(
+            getObjectUnderTest().getAllResources(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
@@ -663,7 +663,7 @@ public class ResourceResolverEngineBeanTestCase extends
         replay();
 
         final List<Resource> actualResourcePaths =
-            getObjectUnderTest().getAllResourcePaths(
+            getObjectUnderTest().getAllResources(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());
@@ -704,7 +704,7 @@ public class ResourceResolverEngineBeanTestCase extends
 
         final List<Resource> actualResourcePaths =
             getObjectUnderTest()
-            .getAllResourcePaths(
+            .getAllResources(
                     getMockDevice(),
                     getResourcePathTestData()
                     .getRequestedJspResourcePath());

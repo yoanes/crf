@@ -119,7 +119,7 @@ public class ResourceResolverServlet extends HttpServletBean {
         }
 
         final Resource resource =
-            getResourceResourceResolverEngine().getResourcePath(
+            getResourceResourceResolverEngine().getResource(
                         getDevice(httpServletRequestInterrogator
                                 .getHttpServletRequest()),
                         httpServletRequestInterrogator.getRequestUri());

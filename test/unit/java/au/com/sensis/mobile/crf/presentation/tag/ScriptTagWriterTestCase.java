@@ -159,7 +159,7 @@ public class ScriptTagWriterTestCase extends
             final List<Resource> expectedResources) throws IOException {
         EasyMock.expect(
                 getMockResourceResolverEngine()
-                        .getAllResourcePaths(getMockDevice(),
+                        .getAllResources(getMockDevice(),
                                 getRequestedScriptResourcePath()))
                         .andReturn(expectedResources).atLeastOnce();
     }

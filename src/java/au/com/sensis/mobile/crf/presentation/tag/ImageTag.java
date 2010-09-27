@@ -32,7 +32,7 @@ public class ImageTag extends AbstractTag {
         validatePathAttribute(getSrc());
 
         final Resource resource =
-                getResourceResolverEngine().getResourcePath(getDevice(),
+                getResourceResolverEngine().getResource(getDevice(),
                         getSrc());
         if (resource != null) {
             if (!resource.newPathEndsWithDotNull()) {
