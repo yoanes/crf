@@ -6,29 +6,20 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.mobile.crf.config.GroupTestData;
-import au.com.sensis.mobile.crf.util.FileIoFacade;
-import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 
 /**
  * Unit test {@link JspResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
+public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
 
     private JspResourceResolverBean objectUnderTest;
-
-    private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private final GroupTestData groupTestData = new GroupTestData();
-    private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
-    private FileIoFacade mockFileIoFacade;
 
     /**
      * Setup test data.
@@ -38,23 +29,48 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
-
         setObjectUnderTest(new JspResourceResolverBean(
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcesRootDir(),
                 getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata(),
                 getResourcePathTestData().getJspResourcesRootServletPath()));
     }
 
-    /**
-     * Tear down test data.
-     *
-     * @throws Exception Thrown if any error occurs.
-     */
-    @After
-    public void tearDown() throws Exception {
-        FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
+    @Override
+    protected JspResourceResolverBean createWithAbstractResourceExtension(
+            final String abstractResourceExtension) {
+        return new JspResourceResolverBean(abstractResourceExtension,
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata(), getResourcePathTestData()
+                        .getJspResourcesRootServletPath());
+    }
+
+    @Override
+    protected JspResourceResolverBean createWithResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        return new JspResourceResolverBean(getResourcePathTestData()
+                .getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                resourceResolutionWarnLogger, getDeploymentMetadata(),
+                getResourcePathTestData().getJspResourcesRootServletPath());
+    }
+
+    @Override
+    protected JspResourceResolverBean createWithRootResourcesDir(
+            final File rootResourcesDir) {
+        return new JspResourceResolverBean(getResourcePathTestData()
+                .getCrfExtensionWithoutLeadingDot(), rootResourcesDir,
+                getMockResourceResolutionWarnLogger(), getDeploymentMetadata(),
+                getResourcePathTestData().getJspResourcesRootServletPath());
+    }
+
+    @Override
+    protected JspResourceResolverBean createWithDeploymentMetadata(
+            final DeploymentMetadata deploymentMetadata) {
+        return new JspResourceResolverBean(getResourcePathTestData()
+                .getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                getMockResourceResolutionWarnLogger(), deploymentMetadata,
+                getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
     @Test
@@ -67,6 +83,7 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                         .getCrfExtensionWithoutLeadingDot(),
                         getResourcesRootDir(),
                         getMockResourceResolutionWarnLogger(),
+                        getDeploymentMetadata(),
                         testValue);
 
                 Assert
@@ -82,76 +99,6 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testConstructorWithBlankAbstractResourceExtension()
-            throws Throwable {
-        final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
-        for (final String testValue : testValues) {
-            try {
-                new JspResourceResolverBean(testValue, getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger(),
-                        getResourcePathTestData()
-                                .getJspResourcesRootServletPath());
-
-                Assert
-                        .fail("IllegalArgumentException expected for testValue: '"
-                                + testValue + "'");
-            } catch (final IllegalArgumentException e) {
-
-                Assert.assertEquals(" has wrong message",
-                        "abstractResourceExtension must not be blank: '"
-                                + testValue + "'", e.getMessage());
-            }
-        }
-    }
-
-    @Test
-    public void testConstructorWhenRootResourcesDirInvalid() throws Throwable {
-        final File [] invalidPaths = { new File(StringUtils.EMPTY), new File(" "),
-                new File("  "), new File("I-do-not-exist"),
-                new File(getClass().getResource(
-                        "/au/com/sensis/mobile/crf/service/"
-                        + "JspResourceResolverBeanTestCase.class")
-                        .toURI()) };
-        for (final File invalidPath : invalidPaths) {
-            try {
-                new JspResourceResolverBean(
-                        getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
-                        invalidPath, getMockResourceResolutionWarnLogger(),
-                        getResourcePathTestData()
-                        .getJspResourcesRootServletPath());
-                Assert.fail("IllegalArgumentException expected for invalidPath: '"
-                      + invalidPath + "'");
-            } catch (final IllegalArgumentException e) {
-
-                Assert.assertEquals(
-                        "IllegalArgumentException has wrong message",
-                        "rootResourcesDir must be a directory: '"
-                                + invalidPath + "'", e.getMessage());
-            }
-        }
-    }
-
-    @Test
-    public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
-            throws Throwable {
-        try {
-            new JspResourceResolverBean(
-                    getResourcePathTestData()
-                            .getCrfExtensionWithoutLeadingDot(),
-                    getResourcesRootDir(), null,
-                    getResourcePathTestData().getJspResourcesRootServletPath());
-
-            Assert.fail("IllegalArgumentException expected");
-        } catch (final IllegalArgumentException e) {
-
-            Assert.assertEquals("IllegalArgumentException has wrong message",
-                    "resourceResolutionWarnLogger must not be null", e
-                            .getMessage());
-        }
-
-    }
-
-    @Test
     public void testResolveWhenMappingPerformedAndResourceExists() throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
@@ -159,9 +106,7 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
         };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JspResourceResolverBean(
-                    testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                    getResourcePathTestData().getJspResourcesRootServletPath()));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordCheckIfNewPathExists(Boolean.TRUE);
 
@@ -193,9 +138,7 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
         };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JspResourceResolverBean(
-                    testValue, getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                    getResourcePathTestData().getJspResourcesRootServletPath()));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordCheckIfNewPathExists(Boolean.FALSE);
 
@@ -271,43 +214,5 @@ public class JspResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
      */
     private void setObjectUnderTest(final JspResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
-    }
-
-    /**
-     * @return the groupTestData
-     */
-    private GroupTestData getGroupTestData() {
-        return groupTestData;
-    }
-
-    /**
-     * @return the resourcePathTestData
-     */
-    private ResourcePathTestData getResourcePathTestData() {
-        return resourcePathTestData;
-    }
-
-    /**
-     * @return the resourcesRootDir
-     */
-    private File getResourcesRootDir() {
-        return getResourcePathTestData().getRootResourcesPath();
-    }
-
-    public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
-        return mockResourceResolutionWarnLogger;
-    }
-
-    public void setMockResourceResolutionWarnLogger(
-            final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
-        this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
-    }
-
-    public FileIoFacade getMockFileIoFacade() {
-        return mockFileIoFacade;
-    }
-
-    public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
-        this.mockFileIoFacade = mockFileIoFacade;
     }
 }

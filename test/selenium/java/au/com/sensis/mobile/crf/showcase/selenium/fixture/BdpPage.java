@@ -78,6 +78,7 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "@type=\"text/css\" "
                 + "and @rel=\"stylesheet\" "
                 + "and @href=\"/resources/css/"
+                + getProjectVersion() + "/"
                 + expectedHref + "\""
                 + "]"));
 
@@ -95,6 +96,7 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "//head/script["
                 + "@type=\"text/javascript\" "
                 + "and @src=\"/resources/javascript/"
+                + getProjectVersion() + "/"
                 + expectedSrc + "\""
                 + "]"));
 
@@ -119,6 +121,7 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "and @title=\"" + expectedTitle + "\" "
                 + "and @alt=\"" + expectedAlt + "\" "
                 + "and @src=\"/resources/images/"
+                + getProjectVersion() + "/"
                 + expectedSrc + "\""
                 + "]"));
 

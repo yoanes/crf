@@ -7,33 +7,22 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.mobile.crf.config.GroupTestData;
-import au.com.sensis.mobile.crf.util.FileIoFacade;
-import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 
 /**
  * Unit test {@link ImageResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
+public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
 
     private static final String[] FILE_EXTENSION_WILDCARDS = new String[] { "*" };
 
     private ImageResourceResolverBean objectUnderTest;
-
-    private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private final GroupTestData groupTestData = new GroupTestData();
-    private File resourcesRootDir;
-    private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
-    private FileIoFacade mockFileIoFacade;
-
 
     /**
      * Setup test data.
@@ -43,88 +32,46 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
-
-        setResourcesRootDir(new File(getClass().getResource("/").toURI()));
-
         setObjectUnderTest(new ImageResourceResolverBean(
+                getResourcePathTestData()
+                        .getAbstractImageExtensionWithLeadingDot(),
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata(), FILE_EXTENSION_WILDCARDS));
+    }
+
+    @Override
+    protected ImageResourceResolverBean createWithAbstractResourceExtension(
+            final String abstractResourceExtension) {
+        return new ImageResourceResolverBean(abstractResourceExtension,
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata(), FILE_EXTENSION_WILDCARDS);
+    }
+
+    @Override
+    protected ImageResourceResolverBean createWithResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        return new ImageResourceResolverBean(getResourcePathTestData()
+                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                resourceResolutionWarnLogger, getDeploymentMetadata(),
+                FILE_EXTENSION_WILDCARDS);
+    }
+
+    @Override
+    protected ImageResourceResolverBean createWithRootResourcesDir(
+            final File rootResourcesDir) {
+        return new ImageResourceResolverBean(getResourcePathTestData()
+                .getCssExtensionWithoutLeadingDot(), rootResourcesDir,
+                getMockResourceResolutionWarnLogger(), getDeploymentMetadata(),
+                FILE_EXTENSION_WILDCARDS);
+    }
+
+    @Override
+    protected ImageResourceResolverBean createWithDeploymentMetadata(
+            final DeploymentMetadata deploymentMetadata) {
+        return new ImageResourceResolverBean(
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                FILE_EXTENSION_WILDCARDS));
-    }
-
-    /**
-     * Tear down test data.
-     *
-     * @throws Exception Thrown if any error occurs.
-     */
-    @After
-    public void tearDown() throws Exception {
-        FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
-    }
-
-    @Test
-    public void testConstructorWithBlankAbstractResourceExtension()
-            throws Throwable {
-        final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
-        for (final String testValue : testValues) {
-            try {
-                new ImageResourceResolverBean(testValue, getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger(),
-                        FILE_EXTENSION_WILDCARDS);
-
-                Assert.fail("IllegalArgumentException expected");
-            } catch (final IllegalArgumentException e) {
-
-                Assert.assertEquals(" has wrong message",
-                        "abstractResourceExtension must not be blank: '"
-                                + testValue + "'", e.getMessage());
-            }
-        }
-    }
-
-    @Test
-    public void testConstructorWhenResourcesRootPathInvalid() throws Throwable {
-        final File [] invalidPaths = { new File(StringUtils.EMPTY), new File(" "),
-                new File("  "), new File("I-do-not-exist"),
-                new File(getClass().getResource(
-                        "/au/com/sensis/mobile/crf/service/"
-                        + "ImageResourceResolverBeanTestCase.class")
-                        .toURI()) };
-        for (final File invalidPath : invalidPaths) {
-            try {
-                new ImageResourceResolverBean(
-                        getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        invalidPath, getMockResourceResolutionWarnLogger(),
-                        FILE_EXTENSION_WILDCARDS);
-                Assert.fail("IllegalArgumentException expected for invalidPath: '"
-                      + invalidPath + "'");
-            } catch (final IllegalArgumentException e) {
-
-                Assert.assertEquals(
-                        "IllegalArgumentException has wrong message",
-                        "rootResourcesDir must be a directory: '"
-                                + invalidPath + "'", e.getMessage());
-            }
-        }
-    }
-
-    @Test
-    public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
-            throws Throwable {
-        try {
-            new ImageResourceResolverBean(getResourcePathTestData()
-                    .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                    null, FILE_EXTENSION_WILDCARDS);
-
-            Assert.fail("IllegalArgumentException expected");
-        } catch (final IllegalArgumentException e) {
-
-            Assert.assertEquals("IllegalArgumentException has wrong message",
-                    "resourceResolutionWarnLogger must not be null", e
-                            .getMessage());
-        }
-
+                deploymentMetadata, FILE_EXTENSION_WILDCARDS);
     }
 
     @Test
@@ -141,9 +88,10 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
         for (final String [] testValue : testVaues) {
             try {
-                new ImageResourceResolverBean(getResourcePathTestData()
-                        .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger(), testValue);
+                new ImageResourceResolverBean(
+                        getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                        getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                        getDeploymentMetadata(), testValue);
 
                 Assert.fail("IllegalArgumentException expected for testValue: '"
                         + ArrayUtils.toString(testValue) + "'");
@@ -164,8 +112,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger(), FILE_EXTENSION_WILDCARDS));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordListFilesByExtension(getSingleMatchedPngImageArray());
 
@@ -216,8 +163,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger(), FILE_EXTENSION_WILDCARDS));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordListFilesByExtension(getMultipleMatchedPngImageArray());
 
@@ -266,8 +212,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new ImageResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger(), FILE_EXTENSION_WILDCARDS));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordListFilesByExtension(new File[] {});
 
@@ -346,21 +291,6 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                         getResourcePathTestData().getRequestedCssResourcePath()));
     }
 
-
-    /**
-     * @return the groupTestData
-     */
-    private GroupTestData getGroupTestData() {
-        return groupTestData;
-    }
-
-    /**
-     * @return the resourcePathTestData
-     */
-    private ResourcePathTestData getResourcePathTestData() {
-        return resourcePathTestData;
-    }
-
     /**
      * @return the objectUnderTest
      */
@@ -374,37 +304,4 @@ public class ImageResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
     private void setObjectUnderTest(final ImageResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
-
-    /**
-     * @return the resourcesRootDir
-     */
-    private File getResourcesRootDir() {
-        return resourcesRootDir;
-    }
-
-    /**
-     * @param resourcesRootDir the resourcesRootDir to set
-     */
-    private void setResourcesRootDir(final File resourcesRootDir) {
-        this.resourcesRootDir = resourcesRootDir;
-    }
-
-    public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
-        return mockResourceResolutionWarnLogger;
-    }
-
-    public void setMockResourceResolutionWarnLogger(
-            final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
-        this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
-    }
-
-    public FileIoFacade getMockFileIoFacade() {
-        return mockFileIoFacade;
-    }
-
-    public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
-        this.mockFileIoFacade = mockFileIoFacade;
-    }
-
-
 }

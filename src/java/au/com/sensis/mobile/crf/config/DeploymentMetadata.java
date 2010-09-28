@@ -24,7 +24,19 @@ public class DeploymentMetadata {
         PRODUCTION
     }
 
-    private Platform platform;
+    private final Platform platform;
+    private final String version;
+
+    /**
+     * Constructor.
+     *
+     * @param platform Platform that the deployment is on.
+     * @param version Version of the deployment.
+     */
+    public DeploymentMetadata(final Platform platform, final String version) {
+        this.platform = platform;
+        this.version = version;
+    }
 
     /**
      * @return true if the current platform is development.
@@ -41,17 +53,18 @@ public class DeploymentMetadata {
     }
 
     /**
-     * @return the platform
+     * @return Platform that the deployment is on.
      */
     private Platform getPlatform() {
         return platform;
     }
 
+
     /**
-     * @param platform the platform to set
+     * @return Version of the deployment.
      */
-    public void setPlatform(final Platform platform) {
-        this.platform = platform;
+    public String getVersion() {
+        return version;
     }
 
     /**
@@ -61,6 +74,7 @@ public class DeploymentMetadata {
     public String toString() {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
         toStringBuilder.append("platform", getPlatform());
+        toStringBuilder.append("version", getVersion());
         return toStringBuilder.toString();
     }
 }

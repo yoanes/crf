@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
@@ -29,6 +30,7 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
      *            handles are stored.
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger} to use to log warnings.
+     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
      * @param jspResourcesRootServletPath
      *            Root of JSP resources, relative to the servlet context root.
      */
@@ -36,9 +38,10 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
             final String abstractResourceExtension,
             final File rootResourcesDir,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final DeploymentMetadata deploymentMetadata,
             final String jspResourcesRootServletPath) {
         super(abstractResourceExtension, rootResourcesDir,
-                resourceResolutionWarnLogger);
+                resourceResolutionWarnLogger, deploymentMetadata);
 
         validateJspResourcesRootServletPath(jspResourcesRootServletPath);
 
@@ -81,7 +84,7 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    protected String insertGroupNameIntoPath(final String requestedResourcePath,
+    protected String insertGroupNameAndDeploymentVersionIntoPath(final String requestedResourcePath,
             final Group group) {
         return getJspResourcesRootServletPath()
                 + group.getName()

@@ -32,17 +32,20 @@
                     <constructor-arg value="@{crf.resources.jsp.abstract.extension}"/>
                     <constructor-arg value="@{crf.env.resources.jsp.root.dir}"/>
                     <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+                    <constructor-arg ref="crf.deploymentMetadata" />
                     <constructor-arg value="@{crf.resources.jsp.root.servlet.path}"/>
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.CssResourceResolverBean">
                     <constructor-arg value="@{crf.resources.css.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.css.root.dir}"/>
                     <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+                    <constructor-arg ref="crf.deploymentMetadata" />
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.ImageResourceResolverBean">
                     <constructor-arg value="@{crf.resources.image.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.images.root.dir}"/>
                     <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+                    <constructor-arg ref="crf.deploymentMetadata" />
                     <constructor-arg>
                         <list>
                             <value>*</value>
@@ -53,6 +56,7 @@
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.javascript.root.dir}"/>
                     <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+                    <constructor-arg ref="crf.deploymentMetadata" />
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.package.keyword}" />
                     <constructor-arg>
                         <bean class="au.com.sensis.mobile.crf.service.JavaScriptFileFinderBean">
@@ -108,9 +112,10 @@
     
     <!-- TODO: extract this global deploymentMetadata bean (and its class) into somewhere more common? -->
     <bean id="crf.deploymentMetadata" class="au.com.sensis.mobile.crf.config.DeploymentMetadata">
-        <property name="platform"> 
+        <constructor-arg>
             <!-- TODO: in future, the platform will be set from a properties file. For now, only DEV is supported. -->
             <util:constant static-field="au.com.sensis.mobile.crf.config.DeploymentMetadata$Platform.DEVELEOPMENT" />
-        </property>
+        </constructor-arg>
+        <constructor-arg><value>@{global.version}.@{global.build}</value></constructor-arg>
     </bean>
 </beans>

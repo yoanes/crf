@@ -4,31 +4,21 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.mobile.crf.config.GroupTestData;
-import au.com.sensis.mobile.crf.util.FileIoFacade;
-import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 
 /**
  * Unit test {@link CssResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
+public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
 
     private CssResourceResolverBean objectUnderTest;
-
-    private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private final GroupTestData groupTestData = new GroupTestData();
-    private File resourcesRootDir;
-    private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
-    private FileIoFacade mockFileIoFacade;
 
     /**
      * Setup test data.
@@ -38,85 +28,42 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
-
-        setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
         setObjectUnderTest(new CssResourceResolverBean(getResourcePathTestData()
                 .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger()));
+                getMockResourceResolutionWarnLogger(), getDeploymentMetadata()));
     }
 
-    @Test
-    public void testConstructorWithBlankAbstractResourceExtension()
-            throws Throwable {
-        final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
-        for (final String testValue : testValues) {
-            try {
-                new CssResourceResolverBean(testValue, getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger());
-
-                Assert.fail("IllegalArgumentException expected");
-            } catch (final IllegalArgumentException e) {
-
-                Assert.assertEquals(" has wrong message",
-                        "abstractResourceExtension must not be blank: '"
-                                + testValue + "'", e.getMessage());
-            }
-        }
+    @Override
+    protected CssResourceResolverBean createWithAbstractResourceExtension(
+            final String abstractResourceExtension) {
+        return new CssResourceResolverBean(abstractResourceExtension,
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata());
     }
 
-    @Test
-    public void testConstructorWhenResourcesRootPathInvalid() throws Throwable {
-        final File[] invalidPaths =
-                {
-                        new File(StringUtils.EMPTY),
-                        new File(" "),
-                        new File("  "),
-                        new File("I-do-not-exist"),
-                        new File(
-                                getClass()
-                                        .getResource(
-                                                "/au/com/sensis/mobile/crf/service/"
-                                                        + "CssResourceResolverBeanTestCase.class")
-                                        .toURI()) };
-        for (final File invalidPath : invalidPaths) {
-            try {
-                new CssResourceResolverBean(getResourcePathTestData()
-                        .getCssExtensionWithoutLeadingDot(), invalidPath,
-                        getMockResourceResolutionWarnLogger());
-                Assert
-                        .fail("IllegalArgumentException expected for invalidPath: '"
-                                + invalidPath + "'");
-            } catch (final IllegalArgumentException e) {
-
-                Assert.assertEquals(
-                        "IllegalArgumentException has wrong message",
-                        "rootResourcesDir must be a directory: '" + invalidPath
-                                + "'", e.getMessage());
-            }
-        }
+    @Override
+    protected CssResourceResolverBean createWithRootResourcesDir(final File rootResourcesDir) {
+        return new CssResourceResolverBean(getResourcePathTestData()
+                .getCssExtensionWithoutLeadingDot(), rootResourcesDir,
+                getMockResourceResolutionWarnLogger(), getDeploymentMetadata());
     }
 
-    @Test
-    public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
-            throws Throwable {
-        try {
-            new CssResourceResolverBean(getResourcePathTestData()
-                    .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                    null);
-
-            Assert.fail("IllegalArgumentException expected");
-        } catch (final IllegalArgumentException e) {
-
-            Assert.assertEquals("IllegalArgumentException has wrong message",
-                    "resourceResolutionWarnLogger must not be null", e
-                            .getMessage());
-        }
-
+    @Override
+    protected CssResourceResolverBean createWithResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        return new CssResourceResolverBean(getResourcePathTestData()
+                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                resourceResolutionWarnLogger, getDeploymentMetadata());
     }
 
-
+    @Override
+    protected CssResourceResolverBean createWithDeploymentMetadata(
+            final DeploymentMetadata deploymentMetadata) {
+        return new CssResourceResolverBean(getResourcePathTestData()
+                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                getMockResourceResolutionWarnLogger(), deploymentMetadata);
+    }
 
     @Test
     public void testResolveWhenMappingPerformedAndResourceExists() throws Throwable {
@@ -128,9 +75,7 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                                 .getCssExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new CssResourceResolverBean(testValue,
-                    getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordCheckIfNewPathExists(Boolean.TRUE);
 
@@ -165,9 +110,7 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
                 .getCssExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new CssResourceResolverBean(testValue,
-                    getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger()));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordCheckIfNewPathExists(Boolean.FALSE);
 
@@ -233,20 +176,6 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
 
     /**
-     * @return the groupTestData
-     */
-    private GroupTestData getGroupTestData() {
-        return groupTestData;
-    }
-
-    /**
-     * @return the resourcePathTestData
-     */
-    private ResourcePathTestData getResourcePathTestData() {
-        return resourcePathTestData;
-    }
-
-    /**
      * @return the objectUnderTest
      */
     private CssResourceResolverBean getObjectUnderTest() {
@@ -258,36 +187,5 @@ public class CssResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
      */
     private void setObjectUnderTest(final CssResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
-    }
-
-    /**
-     * @return the resourcesRootDir
-     */
-    private File getResourcesRootDir() {
-        return resourcesRootDir;
-    }
-
-    /**
-     * @param resourcesRootDir the resourcesRootDir to set
-     */
-    private void setResourcesRootDir(final File resourcesRootDir) {
-        this.resourcesRootDir = resourcesRootDir;
-    }
-
-    public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
-        return mockResourceResolutionWarnLogger;
-    }
-
-    public void setMockResourceResolutionWarnLogger(
-            final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
-        this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
-    }
-
-    public FileIoFacade getMockFileIoFacade() {
-        return mockFileIoFacade;
-    }
-
-    public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
-        this.mockFileIoFacade = mockFileIoFacade;
     }
 }

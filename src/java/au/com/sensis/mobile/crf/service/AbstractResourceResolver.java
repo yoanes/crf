@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
@@ -30,6 +31,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     private final String abstractResourceExtension;
     private final File rootResourcesDir;
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
+    private final DeploymentMetadata deploymentMetadata;
 
     /**
      * Constructor.
@@ -42,20 +44,23 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            handles are stored.
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger} to use to log warnings.
+     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
      */
     public AbstractResourceResolver(final String abstractResourceExtension,
             final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final DeploymentMetadata deploymentMetadata) {
         validateAbstractResourceExtension(abstractResourceExtension);
         validateRootResourcesDir(rootResourcesDir);
         validateResourceResolutionWarnLogger(resourceResolutionWarnLogger);
+        validateDeploymentMetadata(deploymentMetadata);
 
         this.abstractResourceExtension =
                 prefixWithLeadingDotIfRequired(abstractResourceExtension);
         this.rootResourcesDir = rootResourcesDir;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
+        this.deploymentMetadata = deploymentMetadata;
     }
-
 
     private void validateAbstractResourceExtension(
             final String abstractResourceExtension) {
@@ -78,6 +83,10 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         Validate.notNull(resourceResolutionWarnLogger,
             "resourceResolutionWarnLogger must not be null");
+    }
+
+    private void validateDeploymentMetadata(final DeploymentMetadata deploymentMetadata) {
+        Validate.notNull(deploymentMetadata, "deploymentMetadata must not be null");
     }
 
     private String prefixWithLeadingDotIfRequired(final String path) {
@@ -138,6 +147,8 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             final Group group) throws ResourceResolutionRuntimeException {
         final String newResourcePath =
                 createNewResourcePath(requestedResourcePath, group);
+
+        debugLogCheckingIfPathExists(newResourcePath);
 
         if (exists(newResourcePath)) {
             return Arrays.asList(createResource(requestedResourcePath,
@@ -205,7 +216,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * candidate real resource path. Will only ever be called if
      * {@link #isRecognisedAbstractResourceRequest(String)} returns true. The
      * default implementation invokes
-     * {@link #insertGroupNameIntoPath(String, Group)} then replaces the
+     * {@link #insertGroupNameAndDeploymentVersionIntoPath(String, Group)} then replaces the
      * {@link #getAbstractResourceExtension()} with
      * {@link #getRealResourcePathExtension()}.
      *
@@ -221,7 +232,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     protected String createNewResourcePath(final String requestedResourcePath,
             final Group group) {
 
-        return replaceAbstractResourceExtensionWithReal(insertGroupNameIntoPath(
+        return replaceAbstractResourceExtensionWithReal(insertGroupNameAndDeploymentVersionIntoPath(
                 requestedResourcePath, group));
     }
 
@@ -249,10 +260,11 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     protected abstract String getRealResourcePathExtension();
 
     /**
-     * Insert the name of the given {@link Group} into
-     * the requested resource path and return the result. The default
-     * implementation simply inserts the group name at the start of the path,
-     * separated from the rest of the path by {@link #RESOURCE_SEPARATOR}.
+     * Insert the name of the given {@link Group}, plus the
+     * {@link #getDeploymentMetadata()} version into the requested resource path
+     * and return the result. The default implementation simply inserts the
+     * version and group name at the start of the path, each component separated
+     * from the rest of the path by {@link #RESOURCE_SEPARATOR}.
      *
      * @param requestedResourcePath
      *            The path of the resource requested.
@@ -260,12 +272,14 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            {@link Group} that the
      *            {@link au.com.sensis.wireless.common.volantis.devicerepository.api.Device}
      *            for the current request belongs to.
-     * @return the result of inserting the the name of the given {@link Group}
-     *         into the requested resource path.
+     * @return the result of inserting the the name of the given {@link Group},
+     *         plus the {@link #getDeploymentMetadata()} version into the
+     *         requested resource path.
      */
-    protected String insertGroupNameIntoPath(
+    protected String insertGroupNameAndDeploymentVersionIntoPath(
             final String requestedResourcePath, final Group group) {
-        return group.getName() + RESOURCE_SEPARATOR + requestedResourcePath;
+        return getDeploymentMetadata().getVersion() + RESOURCE_SEPARATOR + group.getName()
+                + RESOURCE_SEPARATOR + requestedResourcePath;
     }
 
     /**
@@ -314,6 +328,12 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         }
     }
 
+    private void debugLogCheckingIfPathExists(final String newResourcePath) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Checking if resource exists: '" + newResourcePath + "'");
+        }
+    }
+
     private void debugLogResolutionResults(final String requestedResourcePath,
             final List<Resource> resolvedResources) {
         if (getLogger().isDebugEnabled()) {
@@ -331,5 +351,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
                     + getDebugResourceTypeName()
                     + " file. Ignoring the request.");
         }
+    }
+
+    private DeploymentMetadata getDeploymentMetadata() {
+        return deploymentMetadata;
     }
 }

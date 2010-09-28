@@ -10,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 
@@ -42,6 +43,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      *            handles are stored.
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger} to use to log warnings.
+     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
      * @param abstractPathPackageKeyword
      *            Keyword recognised at the end of abstract paths that signifies
      *            a "package" of JavaScript is being requested.
@@ -53,10 +55,11 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
             final String abstractResourceExtension,
             final File rootResourcesDir,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final DeploymentMetadata deploymentMetadata,
             final String abstractPathPackageKeyword,
             final JavaScriptFileFinder javaScriptFileFinder) {
         super(abstractResourceExtension, rootResourcesDir,
-                resourceResolutionWarnLogger);
+                resourceResolutionWarnLogger, deploymentMetadata);
 
         validateAbstractPathPackageKeyword(abstractPathPackageKeyword);
         validateJavaScriptFileFinder(javaScriptFileFinder);
@@ -112,7 +115,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
             final Group group) throws IllegalStateException {
 
         final String requestedGroupResourcePath =
-                insertGroupNameIntoPath(requestedResourcePath, group);
+                insertGroupNameAndDeploymentVersionIntoPath(requestedResourcePath, group);
         return new File(getRootResourcesDir(), FilenameUtils
                 .getPath(requestedGroupResourcePath));
     }
@@ -133,6 +136,8 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     private List<Resource> doFindBundleResources(
             final String requestedResourcePath,
             final File javascriptFilesBaseDir) throws IOException {
+
+        debugFindingBundleResourcesIn(javascriptFilesBaseDir);
 
         final List<Resource> result = new ArrayList<Resource>();
 
@@ -198,5 +203,11 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
 
     private String getAbstractPathPackageKeyword() {
         return abstractPathPackageKeyword;
+    }
+
+    private void debugFindingBundleResourcesIn(final File javascriptFilesBaseDir) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Finding bundle resources in: '" + javascriptFilesBaseDir + "'");
+        }
     }
 }

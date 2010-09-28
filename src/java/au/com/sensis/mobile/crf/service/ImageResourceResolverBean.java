@@ -10,6 +10,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
@@ -37,6 +38,7 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      *            handles are stored.
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger} to use to log warnings.
+     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
      * @param fileExtensionWildcards
      *            Array of image file extensions to match. Wildcards supported
      *            are '*' as per standard Unix/Windows command line
@@ -45,9 +47,10 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
     public ImageResourceResolverBean(final String abstractResourceExtension,
             final File rootResourcesDir,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final DeploymentMetadata deploymentMetadata,
             final String[] fileExtensionWildcards) {
         super(abstractResourceExtension, rootResourcesDir,
-                resourceResolutionWarnLogger);
+                resourceResolutionWarnLogger, deploymentMetadata);
 
         validateFileExtensionWildcards(fileExtensionWildcards);
 
@@ -87,6 +90,8 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
             throws ResourceResolutionRuntimeException {
 
         final String newResourcesBasePath = createNewResourcePath(requestedResourcePath, group);
+
+        debugLogCheckingForImagesIn(newResourcesBasePath);
 
         // TODO: possibly cache the result since we are accessing the file
         // system?
@@ -183,4 +188,9 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
         return fileExtensionWildcards;
     }
 
+    private void debugLogCheckingForImagesIn(final String newResourcesBasePath) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Checking for images in: '" + newResourcesBasePath + "'");
+        }
+    }
 }

@@ -10,14 +10,14 @@ import au.com.sensis.mobile.crf.config.DeploymentMetadata.Platform;
 public class DeploymentMetadataTestData {
 
     public DeploymentMetadata createDevDeploymentMetadata() {
-        final DeploymentMetadata deploymentMetadata = new DeploymentMetadata();
-        deploymentMetadata.setPlatform(Platform.DEVELEOPMENT);
+        final DeploymentMetadata deploymentMetadata =
+                new DeploymentMetadata(Platform.DEVELEOPMENT, "0.1.5");
         return deploymentMetadata;
     }
 
     public DeploymentMetadata createProdDeploymentMetadata() {
-        final DeploymentMetadata deploymentMetadata = new DeploymentMetadata();
-        deploymentMetadata.setPlatform(Platform.PRODUCTION);
+        final DeploymentMetadata deploymentMetadata =
+                new DeploymentMetadata(Platform.PRODUCTION, "0.1.5");
         return deploymentMetadata;
     }
 }

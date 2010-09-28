@@ -13,28 +13,22 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.mobile.crf.config.GroupTestData;
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
  * Unit test {@link JavaScriptResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
+public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
 
     private static final String ABSTRACT_PATH_PACKAGE_KEYWORD = "package";
 
     private JavaScriptResourceResolverBean objectUnderTest;
 
-    private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private final GroupTestData groupTestData = new GroupTestData();
-    private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
     private JavaScriptFileFinder mockJavaScriptFileFinder;
-    private FileIoFacade mockFileIoFacade;
 
     /**
      * Setup test data.
@@ -44,13 +38,52 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
      */
     @Before
     public void setUp() throws Exception {
-        FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
+        FileIoFacadeFactory
+                .changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
         setObjectUnderTest(new JavaScriptResourceResolverBean(
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                ABSTRACT_PATH_PACKAGE_KEYWORD,
+                getDeploymentMetadata(), ABSTRACT_PATH_PACKAGE_KEYWORD,
                 getMockJavaScriptFileFinder()));
+    }
+
+
+    @Override
+    protected JavaScriptResourceResolverBean createWithAbstractResourceExtension(
+            final String abstractResourceExtension) {
+        return new JavaScriptResourceResolverBean(abstractResourceExtension,
+                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                getMockJavaScriptFileFinder());
+    }
+
+    @Override
+    protected JavaScriptResourceResolverBean createWithResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        return new JavaScriptResourceResolverBean(getResourcePathTestData()
+                .getScriptExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                resourceResolutionWarnLogger, getDeploymentMetadata(),
+                ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
+    }
+
+    @Override
+    protected JavaScriptResourceResolverBean createWithRootResourcesDir(
+            final File rootResourcesDir) {
+        return new JavaScriptResourceResolverBean(getResourcePathTestData()
+                .getScriptExtensionWithoutLeadingDot(), rootResourcesDir,
+                getMockResourceResolutionWarnLogger(), getDeploymentMetadata(),
+                ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
+    }
+
+
+    @Override
+    protected JavaScriptResourceResolverBean createWithDeploymentMetadata(
+            final DeploymentMetadata deploymentMetadata) {
+        return new JavaScriptResourceResolverBean(getResourcePathTestData()
+                .getScriptExtensionWithoutLeadingDot(), getResourcesRootDir(),
+                getMockResourceResolutionWarnLogger(), deploymentMetadata,
+                ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
     }
 
     /**
@@ -64,74 +97,6 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     }
 
     @Test
-    public void testConstructorWithBlankAbstractResourceExtension()
-            throws Throwable {
-        final String[] testValues = { null, StringUtils.EMPTY, " ", "  "};
-        for (final String testValue : testValues) {
-            try {
-                new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger(),
-                        ABSTRACT_PATH_PACKAGE_KEYWORD,
-                        getMockJavaScriptFileFinder());
-
-                Assert.fail("IllegalArgumentException expected");
-            } catch (final IllegalArgumentException e) {
-
-                Assert.assertEquals(" has wrong message",
-                        "abstractResourceExtension must not be blank: '"
-                                + testValue + "'", e.getMessage());
-            }
-        }
-    }
-
-    @Test
-    public void testConstructorWhenResourcesRootPathInvalid() throws Throwable {
-        final File [] invalidPaths = { new File(StringUtils.EMPTY), new File(" "),
-                new File("  "), new File("I-do-not-exist"),
-                new File(getClass().getResource(
-                        "/au/com/sensis/mobile/crf/service/"
-                        + "JavaScriptResourceResolverBeanTestCase.class")
-                        .toURI()) };
-        for (final File invalidPath : invalidPaths) {
-            try {
-                new JavaScriptResourceResolverBean(
-                        getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                        invalidPath, getMockResourceResolutionWarnLogger(),
-                        ABSTRACT_PATH_PACKAGE_KEYWORD,
-                        getMockJavaScriptFileFinder());
-                Assert.fail("IllegalArgumentException expected for invalidPath: '"
-                      + invalidPath + "'");
-            } catch (final IllegalArgumentException e) {
-
-                Assert.assertEquals(
-                        "IllegalArgumentException has wrong message",
-                        "rootResourcesDir must be a directory: '"
-                                + invalidPath + "'", e.getMessage());
-            }
-        }
-    }
-
-    @Test
-    public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
-            throws Throwable {
-        try {
-            new JavaScriptResourceResolverBean(
-                    getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                    getResourcesRootDir(), null,
-                    ABSTRACT_PATH_PACKAGE_KEYWORD,
-                    getMockJavaScriptFileFinder());
-
-            Assert.fail("IllegalArgumentException expected");
-        } catch (final IllegalArgumentException e) {
-
-            Assert.assertEquals("IllegalArgumentException has wrong message",
-                    "resourceResolutionWarnLogger must not be null", e
-                            .getMessage());
-        }
-
-    }
-
-    @Test
     public void testConstructorWithBlankAbstractPathPackageKeyword()
             throws Throwable {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  "};
@@ -141,6 +106,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
                         getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                         getResourcesRootDir(),
                         getMockResourceResolutionWarnLogger(),
+                        getDeploymentMetadata(),
                         testValue,
                         getMockJavaScriptFileFinder());
 
@@ -161,7 +127,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
             new JavaScriptResourceResolverBean(
                     getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                     getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                    ABSTRACT_PATH_PACKAGE_KEYWORD,
+                    getDeploymentMetadata(), ABSTRACT_PATH_PACKAGE_KEYWORD,
                     null);
 
             Assert.fail("IllegalArgumentException expected");
@@ -182,9 +148,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger(), ABSTRACT_PATH_PACKAGE_KEYWORD,
-                    getMockJavaScriptFileFinder()));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
                     getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
@@ -217,9 +181,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger(), ABSTRACT_PATH_PACKAGE_KEYWORD,
-                    getMockJavaScriptFileFinder()));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
                     getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
@@ -271,9 +233,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger(), ABSTRACT_PATH_PACKAGE_KEYWORD,
-                    getMockJavaScriptFileFinder()));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordCheckIfNewPathExists(Boolean.TRUE);
 
@@ -304,9 +264,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(new JavaScriptResourceResolverBean(testValue, getResourcesRootDir(),
-                    getMockResourceResolutionWarnLogger(), ABSTRACT_PATH_PACKAGE_KEYWORD,
-                    getMockJavaScriptFileFinder()));
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
             recordCheckIfNewPathExists(Boolean.FALSE);
 
@@ -406,20 +364,6 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     }
 
     /**
-     * @return the groupTestData
-     */
-    private GroupTestData getGroupTestData() {
-        return groupTestData;
-    }
-
-    /**
-     * @return the resourcePathTestData
-     */
-    private ResourcePathTestData getResourcePathTestData() {
-        return resourcePathTestData;
-    }
-
-    /**
      * @return the objectUnderTest
      */
     private JavaScriptResourceResolverBean getObjectUnderTest() {
@@ -433,22 +377,6 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         this.objectUnderTest = objectUnderTest;
     }
 
-    /**
-     * @return the resourcesRootDir
-     */
-    private File getResourcesRootDir() {
-        return getResourcePathTestData().getRootResourcesPath();
-    }
-
-    public ResourceResolutionWarnLogger getMockResourceResolutionWarnLogger() {
-        return mockResourceResolutionWarnLogger;
-    }
-
-    public void setMockResourceResolutionWarnLogger(
-            final ResourceResolutionWarnLogger mockResourceResolutionWarnLogger) {
-        this.mockResourceResolutionWarnLogger = mockResourceResolutionWarnLogger;
-    }
-
     public JavaScriptFileFinder getMockJavaScriptFileFinder() {
         return mockJavaScriptFileFinder;
     }
@@ -456,19 +384,5 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     public void setMockJavaScriptFileFinder(
             final JavaScriptFileFinder mockJavaScriptFileFinder) {
         this.mockJavaScriptFileFinder = mockJavaScriptFileFinder;
-    }
-
-    public FileIoFacade getMockFileIoFacade() {
-        return mockFileIoFacade;
-    }
-
-    public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
-        this.mockFileIoFacade = mockFileIoFacade;
-    }
-
-
-    @Override
-    public void verify() {
-        // Override to prevent auto verify.
     }
 }
