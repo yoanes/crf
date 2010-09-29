@@ -73,20 +73,7 @@ public class ConfigurationFactoryBean
     private void loadConfigurationFilesWithSchemaValidation() {
 
         try {
-            final List<UiConfiguration> defaultUiConfigurations = new ArrayList<UiConfiguration>();
-
-            for (final Resource resource : getConfigurationResources()) {
-
-                getXmlValidator().validate(resource.getURL(), getConfigSchemaUrl());
-
-                final UiConfiguration uiConfiguration = unmarshallToUiConfiguration(resource);
-
-                addToCorrectList(uiConfiguration, defaultUiConfigurations, getUiConfigurations());
-            }
-
-            validateOneAndOnlyOneDefaultUiConfiguration(defaultUiConfigurations);
-
-            getUiConfigurations().addAll(defaultUiConfigurations);
+            doLoadConfigurationFilesWithSchemaValidation();
 
         } catch (final XmlValidationRuntimeException e) {
             throw e;
@@ -97,6 +84,23 @@ public class ConfigurationFactoryBean
             throw new ConfigurationRuntimeException("Error loading config from classpath: '"
                     + getMappingConfigurationClasspathPattern() + "'", e);
         }
+    }
+
+    private void doLoadConfigurationFilesWithSchemaValidation() throws IOException {
+        final List<UiConfiguration> defaultUiConfigurations = new ArrayList<UiConfiguration>();
+
+        for (final Resource resource : getConfigurationResources()) {
+
+            getXmlValidator().validate(resource.getURL(), getConfigSchemaUrl());
+
+            final UiConfiguration uiConfiguration = unmarshallToUiConfiguration(resource);
+
+            addToCorrectList(uiConfiguration, defaultUiConfigurations, getUiConfigurations());
+        }
+
+        validateOneAndOnlyOneDefaultUiConfiguration(defaultUiConfigurations);
+
+        getUiConfigurations().addAll(defaultUiConfigurations);
     }
 
     private Device createDefaultDevice() {
@@ -135,7 +139,7 @@ public class ConfigurationFactoryBean
         if (uiConfiguration.hasDefaultConfigPath()) {
             defaultUiConfigurations.add(uiConfiguration);
         } else {
-            getUiConfigurations().add(uiConfiguration);
+            uiConfigurations.add(uiConfiguration);
         }
     }
 
