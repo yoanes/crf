@@ -9,9 +9,12 @@ package au.com.sensis.mobile.crf.config;
 public interface ConfigurationFactory {
 
     /**
-     * Returns the (possibly cached) {@link UiConfiguration}.
+     * Returns the {@link UiConfiguration} that applies to the requested path.
      *
-     * @return {@link UiConfiguration} (possibly cached).
+     * @param requestedResourcePath
+     *            Path of the resource requested.
+     *
+     * @return {@link UiConfiguration} that applies to the requested path.
      */
-    UiConfiguration getUiConfiguration();
+    UiConfiguration getUiConfiguration(String requestedResourcePath);
 }

@@ -741,8 +741,10 @@ public class ResourceResolverEngineBeanTestCase extends
     }
 
     private void recordGetUiConfiguration() {
-        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration())
-            .andReturn(getMockUiConfiguration()).atLeastOnce();
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedJspResourcePath())).andReturn(
+                getMockUiConfiguration()).atLeastOnce();
     }
 
     /**

@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.config;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +31,44 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     @Before
     public void setUp() throws Exception {
         setObjectUnderTest(new UiConfiguration());
+        getObjectUnderTest().setConfigPath("component/map");
         getObjectUnderTest().setGroups(getMockGroups());
+    }
+
+    @Test
+    public void testAppliesToPathWhenTrue() throws Throwable {
+        Assert.assertTrue("appliesToPath should be true", getObjectUnderTest().appliesToPath(
+                "component/map/map.css"));
+    }
+
+    @Test
+    public void testAppliesToPathWhenFalse() throws Throwable {
+        Assert.assertFalse("appliesToPath should be false", getObjectUnderTest().appliesToPath(
+            "common/main.css"));
+    }
+
+    @Test
+    public void testAppliesToPathWhenRequestedPathNull() throws Throwable {
+        Assert
+                .assertFalse("appliesToPath should be false", getObjectUnderTest().appliesToPath(
+                        null));
+    }
+
+    @Test
+    public void testHasDefaultConfigPathWhenTrue() throws Throwable {
+        final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
+        for (final String testValue : testValues) {
+            getObjectUnderTest().setConfigPath(testValue);
+            Assert.assertTrue("hasDefaultConfigPath() should be true for testValue: '" + testValue
+                    + "'", getObjectUnderTest().hasDefaultConfigPath());
+        }
+    }
+
+    @Test
+    public void testHasDefaultConfigPathWhenFalse() throws Throwable {
+
+        Assert.assertFalse("hasDefaultConfigPath() should be false", getObjectUnderTest()
+                .hasDefaultConfigPath());
     }
 
     @Test

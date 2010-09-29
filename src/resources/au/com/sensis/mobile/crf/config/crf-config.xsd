@@ -17,6 +17,7 @@
     
     <xs:complexType name="UiConfiguration">
         <xs:sequence>
+            <xs:element name="config-path" type="xs:string" />
             <xs:element name="groups" type="Groups" />
         </xs:sequence>
     </xs:complexType>

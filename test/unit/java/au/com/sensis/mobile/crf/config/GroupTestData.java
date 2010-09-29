@@ -21,7 +21,7 @@ public class GroupTestData {
         return group;
     }
 
-    public Group createDefaultGroup() {
+    public DefaultGroup createDefaultGroup() {
         final DefaultGroup defaultGroup = new DefaultGroup();
         defaultGroup.setName("default");
         return defaultGroup;

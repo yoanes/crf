@@ -4,6 +4,7 @@
          xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
          xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
 
+    <config-path></config-path>
     <groups>
         <group name="iphone" expr="device.name =~ '.*iPhone.*'" />
         <group name="iPad" expr = "device.name =~ '.*iPad.*'" />

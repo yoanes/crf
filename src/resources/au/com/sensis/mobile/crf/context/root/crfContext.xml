@@ -8,12 +8,14 @@
                 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
                 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
+<!-- 
     <bean id="crf.resourceResolverEngine" 
         class="au.com.sensis.mobile.crf.service.DelegatingPathRestrictedResourceResolverEngineBean">
         <constructor-arg ref="crf.defaultResourceResolverEngine" />
     </bean>                
+-->    
 
-    <bean id="crf.defaultResourceResolverEngine" 
+    <bean id="crf.resourceResolverEngine" 
         class="au.com.sensis.mobile.crf.service.ResourceResolverEngineBean">
         <constructor-arg ref="crf.configurationFactory"/>
         <constructor-arg ref="crf.resourceResolver"/>
@@ -22,7 +24,13 @@
         
     <bean id="crf.configurationFactory" 
         class="au.com.sensis.mobile.crf.config.ConfigurationFactoryBean">
-        <constructor-arg value="@{crf.resources.config.classpath}"/>
+        <constructor-arg>
+            <bean class="au.com.sensis.mobile.crf.util.CastorXmlBinderBean"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="au.com.sensis.mobile.crf.util.XsdXmlValidatorBean"/>
+        </constructor-arg>
+        <constructor-arg value="@{crf.resources.config.classpath}, classpath*:/au/com/sensis/mobile/web/component/*/crf/*-crf-config.xml"/>
     </bean>
     
     <bean id="crf.resourceResolver" class="au.com.sensis.mobile.crf.service.DelegatingResourceResolverBean">

@@ -68,7 +68,8 @@ public class ResourceResolverEngineBean implements
                     + "' for device '" + device + "'.");
         }
 
-        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(device);
+        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(device,
+                requestedResourcePath);
         while (matchingGroupIterator.hasNext()) {
 
             final Group currGroup = matchingGroupIterator.next();
@@ -93,8 +94,9 @@ public class ResourceResolverEngineBean implements
         return null;
     }
 
-    private Iterator<Group> getMatchingGroupIterator(final Device device) {
-        return getConfigurationFactory().getUiConfiguration()
+    private Iterator<Group> getMatchingGroupIterator(final Device device,
+            final String requestedResourcePath) {
+        return getConfigurationFactory().getUiConfiguration(requestedResourcePath)
                 .matchingGroupIterator(device);
     }
 
@@ -126,7 +128,8 @@ public class ResourceResolverEngineBean implements
                     + "' for device '" + device + "'.");
         }
 
-        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(device);
+        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(
+                device, requestedResourcePath);
         while (matchingGroupIterator.hasNext()) {
 
             final Group currGroup = matchingGroupIterator.next();

@@ -1,7 +1,9 @@
 package au.com.sensis.mobile.crf.config;
 
+import java.net.URL;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -13,7 +15,65 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  */
 public class UiConfiguration {
 
+    /**
+     * URL of the source that this {@link UiConfiguration} was loaded from.
+     */
+    private URL sourceUrl;
+
+    /**
+     * Path prefix that this configuration applies to. eg. component/map
+     */
+    private String configPath;
+
     private Groups groups;
+
+    /**
+     * @return URL of the source that this {@link UiConfiguration} was loaded from.
+     */
+    public URL getSourceUrl() {
+        return sourceUrl;
+    }
+
+    /**
+     * @param sourceUrl
+     *            URL of the source that this {@link UiConfiguration} was loaded
+     *            from.
+     */
+    public void setSourceUrl(final URL sourceUrl) {
+        this.sourceUrl = sourceUrl;
+    }
+
+    /**
+     * @return Path prefix that this configuration applies to. eg. component/map
+     */
+    public String getConfigPath() {
+        return configPath;
+    }
+
+    /**
+     * @param configPath
+     *            Path prefix that this configuration applies to. eg.
+     *            component/map
+     */
+    public void setConfigPath(final String configPath) {
+        this.configPath = configPath;
+    }
+
+    /**
+     * @param requestedResourcePath Path of the requested resource.
+     * @return true if this {@link UiConfiguration} applies to the given requested resource path.
+     */
+    public boolean appliesToPath(final String requestedResourcePath) {
+        return (requestedResourcePath != null) && requestedResourcePath.startsWith(getConfigPath());
+    }
+
+    /**
+     * @return true if this {@link UiConfiguration} has a default config path
+     *         (ie. does not apply to any specific config path).
+     */
+    public boolean hasDefaultConfigPath() {
+        return (getConfigPath() == null) || StringUtils.isBlank(getConfigPath());
+    }
 
     /**
      * Only public due to XML->Java requirements (using Castor at the time of
@@ -68,6 +128,8 @@ public class UiConfiguration {
         final UiConfiguration rhs = (UiConfiguration) obj;
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
+        equalsBuilder.append(getSourceUrl(), rhs.getSourceUrl());
+        equalsBuilder.append(getConfigPath(), rhs.getConfigPath());
         equalsBuilder.append(getGroups(), rhs.getGroups());
         return equalsBuilder.isEquals();
     }
@@ -78,6 +140,8 @@ public class UiConfiguration {
     @Override
     public int hashCode() {
         final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+        hashCodeBuilder.append(getSourceUrl());
+        hashCodeBuilder.append(getConfigPath());
         hashCodeBuilder.append(getGroups());
         return hashCodeBuilder.toHashCode();
     }
@@ -88,6 +152,8 @@ public class UiConfiguration {
     @Override
     public String toString() {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
+        toStringBuilder.append("sourceUrl", getSourceUrl());
+        toStringBuilder.append("configPath", getConfigPath());
         toStringBuilder.append("groups", getGroups());
         return toStringBuilder.toString();
     }

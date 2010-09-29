@@ -30,7 +30,7 @@
     </appender>
     
     <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
-        <param name="File" value="${catalina.base}/logs/crp-component-showcase.log"/>
+        <param name="File" value="${catalina.base}/logs/crf-showcase.log"/>
         <param name="Append" value="true"/>
         <param name="Threshold" value="DEBUG"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
