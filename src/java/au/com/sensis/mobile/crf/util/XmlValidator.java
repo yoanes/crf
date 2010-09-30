@@ -12,8 +12,8 @@ public interface XmlValidator {
     /**
      * Validate the given XML using the given schema.
      *
-     * @param xmlToValidate URL to the XML to validate.
-     * @param schema URL to the schema to use for the validation.
+     * @param xmlToValidateUrl URL to the XML to validate.
+     * @param schemaUrl URL to the schema to use for the validation.
      */
     void validate(URL xmlToValidateUrl, URL schemaUrl);
 }
