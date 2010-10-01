@@ -8,13 +8,6 @@
                 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
                 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-<!-- 
-    <bean id="crf.resourceResolverEngine" 
-        class="au.com.sensis.mobile.crf.service.DelegatingPathRestrictedResourceResolverEngineBean">
-        <constructor-arg ref="crf.defaultResourceResolverEngine" />
-    </bean>                
--->    
-
     <bean id="crf.resourceResolverEngine" 
         class="au.com.sensis.mobile.crf.service.ResourceResolverEngineBean">
         <constructor-arg ref="crf.configurationFactory"/>
@@ -24,20 +17,28 @@
         
     <bean id="crf.configurationFactory" 
         class="au.com.sensis.mobile.crf.config.ConfigurationFactoryBean">
+        <constructor-arg ref="crf.deploymentMetadata" />
+        <constructor-arg ref="crf.resourcePatternResolver"/>
         <constructor-arg>
             <bean class="au.com.sensis.mobile.crf.util.CastorXmlBinderBean"/>
         </constructor-arg>
         <constructor-arg>
             <bean class="au.com.sensis.mobile.crf.util.XsdXmlValidatorBean"/>
         </constructor-arg>
-        <constructor-arg value="@{crf.resources.config.classpath}, classpath*:/au/com/sensis/mobile/web/component/*/crf/*-crf-config.xml"/>
+            <constructor-arg value="@{crf.resources.config.path.patterns}"/>
+    </bean>
+    
+    <bean id="crf.resourcePatternResolver" class="org.springframework.web.context.support.ServletContextResourcePatternResolver">
+        <constructor-arg>
+            <bean class="org.springframework.web.context.support.ServletContextFactoryBean"/>
+        </constructor-arg>
     </bean>
     
     <bean id="crf.resourceResolver" class="au.com.sensis.mobile.crf.service.DelegatingResourceResolverBean">
         <constructor-arg>
             <list>
                 <bean class="au.com.sensis.mobile.crf.service.JspResourceResolverBean">
-                    <constructor-arg value="@{crf.resources.jsp.abstract.extension}"/>
+                    <constructor-arg value="@{crf.resources.jsp.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.jsp.root.dir}"/>
                     <constructor-arg ref="crf.resourceResolutionWarnLogger" />
                     <constructor-arg ref="crf.deploymentMetadata" />
@@ -125,5 +126,6 @@
             <util:constant static-field="au.com.sensis.mobile.crf.config.DeploymentMetadata$Platform.DEVELEOPMENT" />
         </constructor-arg>
         <constructor-arg><value>@{global.version}.@{global.build}</value></constructor-arg>
+        <property name="cacheUiConfiguration" value="@{crf.env.cache.ui.configuration}" />
     </bean>
 </beans>

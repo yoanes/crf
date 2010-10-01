@@ -26,6 +26,7 @@ public class DeploymentMetadata {
 
     private final Platform platform;
     private final String version;
+    private boolean cacheUiConfiguration = true;
 
     /**
      * Constructor.
@@ -68,6 +69,24 @@ public class DeploymentMetadata {
     }
 
     /**
+     * @return true if the loaded {@link UiConfiguration} should be cached. false
+     * indicates that it will be dynamically reloaded. Defaults to true.
+     */
+    public boolean isCacheUiConfiguration() {
+        return cacheUiConfiguration;
+    }
+
+    /**
+     * @param cacheUiConfiguration
+     *            true if the loaded {@link UiConfiguration} should be cached.
+     *            false indicates that it will be dynamically reloaded. Defaults
+     *            to true.
+     */
+    public void setCacheUiConfiguration(final boolean cacheUiConfiguration) {
+        this.cacheUiConfiguration = cacheUiConfiguration;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -75,6 +94,7 @@ public class DeploymentMetadata {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
         toStringBuilder.append("platform", getPlatform());
         toStringBuilder.append("version", getVersion());
+        toStringBuilder.append("cacheUiConfiguration", isCacheUiConfiguration());
         return toStringBuilder.toString();
     }
 }

@@ -21,6 +21,11 @@ public class UiConfiguration {
     private URL sourceUrl;
 
     /**
+     * Timestamp of the {@link #getSourceUrl()} that was loaded.
+     */
+    private long sourceTimestamp;
+
+    /**
      * Path prefix that this configuration applies to. eg. component/map
      */
     private String configPath;
@@ -41,6 +46,23 @@ public class UiConfiguration {
      */
     public void setSourceUrl(final URL sourceUrl) {
         this.sourceUrl = sourceUrl;
+    }
+
+    /**
+     * @return Timestamp of the {@link #getSourceUrl()} that this
+     *         {@link UiConfiguration} was loaded from.
+     */
+    public long getSourceTimestamp() {
+        return sourceTimestamp;
+    }
+
+    /**
+     * @param sourceTimestamp
+     *            Timestamp of the {@link #getSourceUrl()} that this
+     *            {@link UiConfiguration} was loaded from.
+     */
+    public void setSourceTimestamp(final long sourceTimestamp) {
+        this.sourceTimestamp = sourceTimestamp;
     }
 
     /**
@@ -129,6 +151,7 @@ public class UiConfiguration {
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
         equalsBuilder.append(getSourceUrl(), rhs.getSourceUrl());
+        equalsBuilder.append(getSourceTimestamp(), rhs.getSourceTimestamp());
         equalsBuilder.append(getConfigPath(), rhs.getConfigPath());
         equalsBuilder.append(getGroups(), rhs.getGroups());
         return equalsBuilder.isEquals();
@@ -141,6 +164,7 @@ public class UiConfiguration {
     public int hashCode() {
         final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
         hashCodeBuilder.append(getSourceUrl());
+        hashCodeBuilder.append(getSourceTimestamp());
         hashCodeBuilder.append(getConfigPath());
         hashCodeBuilder.append(getGroups());
         return hashCodeBuilder.toHashCode();
@@ -153,6 +177,7 @@ public class UiConfiguration {
     public String toString() {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
         toStringBuilder.append("sourceUrl", getSourceUrl());
+        toStringBuilder.append("sourceTimestamp", getSourceTimestamp());
         toStringBuilder.append("configPath", getConfigPath());
         toStringBuilder.append("groups", getGroups());
         return toStringBuilder.toString();

@@ -20,4 +20,17 @@ public class DeploymentMetadataTestData {
                 new DeploymentMetadata(Platform.PRODUCTION, "0.1.5");
         return deploymentMetadata;
     }
+
+    public DeploymentMetadata createCacheUiConfigurationEnabledDeploymentMetadata() {
+        final DeploymentMetadata deploymentMetadata =
+                new DeploymentMetadata(Platform.DEVELEOPMENT, "0.1.5");
+        return deploymentMetadata;
+    }
+
+    public DeploymentMetadata createCacheUiConfigurationDisabledDeploymentMetadata() {
+        final DeploymentMetadata deploymentMetadata =
+            new DeploymentMetadata(Platform.DEVELEOPMENT, "0.1.5");
+        deploymentMetadata.setCacheUiConfiguration(false);
+        return deploymentMetadata;
+    }
 }

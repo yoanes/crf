@@ -11,6 +11,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
 import au.com.sensis.mobile.crf.exception.XmlValidationRuntimeException;
@@ -58,8 +61,16 @@ public class ConfigurationFactoryBeanTestCase extends
     private static final String CRF_CONFIG_MULTIPLE_INVALID_EXPR
         = "/au/com/sensis/mobile/crf/config/crf-config-multiple-invalid-expr.xml";
 
+    private final DeploymentMetadataTestData deploymentMetadataTestData
+        = new DeploymentMetadataTestData();
     private final XmlBinder xmlBinder = new CastorXmlBinderBean();
     private final XmlValidator xmlValidator = new XsdXmlValidatorBean();
+    private final ResourcePatternResolver resourcePatternResolver
+        = new PathMatchingResourcePatternResolver();
+
+    private ResourcePatternResolver mockResourcePatternResolver;
+    private Resource mockResource1;
+    private Resource mockResource2;
 
     /**
      * Setup test data.
@@ -76,8 +87,9 @@ public class ConfigurationFactoryBeanTestCase extends
         final String mappingConfigurationClasspath =
                 "/file does not exist on classpath";
         try {
-            new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
-                    mappingConfigurationClasspath);
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(),
+                    getXmlValidator(), mappingConfigurationClasspath);
             Assert.fail("ConfigurationRuntimeException expected");
         } catch (final ConfigurationRuntimeException e) {
 
@@ -100,7 +112,8 @@ public class ConfigurationFactoryBeanTestCase extends
     private void doTestConstructorWhenSchemaValidationFails(final TestData testData)
         throws IOException {
         try {
-            new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     testData.getConfigFileClasspathLocation());
             Assert.fail("XmlValidationRuntimeException expected for testData: "
                     + testData);
@@ -127,7 +140,8 @@ public class ConfigurationFactoryBeanTestCase extends
     @Test
     public void testConstructorWhenOneGroupExpressionInvalid() throws Throwable {
         try {
-            new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     CRF_CONFIG_ONE_INVALID_EXPR);
 
             Assert.fail("ConfigurationRuntimeException expected");
@@ -149,7 +163,8 @@ public class ConfigurationFactoryBeanTestCase extends
     @Test
     public void testConstructorWhenMultipleGroupExpressionsInvalid() throws Throwable {
         try {
-            new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     CRF_CONFIG_MULTIPLE_INVALID_EXPR);
 
             Assert.fail("ConfigurationRuntimeException expected");
@@ -173,12 +188,13 @@ public class ConfigurationFactoryBeanTestCase extends
     public void testConstructorWhenSchemaValidationSucceeds() throws Throwable {
 
         for (final TestData testData : TestData.createTestDataForSchemaValidationSuccess()) {
-            EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled()).andReturn(
-                    Boolean.FALSE).anyTimes();
+            EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled())
+                .andReturn(Boolean.FALSE).anyTimes();
 
             replay();
 
-            new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     testData.getConfigFileClasspathLocation());
 
             // Explicit verify and reset since we are in a loop.
@@ -190,14 +206,14 @@ public class ConfigurationFactoryBeanTestCase extends
     @Test
     public void testConfigurationWithMultipleValidGroupsLoaded() throws Throwable {
 
-        EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled()).andReturn(
-                Boolean.TRUE).atLeastOnce();
-        getMockLogger(ConfigurationFactoryBean.class).info(
-                "Loaded configuration: " + createUiConfigurationWithMultipleValidGroups());
+        recordLoggerIsInfoEnabled(Boolean.TRUE);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationWithMultipleValidGroups(),
+                1);
 
         replay();
         final ConfigurationFactory configurationFactory =
-                new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+                new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                        getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                         CRF_CONFIG_MULTIPLE_VALID_GROUPS);
 
         assertComplexObjectsEqual("uiConfiguration is wrong",
@@ -207,19 +223,16 @@ public class ConfigurationFactoryBeanTestCase extends
 
     @Test
     public void testMultipleConfigurationsLoadedViaSinglePattern() throws Throwable {
-        EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled()).andReturn(
-                Boolean.TRUE).atLeastOnce();
-        getMockLogger(ConfigurationFactoryBean.class).info(
-                "Loaded configuration: " + createUiConfigurationForPatternMatch1());
-        getMockLogger(ConfigurationFactoryBean.class).info(
-                "Loaded configuration: " + createUiConfigurationForPatternMatch2());
-        getMockLogger(ConfigurationFactoryBean.class).info(
-                "Loaded configuration: " + createUiConfigurationForPatternMatch3());
+        recordLoggerIsInfoEnabled(Boolean.TRUE);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch1(), 1);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch2(), 1);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch3(), 1);
 
         replay();
 
         final ConfigurationFactory configurationFactory =
-                new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+                new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                        getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                         CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN);
 
         assertComplexObjectsEqual("uiConfiguration for pattern match 1 is wrong",
@@ -236,20 +249,159 @@ public class ConfigurationFactoryBeanTestCase extends
     }
 
     @Test
-    public void testMultipleConfigurationsLoadedViaCommaSeparatedPatterns() throws Throwable {
-        EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled()).andReturn(
-                Boolean.TRUE).atLeastOnce();
-        getMockLogger(ConfigurationFactoryBean.class).info(
-                "Loaded configuration: " + createUiConfigurationForPatternMatch1());
-        getMockLogger(ConfigurationFactoryBean.class).info(
-                "Loaded configuration: " + createUiConfigurationForPatternMatch2());
-        getMockLogger(ConfigurationFactoryBean.class).info(
-                "Loaded configuration: " + createUiConfigurationForPatternMatch3());
+    public void testGetUiConfigurationWhenCacheDisabledButNoSourceChangeDetected()
+        throws Throwable {
+
+        recordLoggerIsInfoEnabled(Boolean.TRUE);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch1(), 1);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch2(), 1);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch3(), 1);
 
         replay();
 
         final ConfigurationFactory configurationFactory =
-                new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+                new ConfigurationFactoryBean(getCacheDisabledDeploymentMetadata(),
+                        getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                        CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN);
+
+        assertComplexObjectsEqual("uiConfiguration for pattern match 1 is wrong",
+                createUiConfigurationForPatternMatch1(), configurationFactory
+                        .getUiConfiguration("component/component1/main.js"));
+
+        assertComplexObjectsEqual("uiConfiguration for pattern match 2 is wrong",
+                createUiConfigurationForPatternMatch2(), configurationFactory
+                        .getUiConfiguration("component/component2/main.js"));
+
+        assertComplexObjectsEqual("uiConfiguration for pattern match 3 is wrong",
+                createUiConfigurationForPatternMatch3(), configurationFactory
+                        .getUiConfiguration("common/main.css"));
+
+    }
+
+    @Test
+    public void testGetUiConfigurationWhenCacheDisabledAndNewSourcesDetected() throws Throwable {
+
+        final Resource foundResource1 =
+                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1);
+        final Resource foundResource2 =
+                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH2);
+        final Resource foundResource3 =
+                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH3);
+
+        recordGetResources(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN, new Resource[] {
+                foundResource1, foundResource3 }, 1);
+
+        // Record get resources again corresponding to getUiConfiguration
+        // detecting new sources.
+        recordGetResources(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN, new Resource[] {
+                foundResource1, foundResource2, foundResource3 }, 2);
+
+        recordLoggerIsInfoEnabled(Boolean.TRUE);
+        recordLoggerInfo("Updated configuration detected and UiConfiguration caching disabled. "
+                        + "Will reload configuration.", 1);
+
+        // Note that we rely on the presence of the info logging to detect the
+        // configuration being loaded twice. If you refactor to get rid of the
+        // info logging, beware of this.
+        final int expectedNumTimesConfigLoaded = 2;
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch1(),
+                expectedNumTimesConfigLoaded);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch3(),
+                expectedNumTimesConfigLoaded);
+
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch2(),
+                1);
+
+        replay();
+
+        final ConfigurationFactory configurationFactory =
+                new ConfigurationFactoryBean(getCacheDisabledDeploymentMetadata(),
+                        getMockResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                        CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN);
+
+        // This call should trigger the config being loaded again.
+        configurationFactory.getUiConfiguration("component/component1/main.js");
+    }
+
+    @Test
+    public void testGetUiConfigurationWhenCacheDisabledAndUpdatedSourceDetected() throws Throwable {
+
+        final Resource foundResource1 =
+            new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1);
+        final Resource foundResource3 =
+                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH3);
+
+        recordGetResources(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
+                new Resource[] { foundResource1, foundResource3 }, 1);
+
+        // Record get resources again corresponding to getUiConfiguration
+        // detecting an updated source file. This time, return a mock so we can
+        // fiddle the lastModified timestamp.
+        recordGetResources(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
+                new Resource[] { getMockResource1(), foundResource3 }, 2);
+
+        EasyMock.expect(getMockResource1().getURL()).andReturn(foundResource1.getURL())
+                .atLeastOnce();
+        final Long newTimestamp = new Long(5);
+        EasyMock.expect(getMockResource1().lastModified()).andReturn(newTimestamp).atLeastOnce();
+
+        recordLoggerIsInfoEnabled(Boolean.TRUE);
+        recordLoggerInfo("Updated configuration detected and UiConfiguration caching disabled. "
+                + "Will reload configuration.", 1);
+
+        // Note that we rely on the presence of the info logging to detect the
+        // configuration being loaded twice. If you refactor to get rid of the
+        // info logging, beware of this.
+        final UiConfiguration expectedFoundResource1UiConfiguration
+            = createUiConfigurationForPatternMatch1();
+        recordLoggerInfo("Loaded configuration: " + expectedFoundResource1UiConfiguration, 1);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch3(), 2);
+
+        // The second time the config is loaded, the foundResoure1 timestamp should be
+        // different.
+        expectedFoundResource1UiConfiguration.setSourceTimestamp(newTimestamp);
+        recordLoggerInfo("Loaded configuration: " + expectedFoundResource1UiConfiguration, 1);
+
+        replay();
+
+        final ConfigurationFactory configurationFactory =
+                new ConfigurationFactoryBean(getCacheDisabledDeploymentMetadata(),
+                        getMockResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                        CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN);
+
+        // This call should trigger the config being loaded again.
+        configurationFactory.getUiConfiguration("component/component1/main.js");
+    }
+
+    private void recordLoggerInfo(final String message, final int times) {
+        getMockLogger(ConfigurationFactoryBean.class).info(message);
+        EasyMock.expectLastCall().times(times);
+    }
+
+    private void recordLoggerIsInfoEnabled(final Boolean enabled) {
+        EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled()).andReturn(
+                enabled).atLeastOnce();
+    }
+
+    private void recordGetResources(final String resourcesPattern, final Resource[] foundResources,
+            final int times) throws IOException {
+        EasyMock.expect(getMockResourcePatternResolver().getResources(resourcesPattern)).andReturn(
+                foundResources).times(times);
+
+    }
+
+    @Test
+    public void testMultipleConfigurationsLoadedViaCommaSeparatedPatterns() throws Throwable {
+        recordLoggerIsInfoEnabled(Boolean.TRUE);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch1(), 1);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch2(), 1);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch3(), 1);
+
+        replay();
+
+        final ConfigurationFactory configurationFactory =
+                new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                        getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                         CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1 + ", "
                                 + CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH2 + ", "
                                 + CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH3);
@@ -275,7 +427,8 @@ public class ConfigurationFactoryBeanTestCase extends
 
             replay();
 
-            new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     CRF_CONFIG_EMPTY_PATH_CLASSPATH_PATTERN);
 
             Assert.fail("ConfigurationRuntimeException expected");
@@ -295,7 +448,8 @@ public class ConfigurationFactoryBeanTestCase extends
     @Test
     public void testNoConfigurationWithDefaultPath() throws Throwable {
         try {
-            new ConfigurationFactoryBean(getXmlBinder(), getXmlValidator(),
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1);
 
             Assert.fail("ConfigurationRuntimeException expected");
@@ -310,8 +464,10 @@ public class ConfigurationFactoryBeanTestCase extends
     private UiConfiguration createUiConfigurationWithMultipleValidGroups() throws IOException {
         final UiConfiguration uiConfiguration = new UiConfiguration();
 
-        uiConfiguration.setSourceUrl(new ClassPathResource(CRF_CONFIG_MULTIPLE_VALID_GROUPS)
-                .getURL());
+        final ClassPathResource sourceClassPathResource =
+                new ClassPathResource(CRF_CONFIG_MULTIPLE_VALID_GROUPS);
+        uiConfiguration.setSourceUrl(sourceClassPathResource.getURL());
+        uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
 
         uiConfiguration.setConfigPath(StringUtils.EMPTY);
         final Group group1 = new Group();
@@ -334,9 +490,10 @@ public class ConfigurationFactoryBeanTestCase extends
     private UiConfiguration createUiConfigurationForPatternMatch1() throws IOException {
         final UiConfiguration uiConfiguration = new UiConfiguration();
 
-        uiConfiguration.setSourceUrl(
-                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1)
-                    .getURL());
+        final ClassPathResource sourceClassPathResource =
+                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1);
+        uiConfiguration.setSourceUrl(sourceClassPathResource.getURL());
+        uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
 
         uiConfiguration.setConfigPath("component/component1");
 
@@ -345,7 +502,7 @@ public class ConfigurationFactoryBeanTestCase extends
         group1.setExpr("device.name =~ '.*iPhone.*'");
 
         final Groups groups = new Groups();
-        groups.setGroups(new Group [] {group1});
+        groups.setGroups(new Group[] { group1 });
         groups.setDefaultGroup(createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
@@ -356,9 +513,10 @@ public class ConfigurationFactoryBeanTestCase extends
     private UiConfiguration createUiConfigurationForPatternMatch2() throws IOException {
         final UiConfiguration uiConfiguration = new UiConfiguration();
 
-        uiConfiguration.setSourceUrl(
-                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH2)
-                .getURL());
+        final ClassPathResource sourceClassPathResource =
+                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH2);
+        uiConfiguration.setSourceUrl(sourceClassPathResource.getURL());
+        uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
 
         uiConfiguration.setConfigPath("component/component2");
 
@@ -367,7 +525,7 @@ public class ConfigurationFactoryBeanTestCase extends
         group1.setExpr("device.name =~ '.*iPad.*'");
 
         final Groups groups = new Groups();
-        groups.setGroups(new Group [] {group1});
+        groups.setGroups(new Group[] { group1 });
         groups.setDefaultGroup(createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
@@ -378,8 +536,10 @@ public class ConfigurationFactoryBeanTestCase extends
     private UiConfiguration createUiConfigurationForPatternMatch3() throws IOException {
         final UiConfiguration uiConfiguration = new UiConfiguration();
 
-        uiConfiguration.setSourceUrl(
-                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH3).getURL());
+        final ClassPathResource sourceClassPathResource =
+                new ClassPathResource(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH3);
+        uiConfiguration.setSourceUrl(sourceClassPathResource.getURL());
+        uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
 
         uiConfiguration.setConfigPath(StringUtils.EMPTY);
 
@@ -473,5 +633,48 @@ public class ConfigurationFactoryBeanTestCase extends
 
     private XmlBinder getXmlBinder() {
         return xmlBinder;
+    }
+
+    private ResourcePatternResolver getResourcePatternResolver() {
+        return resourcePatternResolver;
+    }
+
+    private DeploymentMetadataTestData getDeploymentMetadataTestData() {
+        return deploymentMetadataTestData;
+    }
+
+    private DeploymentMetadata getCacheEnabledDeploymentMetadata() {
+        return getDeploymentMetadataTestData()
+                .createCacheUiConfigurationEnabledDeploymentMetadata();
+    }
+
+    private DeploymentMetadata getCacheDisabledDeploymentMetadata() {
+        return getDeploymentMetadataTestData()
+                .createCacheUiConfigurationDisabledDeploymentMetadata();
+    }
+
+    public ResourcePatternResolver getMockResourcePatternResolver() {
+        return mockResourcePatternResolver;
+    }
+
+    public void setMockResourcePatternResolver(
+            final ResourcePatternResolver mockResourcePatternResolver) {
+        this.mockResourcePatternResolver = mockResourcePatternResolver;
+    }
+
+    public Resource getMockResource1() {
+        return mockResource1;
+    }
+
+    public void setMockResource1(final Resource mockResource1) {
+        this.mockResource1 = mockResource1;
+    }
+
+    public Resource getMockResource2() {
+        return mockResource2;
+    }
+
+    public void setMockResource2(final Resource mockResource2) {
+        this.mockResource2 = mockResource2;
     }
 }
