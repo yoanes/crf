@@ -76,18 +76,18 @@ public class ImageServlet extends HttpServletBean {
 
         } else {
             throw new ServletException(
-                    "Requests for abstract images should have a servlet path starting with '"
+                    "Requests for abstract images should have a requestUri starting with '"
                     + getImageServletDependencies()
                             .getImagesClientPathPrefix()
-                    + "'. However, servlet path is '" + request.getServletPath()
+                    + "'. However, requestUri is '" + request.getRequestURI()
                     + "'");
         }
 
     }
 
     private boolean requestedResourcePathHasCorrectPrefix(final HttpServletRequest req) {
-        return (req.getServletPath() != null)
-                && req.getServletPath().startsWith(
+        return (req.getRequestURI() != null)
+                && req.getRequestURI().startsWith(
                         getImageServletDependencies()
                                 .getImagesClientPathPrefix());
     }
@@ -118,7 +118,7 @@ public class ImageServlet extends HttpServletBean {
     }
 
     private String getRequestedResourcePath(final HttpServletRequest req) {
-        return StringUtils.substringAfter(req.getServletPath(),
+        return StringUtils.substringAfter(req.getRequestURI(),
                 getImageServletDependencies()
                         .getImagesClientPathPrefix());
     }

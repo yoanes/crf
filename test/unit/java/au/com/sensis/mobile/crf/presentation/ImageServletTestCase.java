@@ -107,7 +107,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         recordGetDevice();
 
-        recordGetServletPath(getRequestedResourcePath());
+        recordGetRequestUri(getRequestedResourcePath());
 
         recordGetResource(
                 getResourcePathTestData().getMapComponentRequestedImageResourcePath(),
@@ -138,7 +138,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         recordGetDevice();
 
-        recordGetServletPath(getRequestedResourcePath());
+        recordGetRequestUri(getRequestedResourcePath());
 
         recordGetResource(getResourcePathTestData()
                 .getMapComponentRequestedImageResourcePath(), null);
@@ -160,7 +160,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         recordGetImageServletDependencies();
 
-        recordGetServletPath(getResourcePathTestData()
+        recordGetRequestUri(getResourcePathTestData()
                 .getMapComponentRequestedImageResourcePath());
 
         replay();
@@ -175,9 +175,9 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
         } catch (final ServletException e) {
 
             Assert.assertEquals("ServletException has wrong message",
-                "Requests for abstract images should have a servlet path starting with '"
+                "Requests for abstract images should have a requestUri starting with '"
                         + IMAGES_CLIENT_PATH_PREFIX
-                        + "'. However, servlet path is '"
+                        + "'. However, requestUri is '"
                         + getResourcePathTestData()
                                 .getMapComponentRequestedImageResourcePath()
                         + "'", e.getMessage());
@@ -258,9 +258,9 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
     }
 
-    private void recordGetServletPath(final String servletPath) {
-        EasyMock.expect(getMockHttpServletRequest().getServletPath())
-                .andReturn(servletPath).atLeastOnce();
+    private void recordGetRequestUri(final String requestUri) {
+        EasyMock.expect(getMockHttpServletRequest().getRequestURI())
+                .andReturn(requestUri).atLeastOnce();
     }
 
     private ImageServlet getObjectUnderTest() {
