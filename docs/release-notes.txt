@@ -1,5 +1,20 @@
 ==== PENDING: Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
 
+==== Version 0.1.1-001 (tag: contentRenderingFramework_v0_1_1-001) ==== 
+
+Jiras:
+* [CRF-55] - Change "href" attribute of crf:image and crf:script tag to "src"
+* [CRF-4] - EIS Engagement for Content Rendering Framework requirements
+* [CRF-38] - Perf Testing: Create CRF test pages 
+* [CRF-39] - Perf Testing: Create MCS test pages 
+* [CRF-40] - Perf Testing: Create static HTML pages
+* [CRF-42] - NEW: ContentRenderingPlatformConfigurationFactory - allow runtime reloading of crp-config.xml
+* [CRF-43] - NEW: Version numbers in JavaScript, image and CSS paths
+* [CRF-49] - NEW: remove dependency on wl-core-component
+* [CRF-57] - Perf Testing: Setup and Run Performance Tests
+* [CRF-58] - NEW: Move PathPrefixRestrictedResourceResolverEngineBean, DelegatingPathRestrictedResourceResolverEngineBean 
+             capabilities into ConfigurationFactoryBean
+
 Upgrade notes:
 - The core component needs to remove the following bean definition from coreComponentPropertiesContext.xml 
   as this is now provided by crf:
