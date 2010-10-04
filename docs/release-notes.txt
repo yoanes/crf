@@ -1,5 +1,10 @@
 ==== PENDING: Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
 
+==== Version 0.1.1-002 (tag: contentRenderingFramework_v0_1_1-002) ==== 
+
+Jiras:
+* [CRF-59] - NEW: crf:deviceProperty tag
+
 ==== Version 0.1.1-001 (tag: contentRenderingFramework_v0_1_1-001) ==== 
 
 Jiras:
