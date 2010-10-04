@@ -29,6 +29,7 @@ public class HD800BdpPage extends BdpPage {
         assertHD800Scripts();
         assertHD800Jsp();
         assertHD800Img();
+        assertDeviceProperties();
     }
 
     private void assertHD800Css() {
@@ -74,5 +75,10 @@ public class HD800BdpPage extends BdpPage {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
                 "default/common/unmetered.png");
+    }
+
+    private void assertDeviceProperties() {
+        assertTrue(getBrowser().isTextPresent("'brwsrname': Mozilla"));
+        assertTrue(getBrowser().isTextPresent("'custom.imageCategory': HD800"));
     }
 }

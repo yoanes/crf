@@ -29,6 +29,7 @@ public class Nokia7600BdpPage extends BdpPage {
         assertNokia7600Script();
         assertNokia7600Jsp();
         assertNokia7600Img();
+        assertDeviceProperties();
     }
 
     private void assertNokia7600Css() {
@@ -75,4 +76,10 @@ public class Nokia7600BdpPage extends BdpPage {
                 "unmeteredImg", "Unmetered", "Unmetered",
                 "nokia7600/common/unmetered.gif");
     }
+
+    private void assertDeviceProperties() {
+        assertTrue(getBrowser().isTextPresent("'brwsrname': Nokia"));
+        assertTrue(getBrowser().isTextPresent("'custom.imageCategory': S"));
+    }
+
 }

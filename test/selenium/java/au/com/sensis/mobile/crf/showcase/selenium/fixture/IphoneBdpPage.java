@@ -30,6 +30,7 @@ public abstract class IphoneBdpPage extends BdpPage {
         assertIphoneJsp();
         assertImg();
         assertMapText();
+        assertDeviceProperties();
     }
 
     private void assertMapText() {
@@ -187,5 +188,10 @@ public abstract class IphoneBdpPage extends BdpPage {
 
     private void assertIphoneJsp() {
         assertTrue(getBrowser().isTextPresent("[iphone-ipod] bdp.jsp"));
+    }
+
+    private void assertDeviceProperties() {
+        assertTrue(getBrowser().isTextPresent("'brwsrname': Safari"));
+        assertTrue(getBrowser().isTextPresent("'custom.imageCategory': L"));
     }
 }

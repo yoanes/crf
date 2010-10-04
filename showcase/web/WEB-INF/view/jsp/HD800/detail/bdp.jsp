@@ -19,6 +19,8 @@
     
     <div><strong>[HD800] bdp.jsp </strong> </div>
     
+    <jsp:include page="/WEB-INF/view/jsp/common/deviceProperties.crf"/>
+        
     <%--
       - Acceptance criteria: test inclusion of relative JSPs via CRF (Jira CRF-16). 
       --%>
