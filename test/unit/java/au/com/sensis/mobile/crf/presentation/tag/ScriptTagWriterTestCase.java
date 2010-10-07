@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.JspFragment;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -40,12 +41,15 @@ public class ScriptTagWriterTestCase extends
 
     private static final String DYN_ATTR_URI = "http://www.w3.org/2002/06/xhtml2";
 
+    private static final String SCRIPT_NAME = "myScript";
+
     private ScriptTagWriter objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final DeploymentMetadataTestData deploymentMetadataTestData
         = new DeploymentMetadataTestData();
     private JspWriter mockJspWriter;
+    private JspFragment mockJspFragment;
     private StringWriter stringWriter;
 
     private WebApplicationContext mockWebApplicationContext;
@@ -95,11 +99,84 @@ public class ScriptTagWriterTestCase extends
     }
 
     @Test
-    public void testDoTag() throws Throwable {
-        final TestData[] testDataArray = getTestData();
+    public void testGetIdWhenSrcNotBlank() throws Throwable {
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
+                new ArrayList<DynamicTagAttribute>(), getRequestedScriptResourcePath(), null,
+                createTagDependencies()));
+
+        Assert.assertEquals("id is wrong", getRequestedScriptResourcePath(), getObjectUnderTest()
+                .getId());
+
+    }
+
+    @Test
+    public void testGetIdWhenSrcBlank() throws Throwable {
+
+        final String[] testValues = new String[] { null, StringUtils.EMPTY, " ", "  " };
+        for (final String testValue : testValues) {
+            setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
+                    new ArrayList<DynamicTagAttribute>(), testValue, "myName",
+                    createTagDependencies()));
+
+            Assert.assertEquals("id is wrong", "myName", getObjectUnderTest().getId());
+        }
+
+    }
+
+    @Test
+    public void testWriteTagWhenHrefIsBlankAndNoDynamicAttributes() throws Throwable {
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
+                new ArrayList<DynamicTagAttribute>(), null, SCRIPT_NAME, createTagDependencies()));
+
+        getMockJspFragment().invoke(getMockJspWriter());
+
+        replay();
+
+        getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
+
+        Assert.assertEquals("incorrect output", "<script ></script>\n", getStringWriter()
+                .getBuffer().toString());
+    }
+
+    @Test
+    public void testWriteTagWhenHrefIsBlankAndOneDynamicAttribute() throws Throwable {
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays
+                .asList(createTitleDynamicAttribute()), null, SCRIPT_NAME,
+                createTagDependencies()));
+
+        getMockJspFragment().invoke(getMockJspWriter());
+
+        replay();
+
+        getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
+
+        Assert.assertEquals("incorrect output", "<script title=\"My Image\" ></script>\n",
+                getStringWriter().getBuffer().toString());
+    }
+
+    @Test
+    public void testWriteTagWhenHrefIsBlankAndTwoDynamicAttributes() throws Throwable {
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays.asList(
+                createTitleDynamicAttribute(), createTypeDynamicAttribute()), null, SCRIPT_NAME,
+                createTagDependencies()));
+
+        getMockJspFragment().invoke(getMockJspWriter());
+
+        replay();
+
+        getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
+
+        Assert.assertEquals("incorrect output",
+                "<script title=\"My Image\" type=\"text/javascript\" ></script>\n",
+                getStringWriter().getBuffer().toString());
+    }
+
+    @Test
+    public void testWriteTag() throws Throwable {
+        final TestData[] testDataArray = getTestDataForHrefNotBlank();
         for (int i = 0; i < testDataArray.length; i++) {
             try {
-                setObjectUnderTest(createObjectUnderTest(testDataArray[i]));
+                setObjectUnderTest(createObjectUnderTestWhenSrcNotBlank(testDataArray[i]));
 
                 recordGetResource(testDataArray[i].getResources());
 
@@ -121,7 +198,7 @@ public class ScriptTagWriterTestCase extends
 
                 replay();
 
-                getObjectUnderTest().writeTag(getMockJspWriter());
+                getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
                 Assert.assertEquals("incorrect output for testData at index "
                         + i + ": '" + testDataArray[i] + "'", testDataArray[i]
@@ -139,11 +216,11 @@ public class ScriptTagWriterTestCase extends
         }
     }
 
-    private ScriptTagWriter createObjectUnderTest(
+    private ScriptTagWriter createObjectUnderTestWhenSrcNotBlank(
             final TestData testData) {
         return new ScriptTagWriter(getMockDevice(),
                 testData.getDynamicAttributes(),
-                getRequestedScriptResourcePath(),
+                getRequestedScriptResourcePath(), null,
                 createTagDependencies(testData));
     }
 
@@ -151,6 +228,14 @@ public class ScriptTagWriterTestCase extends
             final TestData testData) {
         return new ScriptTagDependencies(getMockResourceResolverEngine(),
                 testData.getDeploymentMetadata(), getMockScriptBundleFactory(),
+                getResourcePathTestData().getScriptClientPathPrefix(),
+                getMockResolutionWarnLogger());
+    }
+
+    private ScriptTagDependencies createTagDependencies() {
+        return new ScriptTagDependencies(getMockResourceResolverEngine(),
+                getDeploymentMetadataTestData().createProdDeploymentMetadata(),
+                getMockScriptBundleFactory(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());
     }
@@ -220,6 +305,20 @@ public class ScriptTagWriterTestCase extends
      */
     public void setMockJspWriter(final JspWriter mockJspWriter) {
         this.mockJspWriter = mockJspWriter;
+    }
+
+    /**
+     * @return the mockJspFragment
+     */
+    public JspFragment getMockJspFragment() {
+        return mockJspFragment;
+    }
+
+    /**
+     * @param mockJspFragment the mockJspFragment to set
+     */
+    public void setMockJspFragment(final JspFragment mockJspFragment) {
+        this.mockJspFragment = mockJspFragment;
     }
 
     /**
@@ -310,7 +409,7 @@ public class ScriptTagWriterTestCase extends
         return stringWriter;
     }
 
-    private TestData[] getTestData() {
+    private TestData[] getTestDataForHrefNotBlank() {
         return new TestData [] {
             createTestDataNoDynamicAttributesSingleMappedResourceDevMode(),
             createTestDataOneDynamicAttributeSingleMappedResourceDevMode(),
@@ -579,9 +678,6 @@ public class ScriptTagWriterTestCase extends
             toStringBuilder.append("deploymentMetadata", getDeploymentMetadata());
             return toStringBuilder.toString();
         }
-
-
-
     }
 
     /**

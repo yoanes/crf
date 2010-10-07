@@ -6,7 +6,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <%-- 
-  - Acceptance criteria covered by the links on this page (Jira CRF-20).
+  - Acceptance criteria covered by the following links (Jira CRF-20).
   -
   - Nokia 7600:
   -     only the default group output:
@@ -46,7 +46,7 @@
 <crf:script src="common/main.js" type="text/javascript" device="${context.device}"/>
 
 <%-- 
-  - Acceptance criteria covered by the links on this page (Jira CRF-31).
+  - Acceptance criteria covered by the following links (Jira CRF-31).
   -
   - Nokia 7600:
   -     only the default group output; bundles.properties with partially defined order 
@@ -92,3 +92,19 @@
 <crf:script src="component/map/package" type="text/javascript" device="${context.device}"/> 
 <crf:script src="layers/package" type="text/javascript" device="${context.device}"/> 
 <crf:script src="animation/package" type="text/javascript" device="${context.device}"/> 
+
+<%-- 
+  - Acceptance criteria covered by the following links (Jira CRF-60): only
+  - one of these should result in an inline script being written to the page. The other
+  - is ignored due to having the same name.
+  --%>
+<crf:script name="myScript" type="text/javascript" device="${context.device}">
+    var myScript = "I am here and you should see me only once";
+</crf:script> 
+<crf:script name="myScript" type="text/javascript" device="${context.device}">
+    if (myScript === undefined) { 
+        var myScript = "I am here and you should see me only once";
+    } else {
+        myScript = "I have been included twice";
+    }
+</crf:script> 

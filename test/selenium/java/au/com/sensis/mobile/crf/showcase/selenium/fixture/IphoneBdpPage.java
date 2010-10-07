@@ -90,7 +90,7 @@ public abstract class IphoneBdpPage extends BdpPage {
 
     private void assertIphoneScript() {
         final int expectedNumIphoneScripts = 29;
-        assertNumScripts(expectedNumIphoneScripts);
+        assertNumScripts(expectedNumIphoneScripts + super.getNumExpectedScripts());
 
         assertIphoneScriptByNameNoBundling();
         assertIphoneScriptByAllNoBundling();

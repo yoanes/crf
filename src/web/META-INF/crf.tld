@@ -31,11 +31,17 @@
         <name>script</name>
         <description>Render a script tag.</description>
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.ScriptTag</tag-class>
-        <body-content>empty</body-content>
+        <body-content>scriptless</body-content>
         <attribute>
             <name>src</name>
-            <description>The src of the script resource.</description>
-            <required>true</required>
+            <description>The src of the script resource. Must be set unless name is set.</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <description>The name to associate with the script. Must be set unless src is set.</description>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <attribute>

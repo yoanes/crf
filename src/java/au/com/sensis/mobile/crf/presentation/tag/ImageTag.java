@@ -92,7 +92,7 @@ public class ImageTag extends AbstractTag {
     }
 
     /**
-     * @param href the src to set
+     * @param src the src to set.
      */
     public final void setSrc(final String src) {
         this.src = src;

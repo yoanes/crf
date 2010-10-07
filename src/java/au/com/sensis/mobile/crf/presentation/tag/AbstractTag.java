@@ -57,6 +57,7 @@ public abstract class AbstractTag extends
     /**
      * Validate the tag attribute for the path (either src or href).
      *
+     * @param path Path to be validated.
      * @throws IllegalArgumentException
      *             Thrown if path is invalid.
      */

@@ -56,7 +56,9 @@ public class ScriptTagWriterFactory {
      *            List of {@link DynamicTagAttribute}s containing dynamic JSP
      *            tag attributes to be written out.
      * @param href
-     *            Href attribute of the tag to be written.
+     *            href attribute of the tag to be written.
+     * @param name
+     *            name attribute of the tag.
      * @param scriptTagDependencies
      *            Singleton collaborators.
      * @return a new {@link ScriptTagWriter}.
@@ -64,8 +66,9 @@ public class ScriptTagWriterFactory {
     public TagWriter createScriptTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes,
-            final String href, final ScriptTagDependencies scriptTagDependencies) {
-        return new ScriptTagWriter(device, dynamicAttributes, href,
+            final String href, final String name,
+            final ScriptTagDependencies scriptTagDependencies) {
+        return new ScriptTagWriter(device, dynamicAttributes, href, name,
                 scriptTagDependencies);
     }
 }

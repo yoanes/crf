@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.JspFragment;
 
 /**
  * Interface that knows how to write out a tag to a {@link JspWriter}.
@@ -34,11 +35,14 @@ public interface TagWriter {
      *
      * @param jspWriter
      *            {@link JspWriter} to write to.
+     * @param jspBody
+     *            {@link JspFragment} fragment representing the body of the tag.
      * @throws IOException
      *             Thrown if an IO error occurs.
      * @throws JspException
      *             Thrown if any other error occurs.
      */
-    void writeTag(final JspWriter jspWriter) throws IOException, JspException;
+    void writeTag(final JspWriter jspWriter, final JspFragment jspBody) throws IOException,
+            JspException;
 
 }

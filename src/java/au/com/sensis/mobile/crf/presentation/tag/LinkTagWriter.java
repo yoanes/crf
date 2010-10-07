@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.JspFragment;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.CssBundleFactory;
@@ -73,7 +74,7 @@ public class LinkTagWriter implements TagWriter {
     /**
      * {@inheritDoc}
      */
-    public void writeTag(final JspWriter jspWriter) throws IOException,
+    public void writeTag(final JspWriter jspWriter, final JspFragment jspBody) throws IOException,
             JspException {
 
         if (getDeploymentMetadata().isDevPlatform()) {

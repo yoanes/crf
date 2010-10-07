@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.JspFragment;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
@@ -34,6 +35,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
     private ScriptTag objectUnderTest;
     private PageContext mockPageContext;
+    private JspFragment mockJspFragment;
     private JspWriter mockJspWriter;
     private Map<String, TagWriter> scriptTagWriterMap;
 
@@ -68,6 +70,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().setDevice(getMockDevice());
         getObjectUnderTest().setJspContext(getMockPageContext());
+        getObjectUnderTest().setJspBody(getMockJspFragment());
         getObjectUnderTest().setSrc(getRequestedJavaScriptResourcePath());
         getObjectUnderTest().setDynamicAttribute(DYN_ATTR_URI,
                 createTitleDynamicAttribute().getLocalName(),
@@ -121,10 +124,47 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWithInvalidHref() throws Throwable {
+    public void testDoTagWhenSrcAndNameAreBlank() throws Throwable {
+        final String[] testValues = new String[] { null, StringUtils.EMPTY, " ", "  " };
+        for (final String testValue : testValues) {
+            getObjectUnderTest().setSrc(testValue);
+            getObjectUnderTest().setName(testValue);
+
+            try {
+                getObjectUnderTest().doTag();
+
+                Assert.fail("IllegalArgumentException expected for testValue: '" + testValue + "'");
+            } catch (final IllegalArgumentException e) {
+
+                Assert.assertEquals("IllegalArgumentException has wrong message",
+                        "You must set either the src or name attributes but not both. src='"
+                                + testValue + "'; name='" + testValue + "'", e.getMessage());
+            }
+        }
+
+    }
+
+    @Test
+    public void testDoTagWhenSrcAndNameAreNotBlank() throws Throwable {
+        getObjectUnderTest().setSrc("common/main.js");
+        getObjectUnderTest().setName("myName");
+
+        try {
+            getObjectUnderTest().doTag();
+
+            Assert.fail("IllegalArgumentException expected");
+        } catch (final IllegalArgumentException e) {
+
+            Assert.assertEquals("IllegalArgumentException has wrong message",
+                    "You must set either the src or name attributes but not both. src='"
+                            + "common/main.js" + "'; name='" + "myName" + "'", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testDoTagWithInvalidSrc() throws Throwable {
         final String[] testSrcs =
-                { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
-                        "  " };
+                { "../some/where", "/somewhere" };
 
         for (final String testSrc : testSrcs) {
             try {
@@ -138,7 +178,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testSrc: '"
                                 + testSrc + "'",
-                        "path must not start with '..' or '/'. Was: '" + testSrc + "'",
+                        "src must not start with '..' or '/'. Was: '" + testSrc + "'",
                         e.getMessage());
             }
         }
@@ -171,6 +211,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                         Arrays.asList(createTitleDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
                         getRequestedJavaScriptResourcePath(),
+                        null,
                         getTagDependencies()))
                 .andReturn(getMockScriptTagWriter());
     }
@@ -183,7 +224,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordScriptTagWriterDelegation() throws Exception {
 
-        getMockScriptTagWriter().writeTag(getMockJspWriter());
+        getMockScriptTagWriter().writeTag(getMockJspWriter(), getMockJspFragment());
     }
 
     private void recordGetJspWriter() {
@@ -223,7 +264,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
         getTagWriterMap().put(
                 getRequestedJavaScriptResourcePath(),
                 new ScriptTagWriter(getMockDevice(), null,
-                        getRequestedJavaScriptResourcePath(),
+                        getRequestedJavaScriptResourcePath(), null,
                         createTagDependencies()));
     }
 
@@ -282,6 +323,20 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
      */
     public void setMockJspWriter(final JspWriter mockJspWriter) {
         this.mockJspWriter = mockJspWriter;
+    }
+
+    /**
+     * @return the mockJspFragment
+     */
+    public JspFragment getMockJspFragment() {
+        return mockJspFragment;
+    }
+
+    /**
+     * @param mockJspFragment the mockJspFragment to set
+     */
+    public void setMockJspFragment(final JspFragment mockJspFragment) {
+        this.mockJspFragment = mockJspFragment;
     }
 
     /**

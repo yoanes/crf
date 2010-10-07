@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.JspFragment;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -44,6 +45,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final DeploymentMetadataTestData deploymentMetadataTestData
         = new DeploymentMetadataTestData();
+    private JspFragment mockJspFragment;
     private JspWriter mockJspWriter;
     private StringWriter stringWriter;
 
@@ -119,7 +121,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
                 replay();
 
-                getObjectUnderTest().writeTag(getMockJspWriter());
+                getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
                 Assert.assertEquals("incorrect output for testData at index "
                         + i + ": '" + testDataArray[i] + "'", testDataArray[i]
@@ -219,6 +221,20 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
      */
     public void setMockJspWriter(final JspWriter mockJspWriter) {
         this.mockJspWriter = mockJspWriter;
+    }
+
+    /**
+     * @return the mockJspFragment
+     */
+    public JspFragment getMockJspFragment() {
+        return mockJspFragment;
+    }
+
+    /**
+     * @param mockJspFragment the mockJspFragment to set
+     */
+    public void setMockJspFragment(final JspFragment mockJspFragment) {
+        this.mockJspFragment = mockJspFragment;
     }
 
     /**

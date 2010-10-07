@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.JspFragment;
+
+import org.apache.commons.lang.StringUtils;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.Resource;
@@ -24,6 +27,7 @@ public class ScriptTagWriter implements TagWriter {
     private final Device device;
     private final List<DynamicTagAttribute> dynamicAttributes;
     private final String href;
+    private final String name;
 
     private final ScriptTagDependencies scriptTagDependencies;
 
@@ -36,16 +40,19 @@ public class ScriptTagWriter implements TagWriter {
      *            List of {@link DynamicTagAttribute}s containing dynamic JSP
      *            tag attributes to be written out.
      * @param href
-     *            Href attribute of the tag to be written.
+     *            href attribute of the tag to be written.
+     * @param name
+     *            name attribute of the tag.
      * @param scriptTagDependencies Singleton collaborators.
      */
     public ScriptTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes, final String href,
-            final ScriptTagDependencies scriptTagDependencies) {
+            final String name, final ScriptTagDependencies scriptTagDependencies) {
         this.device = device;
         this.dynamicAttributes = dynamicAttributes;
         this.href = href;
+        this.name = name;
         this.scriptTagDependencies = scriptTagDependencies;
     }
 
@@ -65,21 +72,38 @@ public class ScriptTagWriter implements TagWriter {
     }
 
     /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+
+    /**
      * {@inheritDoc}
      */
     public String getId() {
-        return getHref();
+        if (StringUtils.isNotBlank(getHref())) {
+            return getHref();
+        } else {
+            return getName();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void writeTag(final JspWriter jspWriter) throws IOException, JspException {
-        if (getDeploymentMetadata().isDevPlatform()) {
-            writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
+    public void writeTag(final JspWriter jspWriter, final JspFragment jspBody) throws IOException,
+            JspException {
+        if (StringUtils.isNotBlank(getHref())) {
+            if (getDeploymentMetadata().isDevPlatform()) {
+                writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
+            } else {
+                writeLinkTagForBundledResources(jspWriter, getAllResourcePaths());
+            }
         } else {
-            writeLinkTagForBundledResources(jspWriter, getAllResourcePaths());
+            writeLinkTagWithBodyContent(jspWriter, jspBody);
         }
 
     }
@@ -134,6 +158,20 @@ public class ScriptTagWriter implements TagWriter {
         }
 
         jspWriter.print("></script>\n");
+    }
+
+    private void writeLinkTagWithBodyContent(final JspWriter jspWriter,
+            final JspFragment jspBody) throws IOException, JspException {
+        jspWriter.print("<script ");
+
+        for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
+            jspWriter.print(attribute.getLocalName() + "=\""
+                    + attribute.getValue() + "\" ");
+        }
+
+        jspWriter.print(">");
+        jspBody.invoke(jspWriter);
+        jspWriter.print("</script>\n");
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {

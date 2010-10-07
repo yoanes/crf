@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.JspFragment;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
@@ -35,6 +36,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     private LinkTag objectUnderTest;
     private PageContext mockPageContext;
+    private JspFragment mockJspFragment;
     private JspWriter mockJspWriter;
     private Map<String, TagWriter> linkTagWriterMap;
 
@@ -69,6 +71,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().setDevice(getMockDevice());
         getObjectUnderTest().setJspContext(getMockPageContext());
+        getObjectUnderTest().setJspBody(getMockJspFragment());
         getObjectUnderTest().setHref(getRequestedCssResourcePath());
         getObjectUnderTest().setDynamicAttribute(DYN_ATTR_URI,
                 createRelDynamicAttribute().getLocalName(),
@@ -184,7 +187,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordLinkTagWriterDelegation() throws Exception {
 
-        getMockLinkTagWriter().writeTag(getMockJspWriter());
+        getMockLinkTagWriter().writeTag(getMockJspWriter(), getMockJspFragment());
     }
 
     private void recordGetJspWriter() {
@@ -281,6 +284,20 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
      */
     public void setMockJspWriter(final JspWriter mockJspWriter) {
         this.mockJspWriter = mockJspWriter;
+    }
+
+    /**
+     * @return the mockJspFragment
+     */
+    public JspFragment getMockJspFragment() {
+        return mockJspFragment;
+    }
+
+    /**
+     * @param mockJspFragment the mockJspFragment to set
+     */
+    public void setMockJspFragment(final JspFragment mockJspFragment) {
+        this.mockJspFragment = mockJspFragment;
     }
 
     /**

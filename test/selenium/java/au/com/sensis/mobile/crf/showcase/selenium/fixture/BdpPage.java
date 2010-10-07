@@ -27,7 +27,17 @@ public abstract class BdpPage extends AbstractPageFixture {
     @Override
     public void assertPageStructure() {
         assertTrue(getBrowser().isTextPresent("[default] logo.jsp"));
+        final String myScriptVariable = getBrowser().getEval("window.myScript");
+        assertEquals("myScriptVariable has wrong value",
+                "I am here and you should see me only once", myScriptVariable);
         doAssertPageStructure();
+    }
+
+    /**
+     * @return number of scripts expected by this abstract BdpPage.
+     */
+    protected final int getNumExpectedScripts() {
+        return 1;
     }
 
     /**
