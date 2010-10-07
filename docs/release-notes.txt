@@ -1,5 +1,11 @@
 ==== PENDING: Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
 
+==== Version 0.1.1-004 (tag: contentRenderingFramework_v0_1_1-004) ==== 
+
+Jiras:
+* [CRF-60] - NEW: modify crf:script tag to support scripts in body content
+* [CRF-61] -  NEW: modify crf:script tag to support absolute (http://) URLs
+
 ==== Version 0.1.1-003 (tag: contentRenderingFramework_v0_1_1-003) ==== 
 
 crf.properties updated so that all XML resources under /WEB-INF/crf-config will be picked up
