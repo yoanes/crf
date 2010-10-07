@@ -43,6 +43,8 @@ public class ScriptTagWriterTestCase extends
 
     private static final String SCRIPT_NAME = "myScript";
 
+    private static final String ABSOLUTE_HREF = "http://some.external.script.js";
+
     private ScriptTagWriter objectUnderTest;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
@@ -168,6 +170,49 @@ public class ScriptTagWriterTestCase extends
 
         Assert.assertEquals("incorrect output",
                 "<script title=\"My Image\" type=\"text/javascript\" ></script>\n",
+                getStringWriter().getBuffer().toString());
+    }
+
+    @Test
+    public void testWriteTagWhenHrefIsAbsolutieAndNoDynamicAttributes() throws Throwable {
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
+                new ArrayList<DynamicTagAttribute>(), ABSOLUTE_HREF, null,
+                createTagDependencies()));
+
+        replay();
+
+        getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
+
+        Assert.assertEquals("incorrect output", "<script src=\"" + ABSOLUTE_HREF
+                + "\" ></script>\n", getStringWriter().getBuffer().toString());
+    }
+
+    @Test
+    public void testWriteTagWhenHrefIsAbsoluteAndOneDynamicAttribute() throws Throwable {
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
+                Arrays.asList(createTitleDynamicAttribute()), ABSOLUTE_HREF, null,
+                createTagDependencies()));
+
+        replay();
+
+        getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
+
+        Assert.assertEquals("incorrect output", "<script src=\"" + ABSOLUTE_HREF
+                + "\" title=\"My Image\" ></script>\n", getStringWriter().getBuffer().toString());
+    }
+
+    @Test
+    public void testWriteTagWhenHrefIsAbsoluteAndTwoDynamicAttributes() throws Throwable {
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
+                Arrays.asList(createTitleDynamicAttribute(), createTypeDynamicAttribute()),
+                ABSOLUTE_HREF, null, createTagDependencies()));
+
+        replay();
+
+        getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
+
+        Assert.assertEquals("incorrect output", "<script src=\"" + ABSOLUTE_HREF
+                + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
                 getStringWriter().getBuffer().toString());
     }
 

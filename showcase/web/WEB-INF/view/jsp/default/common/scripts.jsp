@@ -108,3 +108,11 @@
         myScript = "I have been included twice";
     }
 </crf:script> 
+
+<%-- 
+  - Acceptance criteria covered by the following link (Jira CRF-61): absolute url
+  - is passed straight through to the output. Usually used to reference a third party
+  - JS file. For this showcase, though, we are simply referencing a URL that won't be resolved.
+  --%>
+<crf:script src="http://localhost:8080/something.js" 
+    type="text/javascript" device="${context.device}"/>

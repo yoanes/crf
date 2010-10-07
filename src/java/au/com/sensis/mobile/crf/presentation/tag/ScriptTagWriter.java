@@ -24,6 +24,8 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  */
 public class ScriptTagWriter implements TagWriter {
 
+    private static final String ABSOLUTE_URL_PREFIX = "http://";
+
     private final Device device;
     private final List<DynamicTagAttribute> dynamicAttributes;
     private final String href;
@@ -97,15 +99,34 @@ public class ScriptTagWriter implements TagWriter {
     public void writeTag(final JspWriter jspWriter, final JspFragment jspBody) throws IOException,
             JspException {
         if (StringUtils.isNotBlank(getHref())) {
-            if (getDeploymentMetadata().isDevPlatform()) {
-                writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
-            } else {
-                writeLinkTagForBundledResources(jspWriter, getAllResourcePaths());
-            }
+            writeTagWithHref(jspWriter);
         } else {
             writeLinkTagWithBodyContent(jspWriter, jspBody);
         }
 
+    }
+
+
+    private void writeTagWithHref(final JspWriter jspWriter) throws IOException {
+        if (isAbsoluteUrl(getHref())) {
+            writeSingleLinkTag(jspWriter, getHref());
+        } else {
+            resolveResourceAndWriteTag(jspWriter);
+        }
+    }
+
+
+    private boolean isAbsoluteUrl(final String href) {
+        return href.startsWith(ABSOLUTE_URL_PREFIX);
+    }
+
+
+    private void resolveResourceAndWriteTag(final JspWriter jspWriter) throws IOException {
+        if (getDeploymentMetadata().isDevPlatform()) {
+            writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
+        } else {
+            writeLinkTagForBundledResources(jspWriter, getAllResourcePaths());
+        }
     }
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
@@ -144,13 +165,18 @@ public class ScriptTagWriter implements TagWriter {
         }
     }
 
+    private void writeSingleLinkTag(final JspWriter jspWriter, final Resource resource)
+            throws IOException {
+        writeSingleLinkTag(jspWriter, getTagDependencies().getClientPathPrefix()
+                + resource.getNewPath());
+    }
+
     private void writeSingleLinkTag(final JspWriter jspWriter,
-            final Resource resource) throws IOException {
+            final String src) throws IOException {
         jspWriter.print("<script ");
 
         jspWriter.print("src=\""
-                + getTagDependencies().getClientPathPrefix()
-                + resource.getNewPath() + "\" ");
+                + src + "\" ");
 
         for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
             jspWriter.print(attribute.getLocalName() + "=\""

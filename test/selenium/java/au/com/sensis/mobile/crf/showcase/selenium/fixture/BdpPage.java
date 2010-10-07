@@ -27,9 +27,14 @@ public abstract class BdpPage extends AbstractPageFixture {
     @Override
     public void assertPageStructure() {
         assertTrue(getBrowser().isTextPresent("[default] logo.jsp"));
+
         final String myScriptVariable = getBrowser().getEval("window.myScript");
         assertEquals("myScriptVariable has wrong value",
                 "I am here and you should see me only once", myScriptVariable);
+
+        assertAbsolutelyReferencedScript("external, absolutely referenced script not found",
+                "http://localhost:8080/something.js");
+
         doAssertPageStructure();
     }
 
@@ -37,7 +42,7 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @return number of scripts expected by this abstract BdpPage.
      */
     protected final int getNumExpectedScripts() {
-        return 1;
+        return 2;
     }
 
     /**
@@ -107,6 +112,24 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "@type=\"text/javascript\" "
                 + "and @src=\"/resources/javascript/"
                 + getProjectVersion() + "/"
+                + expectedSrc + "\""
+                + "]"));
+
+    }
+
+    /**
+     * Helper method for asserting the presence of a script element with a src that is
+     * an absolute URL.
+     *
+     * @param message Message to use if the test fails.
+     * @param expectedSrc Expected src value of the script.
+     */
+    protected final void assertAbsolutelyReferencedScript(final String message,
+            final String expectedSrc) {
+        assertTrue(message, getBrowser().isElementPresent(
+                "//head/script["
+                + "@type=\"text/javascript\" "
+                + "and @src=\""
                 + expectedSrc + "\""
                 + "]"));
 
