@@ -1,6 +1,0 @@
-########################################################
-## ENVIRONMENT : crf-showcase SANDPIT-test overrides
-########################################################
-
-# Context root relative prefix for all components.
-env.context.root.component.prefix=/test/crf-component-showcase/comp/
