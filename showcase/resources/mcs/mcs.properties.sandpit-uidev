@@ -1,0 +1,9 @@
+# temporarily using the wl-webapp-testbed mcs files since we dont have MCS in crfshowcase yet.
+mcs.devicerepository.filepath=/app/smtestapp/sandpit-uidev/wl-webapp-testbed/devices/devices.mdpr
+mcs.policies.filepath=/app/smtestapp/sandpit-uidev/wl-webapp-testbed/policies
+
+mcs.mgrp.component.scripts.base.url=/dev/crf-component-showcase/comp/
+mcs.mgrp.component.images.base.url=/dev/crf-component-imageserver/
+
+mcs.cache.policies=false
+#mcs.script.asset.path=/crf-component-showcase/scripts/

@@ -1,8 +1,8 @@
 mcs.devicerepository.filepath=D:/var/mcs/devices/devices.mdpr
 mcs.policies.filepath=D:/var/mcs/crf-component-showcase/policies
 
-mcs.mgrp.component.scripts.base.url=/wl-crf-component-showcase/comp/
+mcs.mgrp.component.scripts.base.url=/wl-crf-showcase/comp/
 mcs.mgrp.component.images.base.url=http://localhost:8080/common-imageserver/
 
 mcs.cache.policies=false
-mcs.script.asset.path=/wl-crf-component-showcase/scripts/
+mcs.script.asset.path=/wl-crf-showcase/scripts/

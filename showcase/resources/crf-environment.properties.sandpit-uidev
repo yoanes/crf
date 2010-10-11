@@ -1,0 +1,13 @@
+########################################################
+## ENVIRONMENT : SANDPIT UI DEV
+########################################################
+
+env.resources.jsp.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase
+env.resources.css.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/resources/css
+env.resources.javascript.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/resources/javascript
+env.resources.images.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/resources/images
+
+# TODO: use these. Plus set up to be "/" for non-desk environments.
+env.resources.css.client.path.prefix=/uidev/crfshowcase/resources/css/
+env.resources.javascript.client.path.prefix=/uidev/crfshowcase/resources/javascript/
+env.resources.images.client.path.prefix=/uidev/crfshowcase/resources/images/

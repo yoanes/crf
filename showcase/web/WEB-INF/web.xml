@@ -3,7 +3,12 @@
     xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     id="WebApp_ID" version="2.5">
-    <display-name>dmrTestbed</display-name>
+    
+    <display-name>crfTestbed</display-name>
+    
+    <!--=============
+     - CONTEXT PARAMS 
+     ==============-->
     
     <!-- Application Resources -->
     <context-param>
@@ -26,8 +31,7 @@
     <context-param>
         <param-name>org.apache.tiles.impl.BasicTilesContainer.DEFINITIONS_CONFIG</param-name>
         <param-value>/WEB-INF/tiles-definitions.xml, /WEB-INF/project-tiles-definitions.xml</param-value>
-    </context-param>
-        
+    </context-param>        
     
     <!-- Spring Context locations -->   
     <context-param>
@@ -48,19 +52,22 @@
             /WEB-INF/context/root/**/*Context.xml
         </param-value>
     </context-param>    
-    
-    <!-- Stash Visitor and Device data in the session--> 
-   <!-- <filter>
-        <filter-name>contextSetUpFilter</filter-name>
-        <filter-class>au.com.sensis.wireless.web.filter.MobileContextSetUpFilter</filter-class>
-    </filter>   
-    
-    -->
-    
+ 
+   
+    <!--=============
+     - FILTERS 
+     ==============--> 
+        
     <filter>
         <filter-name>userAgentFilter</filter-name>
         <filter-class>au.com.sensis.wireless.web.filter.UserAgentFilter</filter-class>
     </filter>
+
+    <filter-mapping>
+        <filter-name>userAgentFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
     
     <filter>
         <filter-name>contextSetUpFilter</filter-name>
@@ -70,30 +77,26 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
-     
-    
+
+	<filter-mapping>
+        <filter-name>contextSetUpFilter</filter-name>
+        <url-pattern>/mcs/*</url-pattern>
+    </filter-mapping> 
+	<filter-mapping>
+        <filter-name>contextSetUpFilter</filter-name>
+        <url-pattern>/crf/*</url-pattern>
+    </filter-mapping>    
+         
     <!-- MCS Vform Removal Request Wrapper Filter -->
     <filter>
         <filter-name>mcsVformRequestWrapperFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
-    
-    <filter-mapping>
-        <filter-name>userAgentFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
 
-	<filter-mapping>
-        <filter-name>contextSetUpFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>  
- 
-    
     <filter-mapping>
         <filter-name>mcsVformRequestWrapperFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
+        <url-pattern>/mcs/*</url-pattern>
+    </filter-mapping>   
 
     <!-- MCS Filter -->
     <filter>
@@ -103,19 +106,7 @@
 
     <filter-mapping>
         <filter-name>MCSFilter</filter-name>
-        <url-pattern>*.jsp</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>ERROR</dispatcher>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>MCSFilter</filter-name>
-        <url-pattern>*.xdime</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>ERROR</dispatcher>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>MCSFilter</filter-name>
-        <url-pattern>*.action</url-pattern>
+        <url-pattern>/mcs/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
@@ -131,16 +122,12 @@
         <filter-name>capture</filter-name>
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
-<!--    
-    <filter-mapping>
-        <filter-name>capture</filter-name>
-        <url-pattern>*.xdime</url-pattern>
-    </filter-mapping>
--->
+
     <filter-mapping>
         <filter-name>capture</filter-name>
         <url-pattern>*.action</url-pattern>
     </filter-mapping>
+    
     
     <!-- Struts2 Filter -->
     <filter>
@@ -175,6 +162,11 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
+
+    
+    <!--=============
+     - SERVLETS 
+     ==============-->
     
     <!-- LifeCheckServlet -->
     <servlet>
@@ -186,6 +178,7 @@
         <servlet-name>lifecheck</servlet-name>
         <url-pattern>/lifecheck</url-pattern>
     </servlet-mapping>
+ 
     
     <!-- MCS Servlet Definitions -->
     <servlet>
@@ -198,6 +191,7 @@
       <url-pattern>/MarinerFFP</url-pattern>
     </servlet-mapping>
 
+
     <servlet>
       <servlet-name>MCSCSS</servlet-name>
       <servlet-class>com.volantis.mcs.servlet.CSSServlet</servlet-class>
@@ -208,27 +202,6 @@
       <url-pattern>/MCSCSS/*</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>AgentServlet</servlet-name>
-        <servlet-class>com.volantis.mcs.management.agent.servlet.AgentServlet</servlet-class>
-        <init-param>
-            <param-name>enabled</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>host</param-name>
-            <param-value>localhost</param-value>
-        </init-param>
-        <init-param>
-            <param-name>port</param-name>
-            <param-value>27013</param-value>
-        </init-param>
-        <init-param>
-            <param-name>password</param-name>
-            <param-value>mc5pwd</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>    
 
     <!-- Servlet dedicated to web components. -->
     <servlet>
@@ -247,6 +220,7 @@
         <servlet-name>webComponentServlet</servlet-name>
         <url-pattern>/comp/*</url-pattern>
     </servlet-mapping>
+ 
     
     <!-- crf Servlet. -->
     <servlet>
@@ -262,6 +236,7 @@
         <servlet-name>crfResourceResolverServlet</servlet-name>
         <url-pattern>*.crf</url-pattern>
     </servlet-mapping>
+
     
     <!-- crf ImageServlet. -->
     <servlet>
@@ -277,6 +252,11 @@
         <servlet-name>crfImageServlet</servlet-name>
         <url-pattern>*.image</url-pattern>
     </servlet-mapping>
+
+    
+    <!--=============
+     - MIME TYPES 
+     ==============-->    
     
     <!-- Mime Mappings -->
     <!-- I'm not sure we actually need this here. -->
@@ -371,27 +351,66 @@
         <extension>xdtpl</extension>
         <mime-type>x-application/vnd.xdime+xml;use=template</mime-type>
     </mime-mapping>
+ 
+ 
+     <!--=============
+     - WELCOME FILE 
+     ==============-->
     
     <welcome-file-list>
         <welcome-file>home.action</welcome-file>
     </welcome-file-list>
     
-    <!-- Taglibs -->
+    
+    <!--=============
+     - TAG LIBS 
+     ==============-->
+
     <jsp-config>
 
         <taglib>
             <taglib-uri>/WEB-INF/taglibs/volantis-mcs.tld</taglib-uri>
             <taglib-location>/WEB-INF/taglibs/volantis-mcs.tld</taglib-location>
         </taglib>
-        
+	    <taglib>
+	        <taglib-uri>/tags/c</taglib-uri>
+	        <taglib-location>/WEB-INF/taglibs/c.tld</taglib-location>
+	    </taglib>
+	    <taglib>
+	        <taglib-uri>/tags/fn</taglib-uri>
+	        <taglib-location>/WEB-INF/taglibs/fn.tld</taglib-location>
+	    </taglib>
+	    <taglib>
+	        <taglib-uri>/tags/fmt</taglib-uri>
+	        <taglib-location>/WEB-INF/taglibs/fmt.tld</taglib-location>
+	    </taglib>
+	    <taglib>
+	        <taglib-uri>/tags/html</taglib-uri>
+	        <taglib-location>/WEB-INF/taglibs/struts-html.tld</taglib-location>
+	    </taglib>
+	    <taglib>
+	        <taglib-uri>/tags/logic</taglib-uri>
+	        <taglib-location>/WEB-INF/taglibs/struts-logic-1.1.tld</taglib-location>
+	    </taglib>
+	    <taglib>
+	        <taglib-uri>/tags/string</taglib-uri>
+	        <taglib-location>/WEB-INF/taglibs/taglibs-string.tld</taglib-location>
+	    </taglib>
+
+                
     </jsp-config>
     
-    <!-- Spring Listener -->
+    
+    <!--=============
+     - LISTENERS 
+     ==============-->
+    
+    <!-- Spring -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     
-    <!-- Tiles Listener -->
+    <!-- Tiles -->
     <listener>
         <listener-class>org.apache.struts2.tiles.StrutsTilesListener</listener-class>
     </listener>

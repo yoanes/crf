@@ -1,5 +1,5 @@
 ########################################################
-## ENVIRONMENT : SANDPIT
+## ENVIRONMENT : SANDPIT UI DEV
 ########################################################
 
 # True if the loaded ui configuration should be cached or not. False indicates that it will be dynamically
