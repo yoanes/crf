@@ -1,0 +1,20 @@
+#freeImg  {
+ 	border-top-color: #129ade;
+ 	border-top-style: solid;
+ 	border-top-width: 2px;
+}
+
+#chargesImg  {
+ 	border-top-color: #fa6201;
+ 	border-top-style: solid;
+ 	border-top-width: 2px;
+}
+
+#findSearchInput  {
+ 	margin-top: 4px;
+}
+
+#findLocationInput  {
+ 	margin-top: 4px;
+}
+

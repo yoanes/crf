@@ -1,0 +1,11 @@
+/* HD800 main.css  */
+
+.tabletColumnA{
+	width: 50%;
+	float: right;
+}
+
+.tabletColumnB{
+	width: 50%;
+	float: left;
+}

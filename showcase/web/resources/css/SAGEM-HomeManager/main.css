@@ -1,0 +1,12 @@
+#touchDevice  {
+ 	display: block;
+}
+
+#nonTouch  {
+ 	display: none;
+}
+
+.locationFormSubmitCell  {
+ 	margin-bottom: -20px;
+}
+

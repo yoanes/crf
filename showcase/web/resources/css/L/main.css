@@ -1,0 +1,225 @@
+.contentCellTop  {
+ 	height: 8px;
+}
+
+.contentCellBottom  {
+ 	height: 6px;
+}
+
+.premiumCellTop  {
+ 	height: 8px;
+}
+
+.premiumCellBottom  {
+ 	height: 8px;
+}
+
+.findFormCellTop  {
+ 	height: 8px;
+ 	padding-top: 8px;
+}
+
+.findFormCellBottom  {
+ 	margin-bottom: -8px;
+ 	padding-bottom: 0px;
+}
+
+.yellowLogo  {
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+}
+
+.contentCellNavigation  {
+ 	padding-bottom: 8px;
+ 	padding-top: 3px;
+}
+
+.mapWrapper  {
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+ 	width: 304px;
+}
+
+.userAlert  {
+ 	margin-bottom: 4px;
+ 	margin-left: 16px;
+ 	margin-right: 16px;
+ 	margin-top: 4px;
+}
+
+.contentCellResultAddress  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellResultHeader  {
+ 	padding-left: 8px;
+}
+
+.premiumCellHeader  {
+ 	padding-left: 8px;
+}
+
+.premiumCellAddress  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellBrowseLink  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellSurveyLink  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellSurveyText  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellResultAction  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.premiumCellAction  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellBrowseCurrentCategory  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellBrowseSubCategory  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellDetailAction  {
+ 	padding-bottom: 8px;
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+ 	padding-top: 8px;
+}
+
+.contentCellDetailActionLast  {
+ 	padding-bottom: 0px;
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+ 	padding-top: 8px;
+}
+
+.businessDetailTextSubHeader  {
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellResultExtraInfo  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellGenericLink  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellGenericText  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellGenericHeader  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellSurveyQuestionWrapper  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.contentCellSurveyQuestionWrapperLast  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.ymPaginationLink  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.ymPaginationLinkLast  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+.genericTextWrapper  {
+ 	margin-left: 16px;
+ 	margin-right: 16px;
+}
+
+.businessDetailText  {
+ 	padding-left: 16px;
+ 	padding-right: 16px;
+}
+
+#seoAlphaMenu  {
+ 	width: 304px;
+}
+
+.mapControl  {
+ 	margin-bottom: 3px;
+ 	margin-left: 3px;
+ 	margin-right: 3px;
+ 	margin-top: 3px;
+}
+
+.contentCellBrowseLink  {
+ 	padding-bottom: 8px;
+ 	padding-left: 8px;
+ 	padding-top: 8px;
+}
+
+.footerLegalHelp  {
+ 	padding-bottom: 8px;
+ 	padding-top: 8px;
+}
+
+.footerCopyright  {
+ 	padding-bottom: 8px;
+ 	padding-top: 8px;
+}
+
+.contentCellBrowseCurrentCategory  {
+ 	padding-bottom: 8px;
+}
+
+.contentCellDetailActionFirst  {
+ 	padding-bottom: 8px;
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+ 	padding-top: 0px;
+}
+
+.contentCellDetailActionOrphan  {
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+}
+
+body  {
+ 	font-size: 100%;
+}
+
+.footerTelstraWrapper  {
+ 	padding-bottom: 8px;
+ 	padding-top: 8px;
+}
+

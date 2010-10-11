@@ -1,0 +1,86 @@
+.yellowLogo  {
+ 	text-align: center;
+}
+
+.contentCellWrapper  {
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+}
+
+.contentCellNavigation  {
+ 	margin-bottom: 0px;
+ 	padding-bottom: 3px;
+}
+
+.premiumCellWrapper  {
+ 	background-color: #fff9cf;
+ 	border-bottom-color: #d99d82;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-top-color: #d99d82;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+}
+
+.findFormCellBottom  {
+ 	padding-left: 3px;
+}
+
+.findFormRadioCell  {
+ 	padding-left: 3px;
+}
+
+#findLocationInput  {
+ 	margin-left: 8px;
+ 	width: 110px;
+}
+
+#sharePhoneInput  {
+ 	margin-left: 8px;
+ 	width: 110px;
+}
+
+#findSearchInput  {
+ 	margin-left: 8px;
+ 	width: 110px;
+}
+
+.businessDetailTextWrapper  {
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+}
+
+.userAlert  {
+ 	margin-bottom: 4px;
+ 	margin-left: 6px;
+ 	margin-right: 6px;
+ 	margin-top: 4px;
+}
+
+.genericTextWrapper  {
+ 	margin-left: 6px;
+ 	margin-right: 6px;
+}
+
+.contentCellDetailGalleryImage  {
+ 	margin-bottom: 4px;
+ 	margin-left: 4px;
+ 	margin-right: 4px;
+ 	margin-top: 4px;
+}
+
+
+.contentCellDetailActionFirst  {
+ 	padding-bottom: 4px;
+ 	padding-top: 0px;
+	padding-left: 3px;
+}
+
+.contentCellDetailAction  {
+ 	padding-bottom: 4px;
+ 	padding-top: 4px;
+	padding-left: 3px;
+}
+

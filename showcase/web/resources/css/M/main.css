@@ -1,0 +1,92 @@
+.contentCellTop  {
+ 	height: 8px;
+}
+
+.contentCellBottom  {
+ 	height: 4px;
+}
+
+.premiumCellTop  {
+ 	height: 8px;
+}
+
+.premiumCellBottom  {
+ 	height: 4px;
+ 	padding-top: 4px;
+}
+
+.findFormWrapper  {
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.yellowLogo  {
+ 	margin-bottom: -6px;
+ 	margin-top: -4px;
+}
+
+.contentCellNavigation  {
+ 	padding-bottom: 8px;
+ 	padding-top: 3px;
+}
+
+.businessDetailTextWrapper  {
+ 	padding-left: 4px;
+ 	padding-right: 4px;
+}
+
+.mapWrapper  {
+ 	margin-left: 4px;
+ 	width: 224px;
+	text-align: center;
+}
+
+.userAlert  {
+ 	margin-bottom: 4px;
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+ 	margin-top: 4px;
+}
+
+.genericTextWrapper  {
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+}
+
+.findFormLabelCell  {
+ 	margin-bottom: 3px;
+ 	margin-top: 3px;
+}
+
+#seoAlphaMenu  {
+ 	width: 224px;
+}
+
+.contentCellDetailActionFirst  {
+ 	padding-bottom: 4px;
+ 	padding-top: 0px;
+	padding-left: 3px;
+}
+
+.contentCellDetailAction  {
+ 	padding-bottom: 4px;
+ 	padding-top: 4px;
+	padding-left: 3px;
+}
+
+.contentCellDetailActionLast  {
+ 	padding-bottom: 0px;
+ 	padding-top: 4px;
+}
+
+.contentCellDetailActionOrphan  {
+ 	padding-left: 4px;
+ 	padding-right: 4px;
+}
+

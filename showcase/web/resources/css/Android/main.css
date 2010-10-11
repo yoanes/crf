@@ -1,0 +1,24 @@
+#touchDevice  {
+ 	display: block;
+}
+
+#nonTouch  {
+ 	display: none;
+}
+
+
+.networkInnerWrapper {
+	margin: 0px;
+	padding: 0px;
+	width: 60px;
+	float: left;
+}
+
+.networkBreakWrapper {
+	margin: 0px;
+	padding: 0px;
+}
+
+.networkWrapper {
+	padding: 0px;
+}

@@ -1,0 +1,92 @@
+.yellowLogo  {
+ 	margin-bottom: 8px;
+ 	margin-top: 8px;
+}
+
+.findFormRadioWrapper  {
+ 	margin-bottom: 8px;
+ 	margin-top: -20px;
+ 	padding-top: 0px;
+}
+
+.findFormCellTop  {
+ 	height: 8px;
+ 	padding-bottom: 0px;
+}
+
+.findFormSubmitCell  {
+ 	margin-bottom: 8px;
+}
+
+.contentCellNavigation  {
+ 	padding-top: 8px;
+}
+
+.contentCellNavigationOrphan  {
+ 	padding-top: 8px;
+}
+
+.contentCellBrowseSubCategory  {
+ 	width: 70%;
+}
+
+.contentCellBrowseSubCategoryCount  {
+ 	padding-top: 2px;
+}
+
+#findFormNearLabel  {
+ 	position: relative;
+ 	top: -5px;
+}
+
+.networkBreakWrapper  {
+ 	clear: both;
+ 	display: block;
+ 	margin-bottom: 1px;
+ 	margin-left: 1px;
+ 	margin-right: 1px;
+ 	margin-top: 1px;
+ 	text-align: center;
+}
+
+.networkInnerWrapper  {
+ 	display: inline;
+ 	margin-bottom: 1px;
+ 	margin-left: 1px;
+ 	margin-right: 1px;
+ 	margin-top: 1px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.footerTelstraWrapper  {
+ 	padding-bottom: 4px;
+}
+
+.contentCellBrowseCurrentCategory  {
+ 	padding-bottom: 4px;
+ 	padding-top: 4px;
+}
+
+.contentCellBrowseSubCategory  {
+ 	width: 160px;
+}
+
+.locationFormSubmitCell  {
+ 	padding-left: 6px;
+}
+
+#surveyFormQuestionE #surveyFormQuestionG  {
+ 	width: 150px;
+}
+
+.tabHide  {
+ 	display: block;
+}
+
+#tabBlock  {
+ 	display: none;
+}
+

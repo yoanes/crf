@@ -1,0 +1,186 @@
+.hdColumnWrapper  {
+ 	width: 49%;
+}
+
+#resultsMapColumn  {
+ 	margin-right: 0px;
+ 	width: 49%;
+}
+
+#mapWindow  {
+ 	height: 480px;
+ 	margin-bottom: 0px;
+ 	margin-right: 0px;
+ 	margin-top: -2px;
+}
+
+#resultsColumn  {
+ 	width: 49%;
+}
+
+#findFormNearLabel  {
+}
+
+#findFormFindLabel  {
+}
+
+#findSearchInput  {
+ 	font-family: sans-seriftrue;
+ 	font-size: 0.85em;
+ 	height: 25px;
+ 	margin-bottom: 0px;
+ 	width: 100%;
+}
+
+#findLocationInput  {
+ 	font-family: sans-seriftrue;
+ 	font-size: 0.85em;
+ 	height: 25px;
+ 	margin-left: 0px;
+ 	width: 100%;
+}
+
+#HDHomeHeader .findFormSearch  {
+ 	margin-bottom: 57px;
+ 	margin-top: 40px;
+ 	width: 45%;
+}
+
+#HDHomeHeader .findFormNear  {
+ 	margin-left: -10px;
+ 	margin-top: 40px;
+ 	width: 40%;
+}
+
+#HDHomeHeader .findFormSubmitCell  {
+ 	margin-top: 81px;
+}
+
+#HDSubHeader .findFormSearch  {
+ 	margin-bottom: 0px;
+ 	margin-top: 15px;
+ 	width: 45%;
+}
+
+#HDSubHeader .findFormNear  {
+ 	margin-left: -10px;
+ 	margin-top: 15px;
+ 	width: 40%;
+}
+
+#HDSubHeader .findFormSubmitCell  {
+ 	margin-left: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 14px;
+}
+
+.contentCellBrowseLink  {
+ 	width: 47%;
+}
+
+#detailsMapColumn  {
+ 	height: 480px;
+}
+
+#resultsColumn  {
+ 	width: 50%;
+}
+
+#detailsActionsColumn  {
+ 	margin-top: 2px;
+}
+
+.suggestedTerms .contentCellBrowseLink  {
+ 	width: 97%;
+}
+
+body  {
+ 	font-size: 1.3em;
+}
+
+.findFormWrapper  {
+ 	clear: none;
+ 	float: left;
+ 	width: auto;
+}
+
+.HDHomeLogo  {
+ 	float: left;
+}
+
+#findForm  {
+ 	left: 145px;
+ 	position: absolute;
+ 	right: 0px;
+}
+
+.HDSubLogo  {
+ 	float: left;
+ 	width: 150px;
+}
+
+#HDSubHeader .findFormWrapper  {
+ 	clear: none;
+ 	float: left;
+}
+
+#HDSubHeader #findFormNearLabel  {
+ 	display: none;
+}
+
+#HDSubHeader #findFormFindLabel  {
+ 	display: none;
+}
+
+.findFormInputCell  {
+ 	margin-right: 10px;
+ 	width: auto;
+}
+
+#suggestions  {
+ 	font-size: 0.85em;
+ 	left: 10px;
+ 	margin-left: 10px;
+ 	margin-right: 10px;
+ 	position: absolute;
+ 	width: 42%;
+}
+
+#locSuggestions  {
+ 	font-size: 0.85em;
+ 	left: 44%;
+ 	margin-left: 10px;
+ 	margin-right: 10px;
+ 	position: absolute;
+ 	width: 36%;
+}
+
+.resultsInfo  {
+ 	display: none;
+}
+
+#HDHomeLogo  {
+ 	margin-left: 5px;
+ 	margin-top: -20px;
+}
+
+#HDHomeHeader  {
+ 	margin-top: 5px;
+}
+
+#HDSubLogo  {
+ 	margin-bottom: -6px;
+ 	margin-top: -2px;
+}
+
+.findFormSubmitCell  {
+ 	padding-top: 0px;
+}
+
+.suggestedTerms .contentCellBrowseLink  {
+ 	width: 100%;
+}
+

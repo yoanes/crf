@@ -1,0 +1,1081 @@
+body  {
+ 	background-color: #f2f2f2;
+ 	color: #000000;
+ 	font-family: sans-seriftrue;
+ 	font-size: 90%;
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+}
+
+img {
+	border: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+a  {
+ 	color: #2786c6;
+ 	border-bottom-width: 0px;
+ 	border-left-width: 0px;
+ 	border-right-width: 0px;
+ 	border-top-width: 0px;
+	text-decoration: none;
+ 	vertical-align: middle;
+}
+
+a:hover {
+ 	background-color: #b9e4f6;
+ 	color: #000000;
+ 	text-decoration: none;
+}
+
+a:focus {
+ 	background-color: #b9e4f6;
+ 	color: #184f74;
+ 	text-decoration: none;
+}
+
+.mapControl  {
+ 	text-align: center;
+}
+
+.bannerAd  {
+ 	text-align: center;
+}
+
+.footerMain  {
+ 	background-color: #f2f9fd;
+ 	background-image: /ym/images/furniture/footerMainBack.mimg;
+ 	background-position: bottom;
+ 	background-repeat: repeat-x;
+ 	border-bottom-color: #a7bad4;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-top-color: #cad7e7;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	text-align: center;
+}
+
+.footerLegalHelp  {
+ 	color: #999999;
+ 	border-top-color: #d4d4d4;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	padding-bottom: 4px;
+ 	padding-top: 4px;
+ 	text-align: center;
+}
+
+.ymPagination  {
+ 	background-color: #ffffff;
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	text-decoration: none;
+}
+
+a:active  {
+ 	background-color: #b9e4f6;
+ 	color: #184f74;
+}
+
+.footerMainLower  {
+ 	background-color: #d9edf9;
+ 	border-bottom-color: #c3dded;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-top-color: #ffffff;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+}
+
+.telstraLink  {
+ 	display: block;
+}
+
+.paginationSurveyLink  {
+ 	display: block;
+ 	text-decoration: none;
+}
+
+.ymPaginationLink  {
+ 	display: block;
+ 	text-decoration: none;
+ 	padding-bottom: 5px;
+ 	padding-left: 3px;
+ 	padding-top: 5px;
+}
+
+.ymPaginationLinkLast  {
+ 	border-bottom-color: #a7bad4;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-top-color: #a7bad4;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	display: block;
+ 	padding-bottom: 5px;
+ 	padding-left: 3px;
+ 	padding-top: 5px;
+}
+
+.errorMessage  {
+ 	background-color: #fef8ca;
+ 	color: #c00c3e;
+ 	border-bottom-color: #ffdc00;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-left-color: #ffdc00;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	border-right-color: #ffdc00;
+ 	border-right-style: solid;
+ 	border-right-width: 1px;
+ 	border-top-color: #ffdc00;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	font-size: 90%;
+ 	margin-bottom: 3px;
+ 	margin-left: 3px;
+ 	margin-right: 3px;
+ 	margin-top: 3px;
+ 	padding-bottom: 5px;
+ 	padding-left: 5px;
+ 	padding-right: 5px;
+ 	padding-top: 5px;
+}
+
+.statusMessage  {
+ 	background-color: #fef8ca;
+ 	color: #333333;
+ 	border-bottom-color: #ffdc00;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-left-color: #ffdc00;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	border-right-color: #ffdc00;
+ 	border-right-style: solid;
+ 	border-right-width: 1px;
+ 	border-top-color: #ffdc00;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	font-size: 90%;
+ 	margin-bottom: 3px;
+ 	margin-left: 3px;
+ 	margin-right: 3px;
+ 	margin-top: 3px;
+ 	padding-bottom: 5px;
+ 	padding-left: 5px;
+ 	padding-right: 5px;
+ 	padding-top: 5px;
+}
+
+
+.resultsInfo  {
+ 	padding-bottom: 3px;
+ 	padding-top: 3px;
+ 	text-align: center;
+}
+
+
+.footerWrapper  {
+ 	background-color: #f2f2f2;
+}
+
+.contentCellResultWrapper  {
+ 	border-bottom-color: #d4d4d4;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	text-align: left;
+}
+
+.contentCellResultsCount  {
+ 	border-bottom-color: #d4d4d4;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	padding-bottom: 8px;
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+ 	text-align: left;
+}
+
+.contentCellResultImage  {
+ 	float: right;
+ 	margin-bottom: 0px;
+ 	margin-right: 5px;
+ 	margin-top: 5px;
+ 	padding-bottom: 3px;
+ 	padding-right: 4px;
+ 	padding-top: 4px;
+ 	text-align: right;
+}
+
+.contentCellResultAddress  {
+ 	clear: left;
+ 	padding-bottom: 4px;
+ 	padding-left: 3px;
+ 	padding-top: 4px;
+}
+
+.contentCellResultHeader  {
+ 	font-weight: bold;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-top: 3px;
+}
+
+#findFormSearchType  {
+ 	font-size: 85%;
+ 	mcs-menu-orientation: horizontal;
+ 	mcs-selection-list-option-layout: control-first;
+ 	mcs-selection-list-style: controls;
+}
+
+.contentCellWrapper  {
+ 	margin-bottom: 4px;
+ 	margin-top: 4px;
+}
+
+.premiumCellWrapper  {
+ 	margin-bottom: 4px;
+ 	margin-top: 4px;
+}
+
+.findFormRadioWrapper  {
+ 	margin-bottom: 5px;
+}
+
+.findFormRadioCell  {
+ 	clear: both;
+ 	padding-left: 20%;
+}
+
+.findFormLabelCell  {
+ 	float: left;
+ 	font-weight: bold;
+ 	padding-left: 8px;
+ 	width: 15%;
+}
+
+.findFormInputCell  {
+ 	float: right;
+ 	width: 80%;
+}
+
+.findFormCellBottom  {
+ 	clear: both;
+ 	padding-left: 20%;
+}
+
+.premiumCellResultWrapper  {
+ 	text-align: left;
+}
+
+.locationTip  {
+ 	font-size: 90%;
+ 	font-style: italic;
+}
+
+#findFormSubmit  {
+ 	background-color: transparent;
+ 	border-bottom-width: 0px;
+ 	border-left-width: 0px;
+ 	border-right-width: 0px;
+ 	border-top-width: 0px;
+ 	margin-bottom: 2px;
+ 	margin-top: 2px;
+ 	/* mcs-form-action-image: /ym/images/furniture/search.mimg;
+ 	mcs-form-action-style: image; */
+}
+
+.premiumCellHeader  {
+ 	font-weight: bold;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-top: 3px;
+}
+
+.premiumCellImage  {
+ 	float: right;
+ 	margin-bottom: 0px;
+ 	margin-right: 5px;
+ 	margin-top: 5px;
+ 	padding-bottom: 3px;
+ 	padding-right: 3px;
+ 	padding-top: 3px;
+ 	text-align: right;
+}
+
+.premiumCellAddress  {
+ 	clear: left;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-top: 3px;
+ 	width: 75%;
+}
+
+.contentCellBrowseLink  {
+ 	border-top-color: #d4d4d4;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	clear: both;
+ 	font-weight: bold;
+ 	padding-bottom: 4px;
+ 	padding-left: 4px;
+ 	padding-top: 4px;
+ 	text-align: left;
+}
+
+.contentCellSurveyLink  {
+ 	padding-left: 3px;
+ 	text-align: left;
+}
+
+.contentCellSurveyText  {
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+ 	padding-top: 3px;
+ 	text-align: left;
+}
+
+#chargesHeader  {
+ 	border-top-color: #fa6201;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+}
+
+.carrierHeader  {
+ 	margin-bottom: -4px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+ 	text-align: right;
+ 	vertical-align: top;
+}
+
+.networkWrapper  {
+ 	border-bottom-color: #b1b1b1;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	text-align: center;
+}
+
+.networkBreakWrapper  {
+ 	display: inline;
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.networkInnerWrapper  {
+ 	display: inline;
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.contentCellBrowseHeader  {
+ 	color: #333333;
+ 	padding-bottom: 5px;
+ 	text-align: center;
+}
+
+.footerTelstraWrapper  {
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 4px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 4px;
+ 	text-align: center;
+}
+
+.contentCellResultsCount  {
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	text-align: center;
+}
+
+.contentCellResultAction  {
+ 	clear: left;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-top: 3px;
+}
+
+.premiumCellAction  {
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-top: 3px;
+}
+
+.actionIcon  {
+ 	vertical-align: bottom;
+}
+
+.contentCellNavigation  {
+ 	border-top-color: #cccccc;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	clear: both;
+ 	margin-bottom: 0px;
+ 	padding-top: 8px;
+ 	text-align: center;
+}
+
+.findFormNear  {
+ 	clear: both;
+}
+
+.contentCellBrowseCurrentCategory  {
+ 	font-weight: bold;
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+}
+
+.contentCellBrowseSubCategoryWrapper  {
+ 	border-top-color: #cccccc;
+ 	border-top-style: dashed;
+ 	border-top-width: 1px;
+ 	clear: both;
+}
+
+.contentCellBrowseSubCategory  {
+ 	padding-bottom: 3px;
+ 	padding-left: 7px;
+ 	padding-top: 3px;
+}
+
+.contentCellBrowseSubCategoryCount  {
+ 	color: #cccccc;
+ 	display: none;
+ 	float: right;
+ 	padding-right: 3px;
+ 	text-align: right;
+ 	width: 15%;
+}
+
+.contentCellDetailAction .contentCellDetailActionFirst  {
+ 	border-bottom-color: #cccccc;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-top: 3px;
+}
+
+.contentCellDetailActionLast  {
+ 	padding-left: 3px;
+ 	padding-top: 5px;
+}
+
+.businessDetailTextWrapper  {
+ 	background-color: #ffffff;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.businessDetailText  {
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	padding-bottom: 10px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.businessDetailTextSubHeader  {
+ 	background-color: #f2f2f2;
+ 	font-weight: bold;
+ 	margin-bottom: 5px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 4px;
+ 	padding-left: 4px;
+ 	padding-top: 4px;
+}
+
+.mapWrapper  {
+ 	background-color: #ffffff;
+ 	border-bottom-color: #cccccc;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-left-color: #cccccc;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	border-right-color: #cccccc;
+ 	border-right-style: solid;
+ 	border-right-width: 1px;
+ 	border-top-color: #cccccc;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	margin-bottom: 4px;
+ 	text-align: center;
+}
+
+.directionControls  {
+ 	display: inline;
+ 	padding-left: 4px;
+}
+
+.zoomControls  {
+ 	display: inline;
+ 	padding-right: 4px;
+}
+
+.contentCellResultWrapperLast  {
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+}
+
+.contentCellNavigationOrphan  {
+ 	text-align: center;
+}
+
+#businessDetailPremium  {
+ 	background-color: #fff9cf;
+}
+
+.contentCellResultExtraInfo  {
+ 	color: #c6732c;
+ 	clear: left;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-top: 3px;
+}
+
+.contentCellBrowseLast  {
+ 	padding-left: 7px;
+}
+
+.premiumCellResultWrapper  {
+ 	background-color: #fff9cf;
+ 	border-bottom-color: #d4d4d4;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	margin-bottom: 0px;
+ 	margin-left: 1px;
+ 	margin-right: 1px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+}
+
+.premiumCellResultWrapperLast  {
+ 	background-color: #fff9cf;
+ 	margin-bottom: 0px;
+ 	margin-left: 1px;
+ 	margin-right: 1px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+}
+
+.sortWrapper  {
+ 	margin-bottom: 4px;
+ 	margin-top: 4px;
+ 	text-align: center;
+}
+
+.sortImgOn  {
+ 	vertical-align: bottom;
+}
+
+.sortImgOff  {
+ 	vertical-align: bottom;
+}
+
+.minorHeader  {
+ 	margin-bottom: 4px;
+ 	margin-top: 4px;
+ 	text-align: center;
+}
+
+.contentCellGenericLink  {
+ 	margin-left: 3px;
+ 	margin-right: 3px;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+ 	padding-top: 3px;
+}
+
+#locationFormCellBottom  {
+ 	margin-left: 0px;
+ 	padding-left: 5px;
+}
+
+.locationFormSubmitCell  {
+ 	padding-bottom: 0px;
+ 	padding-top: 0px;
+}
+
+.contentCellGenericText  {
+ 	padding-bottom: 4px;
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+ 	padding-top: 4px;
+}
+
+.callingIcon  {
+ 	vertical-align: middle;
+}
+
+#smsFormSubmit  {
+ 	background-color: transparent;
+ 	border-bottom-width: 0px;
+ 	border-left-width: 0px;
+ 	border-right-width: 0px;
+ 	border-top-width: 0px;
+ 	/*mcs-form-action-image: /ym/images/furniture/send.mimg;
+ 	mcs-form-action-style: image;*/
+}
+
+.premiumCellOrganicResultWrapper  {
+ 	background-color: #fff9cf;
+ 	border-bottom-color: #d4d4d4;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	margin-left: 1px;
+ 	margin-right: 1px;
+}
+
+.contentCellSurveyQuestionWrapper  {
+ 	border-bottom-color: #d4d4d4;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	padding-bottom: 4px;
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+ 	padding-top: 4px;
+}
+
+.contentCellSurveyQuestionWrapperLast  {
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+ 	padding-top: 4px;
+}
+
+.contentCellSurveyQuestionText  {
+ 	margin-bottom: 4px;
+}
+
+.contentCellSurveySubmit  {
+ 	margin-top: 4px;
+}
+
+.contentCellGenericText  {
+ 	margin-left: 3px;
+ 	margin-right: 3px;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-top: 3px;
+}
+
+#versionText  {
+ 	color: #cccccc;
+}
+
+.contentCellGenericHeader  {
+ 	font-weight: bold;
+ 	margin-left: 3px;
+ 	margin-right: 3px;
+ 	padding-bottom: 3px;
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+ 	padding-top: 3px;
+}
+
+.contentCellLegalWrapper  {
+}
+
+#seoAlphaMenu  {
+ 	text-align: center;
+}
+
+.seoActiveIndex  {
+ 	font-weight: bold;
+ 	vertical-align: middle;
+}
+
+#seoStateList a  {
+ 	margin-left: 3px;
+}
+
+#seoAlphaMenu a  {
+ 	margin-left: 2px;
+}
+
+.findFormLabelCell  {
+ 	padding-top: 3px;
+}
+
+#findSearchInput  {
+ 	margin-bottom: 5px;
+ 	width: 95%;
+}
+
+#findLocationInput  {
+ 	width: 95%;
+}
+
+.findFormWrapper  {
+ 	margin-bottom: 4px;
+ 	margin-top: 4px;
+}
+
+.contentCellWrapper  {
+ 	margin-bottom: 4px;
+ 	margin-top: 4px;
+}
+
+.contentCellWebText  {
+ 	text-align: center;
+}
+
+.genericTextWrapper  {
+ 	margin-bottom: 4px;
+ 	margin-top: 4px;
+}
+
+.genericText  {
+ 	margin-bottom: 2px;
+ 	margin-top: 2px;
+}
+
+.contentCellBottom  {
+ 	clear: both;
+}
+
+.poiIcon  {
+ 	vertical-align: middle;
+}
+
+.premiumCellExtraInfo  {
+ 	clear: both;
+ 	width: 75%;
+}
+
+.carrierHeader img  {
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	vertical-align: top;
+}
+
+.contentCellGenericLink a  {
+ 	display: block;
+}
+
+.contentCellBrowseSubCategory a  {
+ 	display: block;
+}
+
+.contentCellResultExtraInfo  {
+ 	width: 75%;
+}
+
+.contentCellResultAction a  {
+ 	display: block;
+}
+
+.premiumCellAction a  {
+ 	display: block;
+}
+
+.premiumCellAction  {
+ 	width: 75%;
+}
+
+.contentCellResultHeader a  {
+ 	display: block;
+}
+
+.premiumCellHeader a  {
+ 	display: block;
+}
+
+.contentCellDetailAction a .contentCellDetailActionFirst a .contentCellDetailActionOrphan a  {
+ 	display: block;
+}
+
+.contentCellDetailActionLast a  {
+ 	display: block;
+ 	padding-top: 3px;
+}
+
+#freeImg  {
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+#chargesImg  {
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+#seoAlphaMenu a  {
+ 	display: inline;
+}
+
+.premiumCellResultWrapper .premiumCellResultWrapperLast  {
+ 	background-color: #ffffff;
+}
+
+.premiumCellIndentWrapper  {
+ 	background-color: #fff9cf;
+ 	border-bottom-color: #ffbf00;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-left-color: #ffbf00;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	border-right-color: #ffbf00;
+ 	border-right-style: solid;
+ 	border-right-width: 1px;
+ 	border-top-color: #ffbf00;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	margin-bottom: 0px;
+ 	margin-left: 4px;
+ 	margin-right: 4px;
+ 	margin-top: 4px;
+}
+
+.contentCellDetailActionOrphan  {
+ 	padding-left: 3px;
+ 	padding-right: 3px;
+}
+
+.tabHide  {
+ 	display: none;
+}
+
+#tabWrapper  {
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+}
+
+.tabLinkOn a  {
+ 	color: #000000;
+ 	font-weight: bold;
+}
+
+.tabLink  {
+ 	float: left;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+ 	text-align: center;
+ 	width: 33%;
+}
+
+.tabLink a  {
+ 	display: block;
+}
+
+#seoStateList a  {
+ 	color: #999999;
+}
+
+#footerTelstraSubPage  {
+ 	border-top-width: 0px;
+}
+
+#apple  {
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+ 	text-align: center;
+}
+
+.locationFormInputCell  {
+ 	margin-left: 15px;
+}
+
+.locationFormSubmitCell  {
+ 	margin-left: 15px;
+}
+
+.photoGallery  {
+ 	margin-bottom: 0px;
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.photoObject  {
+ 	background-color: #ffffff;
+ 	border-bottom-color: #cccccc;
+ 	border-bottom-style: solid;
+ 	border-bottom-width: 1px;
+ 	border-left-color: #cccccc;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	border-right-color: #cccccc;
+ 	border-right-style: solid;
+ 	border-right-width: 1px;
+ 	border-top-color: #cccccc;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	display: block;
+ 	margin-top: 8px;
+ 	text-align: center;
+ 	width: auto;
+}
+
+.contentCellDetailGalleryImage  {
+ 	clear: none;
+ 	display: inline;
+ 	margin-bottom: 5px;
+ 	margin-left: 5px;
+ 	margin-right: 5px;
+ 	margin-top: 5px;
+}
+
+.contentCellDetailGalleryLink  {
+ 	clear: both;
+ 	margin-top: 5px;
+ 	text-align: center;
+}
+
+.photoGalleryPreview  {
+ 	text-align: center;
+}
+
+.suggestedTerms .contentCellBrowseHeader  {
+ 	text-align: center;
+}
+
+.suggestedTerms .contentCellBrowseLink a  {
+ 	display: block;
+ 	font-weight: normal;
+ 	margin-bottom: 8px;
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+ 	margin-top: 8px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.showBusinessNameLink  {
+ 	text-align: center;
+}
+
+#legalID  {
+ 	color: #000000;
+}
+
+#whatsNewText .contentCellBrowseLink  {
+ 	font-weight: normal;
+}
+
+.contentCellLine  {
+ 	border-top-color: #d4d4d4;
+ 	border-top-style: solid;
+ 	border-top-width: 1px;
+ 	clear: both;
+ 	padding-bottom: 8px;
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+ 	padding-top: 8px;
+}
+
+.contentCellLineTop  {
+ 	clear: both;
+ 	padding-bottom: 8px;
+ 	padding-left: 8px;
+ 	padding-right: 8px;
+ 	padding-top: 0px;
+}
+
+.centered  {
+ 	text-align: center;
+}
+
+#touchDevice  {
+ 	display: none;
+}
+
+.hintTextMessage  {
+ 	font-size: 90%;
+ 	font-style: italic;
+}
+
+.grey  {
+ 	color: #888888;
+}
+
+.suggestedTerms .contentCellBrowseLink  {
+ 	margin-bottom: 0px;
+ 	margin-left: 0px;
+ 	margin-right: 0px;
+ 	margin-top: 0px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.contentCellBrowseLink a  {
+ 	display: block;
+}
+
+.sortImgWrapperOn {
+	margin-right: -2px;
+}
+
+.sortImgWrapperOff {
+	margin-left: -2px;
+}
+

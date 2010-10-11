@@ -1,0 +1,113 @@
+.roundedUpper  {
+ 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/topbg.image');
+ 	background-position: 100% 0%;
+ 	background-repeat: no-repeat;
+ 	height: 8px;
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+ 	margin-top: 8px;
+}
+
+.roundedLower  {
+ 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/bottombg.image');
+ 	background-position: 100% 0%;
+ 	background-repeat: no-repeat;
+ 	height: 8px;
+ 	margin-bottom: 8px;
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+}
+
+.roundedContent  {
+ 	background-color: #ffffff;
+ 	border-left-color: #e0e0e0;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	border-right-color: #e0e0e0;
+ 	border-right-style: solid;
+ 	border-right-width: 1px;
+ 	margin-left: 8px;
+ 	margin-right: 8px;
+}
+
+.roundedUpper img  {
+ 	background-color: #ffffff;
+ 	vertical-align: top;
+}
+
+.roundedLower img  {
+ 	background-color: #ffffff;
+ 	vertical-align: top;
+}
+
+.yellow .roundedUpper  {
+ 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/corner_Tbg_y.image');
+ 	background-position: 0%;
+ 	background-repeat: no-repeat;
+ 	height: 8px;
+}
+
+.yellow .roundedLower  {
+ 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/corner_Bbg_y.image');
+ 	background-position: 100%;
+ 	background-repeat: no-repeat;
+ 	height: 8px;
+}
+
+.yellow img  {
+ 	background-color: #ffdc00;
+}
+
+.yellow  {
+ 	clear: none;
+}
+
+.yellow .roundedContent  {
+ 	background-color: #ffdc00;
+ 	border-left-color: #e9c559;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	border-right-color: #e9c559;
+ 	border-right-style: solid;
+ 	border-right-width: 1px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+
+.lightYellow .roundedUpper  {
+ 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/corner_Tbg_ly.image')';
+ 	background-position: 0%;
+ 	background-repeat: no-repeat;
+ 	height: 8px;
+}
+
+.lightYellow .roundedLower  {
+ 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/corner_Bbg_ly.image');
+ 	background-position: 100%;
+ 	background-repeat: no-repeat;
+ 	height: 8px;
+}
+
+.lightYellow img  {
+ 	background-color: #ffdc00;
+}
+
+.lightYellow  {
+}
+
+.lightYellow .roundedContent  {
+ 	background-color: #fff9cf;
+ 	border-left-color: #ffbf00;
+ 	border-left-style: solid;
+ 	border-left-width: 1px;
+ 	border-right-color: #ffbf00;
+ 	border-right-style: solid;
+ 	border-right-width: 1px;
+ 	padding-bottom: 0px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+ 	padding-top: 0px;
+}
+

@@ -1,0 +1,96 @@
+.footerLegalHelp  {
+ 	font-size: 10px;
+}
+
+.footerLegalHelpA  {
+ 	margin-left: -1px;
+ 	margin-right: -1px;
+ 	padding-left: 0px;
+ 	padding-right: 0px;
+}
+
+#chargesImg #freeImg  {
+ 	vertical-align: top;
+}
+
+.findFormRadioWrapper  {
+ 	display: inline;
+ 	font-size: 70%;
+}
+
+.sortImgWrapperOn img .sortImgWrapperOff img  {
+ 	display: inline;
+ 	width: 82px;
+}
+
+.sortImgWrapperOff a img  {
+ 	margin-top: -2px;
+}
+
+.findFormLabelCell  {
+ 	display: block;
+ 	font-weight: bold;
+ 	width: 100px;
+}
+
+.findFormInputCell  {
+ 	display: block;
+ 	margin-right: 5px;
+ 	margin-top: -17px;
+ 	width: 100px;
+}
+
+#findLocationInput  {
+ 	font-size: 1.2em;
+ 	width: 150px;
+}
+
+#findSearchInput  {
+ 	font-size: 1.2em;
+ 	width: 150px;
+}
+
+body  {
+ 	font-size: 70%;
+}
+
+#findFormRadioType  {
+ 	font-size: 50%;
+}
+
+#findFormRadioName  {
+ 	font-size: 50%;
+}
+
+.locationTip  {
+ 	font-size: 9px;
+}
+
+.yellowLogo  {
+ 	text-align: left;
+}
+
+.yellowLogo img  {
+ 	margin-bottom: -5px;
+ 	margin-top: -5px;
+}
+
+.hintTextMessage  {
+ 	font-size: 9px;
+}
+
+#findMessage  {
+ 	font-size: 50%;
+ 	font-style: normal;
+}
+
+#locationMessage  {
+ 	font-size: 50%;
+ 	font-style: normal;
+ 	margin-left: 42px;
+}
+
+.findFormSubmitCell  {
+ 	margin-left: 80px;
+}
+
