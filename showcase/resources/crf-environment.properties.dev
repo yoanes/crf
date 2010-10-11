@@ -1,5 +1,5 @@
 ########################################################
-## ENVIRONMENT : DESK
+## ENVIRONMENT : DEV
 ########################################################
 
 env.resources.jsp.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/
