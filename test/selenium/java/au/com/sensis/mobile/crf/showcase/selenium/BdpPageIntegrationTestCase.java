@@ -20,11 +20,11 @@ import au.com.sensis.wireless.test.selenium.UserAgent;
 public class BdpPageIntegrationTestCase extends AbstractSeleniumIntegrationTestCase {
 
     protected final void openBdp() {
-        openUrl("http://localhost:8080/bdp.action");
+        openUrl("http://localhost:8080/uidev/crfshowcase/crf/bdp.action");
     }
 
     protected final void openBdpWithUserAgent(final String userAgent) {
-        openUrlWithUserAgent("http://localhost:8080/bdp.action", userAgent);
+        openUrlWithUserAgent("http://localhost:8080/uidev/crfshowcase/crf/bdp.action", userAgent);
     }
 
     /**

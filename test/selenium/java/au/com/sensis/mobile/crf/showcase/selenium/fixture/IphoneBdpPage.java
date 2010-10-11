@@ -41,7 +41,7 @@ public abstract class IphoneBdpPage extends BdpPage {
         assertNumImgElements(getExpectedNumImgElements());
         assertImg("in.img not found",
                 "mapZoomIn", "Map Zoom In", "Map Zoom In",
-                "mapComponent-iphone-ipod/component/map/in.png");
+                "mapComponent-iphone-ipod/selenium/component/map/in.png");
         doAssertImg();
     }
 
@@ -60,31 +60,31 @@ public abstract class IphoneBdpPage extends BdpPage {
     private void assertIphoneCss() {
         final int expectedNumIphoneCssLinks = 10;
         assertNumCssLinks(expectedNumIphoneCssLinks);
-        assertCssLink("default/common/main.css link not found",
-                "default/common/main.css");
-        assertCssLink("webkit/common/main.css link not found",
-                "webkit/common/main.css");
-        assertCssLink("applewebkit/common/main.css link not found",
-                "applewebkit/common/main.css");
-        assertCssLink("iphone-ipod/common/main.css link not found",
-                "iphone-ipod/common/main.css");
+        assertCssLink("default/selenium/common/main.css link not found",
+                "default/selenium/common/main.css");
+        assertCssLink("webkit/selenium/common/main.css link not found",
+                "webkit/selenium/common/main.css");
+        assertCssLink("applewebkit/selenium/common/main.css link not found",
+                "applewebkit/selenium/common/main.css");
+        assertCssLink("iphone-ipod/selenium/common/main.css link not found",
+                "iphone-ipod/selenium/common/main.css");
 
-        assertCssLink("iphone-ipod/common/columns.css link not found",
-            "iphone-ipod/common/columns.css");
+        assertCssLink("iphone-ipod/selenium/common/columns.css link not found",
+            "iphone-ipod/selenium/common/columns.css");
 
-        assertCssLink("default/results/results.css link not found",
-                "default/results/results.css");
+        assertCssLink("default/selenium/results/results.css link not found",
+                "default/selenium/results/results.css");
 
-        assertCssLink("webkit/common/jazz.css link not found",
-                "webkit/common/jazz.css");
+        assertCssLink("webkit/selenium/common/jazz.css link not found",
+                "webkit/selenium/common/jazz.css");
 
-        assertCssLink("webkit/common/decorations.css link not found",
-                "webkit/common/decorations.css");
-        assertCssLink("applewebkit/common/decorations.css link not found",
-                "applewebkit/common/decorations.css");
+        assertCssLink("webkit/selenium/common/decorations.css link not found",
+                "webkit/selenium/common/decorations.css");
+        assertCssLink("applewebkit/selenium/common/decorations.css link not found",
+                "applewebkit/selenium/common/decorations.css");
 
-        assertCssLink("mapComponent-iphone-ipod/component/map/map.css link not found",
-            "mapComponent-iphone-ipod/component/map/map.css");
+        assertCssLink("mapComponent-iphone-ipod/selenium/component/map/map.css link not found",
+            "mapComponent-iphone-ipod/selenium/component/map/map.css");
 
     }
 
@@ -97,28 +97,28 @@ public abstract class IphoneBdpPage extends BdpPage {
     }
 
     private void assertIphoneScriptByNameNoBundling() {
-        assertScript("default/common/main.js script not found",
-                "default/common/main.js");
-        assertScript("webkit/common/main.js script not found",
-                "webkit/common/main.js");
-        assertScript("applewebkit/common/main.js script not found",
-                "applewebkit/common/main.js");
-        assertScript("iphone-ipod/common/main.js script not found",
-                "iphone-ipod/common/main.js");
+        assertScript("default/selenium/common/main.js script not found",
+                "default/selenium/common/main.js");
+        assertScript("webkit/selenium/common/main.js script not found",
+                "webkit/selenium/common/main.js");
+        assertScript("applewebkit/selenium/common/main.js script not found",
+                "applewebkit/selenium/common/main.js");
+        assertScript("iphone-ipod/selenium/common/main.js script not found",
+                "iphone-ipod/selenium/common/main.js");
 
-        assertScript("iphone-ipod/common/columns.js script not found",
-                "iphone-ipod/common/columns.js");
+        assertScript("iphone-ipod/selenium/common/columns.js script not found",
+                "iphone-ipod/selenium/common/columns.js");
 
-        assertScript("default/results/results.js script not found",
-                "default/results/results.js");
+        assertScript("default/selenium/results/results.js script not found",
+                "default/selenium/results/results.js");
 
-        assertScript("webkit/common/jazz.js script not found",
-                "webkit/common/jazz.js");
+        assertScript("webkit/selenium/common/jazz.js script not found",
+                "webkit/selenium/common/jazz.js");
 
-        assertScript("webkit/common/decorations.js script not found",
-                "webkit/common/decorations.js");
-        assertScript("applewebkit/common/decorations.js script not found",
-                "applewebkit/common/decorations.js");
+        assertScript("webkit/selenium/common/decorations.js script not found",
+                "webkit/selenium/common/decorations.js");
+        assertScript("applewebkit/selenium/common/decorations.js script not found",
+                "applewebkit/selenium/common/decorations.js");
     }
 
     private void assertIphoneScriptByAllNoBundling() {
@@ -130,60 +130,60 @@ public abstract class IphoneBdpPage extends BdpPage {
     }
 
     private void assertIphonMapScripts() {
-        assertScript("default/component/map/map1.js script not found",
-                "default/component/map/map1.js");
-        assertScript("default/component/map/map2.js script not found",
-                "default/component/map/map2.js");
-        assertScript("webkit/component/map/map1.js script not found",
-                "webkit/component/map/map1.js");
-        assertScript("webkit/component/map/map2.js script not found",
-                "webkit/component/map/map2.js");
-        assertScript("applewebkit/component/map/map1.js script not found",
-                "applewebkit/component/map/map1.js");
-        assertScript("applewebkit/component/map/map2.js script not found",
-                "applewebkit/component/map/map2.js");
+        assertScript("default/selenium/component/map/map1.js script not found",
+                "default/selenium/component/map/map1.js");
+        assertScript("default/selenium/component/map/map2.js script not found",
+                "default/selenium/component/map/map2.js");
+        assertScript("webkit/selenium/component/map/map1.js script not found",
+                "webkit/selenium/component/map/map1.js");
+        assertScript("webkit/selenium/component/map/map2.js script not found",
+                "webkit/selenium/component/map/map2.js");
+        assertScript("applewebkit/selenium/component/map/map1.js script not found",
+                "applewebkit/selenium/component/map/map1.js");
+        assertScript("applewebkit/selenium/component/map/map2.js script not found",
+                "applewebkit/selenium/component/map/map2.js");
         assertScript(
-                "mapComponent-iphone-ipod/component/map/map2.js script not found",
-                "mapComponent-iphone-ipod/component/map/map2.js");
+                "mapComponent-iphone-ipod/selenium/component/map/map2.js script not found",
+                "mapComponent-iphone-ipod/selenium/component/map/map2.js");
         assertScript(
-                "mapComponent-iphone-ipod/component/map/map1.js script not found",
-                "mapComponent-iphone-ipod/component/map/map1.js");
+                "mapComponent-iphone-ipod/selenium/component/map/map1.js script not found",
+                "mapComponent-iphone-ipod/selenium/component/map/map1.js");
     }
 
     private void assertIphoneFielddecoratorScripts() {
-        assertScript("default/fielddecorators/decorator2.js script not found",
-                "default/fielddecorators/decorator2.js");
-        assertScript("default/fielddecorators/decorator1.js script not found",
-                "default/fielddecorators/decorator1.js");
-        assertScript("default/fielddecorators/decorator3.js script not found",
-                "default/fielddecorators/decorator3.js");
+        assertScript("default/selenium/fielddecorators/decorator2.js script not found",
+                "default/selenium/fielddecorators/decorator2.js");
+        assertScript("default/selenium/fielddecorators/decorator1.js script not found",
+                "default/selenium/fielddecorators/decorator1.js");
+        assertScript("default/selenium/fielddecorators/decorator3.js script not found",
+                "default/selenium/fielddecorators/decorator3.js");
     }
 
     private void assertIphoneGridScripts() {
-        assertScript("iphone-ipod/grid/grid2.js script not found",
-                "iphone-ipod/grid/grid2.js");
-        assertScript("iphone-ipod/grid/grid1.js script not found",
-                "iphone-ipod/grid/grid1.js");
-        assertScript("iphone-ipod/grid/grid3.js script not found",
-                "iphone-ipod/grid/grid3.js");
+        assertScript("iphone-ipod/selenium/grid/grid2.js script not found",
+                "iphone-ipod/selenium/grid/grid2.js");
+        assertScript("iphone-ipod/selenium/grid/grid1.js script not found",
+                "iphone-ipod/selenium/grid/grid1.js");
+        assertScript("iphone-ipod/selenium/grid/grid3.js script not found",
+                "iphone-ipod/selenium/grid/grid3.js");
     }
 
     private void assertIphoneAnimationScripts() {
-        assertScript("webkit/animation/animation1.js script not found",
-                "webkit/animation/animation1.js");
-        assertScript("webkit/animation/animation2.js script not found",
-                "webkit/animation/animation2.js");
+        assertScript("webkit/selenium/animation/animation1.js script not found",
+                "webkit/selenium/animation/animation1.js");
+        assertScript("webkit/selenium/animation/animation2.js script not found",
+                "webkit/selenium/animation/animation2.js");
     }
 
     private void assertIphoneLayersScripts() {
-        assertScript("webkit/layers/layers1.js script not found",
-                "webkit/layers/layers1.js");
-        assertScript("webkit/layers/layers2.js script not found",
-                "webkit/layers/layers2.js");
-        assertScript("applewebkit/layers/layers1.js script not found",
-                "applewebkit/layers/layers1.js");
-        assertScript("applewebkit/layers/layers2.js script not found",
-                "applewebkit/layers/layers2.js");
+        assertScript("webkit/selenium/layers/layers1.js script not found",
+                "webkit/selenium/layers/layers1.js");
+        assertScript("webkit/selenium/layers/layers2.js script not found",
+                "webkit/selenium/layers/layers2.js");
+        assertScript("applewebkit/selenium/layers/layers1.js script not found",
+                "applewebkit/selenium/layers/layers1.js");
+        assertScript("applewebkit/selenium/layers/layers2.js script not found",
+                "applewebkit/selenium/layers/layers2.js");
     }
 
     private void assertIphoneJsp() {

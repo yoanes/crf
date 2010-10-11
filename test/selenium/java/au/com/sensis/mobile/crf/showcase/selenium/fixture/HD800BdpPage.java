@@ -34,9 +34,8 @@ public class HD800BdpPage extends BdpPage {
 
     private void assertHD800Css() {
         assertNumCssLinks(2);
-        assertCssLink("main.css link not found", "default/common/main.css");
-        assertCssLink("results.css link not found",
-                "default/results/results.css");
+        assertCssLink("main.css link not found", "default/selenium/common/main.css");
+        assertCssLink("results.css link not found", "default/selenium/results/results.css");
     }
 
     private void assertHD800Scripts() {
@@ -48,22 +47,22 @@ public class HD800BdpPage extends BdpPage {
     }
 
     private void assertHD800ScriptsByAllNoBundling() {
-        assertScript("default/fielddecorators/decorator2.js script not found",
-                "default/fielddecorators/decorator2.js");
-        assertScript("default/fielddecorators/decorator1.js script not found",
-                "default/fielddecorators/decorator1.js");
-        assertScript("default/fielddecorators/decorator3.js script not found",
-                "default/fielddecorators/decorator3.js");
+        assertScript("default/selenium/fielddecorators/decorator2.js script not found",
+                "default/selenium/fielddecorators/decorator2.js");
+        assertScript("default/selenium/fielddecorators/decorator1.js script not found",
+                "default/selenium/fielddecorators/decorator1.js");
+        assertScript("default/selenium/fielddecorators/decorator3.js script not found",
+                "default/selenium/fielddecorators/decorator3.js");
 
-        assertScript("default/component/map/map1.js script not found",
-                "default/component/map/map1.js");
-        assertScript("default/component/map/map2.js script not found",
-                "default/component/map/map2.js");
+        assertScript("default/selenium/component/map/map1.js script not found",
+                "default/selenium/component/map/map1.js");
+        assertScript("default/selenium/component/map/map2.js script not found",
+                "default/selenium/component/map/map2.js");
     }
 
     private void assertHD800ScriptsByNameNoBundling() {
-        assertScript("main.js script not found", "default/common/main.js");
-        assertScript("results.js script not found", "default/results/results.js");
+        assertScript("main.js script not found", "default/selenium/common/main.js");
+        assertScript("results.js script not found", "default/selenium/results/results.js");
     }
 
     private void assertHD800Jsp() {
@@ -74,7 +73,7 @@ public class HD800BdpPage extends BdpPage {
         assertNumImgElements(1);
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
-                "default/common/unmetered.png");
+                "default/selenium/common/unmetered.png");
     }
 
     private void assertDeviceProperties() {

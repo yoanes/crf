@@ -92,7 +92,7 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "//head/link["
                 + "@type=\"text/css\" "
                 + "and @rel=\"stylesheet\" "
-                + "and @href=\"/resources/css/"
+                + "and @href=\"/uidev/crfshowcase/resources/css/"
                 + getProjectVersion() + "/"
                 + expectedHref + "\""
                 + "]"));
@@ -110,7 +110,7 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertTrue(message, getBrowser().isElementPresent(
                 "//head/script["
                 + "@type=\"text/javascript\" "
-                + "and @src=\"/resources/javascript/"
+                + "and @src=\"/uidev/crfshowcase/resources/javascript/"
                 + getProjectVersion() + "/"
                 + expectedSrc + "\""
                 + "]"));
@@ -153,7 +153,7 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "@id=\"" + expectedId + "\" "
                 + "and @title=\"" + expectedTitle + "\" "
                 + "and @alt=\"" + expectedAlt + "\" "
-                + "and @src=\"/resources/images/"
+                + "and @src=\"/uidev/crfshowcase/resources/images/"
                 + getProjectVersion() + "/"
                 + expectedSrc + "\""
                 + "]"));

@@ -35,8 +35,8 @@ public class Nokia7600BdpPage extends BdpPage {
     private void assertNokia7600Css() {
         final int expectedNumNokia7600CssLinks = 2;
         assertNumCssLinks(expectedNumNokia7600CssLinks);
-        assertCssLink("main.css link not found", "default/common/main.css");
-        assertCssLink("results.css link not found", "default/results/results.css");
+        assertCssLink("main.css link not found", "default/selenium/common/main.css");
+        assertCssLink("results.css link not found", "default/selenium/results/results.css");
     }
 
     private void assertNokia7600Script() {
@@ -48,22 +48,22 @@ public class Nokia7600BdpPage extends BdpPage {
     }
 
     private void assertNokia7600ScriptByAllNoBundling() {
-        assertScript("default/fielddecorators/decorator2.js script not found",
-                "default/fielddecorators/decorator2.js");
-        assertScript("default/fielddecorators/decorator1.js script not found",
-                "default/fielddecorators/decorator1.js");
-        assertScript("default/fielddecorators/decorator3.js script not found",
-                "default/fielddecorators/decorator3.js");
+        assertScript("default/selenium/fielddecorators/decorator2.js script not found",
+                "default/selenium/fielddecorators/decorator2.js");
+        assertScript("default/selenium/fielddecorators/decorator1.js script not found",
+                "default/selenium/fielddecorators/decorator1.js");
+        assertScript("default/selenium/fielddecorators/decorator3.js script not found",
+                "default/selenium/fielddecorators/decorator3.js");
 
-        assertScript("default/component/map/map1.js script not found",
-                "default/component/map/map1.js");
-        assertScript("default/component/map/map2.js script not found",
-                "default/component/map/map2.js");
+        assertScript("default/selenium/component/map/map1.js script not found",
+                "default/selenium/component/map/map1.js");
+        assertScript("default/selenium/component/map/map2.js script not found",
+                "default/selenium/component/map/map2.js");
     }
 
     private void assertNokia7600ScriptByNameNoBundling() {
-        assertScript("main.js script not found", "default/common/main.js");
-        assertScript("results.js script not found", "default/results/results.js");
+        assertScript("main.js script not found", "default/selenium/common/main.js");
+        assertScript("results.js script not found", "default/selenium/results/results.js");
     }
 
     private void assertNokia7600Jsp() {
@@ -74,7 +74,7 @@ public class Nokia7600BdpPage extends BdpPage {
         assertNumImgElements(1);
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
-                "nokia7600/common/unmetered.gif");
+                "nokia7600/selenium/common/unmetered.gif");
     }
 
     private void assertDeviceProperties() {

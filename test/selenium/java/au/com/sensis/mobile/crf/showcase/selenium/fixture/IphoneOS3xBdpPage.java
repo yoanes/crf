@@ -29,10 +29,10 @@ public class IphoneOS3xBdpPage extends IphoneBdpPage {
     private void assertIphoneOS3xImg() {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
-                "default/common/unmetered.png");
+                "default/selenium/common/unmetered.png");
         assertImg("appStore img not found",
                 "appStoreImg", "App Store", "App Store",
-                "applewebkit/common/app_store.png");
+                "applewebkit/selenium/common/app_store.png");
     }
 
     /**
