@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<variable-policy xmlns="http://www.volantis.com/xmlns/2006/02/marlin-lpdm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpdm="http://www.volantis.com/xmlns/2006/02/marlin-rpdm" xmlns:struct="http://www.volantis.com/xmlns/2005/10/ThemeStruct" xsi:schemaLocation="http://www.volantis.com/xmlns/2006/02/marlin-lpdm http://www.volantis.com/schema/2006/02/marlin-lpdm.xsd">
+    <type>image</type>
+    <categorization-scheme>custom.imageCategory</categorization-scheme>
+    <variants>
+        <variant>
+            <type>image</type>
+            <selection>
+                <targeted>
+                    <categories>
+                        <category>HD800</category>
+                    </categories>
+                </targeted>
+            </selection>
+            <meta-data>
+                <image>
+                    <encoding>png</encoding>
+                    <height>33</height>
+                    <pixel-depth>24</pixel-depth>
+                    <rendering>color</rendering>
+                    <width>15</width>
+                </image>
+            </meta-data>
+            <content>
+                <url>
+                    <base>
+                        <policy-reference>
+                            <name>/ym/ym.mgrp</name>
+                            <type>base-url</type>
+                        </policy-reference>
+                    </base>
+                    <relative>furniture/action_window_tail_HD800_15x33.png</relative>
+                </url>
+            </content>
+        </variant>
+    </variants>
+</variable-policy>

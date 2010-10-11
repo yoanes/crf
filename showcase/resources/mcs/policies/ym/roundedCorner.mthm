@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<variable-policy xmlns="http://www.volantis.com/xmlns/2006/02/marlin-lpdm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpdm="http://www.volantis.com/xmlns/2006/02/marlin-rpdm" xmlns:struct="http://www.volantis.com/xmlns/2005/10/ThemeStruct" xsi:schemaLocation="http://www.volantis.com/xmlns/2006/02/marlin-lpdm http://www.volantis.com/schema/2006/02/marlin-lpdm.xsd">
+    <type>theme</type>
+    <variants>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <devices>
+                        <device>Master</device>
+                    </devices>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedUpper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="background-image">
+                                        <mcs-policy-reference>
+                                            <expression>/ym/images/furniture/upperRoundedBg.mimg</expression>
+                                        </mcs-policy-reference>
+                                    </property>
+                                    <property name="background-position">
+                                        <pair>
+                                            <first>
+                                                <percentage>100</percentage>
+                                            </first>
+                                            <second>
+                                                <percentage>0</percentage>
+                                            </second>
+                                        </pair>
+                                    </property>
+                                    <property name="background-repeat">
+                                        <keyword>no-repeat</keyword>
+                                    </property>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedLower</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="background-image">
+                                        <mcs-policy-reference>
+                                            <expression>/ym/images/furniture/lowerRoundedBg.mimg</expression>
+                                        </mcs-policy-reference>
+                                    </property>
+                                    <property name="background-position">
+                                        <pair>
+                                            <first>
+                                                <percentage>100</percentage>
+                                            </first>
+                                            <second>
+                                                <percentage>100</percentage>
+                                            </second>
+                                        </pair>
+                                    </property>
+                                    <property name="background-repeat">
+                                        <keyword>no-repeat</keyword>
+                                    </property>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-bottom">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedContent</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#ffffff</colorRGB>
+                                    </property>
+                                    <property name="border-left-color">
+                                        <colorRGB>#e0e0e0</colorRGB>
+                                    </property>
+                                    <property name="border-left-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-left-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="border-right-color">
+                                        <colorRGB>#e0e0e0</colorRGB>
+                                    </property>
+                                    <property name="border-right-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-right-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>child</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>object</type>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#ffffff</colorRGB>
+                                    </property>
+                                    <property name="vertical-align">
+                                        <keyword>top</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>child</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>object</type>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#ffffff</colorRGB>
+                                    </property>
+                                    <property name="vertical-align">
+                                        <keyword>top</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>yellow</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-image">
+                                        <mcs-policy-reference>
+                                            <expression>/ym/images/furniture/yellowUpperRoundedBg.mimg</expression>
+                                        </mcs-policy-reference>
+                                    </property>
+                                    <property name="background-position">
+                                        <pair>
+                                            <first>
+                                                <percentage>100</percentage>
+                                            </first>
+                                            <second>
+                                                <percentage>0</percentage>
+                                            </second>
+                                        </pair>
+                                    </property>
+                                    <property name="background-repeat">
+                                        <keyword>no-repeat</keyword>
+                                    </property>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>yellow</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-image">
+                                        <mcs-policy-reference>
+                                            <expression>/ym/images/furniture/yellowLowerRoundedBg.mimg</expression>
+                                        </mcs-policy-reference>
+                                    </property>
+                                    <property name="background-position">
+                                        <pair>
+                                            <first>
+                                                <percentage>100</percentage>
+                                            </first>
+                                            <second>
+                                                <percentage>100</percentage>
+                                            </second>
+                                        </pair>
+                                    </property>
+                                    <property name="background-repeat">
+                                        <keyword>no-repeat</keyword>
+                                    </property>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>yellow</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>child</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>object</type>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#ffdc00</colorRGB>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>yellow</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear" priority="important">
+                                        <keyword>none</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>yellow</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedContent</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#ffdc00</colorRGB>
+                                    </property>
+                                    <property name="border-left-color">
+                                        <colorRGB>#e9c559</colorRGB>
+                                    </property>
+                                    <property name="border-left-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-left-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="border-right-color">
+                                        <colorRGB>#e9c559</colorRGB>
+                                    </property>
+                                    <property name="border-right-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-right-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="padding-bottom">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>lightYellow</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-image">
+                                        <mcs-policy-reference>
+                                            <expression>/ym/images/furniture/lightYellowUpperRoundedBg.mimg</expression>
+                                        </mcs-policy-reference>
+                                    </property>
+                                    <property name="background-position">
+                                        <pair>
+                                            <first>
+                                                <percentage>100</percentage>
+                                            </first>
+                                            <second>
+                                                <percentage>0</percentage>
+                                            </second>
+                                        </pair>
+                                    </property>
+                                    <property name="background-repeat">
+                                        <keyword>no-repeat</keyword>
+                                    </property>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>lightYellow</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-image">
+                                        <mcs-policy-reference>
+                                            <expression>/ym/images/furniture/lightYellowLowerRoundedBg.mimg</expression>
+                                        </mcs-policy-reference>
+                                    </property>
+                                    <property name="background-position">
+                                        <pair>
+                                            <first>
+                                                <percentage>100</percentage>
+                                            </first>
+                                            <second>
+                                                <percentage>100</percentage>
+                                            </second>
+                                        </pair>
+                                    </property>
+                                    <property name="background-repeat">
+                                        <keyword>no-repeat</keyword>
+                                    </property>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>lightYellow</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>child</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>object</type>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#ffdc00</colorRGB>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>lightYellow</class>
+                                </selector-sequence>
+                                <properties/>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>lightYellow</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedContent</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#fff9cf</colorRGB>
+                                    </property>
+                                    <property name="border-left-color">
+                                        <colorRGB>#ffbf00</colorRGB>
+                                    </property>
+                                    <property name="border-left-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-left-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="border-right-color">
+                                        <colorRGB>#ffbf00</colorRGB>
+                                    </property>
+                                    <property name="border-right-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-right-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="padding-bottom">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <devices>
+                        <device>PC-Win32-IE6</device>
+                        <device>PC-Win32-IE7</device>
+                        <device>PC-Win32-IE8</device>
+                    </devices>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <import-parent>true</import-parent>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedContent</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedUpper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">-8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedLower</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-top">
+                                        <length units="px">-4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>child</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>object</type>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="vertical-align">
+                                        <keyword>middle</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <devices>
+                        <device>SonyEricsson-XHTML</device>
+                    </devices>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <import-parent>true</import-parent>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedUpper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">-10</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedLower</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-top">
+                                        <length units="px">-10</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <devices>
+                        <device>Samsung-SGH-F480T</device>
+                    </devices>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <import-parent>true</import-parent>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedUpper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">-10</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedLower</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-top">
+                                        <length units="px">-10</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>object</type>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="margin-top">
+                                        <length units="px">5</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+    </variants>
+</variable-policy>

@@ -1,0 +1,3139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<variable-policy xmlns="http://www.volantis.com/xmlns/2006/02/marlin-lpdm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpdm="http://www.volantis.com/xmlns/2006/02/marlin-rpdm" xmlns:struct="http://www.volantis.com/xmlns/2005/10/ThemeStruct" xsi:schemaLocation="http://www.volantis.com/xmlns/2006/02/marlin-lpdm http://www.volantis.com/schema/2006/02/marlin-lpdm.xsd">
+    <type>theme</type>
+    <categorization-scheme>custom.imageCategory</categorization-scheme>
+    <variants>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <categories>
+                        <category>M</category>
+                    </categories>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellTop</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellTop</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-bottom">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>yellowLogo</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">-6</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">-4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellNavigation</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>businessDetailTextWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>mapWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">224</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>userAlert</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>genericTextWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormLabelCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>seoAlphaMenu</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="width">
+                                        <length units="px">224</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionFirst</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionLast</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionOrphan</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <categories>
+                        <category>L</category>
+                    </categories>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellTop</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">6</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellTop</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormCellTop</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom" priority="important">
+                                        <length units="px">-8</length>
+                                    </property>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>yellowLogo</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellNavigation</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>mapWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">304</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>userAlert</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">16</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">16</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultAddress</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellAddress</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellSurveyLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellSurveyText</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseCurrentCategory</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseSubCategory</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionLast</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>businessDetailTextSubHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultExtraInfo</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellGenericLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellGenericText</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellGenericHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellSurveyQuestionWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellSurveyQuestionWrapperLast</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>ymPaginationLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>ymPaginationLinkLast</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>genericTextWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">16</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">16</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>businessDetailText</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">16</length>
+                                    </property>
+                                    <property name="padding-right" priority="important">
+                                        <length units="px">16</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>seoAlphaMenu</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="width">
+                                        <length units="px">304</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>mapControl</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>footerLegalHelp</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>footerCopyright</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseCurrentCategory</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionFirst</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionOrphan</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <type>body</type>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <percentage>100</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>footerTelstraWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <categories>
+                        <category>S</category>
+                    </categories>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>yellowLogo</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="text-align">
+                                        <keyword>center</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellNavigation</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#fff9cf</colorRGB>
+                                    </property>
+                                    <property name="border-bottom-color">
+                                        <colorRGB>#d99d82</colorRGB>
+                                    </property>
+                                    <property name="border-bottom-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-bottom-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="border-top-color">
+                                        <colorRGB>#d99d82</colorRGB>
+                                    </property>
+                                    <property name="border-top-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-top-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormRadioCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findLocationInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">110</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>sharePhoneInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">110</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findSearchInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">110</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>businessDetailTextWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>userAlert</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>genericTextWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">6</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailGalleryImage</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <categories>
+                        <category>XS</category>
+                    </categories>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>yellowLogo</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="text-align">
+                                        <keyword>center</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#ffffff</colorRGB>
+                                    </property>
+                                    <property name="border-bottom-color">
+                                        <colorRGB>#cccccc</colorRGB>
+                                    </property>
+                                    <property name="border-bottom-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-bottom-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="border-top-color">
+                                        <colorRGB>#cccccc</colorRGB>
+                                    </property>
+                                    <property name="border-top-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-top-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellNavigation</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#fff9cf</colorRGB>
+                                    </property>
+                                    <property name="border-bottom-color">
+                                        <colorRGB>#d99d82</colorRGB>
+                                    </property>
+                                    <property name="border-bottom-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-bottom-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="border-top-color">
+                                        <colorRGB>#d99d82</colorRGB>
+                                    </property>
+                                    <property name="border-top-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-top-width">
+                                        <length units="px">1</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormRadioCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormLabelCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>block</keyword>
+                                    </property>
+                                    <property name="float">
+                                        <keyword>none</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormInputCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>block</keyword>
+                                    </property>
+                                    <property name="float">
+                                        <keyword>none</keyword>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findLocationInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">110</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>sharePhoneInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">110</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findSearchInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">110</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findFormSearchType</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="mcs-menu-orientation">
+                                        <keyword>vertical</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>businessDetailTextWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>userAlert</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>genericTextWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">6</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findFormRadioType</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="background-color" priority="important">
+                                        <colorRGB>#ffdc00</colorRGB>
+                                    </property>
+                                    <property name="font-size">
+                                        <length units="px">10</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findFormRadioName</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <length units="px">10</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionLast</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>sortImgOn</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-top">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailGalleryImage</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <categories>
+                        <category>HD800</category>
+                    </categories>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellTop</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">6</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellTop</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormCellTop</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear" priority="important">
+                                        <keyword>none</keyword>
+                                    </property>
+                                    <property name="margin-bottom" priority="important">
+                                        <length units="px">-8</length>
+                                    </property>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">15</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellNavigation</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>mapWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>userAlert</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">30</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">30</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultAddress</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellAddress</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellSurveyLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellSurveyText</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseCurrentCategory</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseSubCategory</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionLast</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>businessDetailTextSubHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultExtraInfo</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellGenericLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellGenericText</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellGenericHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellSurveyQuestionWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellSurveyQuestionWrapperLast</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>ymPaginationLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>ymPaginationLinkLast</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>genericTextWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">30</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">30</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>businessDetailText</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">16</length>
+                                    </property>
+                                    <property name="padding-right" priority="important">
+                                        <length units="px">16</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>mapControl</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">3</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">3</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>popular</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>contentCellBrowseLink</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="clear" priority="important">
+                                        <keyword>none</keyword>
+                                    </property>
+                                    <property name="float" priority="important">
+                                        <keyword>left</keyword>
+                                    </property>
+                                    <property name="padding-bottom">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="width" priority="important">
+                                        <percentage>50</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>footerLegalHelp</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>footerCopyright</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseCurrentCategory</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionFirst</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-top" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellDetailActionOrphan</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBrowseHeader</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="text-align" priority="important">
+                                        <keyword>left</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>locationTip</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>none</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormLabelCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>block</keyword>
+                                    </property>
+                                    <property name="float">
+                                        <keyword>none</keyword>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">10</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">14</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormInputCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>block</keyword>
+                                    </property>
+                                    <property name="float">
+                                        <keyword>none</keyword>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">10</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">14</length>
+                                    </property>
+                                    <property name="width">
+                                        <percentage>100</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormSearch</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear" priority="important">
+                                        <keyword>none</keyword>
+                                    </property>
+                                    <property name="float">
+                                        <keyword>left</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormNear</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear" priority="important">
+                                        <keyword>none</keyword>
+                                    </property>
+                                    <property name="float">
+                                        <keyword>left</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormRadioCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <percentage>120</percentage>
+                                    </property>
+                                    <property name="font-weight">
+                                        <keyword>bold</keyword>
+                                    </property>
+                                    <property name="margin-bottom" priority="important">
+                                        <length units="px">-26</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">15</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>networkWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="text-align">
+                                        <keyword>center</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findFormFindLabel</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">5</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findLocationInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <percentage>110</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>sharePhoneInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <percentage>110</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findSearchInput</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <percentage>110</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>networkWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>none</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>seoBreakWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>inline</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <type>body</type>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <percentage>120</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findFormNearLabel</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom">
+                                        <length units="px">5</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>resultsMapColumn</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="float">
+                                        <keyword>right</keyword>
+                                    </property>
+                                    <property name="width">
+                                        <percentage>40</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>resultsColumn</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="float">
+                                        <keyword>left</keyword>
+                                    </property>
+                                    <property name="width" priority="important">
+                                        <percentage>60</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>roundedWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear">
+                                        <keyword>left</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>detailsActionsColumn</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="float">
+                                        <keyword>left</keyword>
+                                    </property>
+                                    <property name="width">
+                                        <percentage>60</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>detailsMapColumn</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="float">
+                                        <keyword>left</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>findFormSubmitCell</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear" priority="important">
+                                        <keyword>none</keyword>
+                                    </property>
+                                    <property name="float" priority="important">
+                                        <keyword>left</keyword>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">10</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">30</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>contentCellBrowseLink</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>a</type>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>block</keyword>
+                                    </property>
+                                    <property name="margin-bottom">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findForm</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear">
+                                        <keyword>both</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>findFormWrapper</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="width">
+                                        <percentage>40</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>actionModuleFirewall</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="left">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="position">
+                                        <keyword>fixed</keyword>
+                                    </property>
+                                    <property name="top">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="visibility">
+                                        <keyword>hidden</keyword>
+                                    </property>
+                                    <property name="width">
+                                        <percentage>99.8</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>actionModuleWindowBorder</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="background-color">
+                                        <colorRGB>#e7e9eb</colorRGB>
+                                    </property>
+                                    <property name="border-bottom-color">
+                                        <colorRGB>#7a7a7a</colorRGB>
+                                    </property>
+                                    <property name="border-bottom-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-bottom-width">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="border-left-color">
+                                        <colorRGB>#7a7a7a</colorRGB>
+                                    </property>
+                                    <property name="border-left-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-left-width">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="border-right-color">
+                                        <colorRGB>#7a7a7a</colorRGB>
+                                    </property>
+                                    <property name="border-right-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-right-width">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="border-top-color">
+                                        <colorRGB>#7a7a7a</colorRGB>
+                                    </property>
+                                    <property name="border-top-style">
+                                        <keyword>solid</keyword>
+                                    </property>
+                                    <property name="border-top-width">
+                                        <length units="px">4</length>
+                                    </property>
+                                    <property name="padding-bottom">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="width">
+                                        <keyword>auto</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>actionModuleWindowContent</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-bottom">
+                                        <length units="px">5</length>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">5</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">5</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">5</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>actionModuleTitle</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <length units="em">0.9</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="text-align">
+                                        <keyword>center</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>actionModuleMoreLink</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="float">
+                                        <keyword>right</keyword>
+                                    </property>
+                                    <property name="margin-bottom" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-top" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="text-align">
+                                        <string>none</string>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">90</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>actionModuleHiddenContent</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="visibility">
+                                        <keyword>hidden</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>actionModuleOpenButtonWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="float">
+                                        <keyword>right</keyword>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">-6</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>actionModuleOpenButtonWrapper</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>a</type>
+                                            <active/>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>actionModuleOpenButtonWrapper</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <type>a</type>
+                                            <hover/>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="background-color">
+                                        <keyword>transparent</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>actionModuleWindowArrow</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">15</length>
+                                    </property>
+                                    <property name="left">
+                                        <length units="px">-11</length>
+                                    </property>
+                                    <property name="position">
+                                        <keyword>absolute</keyword>
+                                    </property>
+                                    <property name="top">
+                                        <length units="px">89</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">33</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>actionModuleOpenButtonBelowImageWrapper</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear">
+                                        <keyword>right</keyword>
+                                    </property>
+                                    <property name="float">
+                                        <keyword>right</keyword>
+                                    </property>
+                                    <property name="margin-bottom">
+                                        <length units="px">5</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">6</length>
+                                    </property>
+                                    <property name="margin-top">
+                                        <length units="px">-4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>actionModuleOpenButtonAnchor</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="display">
+                                        <keyword>block</keyword>
+                                    </property>
+                                    <property name="height">
+                                        <length units="px">32</length>
+                                    </property>
+                                    <property name="width">
+                                        <length units="px">34</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>actionModuleWindowContainer</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="left">
+                                        <percentage>60</percentage>
+                                    </property>
+                                    <property name="margin-left">
+                                        <length units="px">-6</length>
+                                    </property>
+                                    <property name="padding-bottom">
+                                        <length units="px">20</length>
+                                    </property>
+                                    <property name="position">
+                                        <keyword>absolute</keyword>
+                                    </property>
+                                    <property name="visibility">
+                                        <keyword>hidden</keyword>
+                                    </property>
+                                    <property name="width">
+                                        <percentage>39.6</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>listingActionLinkOverflow</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <length units="em">0.9</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>resultsMapColumn</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <id>mapWindow</id>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">400</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>resultsColumn</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>resultsColumn</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedContent</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>resultsColumn</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="margin-left" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>resultsMapColumn</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>mapWrapper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="margin-bottom" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-left" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-top" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>resultsColumnInner</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">15</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">15</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>actionModuleMoreLink</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedContent</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="text-align" priority="important">
+                                        <keyword>center</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <class>actionModuleMoreLink</class>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="margin-top" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>detailsColumnInner</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-left">
+                                        <length units="px">15</length>
+                                    </property>
+                                    <property name="margin-right">
+                                        <length units="px">15</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>detailsColumnInner</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>detailsColumnInner</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedContent</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>detailsColumnInner</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="margin-left" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>resultsMapColumn</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>resultsMapColumn</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedContent</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>resultsMapColumn</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="margin-left" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                    <property name="margin-right" priority="important">
+                                        <length units="px">0</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>resultsMapColumnInner</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="margin-right">
+                                        <length units="px">15</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>backToResultsWrapper</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>backToResultsWrapper</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedContent</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>backToResultsWrapper</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="margin-left" priority="important">
+                                        <length units="px">15</length>
+                                    </property>
+                                    <property name="margin-right" priority="important">
+                                        <length units="px">15</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>homeLinkWrapper</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedUpper</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>homeLinkWrapper</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedContent</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <combined-selector>
+                                    <context>
+                                        <selector-sequence>
+                                            <id>homeLinkWrapper</id>
+                                        </selector-sequence>
+                                    </context>
+                                    <combinator>descendant</combinator>
+                                    <subject>
+                                        <selector-sequence>
+                                            <class>roundedLower</class>
+                                        </selector-sequence>
+                                    </subject>
+                                </combined-selector>
+                                <properties>
+                                    <property name="margin-left" priority="important">
+                                        <length units="px">15</length>
+                                    </property>
+                                    <property name="margin-right" priority="important">
+                                        <length units="px">15</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <id>backToResultsWrapper</id>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="clear">
+                                        <keyword>both</keyword>
+                                    </property>
+                                    <property name="margin-bottom" priority="important">
+                                        <length units="px">-6</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellResultAction</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="float">
+                                        <keyword>left</keyword>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>premiumCellExtraInfo</class>
+                                </selector-sequence>
+                                <selector-sequence>
+                                    <class>contentCellResultExtraInfo</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="width" priority="important">
+                                        <percentage>85</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <categories>
+                        <category>HD480</category>
+                    </categories>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <type>body</type>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="font-size">
+                                        <percentage>110</percentage>
+                                    </property>
+                                </properties>
+                            </rule>
+                            <rule>
+                                <selector-sequence>
+                                    <class>businessDetailText</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="padding-bottom" priority="important">
+                                        <length units="px">8</length>
+                                    </property>
+                                    <property name="padding-left">
+                                        <length units="px">16</length>
+                                    </property>
+                                    <property name="padding-right">
+                                        <length units="px">16</length>
+                                    </property>
+                                    <property name="padding-top">
+                                        <length units="px">4</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+        <variant>
+            <type>theme</type>
+            <selection>
+                <targeted>
+                    <categories>
+                        <category>HD640</category>
+                    </categories>
+                </targeted>
+            </selection>
+            <content>
+                <theme>
+                    <style-sheet>
+                        <rules>
+                            <rule>
+                                <selector-sequence>
+                                    <class>contentCellBottom</class>
+                                </selector-sequence>
+                                <properties>
+                                    <property name="height" priority="important">
+                                        <length units="px">6</length>
+                                    </property>
+                                </properties>
+                            </rule>
+                        </rules>
+                    </style-sheet>
+                </theme>
+            </content>
+        </variant>
+    </variants>
+</variable-policy>
