@@ -86,7 +86,7 @@ public class UiConfiguration {
      * @return true if this {@link UiConfiguration} applies to the given requested resource path.
      */
     public boolean appliesToPath(final String requestedResourcePath) {
-        return (requestedResourcePath != null) && requestedResourcePath.startsWith(getConfigPath());
+        return (requestedResourcePath != null) && requestedResourcePath.contains(getConfigPath());
     }
 
     /**

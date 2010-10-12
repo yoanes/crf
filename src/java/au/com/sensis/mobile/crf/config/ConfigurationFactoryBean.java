@@ -222,6 +222,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
         for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
             if (uiConfiguration.appliesToPath(requestedResourcePath)) {
+                debugLogUiConfigurationFound(uiConfiguration);
                 return uiConfiguration;
             }
         }
@@ -319,6 +320,13 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         return deploymentMetadata;
     }
 
+    private void debugLogUiConfigurationFound(final UiConfiguration uiConfiguration) {
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("UiConfiguration found with configPath: '"
+                    + uiConfiguration.getConfigPath() + "'");
+        }
+    }
 
     private class UrlAndTimestamp implements Comparable<UrlAndTimestamp> {
         private final URL url;

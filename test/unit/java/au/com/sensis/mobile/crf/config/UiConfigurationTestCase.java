@@ -36,9 +36,27 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testAppliesToPathWhenTrue() throws Throwable {
-        Assert.assertTrue("appliesToPath should be true", getObjectUnderTest().appliesToPath(
-                "component/map/map.css"));
+    public void testAppliesToPathWhenConfigPathIsNonEmptyAndResultIsTrue() throws Throwable {
+        final String[] testValues =
+                { "component/map/map.css", "/WEB-INF/view/jsp/component/map/render.jsp" };
+
+        for (final String testValue : testValues) {
+            Assert.assertTrue("appliesToPath should be true for testValue: '" + testValue + "'",
+                    getObjectUnderTest().appliesToPath(testValue));
+        }
+    }
+
+    @Test
+    public void testAppliesToPathWhenConfigPathIsEmptyAndResultIsTrue() throws Throwable {
+        final String[] testValues =
+                { "component/map/map.css", "/WEB-INF/view/jsp/component/map/render.jsp" };
+
+        getObjectUnderTest().setConfigPath(StringUtils.EMPTY);
+
+        for (final String testValue : testValues) {
+            Assert.assertTrue("appliesToPath should be true for testValue: '" + testValue + "'",
+                    getObjectUnderTest().appliesToPath(testValue));
+        }
     }
 
     @Test
