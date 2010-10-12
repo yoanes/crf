@@ -2,10 +2,10 @@
 ## ENVIRONMENT : DEV
 ########################################################
 
-env.resources.jsp.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/
-env.resources.css.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/resources/css
-env.resources.javascript.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/resources/javascript
-env.resources.images.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/resources/images
+env.resources.jsp.root.dir=/app/mb/dev/dev_a/sensismobile/current
+env.resources.css.root.dir=/app/mb/dev/dev_a/sensismobile/current/resources/css
+env.resources.javascript.root.dir=/app/mb/dev/dev_a/sensismobile/current/resources/javascript
+env.resources.images.root.dir=/app/mb/dev/dev_a/sensismobile/current/resources/images
 
 # TODO: use these. Plus set up to be "/" for non-desk environments.
 env.resources.css.client.path.prefix=/resources/css/
