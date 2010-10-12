@@ -21,7 +21,6 @@
 	
 	
 	<div class="tabletColumnA">
-	<jsp:include page="../../common/deviceProperties.crf"/>
 	<jsp:include page="../../detail/bdp_actions.crf"/>
 	<jsp:include page="../../detail/map.crf"/>
 	<jsp:include page="../../detail/bdp_adpoints.crf"/>

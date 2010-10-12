@@ -19,7 +19,6 @@
   <body>
 
 	<jsp:include page="../../detail/logo.crf"/>
-	<jsp:include page="../../common/deviceProperties.crf"/>
     <jsp:include page="../../detail/bdp_details.crf"/>
 	<jsp:include page="../../detail/bdp_actions.crf"/>
 	<jsp:include page="../../detail/map.crf"/>

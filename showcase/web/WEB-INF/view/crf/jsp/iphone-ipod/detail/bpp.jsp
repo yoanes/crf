@@ -28,7 +28,6 @@
 	<div class="tabletColumnB">
 	    
     <jsp:include page="../../detail/bdp_details.crf"/>
-	<jsp:include page="../../common/deviceProperties.crf"/>
 	
 	</div>
 	
