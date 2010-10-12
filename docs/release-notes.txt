@@ -1,5 +1,18 @@
 ==== PENDING: Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
 
+==== Version 0.1.1-006 (tag: contentRenderingFramework_v0_1_1-006) ==== 
+
+Jiras:
+- CRF-38 Perf Testing: Create CRF test pages 
+- CRF-39 Perf Testing: Create MCS test pages 
+- CRF-40 Perf Testing: Create static HTML pages 
+- CRF-12 Support multiple, independent crf-config.xml files
+    -  additional fix for this reopened Jira. Given a group config file with a config path 
+       of "component/map", JSP URLs like "../../../selenium/component/map/map.crf" will now be 
+       correctly resolved. ie. UiConfiguration.appliesToPath now uses String.contains instead of 
+       String.startsWith. Also fixed URL in map.css which was broken from previous commits 
+       (can't easily assert for this in the selenium tests, I think).
+
 ==== Version 0.1.1-005 (tag: contentRenderingFramework_v0_1_1-005) ==== 
 
 Added crf-environment.properties.sandpit-uidev.
