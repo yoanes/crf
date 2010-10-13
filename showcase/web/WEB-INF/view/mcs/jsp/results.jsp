@@ -172,7 +172,7 @@
 
 					<div class="mapWrapper">
 						<div class="map">
-							<object src="http://dsb.sensis.com.au/uidev/crfshowcase/resources/images/${crfversion}/HD800/sandpit/map.gif" srctype="image/gif">
+							<object src="../resources/images/${crfversion}/HD800/sandpit/map.gif" srctype="image/gif">
                                 <param name="mcs-transcode" value="false"/>
                             </object>							
 						</div>
@@ -343,50 +343,56 @@
 		</div>			
 	
 	</div>
-		<div style="clear:both; z-index: 9999;"></div>
-		<div:rc css="yellow" colour="yellow">
 	
-			<div class="findFormCellTop">
-				&#160;
-			</div>
-	
-			<div class="findFormSearch">
-				<div class="findFormLabelCell" id="findFormFindLabel">
-					Find
+	<sel:select>
+	    <sel:when expr="device:isInstanceOf('Apple-iPad')"></sel:when>
+		<sel:otherwise>	
+			<div style="clear:both; z-index: 9999;"></div>
+			<div:rc css="yellow" colour="yellow">
+		
+				<div class="findFormCellTop">
+					&#160;
 				</div>
-				<div class="findFormInputCell" id="findInputCell">
-					<xf:input ref="keyWords" id="findSearchInput">
-						<xf:label/>
-					</xf:input>
-				</div>	
-			</div>
-			
-			<div class="findFormNear">
-				<div class="findFormLabelCell" id="findFormNearLabel">
-					Near
+		
+				<div class="findFormSearch">
+					<div class="findFormLabelCell" id="findFormFindLabel">
+						Find
+					</div>
+					<div class="findFormInputCell" id="findInputCell">
+						<xf:input ref="keyWords" id="findSearchInput">
+							<xf:label/>
+						</xf:input>
+					</div>	
 				</div>
-				<div class="findFormInputCell">
-					<xf:input ref="suburb" id="findLocationInput">
-						<xf:label/>
-					</xf:input>
-				</div>	
-			</div>	
-	
-			<div class="findFormCellBottom">	
-				<div class="locationTip">
-					Leave blank to use your location
+				
+				<div class="findFormNear">
+					<div class="findFormLabelCell" id="findFormNearLabel">
+						Near
+					</div>
+					<div class="findFormInputCell">
+						<xf:input ref="suburb" id="findLocationInput">
+							<xf:label/>
+						</xf:input>
+					</div>	
 				</div>	
 		
-				<div class="findFormSubmitCell">					
-					<xf:submit submission="findFormSubmission" id="findFormSubmit">
-						<xf:label/>
-					</xf:submit>					
-				</div>
-			</div>
+				<div class="findFormCellBottom">	
+					<div class="locationTip">
+						Leave blank to use your location
+					</div>	
 			
-			<div class="dirtyThubHack">&#160;</div>
-			<div style="clear:both; z-index: 9999;"></div>
-		</div:rc>
+					<div class="findFormSubmitCell">					
+						<xf:submit submission="findFormSubmission" id="findFormSubmit">
+							<xf:label/>
+						</xf:submit>					
+					</div>
+				</div>
+				
+				<div class="dirtyThubHack">&#160;</div>
+				<div style="clear:both; z-index: 9999;"></div>
+			</div:rc>
+		</sel:otherwise>
+	</sel:select>
 
 	</div>		
 
