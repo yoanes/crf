@@ -271,7 +271,7 @@
 					<!-- -->					
 					<div class="mapWrapper">
 						<div class="map">
-							<object src="http://dsb.sensis.com.au/uidev/crfshowcase/resources/images/${crfversion}/HD800/sandpit/map.gif" srctype="image/gif">
+							<object src="../resources/images/${crfversion}/HD800/sandpit/map.gif" srctype="image/gif">
                                 <param name="mcs-transcode" value="false"/>
                             </object>							
 						</div>
