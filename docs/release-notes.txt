@@ -1,3 +1,8 @@
+==== Version 0.1.2-001 (tag: contentRenderingFramework_v0_1_2-001) ==== 
+
+Removed dependency:
+    <dependency org="com.sensis" name="ems-cxf-client" rev="1.6" conf="showcase->default"/>
+
 ==== Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
 
 Closing off iteration 0.1.2. Jira issues:

@@ -115,9 +115,6 @@
         <dependency org="com.sensis" name="sdpCommon-web" rev="1.6-020" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-012" conf="default"/>
 
-        <!-- EMS dependencies -->
-        <dependency org="com.sensis" name="ems-cxf-client" rev="1.6" conf="showcase->default"/>
-
         <!-- Hibernate Persistence -->
         <!-- Should be included in hibernate 3.2.6.ga dependencies??
         <dependency org="dom4j" name="dom4j" rev="1.6.1" conf="showcase->default"/>
