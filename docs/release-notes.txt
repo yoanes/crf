@@ -1,4 +1,24 @@
-==== PENDING: Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
+==== Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
+
+Closing off iteration 0.1.2. Jira issues:
+** Improvement
+    * [CRF-55] - Change "href" attribute of crf:image and crf:script tag to "src"
+
+** Task
+    * [CRF-12] - Support multiple, independent crf-config.xml files
+    * [CRF-35] - Deploy CRF Showcase to Dev
+    * [CRF-38] - Perf Testing: Create CRF test pages 
+    * [CRF-39] - Perf Testing: Create MCS test pages 
+    * [CRF-40] - Perf Testing: Create static HTML pages
+    * [CRF-42] - NEW: ContentRenderingPlatformConfigurationFactory - allow runtime reloading of crp-config.xml
+    * [CRF-43] - NEW: Version numbers in JavaScript, image and CSS paths
+    * [CRF-49] - NEW: remove dependency on wl-core-component
+    * [CRF-57] - Perf Testing: Setup and Run Performance Tests
+    * [CRF-58] - NEW: Move PathPrefixRestrictedResourceResolverEngineBean, DelegatingPathRestrictedResourceResolverEngineBean 
+      capabilities into ConfigurationFactoryBean
+    * [CRF-59] - NEW: crf:deviceProperty tag
+    * [CRF-60] - NEW: modify crf:script tag to support scripts in body content
+    * [CRF-61] - NEW: modify crf:script tag to support absolute (http://) URLs
 
 ==== Version 0.1.1-006 (tag: contentRenderingFramework_v0_1_1-006) ==== 
 
