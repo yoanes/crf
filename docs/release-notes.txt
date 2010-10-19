@@ -7,6 +7,11 @@ Jiras:
     * Added PropertiesResourceResolverBean and wired up DelegatingResourceResolverBean in 
       crfContext.xml to include this. 
     * crf.propertiesLoader bean now exposed in crfContext.xml so that apps can use it if required. 
+    
+Upgrade notes:
+* Any webapp that uses crf now requires an extra property in crf-environment.properties.*. The 
+  following example is for a desktop environment:
+    * env.resources.properties.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-map-component-showcase/WEB-INF/properties    
 
 ==== Version 0.1.2-001 (tag: contentRenderingFramework_v0_1_2-001) ==== 
 
