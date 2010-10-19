@@ -77,8 +77,19 @@
                         </bean>
                     </constructor-arg>
                 </bean>
+                <bean class="au.com.sensis.mobile.crf.service.PropertiesResourceResolverBean">
+                    <constructor-arg value="@{crf.resources.properties.abstract.path.extension}"/>
+                    <constructor-arg value="@{crf.env.resources.properties.root.dir}"/>
+                    <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+                    <constructor-arg ref="crf.deploymentMetadata" />
+                </bean>
             </list>
         </constructor-arg>
+    </bean>
+    
+    <bean id="crf.propertiesLoader" 
+        class="au.com.sensis.mobile.crf.service.PropertiesLoaderBean">
+        <constructor-arg ref="crf.resourceResolverEngine" />
     </bean>
     
     <bean id="crf.resourceResolutionWarnLogger" class="au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger" />

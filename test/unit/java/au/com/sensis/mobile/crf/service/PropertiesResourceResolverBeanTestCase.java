@@ -12,64 +12,73 @@ import org.junit.Test;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 
 /**
- * Unit test {@link CssResourceResolverBean}.
+ * Unit test {@link PropertiesResourceResolverBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
+public class PropertiesResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
 
-    private CssResourceResolverBean objectUnderTest;
+    private PropertiesResourceResolverBean objectUnderTest;
 
     /**
      * Setup test data.
      *
-     * @throws Exception
-     *             Thrown if any error occurs.
+     * @throws Exception Thrown if any error occurs.
      */
     @Before
     public void setUp() throws Exception {
-
-        setObjectUnderTest(new CssResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(), getDeploymentMetadata()));
+        setObjectUnderTest(new PropertiesResourceResolverBean(
+                getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
+                getResourcesRootDir(),
+                getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata()));
     }
 
     @Override
-    protected CssResourceResolverBean createWithAbstractResourceExtension(
+    protected PropertiesResourceResolverBean createWithAbstractResourceExtension(
             final String abstractResourceExtension) {
-        return new CssResourceResolverBean(abstractResourceExtension,
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
+        return new PropertiesResourceResolverBean(
+                abstractResourceExtension,
+                getResourcesRootDir(),
+                getMockResourceResolutionWarnLogger(),
                 getDeploymentMetadata());
     }
 
     @Override
-    protected CssResourceResolverBean createWithRootResourcesDir(final File rootResourcesDir) {
-        return new CssResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), rootResourcesDir,
-                getMockResourceResolutionWarnLogger(), getDeploymentMetadata());
-    }
-
-    @Override
-    protected CssResourceResolverBean createWithResourceResolutionWarnLogger(
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        return new CssResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                resourceResolutionWarnLogger, getDeploymentMetadata());
-    }
-
-    @Override
-    protected CssResourceResolverBean createWithDeploymentMetadata(
+    protected PropertiesResourceResolverBean createWithDeploymentMetadata(
             final DeploymentMetadata deploymentMetadata) {
-        return new CssResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(), deploymentMetadata);
+        return new PropertiesResourceResolverBean(
+                getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
+                getResourcesRootDir(),
+                getMockResourceResolutionWarnLogger(),
+                deploymentMetadata);
+    }
+
+    @Override
+    protected PropertiesResourceResolverBean createWithResourceResolutionWarnLogger(
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+        return new PropertiesResourceResolverBean(
+                getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
+                getResourcesRootDir(),
+                resourceResolutionWarnLogger,
+                getDeploymentMetadata());
+    }
+
+    @Override
+    protected PropertiesResourceResolverBean createWithRootResourcesDir(
+            final File rootResourcesDir) {
+        return new PropertiesResourceResolverBean(
+                getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
+                rootResourcesDir,
+                getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata());
     }
 
     @Test
     public void testResolveWhenMappingPerformedAndResourceExists() throws Throwable {
         final String[] testValues =
-                { getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        getResourcePathTestData().getCssExtensionWithLeadingDot() };
+                { getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
+                        getResourcePathTestData().getPropertiesExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
@@ -80,11 +89,11 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             final List<Resource> actualResources =
                     getObjectUnderTest().resolve(
-                            getResourcePathTestData().getRequestedCssResourcePath(),
+                            getResourcePathTestData().getRequestedPropertiesResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
             Assert.assertEquals("actualResources is wrong", Arrays.asList(getResourcePathTestData()
-                    .getMappedIphoneGroupCssResourcePath()), actualResources);
+                    .getMappedIphoneGroupPropertiesResourcePath()), actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -96,8 +105,8 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
     @Test
     public void testResolveWhenMappingPerformedAndResourceDoesNotExist() throws Throwable {
         final String[] testValues =
-                { getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        getResourcePathTestData().getCssExtensionWithLeadingDot() };
+                { getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
+                        getResourcePathTestData().getPropertiesExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
@@ -108,7 +117,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             final List<Resource> actualResources =
                     getObjectUnderTest().resolve(
-                            getResourcePathTestData().getRequestedCssResourcePath(),
+                            getResourcePathTestData().getRequestedPropertiesResourcePath(),
                             getGroupTestData().createIPhoneGroup());
 
             Assert.assertNotNull("actualResources should not be null", actualResources);
@@ -126,7 +135,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
                 getMockFileIoFacade().fileExists(
                         getResourcePathTestData().getRootResourcesPath(),
                         getResourcePathTestData()
-                                .getMappedIphoneGroupCssResourcePath()
+                                .getMappedIphoneGroupPropertiesResourcePath()
                                 .getNewPath())).andReturn(exists);
 
     }
@@ -151,7 +160,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
     public void testSupportsWhenTrue() throws Throwable {
         Assert.assertTrue("supports should be true",
                 getObjectUnderTest().supports(
-                        getResourcePathTestData().getRequestedCssResourcePath()));
+                        getResourcePathTestData().getRequestedPropertiesResourcePath()));
     }
 
     @Test
@@ -165,14 +174,14 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
     /**
      * @return the objectUnderTest
      */
-    private CssResourceResolverBean getObjectUnderTest() {
+    private PropertiesResourceResolverBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final CssResourceResolverBean objectUnderTest) {
+    private void setObjectUnderTest(final PropertiesResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 }

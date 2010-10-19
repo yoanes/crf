@@ -27,7 +27,7 @@
         </action>
 
 		<!-- Selenium system tests -->
-        <action name="bdp" class="dumbAction">
+        <action name="bdp" class="bdpAction">
             <result name="success">/WEB-INF/view/crf/jsp/selenium/detail/bdp.crf</result>
         </action>
     </package>

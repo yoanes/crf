@@ -1,3 +1,13 @@
+==== Version 0.1.2-002 (tag: contentRenderingFramework_v0_1_2-002) ==== 
+
+Jiras:
+* CRF-67 NEW: properties file resolution
+    * Added au.com.sensis.mobile.crf.service.PropertiesLoader and PropertiesLoaderBean 
+      implementation.
+    * Added PropertiesResourceResolverBean and wired up DelegatingResourceResolverBean in 
+      crfContext.xml to include this. 
+    * crf.propertiesLoader bean now exposed in crfContext.xml so that apps can use it if required. 
+
 ==== Version 0.1.2-001 (tag: contentRenderingFramework_v0_1_2-001) ==== 
 
 Removed dependency:

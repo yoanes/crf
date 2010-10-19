@@ -144,7 +144,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     public void testResolveWhenPackageRequestedAndResourcesFound()
         throws Throwable {
         final String[] testValues = {
-                getResourcePathTestData().getScriptExtensionWithLeadingDot(),
+                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
@@ -177,7 +177,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     public void testResolveWhenPackageRequestedAndNoResourcesFound()
         throws Throwable {
         final String[] testValues = {
-                getResourcePathTestData().getScriptExtensionWithLeadingDot(),
+                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
@@ -229,7 +229,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     @Test
     public void testResolveWhenPackageNotRequestedAndResourcesFound() throws Throwable {
         final String[] testValues = {
-                getResourcePathTestData().getScriptExtensionWithLeadingDot(),
+                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
@@ -260,7 +260,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     @Test
     public void testResolveWhenPackageNotRequestedAndNoResourcesFound() throws Throwable {
         final String[] testValues = {
-                getResourcePathTestData().getScriptExtensionWithLeadingDot(),
+                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {

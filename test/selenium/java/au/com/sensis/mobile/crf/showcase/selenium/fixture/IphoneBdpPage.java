@@ -24,6 +24,15 @@ public abstract class IphoneBdpPage extends BdpPage {
      * {@inheritDoc}
      */
     @Override
+    protected void assertAppProperty1() {
+        assertTrue("app.property1 not found on page",
+                getBrowser().isTextPresent("'app.property1': appProperty1IponeIpodValue"));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void doAssertPageStructure() {
         assertIphoneCss();
         assertIphoneScript();

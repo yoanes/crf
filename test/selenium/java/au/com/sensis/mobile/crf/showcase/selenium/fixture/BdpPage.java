@@ -35,7 +35,17 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertAbsolutelyReferencedScript("external, absolutely referenced script not found",
                 "http://localhost:8080/something.js");
 
+        assertAppProperty1();
+
         doAssertPageStructure();
+    }
+
+    /**
+     * Assert that that action we hit has successfully retrieved a properties file.
+     */
+    protected void assertAppProperty1() {
+        assertTrue("app.property1 not found on page",
+                getBrowser().isTextPresent("'app.property1': appProperty1DefaultValue"));
     }
 
     /**

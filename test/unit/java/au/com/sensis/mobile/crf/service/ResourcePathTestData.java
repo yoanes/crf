@@ -85,6 +85,14 @@ public class ResourcePathTestData {
         return "." + getAbstractImageExtensionWithoutLeadingDot();
     }
 
+    public String getPropertiesExtensionWithoutLeadingDot() {
+        return "properties";
+    }
+
+    public String getPropertiesExtensionWithLeadingDot() {
+        return "." + getPropertiesExtensionWithoutLeadingDot();
+    }
+
     public String getRequestedCssResourcePath() {
         return "common/main.css";
     }
@@ -348,6 +356,15 @@ public class ResourcePathTestData {
 
     public String getMapComponentRequestedImageResourcePath() {
         return "component/map/tile_bg.image";
+    }
+
+    public String getRequestedPropertiesResourcePath() {
+        return "common/main.properties";
+    }
+
+    public Resource getMappedIphoneGroupPropertiesResourcePath() {
+        return new ResourceBean(getRequestedPropertiesResourcePath(),
+                "iPhone/common/main.properties", getRootResourcesPath());
     }
 
 }
