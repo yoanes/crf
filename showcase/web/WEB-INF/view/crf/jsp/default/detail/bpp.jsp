@@ -9,8 +9,7 @@
   	<title>CRF BPP [default]</title>
   	<crf:link href="main.css" rel="stylesheet"  type="text/css" device="${context.device}"/> 
   	<crf:link href="corners.css" rel="stylesheet"  type="text/css" device="${context.device}"/> 
-    <%--<crap:css device="${context.device}" rel="stylesheet" type="text/css" path="resources/css/main.css" />
-    <crap:css device="${context.device}" rel="stylesheet" type="text/css" path="resources/css/corners.css" />--%>
+
 	<meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no" />
 	
 	<jsp:include page="../../common/scripts.crf"/>

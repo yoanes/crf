@@ -9,16 +9,16 @@
         <!-- Device specific groups. -->
         <group name="iphone-ipod-os2" expr="device.name =~ '.*iPhone.*' and device.userAgent =~ '.*OS 2_.*'" />
         <group name="iphone-ipod" expr="device.name =~ '.*iPhone.*'" />
-        <!-- <group name="iPad" expr = "device.name =~ '.*iPad.*'" /> -->
         <group name="nokia7600" expr = "device.userAgent =~ '.*Nokia7600.*'" />        
-        <!-- <group name="iphone" expr="device.name =~ '.*iPhone.*'" /> -->
         <group name="Apple-iPad" expr="device.name =~ '.*iPad.*'" />
 	 	<group name="Samsung-GT-C5220" expr="device.name =~ '.*Samsung.*C5220.*'" />
 	 	<group name="Samsung-SGH-A412" expr="device.name =~ '.*Samsung.*SGH.*A412.*'" />
 	 	<group name="Samsung-SGH-F480" expr="device.name =~ '.*Samsung.*SGH.*F480.*'" />
 	 	<group name="SAGEM-HomeManager" expr="device.name =~ '.*SAGEM-HomeManager.*'" />
 		<group name="BlackBerry-9700" expr="device.name =~ '.*BlackBerry9700.*'" />
-		<group name="HTC-Desire" expr="device.name =~ '.*HTC.*Desire.*A8183.*'" />
+		<group name="HTC-Desire" expr="device.isA('HTC-A8183')" />
+		<!--<group name="highend-maps" expr="device.isOneOf('HTC-A8183', 'SonyEricsson-X10')" />
+		 <group name="HTC-Desire" expr="device.name =~ '.*HTC.*Desire.*A8183.*'" /> -->
 		<group name="SonyEricsson-Z750i" expr="device.name =~ '.*SonyEricsson.*Z750i.*'" />
 
 		<!-- Browser family groups. -->
@@ -28,12 +28,6 @@
         <group name="webkit" expr="device.userAgent =~ '.*WebKit.*'" />
         <group name="Apple" expr="device.name =~ '.*Apple.*'" />
 	 	<group name="Android" expr="device.userAgent =~ '.*Android.*'" />
-
-        <!-- Image category groups.
-        <group name="HD800" expr="device.imageCategory eq 'HD800'" />
-        <group name="large" expr="device.imageCategory eq 'L'" />
-        <group name="medium" expr="device.imageCategory eq 'M'" />
-        <group name="small" expr="device.imageCategory eq 'S'" /> -->
 
         <!-- Image category groups. -->
         <group name="HD800" expr="device.imageCategory eq 'HD800'" />
