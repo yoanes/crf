@@ -9,14 +9,12 @@
     <crf:link device="${context.device}" rel="stylesheet" type="text/css" href="main.css" />
     <crf:link device="${context.device}" rel="stylesheet" type="text/css" href="corners.css" />
 	<meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no" />
+	<crf:script device="${context.device}" type="text/javascript" src="main.js"/> 
   </head>
   <body>
-<%--
-	<img src="http://www.webdesign-guru.co.uk/icon/wp-content/uploads/cp24/google-buzz-icon-1-400.png"/>
-	<img src="http://www.webdesign-guru.co.uk/icon/wp-content/uploads/cp24/google-buzz-icon-1-400.png" width="100" height="85.5"/>
---%>
+
 	<jsp:include page="../../detail/logo.crf"/>
-		<jsp:include page="../../detail/find.crf"/>
+	<jsp:include page="../../detail/find.crf"/>
     <jsp:include page="../../detail/home_body.crf"/>
 	<jsp:include page="../../detail/footer.crf"/>
   </body>
