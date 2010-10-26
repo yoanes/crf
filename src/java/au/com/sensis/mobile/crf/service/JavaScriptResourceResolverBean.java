@@ -74,14 +74,14 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
         if (StringUtils.isBlank(abstractPathPackageKeyword)) {
             throw new IllegalArgumentException(
                     "abstractPathPackageKeyword must not be blank: '"
-                            + abstractPathPackageKeyword + "'");
+                    + abstractPathPackageKeyword + "'");
         }
     }
 
     private void validateJavaScriptFileFinder(
             final JavaScriptFileFinder javaScriptFileFinder) {
         Validate.notNull(javaScriptFileFinder,
-                "javaScriptFileFinder must not be null");
+        "javaScriptFileFinder must not be null");
     }
 
     /**
@@ -91,7 +91,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     protected boolean isRecognisedAbstractResourceRequest(
             final String requestedResourcePath) {
         return super.isRecognisedAbstractResourceRequest(requestedResourcePath)
-            || isPackageRequested(requestedResourcePath);
+        || isPackageRequested(requestedResourcePath);
     }
 
     /**
@@ -102,7 +102,8 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      */
     @Override
     protected List<Resource> doResolve(final String requestedResourcePath,
-            final Group group) throws ResourceResolutionRuntimeException {
+            final Group group)
+            throws ResourceResolutionRuntimeException {
 
         if (isPackageRequested(requestedResourcePath)) {
             return findBundleResources(requestedResourcePath, group);
@@ -111,11 +112,71 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
         }
     }
 
+    @Override
+    protected void accumulateGroupResources(
+            final List<Resource> resolvedPaths,
+            final ResourceAccumulator allResourcePaths) {
+
+        if (!resolvedPaths.isEmpty()) {
+
+            // don't want to reverse so we include the most specific match.
+            //Collections.reverse(resolvedPaths);
+
+
+            // for each found resource decide if we want to add it to the final list
+            for (final Resource newResource : resolvedPaths) {
+
+                LOGGER.debug("looking at: " + newResource);
+
+                boolean alreadyStoredAVariant = false;
+
+                // loop through the final list to see if our new ones are already there
+                for (final Resource existingResource : allResourcePaths.getAllResourcePaths()) {
+
+                    LOGGER.debug("comparing with: " + newResource);
+
+                    // asked for a Javascript package
+
+                    LOGGER.debug("package keyword: " + getAbstractPathPackageKeyword());
+
+                    if (newResource.getOriginalPath().endsWith(getAbstractPathPackageKeyword())) {
+                        LOGGER.debug("Requested a package");
+                        // compare on filename
+                        final int lastSlashPos = existingResource.getNewPath().lastIndexOf("/");
+                        final String existingFilename = existingResource.getNewPath().substring(
+                                lastSlashPos);
+
+                        LOGGER.debug("filename: " + existingFilename);
+
+                        // new request is for same filename as already in the list
+                        if (newResource.getNewPath().endsWith(existingFilename)) {
+                            LOGGER.debug("found filename in list");
+                            alreadyStoredAVariant = true;
+                            break;
+                        }
+                        // It's not a Javascript package request and a more specific version
+                        // of the file has already been included
+                    } else if (existingResource.getOriginalPath().equals(
+                            newResource.getOriginalPath())) {
+                        LOGGER.debug("Didnt request package");
+                        alreadyStoredAVariant = true;
+                        break;
+                    }
+                }
+
+                if (!alreadyStoredAVariant) {
+                    LOGGER.debug("havent already seen this resource, adding it to list");
+                    allResourcePaths.getAllResourcePaths().push(newResource);
+                }
+            }
+        }
+    }
+
     private File getPackageDir(final String requestedResourcePath,
             final Group group) throws IllegalStateException {
 
         final String requestedGroupResourcePath =
-                insertGroupNameAndDeploymentVersionIntoPath(requestedResourcePath, group);
+            insertGroupNameAndDeploymentVersionIntoPath(requestedResourcePath, group);
         return new File(getRootResourcesDir(), FilenameUtils
                 .getPath(requestedGroupResourcePath));
     }
@@ -129,7 +190,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
         } catch (final IOException e) {
             throw new ResourceResolutionRuntimeException(
                     "Unexpected error when resolving requested resource '"
-                            + requestedResourcePath + "' for group " + group, e);
+                    + requestedResourcePath + "' for group " + group, e);
         }
     }
 
@@ -156,10 +217,10 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
 
     private String getRootResourceDirRelativePath(final File file) {
         String rootResourceDirRelativePath =
-                StringUtils.substringAfter(file.getPath(),
-                        getRootResourcesDir().getPath());
+            StringUtils.substringAfter(file.getPath(),
+                    getRootResourcesDir().getPath());
         rootResourceDirRelativePath =
-                rootResourceDirRelativePath.replace(File.separator, SEPARATOR);
+            rootResourceDirRelativePath.replace(File.separator, SEPARATOR);
 
         if (rootResourceDirRelativePath.startsWith(SEPARATOR)) {
             return StringUtils.substringAfter(rootResourceDirRelativePath,
