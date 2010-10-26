@@ -30,7 +30,7 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
             final List<ResourceResolver> resourceResolvers) {
         if (resourceResolvers == null) {
             throw new IllegalArgumentException(
-                    "resourceResolvers must not be null");
+            "resourceResolvers must not be null");
         }
 
         if (resourceResolvers.isEmpty() && logger.isEnabledFor(Level.WARN)) {
@@ -49,11 +49,12 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    public List<Resource> resolve(final String requestedResourcePath,
-            final Group group) throws ResourceResolutionRuntimeException {
+    public List<Resource> resolve(final String requestedResourcePath, final Group group,
+            final ResourceAccumulator results) throws ResourceResolutionRuntimeException {
+
         for (final ResourceResolver resourceResolver : getResourceResolvers()) {
             if (resourceResolver.supports(requestedResourcePath)) {
-                return resourceResolver.resolve(requestedResourcePath, group);
+                return resourceResolver.resolve(requestedResourcePath, group, results);
             }
         }
         return new ArrayList<Resource>();

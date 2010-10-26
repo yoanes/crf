@@ -1,9 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,7 +18,7 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  * @author Adrian.Koh2@sensis.com.au
  */
 public class ResourceResolverEngineBean implements
-        ResourceResolverEngine {
+ResourceResolverEngine {
 
     private static final Logger LOGGER = Logger.getLogger(
             ResourceResolverEngineBean.class);
@@ -50,7 +47,7 @@ public class ResourceResolverEngineBean implements
         Validate.notNull(configurationFactory, "configurationFactory must not be null");
         Validate.notNull(resourceResolver, "resourceResolver must not be null");
         Validate.notNull(resourceResolutionWarnLogger,
-                "resourceResolutionWarnLogger must not be null");
+        "resourceResolutionWarnLogger must not be null");
 
         this.configurationFactory = configurationFactory;
         this.resourceResolver = resourceResolver;
@@ -77,7 +74,7 @@ public class ResourceResolverEngineBean implements
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
             final List<Resource> resources =
-                    resolve(requestedResourcePath, currGroup);
+                resolve(requestedResourcePath, currGroup, null);
 
             if (!resources.isEmpty()) {
                 debugLogResourcesFound(resources);
@@ -97,7 +94,7 @@ public class ResourceResolverEngineBean implements
     private Iterator<Group> getMatchingGroupIterator(final Device device,
             final String requestedResourcePath) {
         return getConfigurationFactory().getUiConfiguration(requestedResourcePath)
-                .matchingGroupIterator(device);
+        .matchingGroupIterator(device);
     }
 
     private void warnIfMultipleResourcesFound(
@@ -121,7 +118,7 @@ public class ResourceResolverEngineBean implements
     public List<Resource> getAllResources(final Device device,
             final String requestedResourcePath) throws ResourceResolutionRuntimeException {
 
-        final Deque<Resource> allResourcePaths = new ArrayDeque<Resource>();
+        final ResourceAccumulator accumulatedResults = new ResourceAccumulator();
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Looking for resource '" + requestedResourcePath
@@ -136,38 +133,22 @@ public class ResourceResolverEngineBean implements
 
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
-            accumulateGroupResources(
-                    resolve(requestedResourcePath, currGroup),
-                    allResourcePaths);
+            resolve(requestedResourcePath, currGroup, accumulatedResults);
         }
 
-        if (allResourcePaths.isEmpty()) {
+        if (accumulatedResults.getAllResourcePaths().isEmpty()) {
             debugLogNoResourcesFound(requestedResourcePath);
         }
 
-        return new ArrayList<Resource>(allResourcePaths);
-    }
-
-    private void accumulateGroupResources(
-            final List<Resource> resolvedPaths,
-            final Deque<Resource> allResourcePaths) {
-
-        if (!resolvedPaths.isEmpty()) {
-
-            debugLogResourcesFound(resolvedPaths);
-
-            Collections.reverse(resolvedPaths);
-
-            for (final Resource currPath : resolvedPaths) {
-                allResourcePaths.push(currPath);
-            }
-        }
+        return new ArrayList<Resource>(accumulatedResults.getAllResourcePaths());
     }
 
     private List<Resource> resolve(
-            final String requestedResourcePath, final Group currGroup) {
+            final String requestedResourcePath, final Group currGroup,
+            final ResourceAccumulator results) {
+
         return getResourceResolver().resolve(
-                requestedResourcePath, currGroup);
+                requestedResourcePath, currGroup, results);
     }
 
     private void debugLogResourcesFound(

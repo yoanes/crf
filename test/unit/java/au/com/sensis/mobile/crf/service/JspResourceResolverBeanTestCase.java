@@ -43,7 +43,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         return new JspResourceResolverBean(abstractResourceExtension,
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
                 getDeploymentMetadata(), getResourcePathTestData()
-                        .getJspResourcesRootServletPath());
+                .getJspResourcesRootServletPath());
     }
 
     @Override
@@ -75,7 +75,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
     @Test
     public void testConstructorWithBlankJspResourcesRootServletPath()
-            throws Throwable {
+    throws Throwable {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
@@ -87,13 +87,13 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
                         testValue);
 
                 Assert
-                        .fail("IllegalArgumentException expected for testValue: '"
-                                + testValue + "'");
+                .fail("IllegalArgumentException expected for testValue: '"
+                        + testValue + "'");
             } catch (final IllegalArgumentException e) {
 
                 Assert.assertEquals(" has wrong message",
                         "jspResourcesRootServletPath must not be blank: '"
-                                + testValue + "'", e.getMessage());
+                        + testValue + "'", e.getMessage());
             }
         }
     }
@@ -113,10 +113,10 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
             replay();
 
             final List<Resource> actualResources =
-                    getObjectUnderTest().resolve(
-                            getResourcePathTestData()
-                                    .getRequestedJspResourcePath(),
-                            getGroupTestData().createIPhoneGroup());
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedJspResourcePath(),
+                        getGroupTestData().createIPhoneGroup(),
+                        getResolvedResourcePaths());
 
             Assert.assertEquals("actualResources is wrong",
                     Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath()),
@@ -131,7 +131,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
     @Test
     public void testResolveWhenMappingPerformedAndResourceDoesNotExist()
-        throws Throwable {
+    throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getCrfExtensionWithLeadingDot()
@@ -146,9 +146,9 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
-                        getResourcePathTestData()
-                        .getRequestedJspResourcePath(),
-                        getGroupTestData().createIPhoneGroup());
+                        getResourcePathTestData().getRequestedJspResourcePath(),
+                        getGroupTestData().createIPhoneGroup(),
+                        getResolvedResourcePaths());
 
             Assert.assertNotNull("actualResources should not be null",
                     actualResources);
@@ -167,19 +167,18 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
                 getMockFileIoFacade().fileExists(
                         getResourcePathTestData().getRootResourcesPath(),
                         getResourcePathTestData()
-                                .getMappedIphoneGroupResourcePath()
-                                .getNewPath())).andReturn(exists);
+                        .getMappedIphoneGroupResourcePath()
+                        .getNewPath())).andReturn(exists);
 
     }
 
     @Test
     public void testResolveWhenNoMappingPerformed() throws Throwable {
         final List<Resource> actualResources =
-                getObjectUnderTest()
-                        .resolve(
-                                getResourcePathTestData()
-                                        .getRequestedCssResourcePath(),
-                                getGroupTestData().createIPhoneGroup());
+            getObjectUnderTest().resolve(
+                    getResourcePathTestData().getRequestedCssResourcePath(),
+                    getGroupTestData().createIPhoneGroup(),
+                    getResolvedResourcePaths());
 
         Assert.assertNotNull("actualResources should not be null",
                 actualResources);

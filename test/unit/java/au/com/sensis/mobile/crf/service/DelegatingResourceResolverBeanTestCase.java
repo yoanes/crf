@@ -25,6 +25,7 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     private ResourceResolver mockResourceResolver1;
     private ResourceResolver mockResourceResolver2;
     private final GroupTestData groupTestData = new GroupTestData();
+    private final ResourceAccumulator resolvedResourcePaths = new ResourceAccumulator();
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
 
     /**
@@ -63,8 +64,8 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
         getMockLogger(DelegatingResourceResolverBean.class).warn(
                 "resourceResolvers is empty. "
-                        + "This DelegatingResourceResolverBean will always "
-                        + "return an empty list of resources.");
+                + "This DelegatingResourceResolverBean will always "
+                + "return an empty list of resources.");
 
         replay();
 
@@ -76,17 +77,17 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     public void testResolveWhenFirstSecondResolverSupportsRequestedPathFound() throws Throwable {
 
         EasyMock.expect(getMockResourceResolver1().supports(getRequestedPath()))
-            .andReturn(Boolean.TRUE);
+        .andReturn(Boolean.TRUE);
 
         EasyMock.expect(getMockResourceResolver1().resolve(
-                getRequestedPath(), getGroup()))
+                getRequestedPath(), getGroup(), getResolvedResourcePaths()))
                 .andReturn(getExpectedResources());
 
         replay();
 
         final List<Resource> actualResources =
             getObjectUnderTest().resolve(getRequestedPath(),
-                    getGroup());
+                    getGroup(), getResolvedResourcePaths());
 
         Assert.assertEquals("actualResource is wrong",
                 getExpectedResources(), actualResources);
@@ -96,20 +97,20 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     public void testResolveWhenSecondResolverSupportsRequestedPathFound() throws Throwable {
 
         EasyMock.expect(getMockResourceResolver1().supports(getRequestedPath()))
-            .andReturn(Boolean.FALSE);
+        .andReturn(Boolean.FALSE);
 
         EasyMock.expect(getMockResourceResolver2().supports(getRequestedPath()))
-            .andReturn(Boolean.TRUE);
+        .andReturn(Boolean.TRUE);
 
         EasyMock.expect(getMockResourceResolver2().resolve(
-                getRequestedPath(), getGroup()))
+                getRequestedPath(), getGroup(), getResolvedResourcePaths()))
                 .andReturn(getExpectedResources());
 
         replay();
 
         final List<Resource> actualResources =
-                getObjectUnderTest().resolve(getRequestedPath(),
-                        getGroup());
+            getObjectUnderTest().resolve(getRequestedPath(), getGroup(),
+                    getResolvedResourcePaths());
 
         Assert.assertEquals("actualResource is wrong",
                 getExpectedResources(), actualResources);
@@ -119,17 +120,18 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     public void testResolveWhenNoResolverSupports() throws Throwable {
 
         EasyMock
-                .expect(getMockResourceResolver1().supports(getRequestedPath()))
-                .andReturn(Boolean.FALSE);
+        .expect(getMockResourceResolver1().supports(getRequestedPath()))
+        .andReturn(Boolean.FALSE);
 
         EasyMock
-                .expect(getMockResourceResolver2().supports(getRequestedPath()))
-                .andReturn(Boolean.FALSE);
+        .expect(getMockResourceResolver2().supports(getRequestedPath()))
+        .andReturn(Boolean.FALSE);
 
         replay();
 
         final List<Resource> actualResources =
-                getObjectUnderTest().resolve(getRequestedPath(), getGroup());
+            getObjectUnderTest().resolve(getRequestedPath(), getGroup(),
+                    getResolvedResourcePaths());
 
         Assert.assertNotNull("actualResource should not be null",
                 actualResources);
@@ -141,8 +143,8 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     public void testSupportsWhenFirstResolverSupportsTrue() throws Throwable {
 
         EasyMock
-                .expect(getMockResourceResolver1().supports(getRequestedPath()))
-                .andReturn(Boolean.TRUE);
+        .expect(getMockResourceResolver1().supports(getRequestedPath()))
+        .andReturn(Boolean.TRUE);
 
         replay();
 
@@ -154,12 +156,12 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     public void testSupportsWhenSecondResolverSupportsTrue() throws Throwable {
 
         EasyMock
-                .expect(getMockResourceResolver1().supports(getRequestedPath()))
-                .andReturn(Boolean.FALSE);
+        .expect(getMockResourceResolver1().supports(getRequestedPath()))
+        .andReturn(Boolean.FALSE);
 
         EasyMock
-                .expect(getMockResourceResolver2().supports(getRequestedPath()))
-                .andReturn(Boolean.TRUE);
+        .expect(getMockResourceResolver2().supports(getRequestedPath()))
+        .andReturn(Boolean.TRUE);
 
         replay();
 
@@ -171,12 +173,12 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     public void testSupportsWhenFalse() throws Throwable {
 
         EasyMock
-                .expect(getMockResourceResolver1().supports(getRequestedPath()))
-                .andReturn(Boolean.FALSE);
+        .expect(getMockResourceResolver1().supports(getRequestedPath()))
+        .andReturn(Boolean.FALSE);
 
         EasyMock
-                .expect(getMockResourceResolver2().supports(getRequestedPath()))
-                .andReturn(Boolean.FALSE);
+        .expect(getMockResourceResolver2().supports(getRequestedPath()))
+        .andReturn(Boolean.FALSE);
 
         replay();
 
@@ -194,7 +196,7 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
     private String getRequestedPath() {
         return getResourcePathTestData()
-                .getRequestedJspResourcePath();
+        .getRequestedJspResourcePath();
     }
 
     /**
@@ -244,6 +246,13 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
      */
     private GroupTestData getGroupTestData() {
         return groupTestData;
+    }
+
+    /**
+     * @return the resolvedResourcePaths
+     */
+    protected ResourceAccumulator getResolvedResourcePaths() {
+        return resolvedResourcePaths;
     }
 
     /**

@@ -3,6 +3,7 @@ package au.com.sensis.mobile.crf.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -56,7 +57,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         validateDeploymentMetadata(deploymentMetadata);
 
         this.abstractResourceExtension =
-                prefixWithLeadingDotIfRequired(abstractResourceExtension);
+            prefixWithLeadingDotIfRequired(abstractResourceExtension);
         this.rootResourcesDir = rootResourcesDir;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
         this.deploymentMetadata = deploymentMetadata;
@@ -67,7 +68,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (StringUtils.isBlank(abstractResourceExtension)) {
             throw new IllegalArgumentException(
                     "abstractResourceExtension must not be blank: '"
-                            + abstractResourceExtension + "'");
+                    + abstractResourceExtension + "'");
         }
     }
 
@@ -75,14 +76,14 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (!resourcesRootDir.exists() || !resourcesRootDir.isDirectory()) {
             throw new IllegalArgumentException(
                     "rootResourcesDir must be a directory: '"
-                            + resourcesRootDir + "'");
+                    + resourcesRootDir + "'");
         }
     }
 
     private void validateResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         Validate.notNull(resourceResolutionWarnLogger,
-            "resourceResolutionWarnLogger must not be null");
+        "resourceResolutionWarnLogger must not be null");
     }
 
     private void validateDeploymentMetadata(final DeploymentMetadata deploymentMetadata) {
@@ -104,13 +105,27 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      */
     @Override
     public List<Resource> resolve(final String requestedResourcePath,
-            final Group group) throws ResourceResolutionRuntimeException {
+            final Group group, final ResourceAccumulator results) throws ResourceResolutionRuntimeException {
+
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
 
             debugLogAttemptingResolution(requestedResourcePath);
 
+            // question: what's the key in the hashmap?
+            // - concat'd string of path and group?
+            // - hashcode of path n group?
+
+
+            // check ConcurrentHashMap to see if it already contains resolved resources
+            // for the given requestedResourcePath and group
+
+            // if so, return it
+
+            // if not,
             final List<Resource> resolvedResources =
-                    doResolve(requestedResourcePath, group);
+                doResolve(requestedResourcePath, group);
+
+            accumulateGroupResources(resolvedResources, results);
 
             debugLogResolutionResults(requestedResourcePath, resolvedResources);
 
@@ -120,6 +135,22 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             debugLogRequestIgnored(requestedResourcePath);
 
             return new ArrayList<Resource>();
+        }
+    }
+
+    protected void accumulateGroupResources(
+            final List<Resource> resolvedPaths,
+            final ResourceAccumulator allResourcePaths) {
+
+        if (!resolvedPaths.isEmpty() &&
+                ((allResourcePaths != null) &&
+                        (allResourcePaths.getAllResourcePaths() != null))) {
+
+            Collections.reverse(resolvedPaths);
+
+            for (final Resource currPath : resolvedPaths) {
+                allResourcePaths.getAllResourcePaths().push(currPath);
+            }
         }
     }
 
@@ -144,9 +175,11 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *             Thrown if any error occurs.
      */
     protected List<Resource> doResolve(final String requestedResourcePath,
-            final Group group) throws ResourceResolutionRuntimeException {
+            final Group group)
+            throws ResourceResolutionRuntimeException {
+
         final String newResourcePath =
-                createNewResourcePath(requestedResourcePath, group);
+            createNewResourcePath(requestedResourcePath, group);
 
         debugLogCheckingIfPathExists(newResourcePath);
 
@@ -279,7 +312,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     protected String insertGroupNameAndDeploymentVersionIntoPath(
             final String requestedResourcePath, final Group group) {
         return getDeploymentMetadata().getVersion() + RESOURCE_SEPARATOR + group.getName()
-                + RESOURCE_SEPARATOR + requestedResourcePath;
+        + RESOURCE_SEPARATOR + requestedResourcePath;
     }
 
     /**
@@ -339,7 +372,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug(
                     "Resolved requested resource '" + requestedResourcePath
-                            + "' to '" + resolvedResources + "'");
+                    + "' to '" + resolvedResources + "'");
         }
     }
 

@@ -109,6 +109,10 @@ public class ResourcePathTestData {
         return "common/main.js";
     }
 
+    public String getRequestedNamedScriptResourcePath2() {
+        return "common/ajax.js";
+    }
+
     public String getRequestedPackageScriptResourcePath() {
         return "util/package";
     }
@@ -121,6 +125,11 @@ public class ResourcePathTestData {
     public Resource getMappedDefaultGroupNamedScriptResourcePath() {
         return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 getDeploymentVersion() + "/default/common/main.js", getRootResourcesPath());
+    }
+
+    public Resource getMappedDefaultGroupNamedScriptResourcePath2() {
+        return new ResourceBean(getRequestedNamedScriptResourcePath2(),
+                getDeploymentVersion() + "/default/common/ajax.js", getRootResourcesPath());
     }
 
     public Resource getMappedDefaultGroupNamedScriptBundleResourcePath() {
@@ -172,6 +181,11 @@ public class ResourcePathTestData {
                 getDeploymentVersion() + "/iPhone/common/main.js", getRootResourcesPath());
     }
 
+    public Resource getMappedIphoneGroupNamedScriptResourcePath2() {
+        return new ResourceBean(getRequestedNamedScriptResourcePath2(),
+                getDeploymentVersion() + "/iPhone/common/ajax.js", getRootResourcesPath());
+    }
+
     public String getMappedIphoneGroupNamedScriptResourceHref() {
         return getScriptClientPathPrefix()
         + getMappedIphoneGroupNamedScriptResourcePath().getNewPath();
@@ -184,8 +198,8 @@ public class ResourcePathTestData {
 
     public String getMappedIphoneGroupNamedScriptBundleResourceHref() {
         return getScriptClientPathPrefix()
-                + getMappedIphoneGroupNamedScriptBundleResourcePath()
-                        .getNewPath();
+        + getMappedIphoneGroupNamedScriptBundleResourcePath()
+        .getNewPath();
     }
 
     public Resource getMappedIphoneGroupPackagedScriptBundleResourcePath() {
@@ -216,6 +230,11 @@ public class ResourcePathTestData {
     public Resource getMappedAndroidGroupBundledScriptResourcePath2() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 getDeploymentVersion() + "/android/util/util2.js", getRootResourcesPath());
+    }
+
+    public Resource getMappedAppleGroupNamedScriptResourcePath() {
+        return new ResourceBean(getRequestedNamedScriptResourcePath(),
+                getDeploymentVersion() + "/apple/common/main.js", getRootResourcesPath());
     }
 
     public Resource getMappedAppleGroupBundledScriptBundleResourcePath() {
@@ -293,27 +312,27 @@ public class ResourcePathTestData {
 
     public String getMappedDefaultGroupCssResourceHref() {
         return getCssClientPathPrefix()
-            + getMappedDefaultGroupCssResourcePath().getNewPath();
+        + getMappedDefaultGroupCssResourcePath().getNewPath();
     }
 
     public String getMappedDefaultGroupNamedScriptResourceHref() {
         return getScriptClientPathPrefix()
-            + getMappedDefaultGroupNamedScriptResourcePath().getNewPath();
+        + getMappedDefaultGroupNamedScriptResourcePath().getNewPath();
     }
 
     public String getMappedDefaultGroupCssBundleResourceHref() {
         return getCssClientPathPrefix()
-            + getMappedDefaultGroupCssBundleResourcePath().getNewPath();
+        + getMappedDefaultGroupCssBundleResourcePath().getNewPath();
     }
 
     public String getMappedIphoneGroupCssResourceHref() {
         return getCssClientPathPrefix()
-            + getMappedIphoneGroupCssResourcePath().getNewPath();
+        + getMappedIphoneGroupCssResourcePath().getNewPath();
     }
 
     public String getMappedIphoneGroupCssBundleResourceHref() {
         return getCssClientPathPrefix()
-            + getMappedIphoneGroupCssBundleResourcePath().getNewPath();
+        + getMappedIphoneGroupCssBundleResourcePath().getNewPath();
     }
 
     public Resource getMappedDefaultGroupImageResourcePath() {
@@ -343,7 +362,7 @@ public class ResourcePathTestData {
 
     public String getMappedDefaultGroupPngImageResourceHref() {
         return getImageClientPathPrefix()
-            + getMappedDefaultGroupPngImageResourcePath().getNewPath();
+        + getMappedDefaultGroupPngImageResourcePath().getNewPath();
     }
 
     public String getMapComponentPathPrefix() {

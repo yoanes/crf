@@ -25,8 +25,8 @@ public interface ResourceResolver {
      * @throws ResourceResolutionRuntimeException
      *             Thrown if any error occurs.
      */
-    List<Resource> resolve(String requestedResourcePath, Group group)
-            throws ResourceResolutionRuntimeException;
+    List<Resource> resolve(String requestedResourcePath, Group group, ResourceAccumulator results)
+    throws ResourceResolutionRuntimeException;
 
     /**
      * Returns true if this {@link ResourceResolver} supports resolution of the

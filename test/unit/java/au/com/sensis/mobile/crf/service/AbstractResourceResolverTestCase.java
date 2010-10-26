@@ -24,9 +24,10 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
+    private final ResourceAccumulator resolvedResourcePaths = new ResourceAccumulator();
     private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private DeploymentMetadata deploymentMetadata;
     private File resourcesRootDir;
     private FileIoFacade mockFileIoFacade;
@@ -57,7 +58,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     @Test
     public void testConstructorWithBlankAbstractResourceExtension()
-            throws Throwable {
+    throws Throwable {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
@@ -68,7 +69,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
                 Assert.assertEquals(" has wrong message",
                         "abstractResourceExtension must not be blank: '"
-                                + testValue + "'", e.getMessage());
+                        + testValue + "'", e.getMessage());
             }
         }
     }
@@ -89,29 +90,29 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     @Test
     public void testConstructorWhenResourcesRootPathInvalid() throws Throwable {
         final File[] invalidPaths =
-                {
-                        new File(StringUtils.EMPTY),
-                        new File(" "),
-                        new File("  "),
-                        new File("I-do-not-exist"),
-                        new File(
-                                getClass()
-                                        .getResource(
-                                                "/au/com/sensis/mobile/crf/service/"
-                                                        + "CssResourceResolverBeanTestCase.class")
-                                        .toURI()) };
+        {
+                new File(StringUtils.EMPTY),
+                new File(" "),
+                new File("  "),
+                new File("I-do-not-exist"),
+                new File(
+                        getClass()
+                        .getResource(
+                                "/au/com/sensis/mobile/crf/service/"
+                                + "CssResourceResolverBeanTestCase.class")
+                                .toURI()) };
         for (final File invalidPath : invalidPaths) {
             try {
                 createWithRootResourcesDir(invalidPath);
                 Assert
-                        .fail("IllegalArgumentException expected for invalidPath: '"
-                                + invalidPath + "'");
+                .fail("IllegalArgumentException expected for invalidPath: '"
+                        + invalidPath + "'");
             } catch (final IllegalArgumentException e) {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message",
                         "rootResourcesDir must be a directory: '" + invalidPath
-                                + "'", e.getMessage());
+                        + "'", e.getMessage());
             }
         }
     }
@@ -131,7 +132,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     @Test
     public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
-            throws Throwable {
+    throws Throwable {
         try {
             createWithResourceResolutionWarnLogger(null);
 
@@ -140,7 +141,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
             Assert.assertEquals("IllegalArgumentException has wrong message",
                     "resourceResolutionWarnLogger must not be null", e
-                            .getMessage());
+                    .getMessage());
         }
 
     }
@@ -160,7 +161,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     @Test
     public void testConstructorWhenDeploymentMetadatIsNull()
-            throws Throwable {
+    throws Throwable {
         try {
             createWithDeploymentMetadata(null);
 
@@ -169,7 +170,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
             Assert.assertEquals("IllegalArgumentException has wrong message",
                     "deploymentMetadata must not be null", e
-                            .getMessage());
+                    .getMessage());
         }
 
     }
@@ -192,6 +193,13 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
      */
     protected GroupTestData getGroupTestData() {
         return groupTestData;
+    }
+
+    /**
+     * @return the resolvedResourcePaths
+     */
+    protected ResourceAccumulator getResolvedResourcePaths() {
+        return resolvedResourcePaths;
     }
 
     /**
@@ -243,5 +251,6 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
         this.mockFileIoFacade = mockFileIoFacade;
     }
+
 
 }

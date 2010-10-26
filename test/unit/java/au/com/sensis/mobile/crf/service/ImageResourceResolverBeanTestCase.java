@@ -32,9 +32,10 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
      */
     @Before
     public void setUp() throws Exception {
+
         setObjectUnderTest(new ImageResourceResolverBean(
                 getResourcePathTestData()
-                        .getAbstractImageExtensionWithLeadingDot(),
+                .getAbstractImageExtensionWithLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
                 getDeploymentMetadata(), FILE_EXTENSION_WILDCARDS));
     }
@@ -42,6 +43,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     @Override
     protected ImageResourceResolverBean createWithAbstractResourceExtension(
             final String abstractResourceExtension) {
+
         return new ImageResourceResolverBean(abstractResourceExtension,
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
                 getDeploymentMetadata(), FILE_EXTENSION_WILDCARDS);
@@ -50,6 +52,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     @Override
     protected ImageResourceResolverBean createWithResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+
         return new ImageResourceResolverBean(getResourcePathTestData()
                 .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
                 resourceResolutionWarnLogger, getDeploymentMetadata(),
@@ -59,6 +62,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     @Override
     protected ImageResourceResolverBean createWithRootResourcesDir(
             final File rootResourcesDir) {
+
         return new ImageResourceResolverBean(getResourcePathTestData()
                 .getCssExtensionWithoutLeadingDot(), rootResourcesDir,
                 getMockResourceResolutionWarnLogger(), getDeploymentMetadata(),
@@ -68,6 +72,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     @Override
     protected ImageResourceResolverBean createWithDeploymentMetadata(
             final DeploymentMetadata deploymentMetadata) {
+
         return new ImageResourceResolverBean(
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
@@ -77,6 +82,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     @Test
     public void testConstructorWhenFileExtensionWildcardsIsInvalid()
     throws Throwable {
+
         final List<String []> testVaues = Arrays.asList(
                 null,
                 new String [] {},
@@ -107,6 +113,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
     @Test
     public void testResolveWhenMappingPerformedAndSingleResourceFound() throws Throwable {
+
         final String[] testValues = {
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
@@ -119,14 +126,14 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
             replay();
 
             final List<Resource> actualResources =
-                    getObjectUnderTest().resolve(
-                            getResourcePathTestData()
-                                    .getRequestedImageResourcePath(),
-                            getGroupTestData().createIPhoneGroup());
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedImageResourcePath(),
+                        getGroupTestData().createIPhoneGroup(),
+                        getResolvedResourcePaths());
 
             assertComplexObjectsEqual("actualResources is wrong",
                     Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
-                        actualResources);
+                    actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -142,22 +149,23 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
     private File[] getMultipleMatchedPngImageArray() {
         return new File[] {
-                        getMappedIPhonePngImageResourcePath().getNewFile(),
-                        getMappedIPhoneGroupGifImageResourcePath().getNewFile() };
+                getMappedIPhonePngImageResourcePath().getNewFile(),
+                getMappedIPhoneGroupGifImageResourcePath().getNewFile() };
     }
 
     private Resource getMappedIPhonePngImageResourcePath() {
         return getResourcePathTestData()
-                .getMappedIphoneGroupPngImageResourcePath();
+        .getMappedIphoneGroupPngImageResourcePath();
     }
 
     private Resource getMappedIPhoneGroupGifImageResourcePath() {
         return getResourcePathTestData()
-                .getMappedIphoneGroupGifImageResourcePath();
+        .getMappedIphoneGroupGifImageResourcePath();
     }
 
     @Test
     public void testResolveWhenMappingPerformedAndMultipleResourcesFound() throws Throwable {
+
         final String[] testValues = {
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
@@ -172,14 +180,14 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
             replay();
 
             final List<Resource> actualResources =
-                    getObjectUnderTest().resolve(
-                            getResourcePathTestData()
-                                    .getRequestedImageResourcePath(),
-                            getGroupTestData().createIPhoneGroup());
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedImageResourcePath(),
+                        getGroupTestData().createIPhoneGroup(),
+                        getResolvedResourcePaths());
 
             assertComplexObjectsEqual("actualResources is wrong",
                     Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
-                        actualResources);
+                    actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -189,23 +197,24 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     }
 
     private void recordLogWarningResolveToSingleFoundMultipleResources() {
+
         EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled())
-            .andReturn(Boolean.TRUE);
+        .andReturn(Boolean.TRUE);
 
         getMockResourceResolutionWarnLogger()
-            .warn("Requested resource '"
-                    + getResourcePathTestData().getRequestedImageResourcePath()
-                    + "' resolved to multiple real resources with extensions matching "
-                    + ArrayUtils.toString(FILE_EXTENSION_WILDCARDS)
-                    + ". Will only return the first resource. Total found: ["
-                    + getMappedIPhonePngImageResourcePath().getNewFile()
-                    + ", " + getMappedIPhoneGroupGifImageResourcePath().getNewFile()
-                    + "].");
+        .warn("Requested resource '"
+                + getResourcePathTestData().getRequestedImageResourcePath()
+                + "' resolved to multiple real resources with extensions matching "
+                + ArrayUtils.toString(FILE_EXTENSION_WILDCARDS)
+                + ". Will only return the first resource. Total found: ["
+                + getMappedIPhonePngImageResourcePath().getNewFile()
+                + ", " + getMappedIPhoneGroupGifImageResourcePath().getNewFile()
+                + "].");
     }
 
     @Test
     public void testResolveWhenMappingPerformedAndResourceDoesNotExist()
-        throws Throwable {
+    throws Throwable {
 
         final String[] testValues = {
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
@@ -220,9 +229,9 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
-                        getResourcePathTestData()
-                        .getRequestedImageResourcePath(),
-                        getGroupTestData().createIPhoneGroup());
+                        getResourcePathTestData().getRequestedImageResourcePath(),
+                        getGroupTestData().createIPhoneGroup(),
+                        getResolvedResourcePaths());
 
             Assert.assertNotNull("actualResources should not be null",
                     actualResources);
@@ -237,24 +246,26 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     }
 
     private void recordListFilesByExtension(final File[] files) {
+
         EasyMock.expect(
                 getMockFileIoFacade().list(
                         EasyMock.eq(getRootResourcesDir()),
                         EasyMock.eq(getMappedIphoneGroupImageResourcePath()
                                 .getNewPath()),
-                        EasyMock.aryEq(FILE_EXTENSION_WILDCARDS))).andReturn(
-                files);
+                                EasyMock.aryEq(FILE_EXTENSION_WILDCARDS))).andReturn(
+                                        files);
 
     }
 
     private Resource getMappedIphoneGroupImageResourcePath() {
+
         return getResourcePathTestData()
         .getMappedIphoneGroupImageResourcePath();
     }
 
     private Resource getMappedIphoneGroupPngImageResourcePath() {
-        return getResourcePathTestData()
-                .getMappedIphoneGroupPngImageResourcePath();
+
+        return getResourcePathTestData().getMappedIphoneGroupPngImageResourcePath();
     }
 
     private File getRootResourcesDir() {
@@ -263,12 +274,12 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
     @Test
     public void testResolveWhenNoMappingPerformed() throws Throwable {
+
         final List<Resource> actualResources =
-                getObjectUnderTest()
-                        .resolve(
-                                getResourcePathTestData()
-                                        .getRequestedCssResourcePath(),
-                                getGroupTestData().createIPhoneGroup());
+            getObjectUnderTest().resolve(
+                    getResourcePathTestData().getRequestedCssResourcePath(),
+                    getGroupTestData().createIPhoneGroup(),
+                    getResolvedResourcePaths());
 
         Assert.assertNotNull("actualResources should not be null",
                 actualResources);
@@ -279,6 +290,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
     @Test
     public void testSupportsWhenTrue() throws Throwable {
+
         Assert.assertTrue("supports should be true",
                 getObjectUnderTest().supports(
                         getResourcePathTestData().getRequestedImageResourcePath()));
@@ -286,6 +298,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
     @Test
     public void testSupportsWhenFalse() throws Throwable {
+
         Assert.assertFalse("supports should be false",
                 getObjectUnderTest().supports(
                         getResourcePathTestData().getRequestedCssResourcePath()));

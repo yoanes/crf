@@ -67,9 +67,9 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
     @Test
     public void testResolveWhenMappingPerformedAndResourceExists() throws Throwable {
-        final String[] testValues =
-                { getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        getResourcePathTestData().getCssExtensionWithLeadingDot() };
+        final String[] testValues = {
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                getResourcePathTestData().getCssExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
@@ -79,12 +79,15 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
             replay();
 
             final List<Resource> actualResources =
-                    getObjectUnderTest().resolve(
-                            getResourcePathTestData().getRequestedCssResourcePath(),
-                            getGroupTestData().createIPhoneGroup());
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedCssResourcePath(),
+                        getGroupTestData().createIPhoneGroup(),
+                        getResolvedResourcePaths());
 
-            Assert.assertEquals("actualResources is wrong", Arrays.asList(getResourcePathTestData()
-                    .getMappedIphoneGroupCssResourcePath()), actualResources);
+            Assert.assertEquals("actualResources is wrong",
+                    Arrays.asList(getResourcePathTestData()
+                            .getMappedIphoneGroupCssResourcePath()),
+                            actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -94,10 +97,11 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
     }
 
     @Test
-    public void testResolveWhenMappingPerformedAndResourceDoesNotExist() throws Throwable {
-        final String[] testValues =
-                { getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        getResourcePathTestData().getCssExtensionWithLeadingDot() };
+    public void testResolveWhenMappingPerformedAndResourceDoesNotExist()
+    throws Throwable {
+        final String[] testValues = {
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                getResourcePathTestData().getCssExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
@@ -107,12 +111,15 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
             replay();
 
             final List<Resource> actualResources =
-                    getObjectUnderTest().resolve(
-                            getResourcePathTestData().getRequestedCssResourcePath(),
-                            getGroupTestData().createIPhoneGroup());
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedCssResourcePath(),
+                        getGroupTestData().createIPhoneGroup(),
+                        getResolvedResourcePaths());
 
-            Assert.assertNotNull("actualResources should not be null", actualResources);
-            Assert.assertTrue("actualResources should be empty", actualResources.isEmpty());
+            Assert.assertNotNull("actualResources should not be null",
+                    actualResources);
+            Assert.assertTrue("actualResources should be empty",
+                    actualResources.isEmpty());
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -126,19 +133,18 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
                 getMockFileIoFacade().fileExists(
                         getResourcePathTestData().getRootResourcesPath(),
                         getResourcePathTestData()
-                                .getMappedIphoneGroupCssResourcePath()
-                                .getNewPath())).andReturn(exists);
+                        .getMappedIphoneGroupCssResourcePath()
+                        .getNewPath())).andReturn(exists);
 
     }
 
     @Test
     public void testResolveWhenNoMappingPerformed() throws Throwable {
         final List<Resource> actualResources =
-                getObjectUnderTest()
-                        .resolve(
-                                getResourcePathTestData()
-                                        .getRequestedJspResourcePath(),
-                                getGroupTestData().createIPhoneGroup());
+            getObjectUnderTest().resolve(
+                    getResourcePathTestData().getRequestedJspResourcePath(),
+                    getGroupTestData().createIPhoneGroup(),
+                    getResolvedResourcePaths());
 
         Assert.assertNotNull("actualResources should not be null",
                 actualResources);
