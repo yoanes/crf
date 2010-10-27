@@ -3,6 +3,7 @@
 ########################################################
 
 env.resources.jsp.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase
+env.resources.properties.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/WEB-INF/properties
 env.resources.css.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/resources/css
 env.resources.javascript.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/resources/javascript
 env.resources.images.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/resources/images
