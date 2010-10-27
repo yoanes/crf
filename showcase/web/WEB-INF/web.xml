@@ -228,7 +228,7 @@
         <servlet-class>au.com.sensis.mobile.crf.presentation.ResourceResolverServlet</servlet-class>
         <init-param>
             <param-name>resourceResolverEngineBeanName</param-name>
-            <param-value>crf.resourceResolverEngine</param-value>
+            <param-value>crf.cachedResourceResolverEngine</param-value>
         </init-param>
     </servlet>
     
