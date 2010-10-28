@@ -1,3 +1,10 @@
+==== Version 0.1.3-001 (tag: contentRenderingFramework_v0_1_3-001) ==== 
+
+Jiras:
+* CRF-13: ResourceResolverEngineBean caching 
+* CRF-62: NEW: modify crf:script to make JS files override inherited files with the same name
+* CRF-67: NEW: properties file resolution
+
 ==== Version 0.1.2-002 (tag: contentRenderingFramework_v0_1_2-002) ==== 
 
 Jiras:
