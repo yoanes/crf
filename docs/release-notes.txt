@@ -5,6 +5,20 @@ Jiras:
 * CRF-62: NEW: modify crf:script to make JS files override inherited files with the same name
 * CRF-67: NEW: properties file resolution
 
+Upgrade Notes:
+* JavaScript inheritance: previously, files with the same name will be included from later groups.
+  This will no longer occur. eg. if a device matches both the apple and iphone groups and they
+  both have a map.js file:
+  
+      iphone/comp/map/map.js
+      apple/comp/map/map.js
+      
+  only iphone/comp/map/map.js will be resolved (ie. the most specific file).  
+  Beware of this in case you were relying on the previous behaviour.
+* The standard crf-environment.properties.* files now define the "env.cache.resources" property
+  with a sensible default value for each environment. You may override this if you wish
+  by defining the property in a crf-environment.properties.* file in your classpath root.
+
 ==== Version 0.1.2-002 (tag: contentRenderingFramework_v0_1_2-002) ==== 
 
 Jiras:
