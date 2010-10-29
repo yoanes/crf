@@ -357,10 +357,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 null,
                 "<link href=\""
                 + getMappedDefaultGroupCssResourceHref()
-                + "\" rel=\"stylesheet\" type=\"text/css\" />\n"
+                + "\" rel=\"stylesheet\" type=\"text/css\" />"
                 + "<link href=\""
                 + getMappediPhoneGroupCssResourceHref()
-                + "\" rel=\"stylesheet\" type=\"text/css\" />\n",
+                + "\" rel=\"stylesheet\" type=\"text/css\" />",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -372,7 +372,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMappedIphoneGroupCssBundleResourcePath(),
                         "<link href=\""
                         + getMappedIphoneGroupCssBundleResourceHref()
-                        + "\" rel=\"stylesheet\" type=\"text/css\" />\n",
+                        + "\" rel=\"stylesheet\" type=\"text/css\" />",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -384,10 +384,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 null,
                 "<link href=\""
                 + getMappedDefaultGroupCssResourceHref()
-                + "\" rel=\"stylesheet\" />\n"
+                + "\" rel=\"stylesheet\" />"
                 + "<link href=\""
                 + getMappediPhoneGroupCssResourceHref()
-                + "\" rel=\"stylesheet\" />\n",
+                + "\" rel=\"stylesheet\" />",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -399,7 +399,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMappedIphoneGroupCssBundleResourcePath(),
                         "<link href=\""
                         + getMappedIphoneGroupCssBundleResourceHref()
-                        + "\" rel=\"stylesheet\" />\n",
+                        + "\" rel=\"stylesheet\" />",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -410,9 +410,9 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                         getMappediPhoneGroupCssResourcePath()),
                 null,
                 "<link href=\"" + getMappedDefaultGroupCssResourceHref()
-                + "\" " + "/>\n"
+                + "\" " + "/>"
                 + "<link href=\"" + getMappediPhoneGroupCssResourceHref()
-                    + "\" " + "/>\n",
+                    + "\" " + "/>",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -423,7 +423,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                         getMappediPhoneGroupCssResourcePath()),
                 getMappedIphoneGroupCssBundleResourcePath(),
                 "<link href=\"" + getMappedIphoneGroupCssBundleResourceHref()
-                + "\" " + "/>\n",
+                + "\" " + "/>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -434,7 +434,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 null,
                 "<link href=\""
                 + getMappedDefaultGroupCssResourceHref()
-                + "\" rel=\"stylesheet\" type=\"text/css\" />\n",
+                + "\" rel=\"stylesheet\" type=\"text/css\" />",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -445,7 +445,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMappedDefaultGroupCssBundleResourcePath(),
                 "<link href=\""
                 + getMappedDefaultGroupCssBundleResourceHref()
-                + "\" rel=\"stylesheet\" type=\"text/css\" />\n",
+                + "\" rel=\"stylesheet\" type=\"text/css\" />",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -456,7 +456,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMappedDefaultGroupCssBundleResourcePath(),
                 "<link href=\""
                 + getMappedDefaultGroupCssBundleResourceHref()
-                + "\" rel=\"stylesheet\" />\n",
+                + "\" rel=\"stylesheet\" />",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -467,7 +467,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 null,
                 "<link href=\""
                 + getMappedDefaultGroupCssResourceHref()
-                + "\" rel=\"stylesheet\" />\n",
+                + "\" rel=\"stylesheet\" />",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -477,7 +477,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(getMappedDefaultGroupCssResourcePath()),
                 getMappedDefaultGroupCssBundleResourcePath(),
                 "<link href=\"" + getMappedDefaultGroupCssBundleResourceHref()
-                + "\" " + "/>\n",
+                + "\" " + "/>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -505,7 +505,7 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(getMappedDefaultGroupCssResourcePath()),
                 null,
                 "<link href=\"" + getMappedDefaultGroupCssResourceHref()
-                    + "\" " + "/>\n",
+                    + "\" " + "/>",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 

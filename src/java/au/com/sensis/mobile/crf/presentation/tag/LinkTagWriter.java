@@ -136,7 +136,7 @@ public class LinkTagWriter implements TagWriter {
                     + attribute.getValue() + "\" ");
         }
 
-        jspWriter.print("/>\n");
+        jspWriter.print("/>");
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {

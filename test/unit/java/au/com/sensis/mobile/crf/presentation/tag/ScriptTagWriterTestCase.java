@@ -136,7 +136,7 @@ public class ScriptTagWriterTestCase extends
 
         getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
-        Assert.assertEquals("incorrect output", "<script ></script>\n", getStringWriter()
+        Assert.assertEquals("incorrect output", "<script ></script>", getStringWriter()
                 .getBuffer().toString());
     }
 
@@ -152,7 +152,7 @@ public class ScriptTagWriterTestCase extends
 
         getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
-        Assert.assertEquals("incorrect output", "<script title=\"My Image\" ></script>\n",
+        Assert.assertEquals("incorrect output", "<script title=\"My Image\" ></script>",
                 getStringWriter().getBuffer().toString());
     }
 
@@ -169,7 +169,7 @@ public class ScriptTagWriterTestCase extends
         getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
         Assert.assertEquals("incorrect output",
-                "<script title=\"My Image\" type=\"text/javascript\" ></script>\n",
+                "<script title=\"My Image\" type=\"text/javascript\" ></script>",
                 getStringWriter().getBuffer().toString());
     }
 
@@ -184,7 +184,7 @@ public class ScriptTagWriterTestCase extends
         getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
         Assert.assertEquals("incorrect output", "<script src=\"" + ABSOLUTE_HREF
-                + "\" ></script>\n", getStringWriter().getBuffer().toString());
+                + "\" ></script>", getStringWriter().getBuffer().toString());
     }
 
     @Test
@@ -198,7 +198,7 @@ public class ScriptTagWriterTestCase extends
         getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
         Assert.assertEquals("incorrect output", "<script src=\"" + ABSOLUTE_HREF
-                + "\" title=\"My Image\" ></script>\n", getStringWriter().getBuffer().toString());
+                + "\" title=\"My Image\" ></script>", getStringWriter().getBuffer().toString());
     }
 
     @Test
@@ -212,7 +212,7 @@ public class ScriptTagWriterTestCase extends
         getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
         Assert.assertEquals("incorrect output", "<script src=\"" + ABSOLUTE_HREF
-                + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
+                + "\" title=\"My Image\" type=\"text/javascript\" ></script>",
                 getStringWriter().getBuffer().toString());
     }
 
@@ -486,10 +486,10 @@ public class ScriptTagWriterTestCase extends
                 null,
                 "<script src=\""
                 + getMappedDefaultGroupScriptResourceHref()
-                + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n"
+                + "\" title=\"My Image\" type=\"text/javascript\" ></script>"
                 + "<script src=\""
                 + getMappediPhoneGroupScriptResourceHref()
-                + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
+                + "\" title=\"My Image\" type=\"text/javascript\" ></script>",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -501,7 +501,7 @@ public class ScriptTagWriterTestCase extends
                 getMappedIphoneGroupScriptBundleResourcePath(),
                         "<script src=\""
                         + getMappedIphoneGroupScriptBundleResourceHref()
-                        + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
+                        + "\" title=\"My Image\" type=\"text/javascript\" ></script>",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -513,10 +513,10 @@ public class ScriptTagWriterTestCase extends
                 null,
                 "<script src=\""
                 + getMappedDefaultGroupScriptResourceHref()
-                + "\" title=\"My Image\" ></script>\n"
+                + "\" title=\"My Image\" ></script>"
                 + "<script src=\""
                 + getMappediPhoneGroupScriptResourceHref()
-                + "\" title=\"My Image\" ></script>\n",
+                + "\" title=\"My Image\" ></script>",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -528,7 +528,7 @@ public class ScriptTagWriterTestCase extends
                 getMappedIphoneGroupScriptBundleResourcePath(),
                         "<script src=\""
                         + getMappedIphoneGroupScriptBundleResourceHref()
-                        + "\" title=\"My Image\" ></script>\n",
+                        + "\" title=\"My Image\" ></script>",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -539,9 +539,9 @@ public class ScriptTagWriterTestCase extends
                         getMappediPhoneGroupScriptResourcePath()),
                 null,
                 "<script src=\"" + getMappedDefaultGroupScriptResourceHref()
-                + "\" " + "></script>\n"
+                + "\" " + "></script>"
                 + "<script src=\"" + getMappediPhoneGroupScriptResourceHref()
-                    + "\" " + "></script>\n",
+                    + "\" " + "></script>",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -552,7 +552,7 @@ public class ScriptTagWriterTestCase extends
                         getMappediPhoneGroupScriptResourcePath()),
                 getMappedIphoneGroupScriptBundleResourcePath(),
                 "<script src=\"" + getMappedIphoneGroupScriptBundleResourceHref()
-                + "\" " + "></script>\n",
+                + "\" " + "></script>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -563,7 +563,7 @@ public class ScriptTagWriterTestCase extends
                 null,
                 "<script src=\""
                 + getMappedDefaultGroupScriptResourceHref()
-                + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
+                + "\" title=\"My Image\" type=\"text/javascript\" ></script>",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -574,7 +574,7 @@ public class ScriptTagWriterTestCase extends
                 getMappedDefaultGroupScriptBundleResourcePath(),
                 "<script src=\""
                 + getMappedDefaultGroupScriptBundleResourceHref()
-                + "\" title=\"My Image\" type=\"text/javascript\" ></script>\n",
+                + "\" title=\"My Image\" type=\"text/javascript\" ></script>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -585,7 +585,7 @@ public class ScriptTagWriterTestCase extends
                 getMappedDefaultGroupScriptBundleResourcePath(),
                 "<script src=\""
                 + getMappedDefaultGroupScriptBundleResourceHref()
-                + "\" title=\"My Image\" ></script>\n",
+                + "\" title=\"My Image\" ></script>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -596,7 +596,7 @@ public class ScriptTagWriterTestCase extends
                 null,
                 "<script src=\""
                 + getMappedDefaultGroupScriptResourceHref()
-                + "\" title=\"My Image\" ></script>\n",
+                + "\" title=\"My Image\" ></script>",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
@@ -606,7 +606,7 @@ public class ScriptTagWriterTestCase extends
                 Arrays.asList(getMappedDefaultGroupScriptResourcePath()),
                 getMappedDefaultGroupScriptBundleResourcePath(),
                 "<script src=\"" + getMappedDefaultGroupScriptBundleResourceHref()
-                + "\" " + "></script>\n",
+                + "\" " + "></script>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
 
@@ -634,7 +634,7 @@ public class ScriptTagWriterTestCase extends
                 Arrays.asList(getMappedDefaultGroupScriptResourcePath()),
                 null,
                 "<script src=\"" + getMappedDefaultGroupScriptResourceHref()
-                    + "\" " + "></script>\n",
+                    + "\" " + "></script>",
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 

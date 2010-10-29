@@ -19,6 +19,13 @@ Upgrade Notes:
   with a sensible default value for each environment. You may override this if you wish
   by defining the property in a crf-environment.properties.* file in your classpath root.
 
+==== Version 0.1.2-003 (tag: contentRenderingFramework_v0_1_2-003, branch: contentRenderingFramework_v0_1_2-002) ==== 
+
+Released from branch contentRenderingFramework_v0_1_2-002. 
+
+Jiras:
+* CRF-72 NEW - {{crf:img}}, {{crf:link}} and {{crf:script}} should not write a "\n" character to response 
+
 ==== Version 0.1.2-002 (tag: contentRenderingFramework_v0_1_2-002) ==== 
 
 Jiras:

@@ -183,7 +183,7 @@ public class ScriptTagWriter implements TagWriter {
                     + attribute.getValue() + "\" ");
         }
 
-        jspWriter.print("></script>\n");
+        jspWriter.print("></script>");
     }
 
     private void writeLinkTagWithBodyContent(final JspWriter jspWriter,
@@ -197,7 +197,7 @@ public class ScriptTagWriter implements TagWriter {
 
         jspWriter.print(">");
         jspBody.invoke(jspWriter);
-        jspWriter.print("</script>\n");
+        jspWriter.print("</script>");
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {

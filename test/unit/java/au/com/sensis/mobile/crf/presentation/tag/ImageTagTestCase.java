@@ -445,7 +445,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 new ArrayList<DynamicTagAttribute>(),
                 getMockResource(),
                 "<img src=\"" + getMappedDefaultGroupPngImageResourceHref()
-                    + "\" " + "/>\n");
+                    + "\" " + "/>");
     }
 
     private TestData createTestDataOneDynamicAttributeSingleMappedResource() {
@@ -454,7 +454,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 getMockResource(),
                 "<img src=\""
                 + getMappedDefaultGroupPngImageResourceHref()
-                + "\" title=\"unmetered usage\" />\n");
+                + "\" title=\"unmetered usage\" />");
     }
 
     private TestData createTestDataTwoDynamicAttributesSingleMappedResource() {
@@ -463,7 +463,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 getMockResource(),
                 "<img src=\""
                 + getMappedDefaultGroupPngImageResourceHref()
-                + "\" title=\"unmetered usage\" alt=\"unmetered\" />\n");
+                + "\" title=\"unmetered usage\" alt=\"unmetered\" />");
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResource() {

@@ -64,7 +64,7 @@ public class ImageTag extends AbstractTag {
                     + attribute.getValue() + "\" ");
         }
 
-        jspWriter.print("/>\n");
+        jspWriter.print("/>");
     }
 
     private ImageTagDependencies getTagDependencies() {
