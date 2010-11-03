@@ -96,7 +96,7 @@ implements ResourceResolverEngine {
     }
 
     protected int generateHashKey(final Device device, final String requestedResourcePath) {
-        return (device.getName() + requestedResourcePath).hashCode();
+        return (device.getUserAgent() + requestedResourcePath).hashCode();
     }
 
     protected List<Resource> fetchAllResources(final Device device,
