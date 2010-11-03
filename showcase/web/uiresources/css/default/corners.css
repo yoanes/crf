@@ -1,5 +1,5 @@
 .roundedUpper  {
- 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/topbg.image');
+ 	background-image: url('/uidev/crfshowcase/uiresources/images/common/corners/topbg.image');
  	background-position: 100% 0%;
  	background-repeat: no-repeat;
  	height: 8px;
@@ -9,7 +9,7 @@
 }
 
 .roundedLower  {
- 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/bottombg.image');
+ 	background-image: url('/uidev/crfshowcase/uiresources/images/common/corners/bottombg.image');
  	background-position: 100% 0%;
  	background-repeat: no-repeat;
  	height: 8px;
@@ -41,14 +41,14 @@
 }
 
 .yellow .roundedUpper  {
- 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/corner_Tbg_y.image');
+ 	background-image: url('/uidev/crfshowcase/uiresources/images/common/corners/corner_Tbg_y.image');
  	background-position: 0%;
  	background-repeat: no-repeat;
  	height: 8px;
 }
 
 .yellow .roundedLower  {
- 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/corner_Bbg_y.image');
+ 	background-image: url('/uidev/crfshowcase/uiresources/images/common/corners/corner_Bbg_y.image');
  	background-position: 100%;
  	background-repeat: no-repeat;
  	height: 8px;
@@ -77,14 +77,14 @@
 }
 
 .lightYellow .roundedUpper  {
- 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/corner_Tbg_ly.image')';
+ 	background-image: url('/uidev/crfshowcase/uiresources/images/common/corners/corner_Tbg_ly.image')';
  	background-position: 0%;
  	background-repeat: no-repeat;
  	height: 8px;
 }
 
 .lightYellow .roundedLower  {
- 	background-image: url('/uidev/crfshowcase/resources/images/common/corners/corner_Bbg_ly.image');
+ 	background-image: url('/uidev/crfshowcase/uiresources/images/common/corners/corner_Bbg_ly.image');
  	background-position: 100%;
  	background-repeat: no-repeat;
  	height: 8px;

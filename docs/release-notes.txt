@@ -1,3 +1,15 @@
+==== Version 0.1.2-101 (tag: contentRenderingFramework_v0_1_2-101) ==== 
+
+Jiras:
+* CRF-65: Change 'resources' to 'uiresources'
+
+Additional Changes:
+* Changed the Resource caching to use the Device user-agent as the key instead of Device name.
+ 
+Upgrade Notes:
+* The 'resources' directory (containing CSS, images, Javascript) should be renamed to 'uiresources'.  
+
+    
 ==== Version 0.1.2-100 (tag: contentRenderingFramework_v0_1_2-100) ==== 
 
 Jiras:

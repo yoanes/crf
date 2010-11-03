@@ -2,12 +2,12 @@
 ## ENVIRONMENT : DESK
 ########################################################
 
-env.resources.jsp.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase
-env.resources.properties.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/WEB-INF/properties
-env.resources.css.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/resources/css
-env.resources.javascript.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/resources/javascript
-env.resources.images.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/resources/images
+env.resources.jsp.root.dir=D:/Apps/Tomcat6.0/webapps/wl-crf-showcase
+env.resources.properties.root.dir=D:/Apps/Tomcat6.0/webapps/wl-crf-showcase/WEB-INF/properties
+env.resources.css.root.dir=D:/Apps/Tomcat6.0/webapps/wl-crf-showcase/uiresources/css
+env.resources.javascript.root.dir=D:/Apps/Tomcat6.0/webapps/wl-crf-showcase/uiresources/javascript
+env.resources.images.root.dir=D:/Apps/Tomcat6.0/webapps/wl-crf-showcase/uiresources/images
 
-env.resources.css.client.path.prefix=/uidev/crfshowcase/resources/css/
-env.resources.javascript.client.path.prefix=/uidev/crfshowcase/resources/javascript/
-env.resources.images.client.path.prefix=/uidev/crfshowcase/resources/images/
+env.resources.css.client.path.prefix=/uidev/crfshowcase/uiresources/css/
+env.resources.javascript.client.path.prefix=/uidev/crfshowcase/uiresources/javascript/
+env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/images/

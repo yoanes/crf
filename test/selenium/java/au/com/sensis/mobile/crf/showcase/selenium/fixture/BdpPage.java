@@ -33,7 +33,7 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "I am here and you should see me only once", myScriptVariable);
 
         assertAbsolutelyReferencedScript("external, absolutely referenced script not found",
-                "http://localhost:8080/something.js");
+        "http://localhost:8080/something.js");
 
         assertAppProperty1();
 
@@ -102,7 +102,7 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "//head/link["
                 + "@type=\"text/css\" "
                 + "and @rel=\"stylesheet\" "
-                + "and @href=\"/uidev/crfshowcase/resources/css/"
+                + "and @href=\"/uidev/crfshowcase/uiresources/css/"
                 + getProjectVersion() + "/"
                 + expectedHref + "\""
                 + "]"));
@@ -120,7 +120,7 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertTrue(message, getBrowser().isElementPresent(
                 "//head/script["
                 + "@type=\"text/javascript\" "
-                + "and @src=\"/uidev/crfshowcase/resources/javascript/"
+                + "and @src=\"/uidev/crfshowcase/uiresources/javascript/"
                 + getProjectVersion() + "/"
                 + expectedSrc + "\""
                 + "]"));
@@ -163,7 +163,7 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "@id=\"" + expectedId + "\" "
                 + "and @title=\"" + expectedTitle + "\" "
                 + "and @alt=\"" + expectedAlt + "\" "
-                + "and @src=\"/uidev/crfshowcase/resources/images/"
+                + "and @src=\"/uidev/crfshowcase/uiresources/images/"
                 + getProjectVersion() + "/"
                 + expectedSrc + "\""
                 + "]"));
