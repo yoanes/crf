@@ -1,3 +1,9 @@
+==== Version 0.1.2-103 (tag: contentRenderingFramework_v0_1_2-103) ==== 
+
+Merged changes between contentRenderingFramework_v0_1_2-003 and 
+contentRenderingFramework_v0_1_2-004 (from branch_contentRenderingFramework_v0_1_2-002) 
+onto HEAD.
+
 ==== Version 0.1.2-102 (tag: contentRenderingFramework_v0_1_2-102) ==== 
 
 Jiras:
@@ -35,6 +41,11 @@ Upgrade Notes:
 * The standard crf-environment.properties.* files now define the "env.cache.resources" property
   with a sensible default value for each environment. You may override this if you wish
   by defining the property in a crf-environment.properties.* file in your classpath root.
+
+==== Version 0.1.2-004 (tag: contentRenderingFramework_v0_1_2-004, branch: branch_contentRenderingFramework_v0_1_2-002) ==== 
+
+Jiras:
+* CRF-68: NEW: crf:img should output body content if the source image is not found
 
 ==== Version 0.1.2-003 (tag: contentRenderingFramework_v0_1_2-003, branch: branch_contentRenderingFramework_v0_1_2-002) ==== 
 

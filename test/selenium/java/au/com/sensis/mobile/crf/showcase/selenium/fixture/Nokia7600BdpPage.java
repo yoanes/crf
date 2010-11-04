@@ -71,10 +71,27 @@ public class Nokia7600BdpPage extends BdpPage {
     }
 
     private void assertNokia7600Img() {
-        assertNumImgElements(1);
+        assertNumImgElements(2);
+        assertImgWhenLeafGroupNodeImageFound();
+        assertBrokenImgWhenNoImageFound();
+        assertBodyContentImgWhenDotNullImgFound();
+    }
+
+    private void assertImgWhenLeafGroupNodeImageFound() {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
                 "nokia7600/selenium/common/unmetered.gif");
+    }
+
+    private void assertBrokenImgWhenNoImageFound() {
+        assertBrokenImg("App Store (broken) img not found",
+                "appStoreImg", "App Store", "App Store",
+                "selenium/common/app_store.image");
+    }
+
+    private void assertBodyContentImgWhenDotNullImgFound() {
+        assertTrue("WM text should be present resulting from img body content",
+                getBrowser().isTextPresent("WM"));
     }
 
     private void assertDeviceProperties() {

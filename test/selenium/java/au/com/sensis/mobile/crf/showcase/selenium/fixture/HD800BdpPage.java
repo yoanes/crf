@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.showcase.selenium.fixture;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 import com.thoughtworks.selenium.Selenium;
@@ -70,10 +71,32 @@ public class HD800BdpPage extends BdpPage {
     }
 
     private void assertHD800Img() {
-        assertNumImgElements(1);
+        final int expectedNumImages = 3;
+        assertNumImgElements(expectedNumImages);
+        assertImgWhenDefaultGroupNodeImageFound();
+        assertBrokenImgWhenNoImageFound();
+        assertBodyContentImgWhenImgFound();
+    }
+
+    private void assertImgWhenDefaultGroupNodeImageFound() {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
                 "default/selenium/common/unmetered.png");
+    }
+
+    private void assertBrokenImgWhenNoImageFound() {
+        assertBrokenImg("App Store (broken) img not found",
+                "appStoreImg", "App Store", "App Store",
+                "selenium/common/app_store.image");
+    }
+
+    private void assertBodyContentImgWhenImgFound() {
+        assertImg("wm img not found",
+                "wherisMobileImg", "Whereis Mobile", "Whereis Mobile",
+                "HD800/selenium/common/wm.gif");
+        assertFalse("WM text should not be present resulting from img body content",
+                getBrowser().isTextPresent("WM"));
+
     }
 
     private void assertDeviceProperties() {

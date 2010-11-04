@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.showcase.selenium.fixture;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 import com.thoughtworks.selenium.Selenium;
@@ -51,6 +52,7 @@ public abstract class IphoneBdpPage extends BdpPage {
         assertImg("in.img not found",
                 "mapZoomIn", "Map Zoom In", "Map Zoom In",
         "mapComponent-iphone-ipod/selenium/component/map/in.png");
+        assertBodyContentImgWhenImgFound();
         doAssertImg();
     }
 
@@ -58,7 +60,15 @@ public abstract class IphoneBdpPage extends BdpPage {
      * @return number of expected img elements.
      */
     protected int getExpectedNumImgElements() {
-        return 1;
+        return 2;
+    }
+
+    private void assertBodyContentImgWhenImgFound() {
+        assertImg("wm img not found",
+                "wherisMobileImg", "Whereis Mobile", "Whereis Mobile",
+                "iphone-ipod/selenium/common/wm.gif");
+        assertFalse("WM text should not be present resulting from img body content",
+                getBrowser().isTextPresent("WM"));
     }
 
     /**

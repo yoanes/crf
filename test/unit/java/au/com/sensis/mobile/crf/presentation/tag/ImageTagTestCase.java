@@ -2,12 +2,16 @@ package au.com.sensis.mobile.crf.presentation.tag;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.jsp.JspContext;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.JspFragment;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -38,6 +42,7 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private static final String DYN_ATTR_URI = "http://www.w3.org/2002/06/xhtml2";
+    private static final String BODY_CONTENT = "+";
 
     private ImageTag objectUnderTest;
     private Device mockDevice;
@@ -77,6 +82,10 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         getObjectUnderTest().setJspContext(getMockPageContext());
         getObjectUnderTest().setSrc(getResourcePathTestData()
                 .getRequestedImageResourcePath());
+
+        final StubbedJspFragment stubbedJspFragment = new StubbedJspFragment(BODY_CONTENT,
+                getMockPageContext());
+        getObjectUnderTest().setJspBody(stubbedJspFragment);
 
         setSpringMockServletContext(new MockServletContext());
 
@@ -142,12 +151,13 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 recordLookupRequestedResourceWhenFound(testDataArray[i]
                         .getResource());
 
-                if (StringUtils.isNotEmpty(testDataArray[i].getOutputString())) {
+                if (testDataArray[i].getResource() != null) {
                     recordResourceEndsWithDotNull(Boolean.FALSE);
                     recordGetResourceNewPath();
                     recordGetJspWriter();
                 } else {
                     recordLogResourceNotFoundWarning();
+                    recordGetJspWriter();
                 }
 
                 replay();
@@ -179,7 +189,29 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenDotNullResource() throws Throwable {
+    public void testDoTagWhenDotNullResourceAndBodyContentNotEmpty() throws Throwable {
+
+        recordGetImageTagDependencies();
+
+        recordLookupRequestedResourceWhenFound(getMockResource());
+
+        recordResourceEndsWithDotNull(Boolean.TRUE);
+
+        recordGetJspWriter();
+
+        replay();
+
+        getObjectUnderTest().doTag();
+
+        Assert.assertEquals("incorrect output string", BODY_CONTENT,
+                getStringWriter().getBuffer().toString());
+
+    }
+
+    @Test
+    public void testDoTagWhenDotNullResourceAndBodyContentEmpty() throws Throwable {
+
+        getObjectUnderTest().setJspBody(null);
 
         recordGetImageTagDependencies();
 
@@ -210,6 +242,10 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         getObjectUnderTest().setJspContext(getMockPageContext());
         getObjectUnderTest().setSrc(
                 getResourcePathTestData().getRequestedImageResourcePath());
+
+        final StubbedJspFragment stubbedJspFragment = new StubbedJspFragment(
+                testData.getBodyContent(), getMockPageContext());
+        getObjectUnderTest().setJspBody(stubbedJspFragment);
 
         for (final DynamicTagAttribute dynamicTagAttribute : testData
                 .getDynamicAttributes()) {
@@ -267,7 +303,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordGetJspWriter() {
         EasyMock.expect(getMockPageContext().getOut()).andReturn(
-                getMockJspWriter());
+                getMockJspWriter()).atLeastOnce();
     }
 
     /**
@@ -436,7 +472,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
             createTestDataOneDynamicAttributeSingleMappedResource(),
             createTestDataTwoDynamicAttributesSingleMappedResource(),
 
-            createTestDataNoDynamicAttributesNoMappedResource(),
+            createTestDataNoDynamicAttributesNoMappedResourceAndNoBodyContent(),
+
+            createTestDataNoDynamicAttributesNoMappedResourceButWithBodyContent()
         };
     }
 
@@ -445,7 +483,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 new ArrayList<DynamicTagAttribute>(),
                 getMockResource(),
                 "<img src=\"" + getMappedDefaultGroupPngImageResourceHref()
-                    + "\" " + "/>");
+                    + "\" " + "/>",
+                BODY_CONTENT);
     }
 
     private TestData createTestDataOneDynamicAttributeSingleMappedResource() {
@@ -454,7 +493,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 getMockResource(),
                 "<img src=\""
                 + getMappedDefaultGroupPngImageResourceHref()
-                + "\" title=\"unmetered usage\" />");
+                + "\" title=\"unmetered usage\" />",
+                BODY_CONTENT);
     }
 
     private TestData createTestDataTwoDynamicAttributesSingleMappedResource() {
@@ -463,12 +503,22 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 getMockResource(),
                 "<img src=\""
                 + getMappedDefaultGroupPngImageResourceHref()
-                + "\" title=\"unmetered usage\" alt=\"unmetered\" />");
+                + "\" title=\"unmetered usage\" alt=\"unmetered\" />",
+                BODY_CONTENT);
     }
 
-    private TestData createTestDataNoDynamicAttributesNoMappedResource() {
+    private TestData createTestDataNoDynamicAttributesNoMappedResourceAndNoBodyContent() {
         return new TestData(new ArrayList<DynamicTagAttribute>(), null,
-                StringUtils.EMPTY);
+                "<img src=\""
+                + getResourcePathTestData().getRequestedImageResourcePath()
+                + "\" />", StringUtils.EMPTY);
+    }
+
+    private TestData createTestDataNoDynamicAttributesNoMappedResourceButWithBodyContent() {
+        return new TestData(new ArrayList<DynamicTagAttribute>(), null,
+                "<img src=\""
+                + getResourcePathTestData().getRequestedImageResourcePath()
+                + "\" />", BODY_CONTENT);
     }
 
     private DynamicTagAttribute createTitleDynamicAttribute() {
@@ -483,54 +533,6 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private String getMappedDefaultGroupPngImageResourceHref() {
         return getResourcePathTestData().getMappedDefaultGroupPngImageResourceHref();
-    }
-
-    private static class TestData {
-        private final List<DynamicTagAttribute> dynamicAttributes;
-        private final Resource resource;
-        private final String outputString;
-
-        public TestData(final List<DynamicTagAttribute> dynamicAttributes,
-                final Resource resource,
-                final String outputString) {
-            super();
-            this.dynamicAttributes = dynamicAttributes;
-            this.resource = resource;
-            this.outputString = outputString;
-        }
-
-        /**
-         * @return the dynamicAttributes
-         */
-        private List<DynamicTagAttribute> getDynamicAttributes() {
-            return dynamicAttributes;
-        }
-
-        /**
-         * @return the outputString
-         */
-        private String getOutputString() {
-            return outputString;
-        }
-
-        /**
-         * @return the resource
-         */
-        private Resource getResource() {
-            return resource;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String toString() {
-            final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
-            toStringBuilder.append("dynamicAttributes", getDynamicAttributes());
-            toStringBuilder.append("resource", getResource());
-            toStringBuilder.append("outputString", getOutputString());
-            return toStringBuilder.toString();
-        }
     }
 
     /**
@@ -560,6 +562,88 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     public void setMockResolutionWarnLogger(
             final ResourceResolutionWarnLogger mockResolutionWarnLogger) {
         this.mockResolutionWarnLogger = mockResolutionWarnLogger;
+    }
+
+
+    private static class TestData {
+        private final List<DynamicTagAttribute> dynamicAttributes;
+        private final Resource resource;
+        private final String outputString;
+        private final String bodyContent;
+
+        public TestData(final List<DynamicTagAttribute> dynamicAttributes,
+                final Resource resource,
+                final String outputString,
+                final String bodyContent) {
+            super();
+            this.dynamicAttributes = dynamicAttributes;
+            this.resource = resource;
+            this.outputString = outputString;
+            this.bodyContent = bodyContent;
+        }
+
+        /**
+         * @return the dynamicAttributes
+         */
+        private List<DynamicTagAttribute> getDynamicAttributes() {
+            return dynamicAttributes;
+        }
+
+        /**
+         * @return the outputString
+         */
+        private String getOutputString() {
+            return outputString;
+        }
+
+        /**
+         * @return the resource
+         */
+        private Resource getResource() {
+            return resource;
+        }
+
+        /**
+         * @return the bodyContent
+         */
+        public String getBodyContent() {
+            return bodyContent;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
+            toStringBuilder.append("dynamicAttributes", getDynamicAttributes());
+            toStringBuilder.append("resource", getResource());
+            toStringBuilder.append("outputString", getOutputString());
+            toStringBuilder.append("bodyContent", getBodyContent());
+            return toStringBuilder.toString();
+        }
+    }
+
+    private static class StubbedJspFragment extends JspFragment {
+
+        private final String bodyContent;
+        private final JspContext jspContext;
+
+        public StubbedJspFragment(final String bodyContent, final JspContext jspContext) {
+            this.bodyContent = bodyContent;
+            this.jspContext = jspContext;
+        }
+
+        @Override
+        public JspContext getJspContext() {
+            return jspContext;
+        }
+
+        @Override
+        public void invoke(final Writer writer) throws JspException, IOException {
+            writer.write(bodyContent);
+        }
+
     }
 }
 

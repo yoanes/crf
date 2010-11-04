@@ -35,18 +35,29 @@ public class ImageTag extends AbstractTag {
                 getResourceResolverEngine().getResource(getDevice(),
                         getSrc());
         if (resource != null) {
-            if (!resource.newPathEndsWithDotNull()) {
-                writeSingleImageTag(getJspContext().getOut(),
-                        resource);
-            }
+            doTagWhenResourceFound(resource);
         } else {
+            doTagWhenResourceNotFound();
+        }
+            }
+
+    private void doTagWhenResourceFound(final Resource resource) throws IOException, JspException {
+        if (resource.newPathEndsWithDotNull()) {
+            writeBodyContent();
+        } else {
+            writeSingleImageTag(getJspContext().getOut(), resource);
+        }
+    }
+
+    private void doTagWhenResourceNotFound() throws IOException {
             if (getResourceResolutionWarnLogger().isWarnEnabled()) {
                 getResourceResolutionWarnLogger().warn(
                         "No resource was found for requested resource '"
                                 + getSrc() + "' and device " + getDevice());
             }
+
+        writeSingleBrokenImageTag(getJspContext().getOut());
         }
-    }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
         return getTagDependencies().getResourceResolutionWarnLogger();
@@ -54,17 +65,42 @@ public class ImageTag extends AbstractTag {
 
     private void writeSingleImageTag(final JspWriter jspWriter,
             final Resource resource) throws IOException {
+        writeSingleImageTag(jspWriter, resource.getNewPath());
+    }
+
+    private void writeSingleBrokenImageTag(final JspWriter jspWriter) throws IOException {
+        jspWriter.print("<img ");
+
+        jspWriter.print("src=\"" + getSrc() + "\" ");
+
+        writeDynamicTagAttributes(jspWriter);
+
+        jspWriter.print("/>");
+    }
+
+    private void writeSingleImageTag(final JspWriter jspWriter,
+            final String imageSrc) throws IOException {
         jspWriter.print("<img ");
 
         jspWriter.print("src=\"" + getTagDependencies().getClientPathPrefix()
-                + resource.getNewPath() + "\" ");
+                + imageSrc + "\" ");
 
+        writeDynamicTagAttributes(jspWriter);
+
+        jspWriter.print("/>");
+    }
+
+    private void writeDynamicTagAttributes(final JspWriter jspWriter) throws IOException {
         for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
             jspWriter.print(attribute.getLocalName() + "=\""
                     + attribute.getValue() + "\" ");
         }
+    }
 
-        jspWriter.print("/>");
+    private void writeBodyContent() throws JspException, IOException {
+        if (getJspBody() != null) {
+            getJspBody().invoke(getJspContext().getOut());
+        }
     }
 
     private ImageTagDependencies getTagDependencies() {

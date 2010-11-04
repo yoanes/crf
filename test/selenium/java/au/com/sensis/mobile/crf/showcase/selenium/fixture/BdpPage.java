@@ -169,4 +169,28 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "]"));
 
     }
+
+    /**
+     * Helper method for asserting the presence of a (broken) img. ie. an img which
+     * could not be resolved to a real resource
+     *
+     * @param message Message to use if the test fails.
+     * @param expectedId Expected id attribute.
+     * @param expectedTitle Expected title attribute.
+     * @param expectedAlt Expected alt attribute.
+     * @param expectedSrc Expected src value of the link, relative to the root
+     *      resources/images dir.
+     */
+    protected final void assertBrokenImg(final String message, final String expectedId,
+            final String expectedTitle, final String expectedAlt,
+            final String expectedSrc) {
+        assertTrue(message, getBrowser().isElementPresent(
+                "//body//img["
+                + "@id=\"" + expectedId + "\" "
+                + "and @title=\"" + expectedTitle + "\" "
+                + "and @alt=\"" + expectedAlt + "\" "
+                + "and @src=\"" + expectedSrc + "\""
+                + "]"));
+
+    }
 }
