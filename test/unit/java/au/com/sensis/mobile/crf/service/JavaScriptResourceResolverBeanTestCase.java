@@ -231,9 +231,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
 
         return Arrays.asList(
                 getResourcePathTestData()
-                .getMappedDefaultGroupPackagedScriptResourcePath1(),
+                .getMappedDefaultGroupPackagedScriptResourcePath2(),
                 getResourcePathTestData()
-                .getMappedDefaultGroupPackagedScriptResourcePath2());
+                .getMappedDefaultGroupPackagedScriptResourcePath1());
     }
 
     @Test
@@ -369,10 +369,11 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     public void testAccumulateGroupResourcesOverridesSameFilename() throws Throwable {
 
         final ResourceAccumulator resourceAccumulator = new ResourceAccumulator();
+        resourceAccumulator.getAllResourcePaths().push(
+                getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
 
         // Matches 3 different versions of the same Javascript file
         final List<Resource> resolvedPaths = new ArrayList<Resource>();
-        resolvedPaths.add(getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
         resolvedPaths.add(getResourcePathTestData().getMappedAppleGroupNamedScriptResourcePath());
         resolvedPaths.add(getResourcePathTestData().getMappedDefaultGroupNamedScriptResourcePath());
 
@@ -390,13 +391,13 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     public void testAccumulateGroupResourcesOverridesPackages() throws Throwable {
 
         final ResourceAccumulator resourceAccumulator = new ResourceAccumulator();
+        resourceAccumulator.getAllResourcePaths().push(
+                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath2());
+        resourceAccumulator.getAllResourcePaths().push(
+                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath1());
 
         // Matches 2 sets of the Javascript package
         final List<Resource> resolvedPaths = new ArrayList<Resource>();
-        resolvedPaths.add(
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath1());
-        resolvedPaths.add(
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath2());
         resolvedPaths.add(
                 getResourcePathTestData().getMappedAppleGroupBundledScriptResourcePath1());
         resolvedPaths.add(
@@ -407,9 +408,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         // Expect to only return the most specific version of the Javascript file
         final ResourceAccumulator expectedResourceAccumulator = new ResourceAccumulator();
         expectedResourceAccumulator.getAllResourcePaths().add(
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath2());
-        expectedResourceAccumulator.getAllResourcePaths().add(
                 getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath1());
+        expectedResourceAccumulator.getAllResourcePaths().add(
+                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath2());
 
         Assert.assertEquals(expectedResourceAccumulator, resourceAccumulator);
     }
@@ -421,20 +422,21 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
 
         // Matches 2 different versions of the same 2 Javascript files
         final List<Resource> resolvedPaths = new ArrayList<Resource>();
-        resolvedPaths.add(getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
-        resolvedPaths.add(getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath2());
         resolvedPaths.add(getResourcePathTestData().getMappedDefaultGroupNamedScriptResourcePath());
         resolvedPaths.add(
                 getResourcePathTestData().getMappedDefaultGroupNamedScriptResourcePath2());
+        resolvedPaths.add(getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
+        resolvedPaths.add(getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath2());
+
 
         getObjectUnderTest().accumulateGroupResources(resolvedPaths, resourceAccumulator);
 
         // Expect to only return the most specific versions of the Javascript files
         final ResourceAccumulator expectedResourceAccumulator = new ResourceAccumulator();
         expectedResourceAccumulator.getAllResourcePaths().add(
-                getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath2());
-        expectedResourceAccumulator.getAllResourcePaths().add(
                 getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
+        expectedResourceAccumulator.getAllResourcePaths().add(
+                getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath2());
 
         Assert.assertEquals(expectedResourceAccumulator, resourceAccumulator);
     }

@@ -3,6 +3,8 @@ package au.com.sensis.mobile.crf.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -112,6 +114,13 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
         }
     }
 
+    /**
+     * Accumulates unique resources, overriding duplicate matches with the most specific version,
+     * whilst preserving specifically set file order for packages
+     * (set using the package.properties).
+     *
+     * {@inheritDoc}
+     */
     @Override
     protected void accumulateGroupResources(
             final List<Resource> resolvedPaths,
@@ -119,57 +128,62 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
 
         if (!resolvedPaths.isEmpty()) {
 
-            // don't want to reverse so we include the most specific match.
-            //Collections.reverse(resolvedPaths);
-
+            // We reverse the files so that when they're output in the HTML page
+            // they're still in the original order.
+            Collections.reverse(resolvedPaths);
 
             // for each found resource decide if we want to add it to the final list
             for (final Resource newResource : resolvedPaths) {
 
-                LOGGER.debug("looking at: " + newResource);
+                LOGGER.debug("looking at: " + newResource.getNewPath());
 
-                boolean alreadyStoredAVariant = false;
+                if (!hasAVariantHasAlreadyBeenStored(newResource,
+                        allResourcePaths.getAllResourcePaths())) {
 
-                // loop through the final list to see if our new ones are already there
-                for (final Resource existingResource : allResourcePaths.getAllResourcePaths()) {
-
-                    LOGGER.debug("comparing with: " + newResource);
-
-                    // asked for a Javascript package
-
-                    LOGGER.debug("package keyword: " + getAbstractPathPackageKeyword());
-
-                    if (newResource.getOriginalPath().endsWith(getAbstractPathPackageKeyword())) {
-                        LOGGER.debug("Requested a package");
-                        // compare on filename
-                        final int lastSlashPos = existingResource.getNewPath().lastIndexOf("/");
-                        final String existingFilename = existingResource.getNewPath().substring(
-                                lastSlashPos);
-
-                        LOGGER.debug("filename: " + existingFilename);
-
-                        // new request is for same filename as already in the list
-                        if (newResource.getNewPath().endsWith(existingFilename)) {
-                            LOGGER.debug("found filename in list");
-                            alreadyStoredAVariant = true;
-                            break;
-                        }
-                        // It's not a Javascript package request and a more specific version
-                        // of the file has already been included
-                    } else if (existingResource.getOriginalPath().equals(
-                            newResource.getOriginalPath())) {
-                        LOGGER.debug("Didnt request package");
-                        alreadyStoredAVariant = true;
-                        break;
-                    }
-                }
-
-                if (!alreadyStoredAVariant) {
-                    LOGGER.debug("havent already seen this resource, adding it to list");
+                    LOGGER.debug("Adding " + newResource.getNewPath() + " to the list.");
                     allResourcePaths.getAllResourcePaths().push(newResource);
                 }
             }
         }
+    }
+
+    private boolean isPartOfAPackage(final Resource requestedResource) {
+        return requestedResource.getOriginalPath().endsWith(getAbstractPathPackageKeyword());
+    }
+
+    private boolean hasAVariantHasAlreadyBeenStored(final Resource newResource,
+            final Deque<Resource> accumulatedResources) {
+
+        boolean alreadyStoredAVariant = false;
+
+        // loop through the final list to see if our new ones are already there
+        for (final Resource existingResource : accumulatedResources) {
+
+            LOGGER.debug("Comparing with: " + existingResource.getNewPath());
+
+            if (isPartOfAPackage(newResource)) {
+
+                // compare on filename
+                final int lastSlashPos = existingResource.getNewPath().lastIndexOf("/");
+                final String existingFilename = existingResource.getNewPath().substring(
+                        lastSlashPos);
+
+                // new request is for same filename as already in the list
+                if (newResource.getNewPath().endsWith(existingFilename)) {
+                    LOGGER.debug("found this filename already in the list");
+                    alreadyStoredAVariant = true;
+                    break;
+                }
+                // It's not a Javascript package request and a more specific version
+                // of the file has already been included
+            } else if (existingResource.getOriginalPath().equals(newResource.getOriginalPath())) {
+
+                alreadyStoredAVariant = true;
+                break;
+            }
+        }
+
+        return alreadyStoredAVariant;
     }
 
     private File getPackageDir(final String requestedResourcePath,
