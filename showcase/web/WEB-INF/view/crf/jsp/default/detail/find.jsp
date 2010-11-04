@@ -46,8 +46,12 @@
 
 	
 			<div class="findFormSubmitCell">
+				<c:set var="contextpath" value=""/>
+				<c:if test="${pageContext.request.contextPath == ''}">
+					<c:set var="contextpath" value="${pageContext.request.contextPath}/"/>
+				</c:if>
 				
-				<input type="image" src="/uidev/crfshowcase/resources/images/furniture/search.image" id="findFormSubmit"/>
+				<input type="image" src="${contextpath}uiresources/images/furniture/search.image" id="findFormSubmit"/>
 					
 			</div>
 	</div>
