@@ -11,8 +11,10 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 
 /**
- * 
- * 
+ * Provides optional caching of Resource requests, if enabled.
+ * Otherwise it passes the resource resolution through to the underlying
+ * {@link ResourceResolverEngine}.
+ *
  * @author Tony Filipe
  */
 public class CachedResourceResolverEngineBean
@@ -24,6 +26,13 @@ implements ResourceResolverEngine {
     private final boolean cachingEnabled;
 
 
+    /**
+     * Constructs an initialised CachedResourceResolverEngineBean.
+     * @param resourceResolverEngine the underlying {@link ResourceResolverEngine} used when
+     *  caching is disabled or the requested resource can't be found in the cache.
+     * @param cachingEnabled determines whether the request is serveed from cache or simply passes
+     *  through to the underlying {@link ResourceResolverEngine} for resolution.
+     */
     public CachedResourceResolverEngineBean(final ResourceResolverEngine resourceResolverEngine,
             final boolean cachingEnabled) {
 
@@ -36,6 +45,9 @@ implements ResourceResolverEngine {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Resource> getAllResources(final Device device, final String requestedResourcePath)
     throws ResourceResolutionRuntimeException {
@@ -64,7 +76,9 @@ implements ResourceResolverEngine {
         return resources;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Resource getResource(final Device device, final String requestedResourcePath)
     throws ResourceResolutionRuntimeException {

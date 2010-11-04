@@ -105,23 +105,13 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      */
     @Override
     public List<Resource> resolve(final String requestedResourcePath,
-            final Group group, final ResourceAccumulator results) throws ResourceResolutionRuntimeException {
+            final Group group, final ResourceAccumulator results)
+            throws ResourceResolutionRuntimeException {
 
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
 
             debugLogAttemptingResolution(requestedResourcePath);
 
-            // question: what's the key in the hashmap?
-            // - concat'd string of path and group?
-            // - hashcode of path n group?
-
-
-            // check ConcurrentHashMap to see if it already contains resolved resources
-            // for the given requestedResourcePath and group
-
-            // if so, return it
-
-            // if not,
             final List<Resource> resolvedResources =
                 doResolve(requestedResourcePath, group);
 
@@ -138,13 +128,18 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         }
     }
 
+    /**
+     * Accumulates all of the given {@link Resource}s together.
+     * @param resolvedPaths to be added to the combined list
+     * @param allResourcePaths the {@link ResourceAccumulator}
+     */
     protected void accumulateGroupResources(
             final List<Resource> resolvedPaths,
             final ResourceAccumulator allResourcePaths) {
 
-        if (!resolvedPaths.isEmpty() &&
-                ((allResourcePaths != null) &&
-                        (allResourcePaths.getAllResourcePaths() != null))) {
+        if (!resolvedPaths.isEmpty()
+                && ((allResourcePaths != null)
+                        && (allResourcePaths.getAllResourcePaths() != null))) {
 
             Collections.reverse(resolvedPaths);
 

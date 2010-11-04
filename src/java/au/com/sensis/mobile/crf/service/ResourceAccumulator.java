@@ -13,12 +13,22 @@ public class ResourceAccumulator {
     private Deque<Resource> allResourcePaths;
 
 
+    /**
+     * Constructs an initialised ResourceAccumulator.
+     */
     public ResourceAccumulator() {
 
         allResourcePaths = new ArrayDeque<Resource>();
     }
 
 
+    /**
+     * Compares this {@link ResourceAccumulator} with the given Object.
+     *
+     * @param obj the Object being compared to this.
+     * @return true if the given Object is a {@link ResourceAccumulator} and contains
+     *  the same content this one
+     */
     @Override
     public boolean equals(final Object obj) {
 
@@ -39,11 +49,22 @@ public class ResourceAccumulator {
     }
 
 
+    /**
+     * Returns a String representing the content of this ResourceAccumulator.
+     */
     @Override
     public String toString() {
 
         return allResourcePaths.toString();
     }
+
+    /**
+     * Delegates to the Object.hashCode() method.
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    };
 
     /**
      * @return the allResourcePaths

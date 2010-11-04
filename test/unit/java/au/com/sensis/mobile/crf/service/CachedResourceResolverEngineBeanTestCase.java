@@ -17,7 +17,7 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
  * Tests the business logic rules of {@link CachedResourceResolverEngineBean}.
- * 
+ *
  * @author Tony Filipe
  */
 public class CachedResourceResolverEngineBeanTestCase
@@ -76,7 +76,7 @@ extends AbstractJUnit4TestCase {
 
     /**
      * When caching is disabled we expect it to call the underlying ResolverEngineBean's
-     * getAllResources method;
+     * getAllResources method.
      *
      * @throws Throwable
      */
@@ -158,7 +158,7 @@ extends AbstractJUnit4TestCase {
 
     /**
      * When caching is disabled we expect it to call the underlying ResolverEngineBean's
-     * getResource method;
+     * getResource method.
      *
      * @throws Throwable
      */

@@ -20,6 +20,8 @@ public interface ResourceResolver {
      *            Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
      * @param group
      *            {@link Group} to perform the path mapping for.
+     * @param results
+     *            The {@link ResourceAccumulator} to add the results to.
      * @return List of {@link Resource}s containing the results. If no resources
      *         can be resolved, an empty list is returned. May not be null.
      * @throws ResourceResolutionRuntimeException
