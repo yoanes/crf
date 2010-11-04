@@ -11,3 +11,6 @@ env.resources.images.root.dir=D:/Apps/Tomcat6.0/webapps/wl-crf-showcase/uiresour
 env.resources.css.client.path.prefix=/uidev/crfshowcase/uiresources/css/
 env.resources.javascript.client.path.prefix=/uidev/crfshowcase/uiresources/javascript/
 env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/images/
+
+env.cache.ui.configuration=false
+env.cache.resources=false
