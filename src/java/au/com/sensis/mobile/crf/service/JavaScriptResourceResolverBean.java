@@ -137,7 +137,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
 
                 LOGGER.debug("looking at: " + newResource.getNewPath());
 
-                if (!hasAVariantHasAlreadyBeenStored(newResource,
+                if (!hasAVariantAlreadyBeenStored(newResource,
                         allResourcePaths.getAllResourcePaths())) {
 
                     LOGGER.debug("Adding " + newResource.getNewPath() + " to the list.");
@@ -151,7 +151,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
         return requestedResource.getOriginalPath().endsWith(getAbstractPathPackageKeyword());
     }
 
-    private boolean hasAVariantHasAlreadyBeenStored(final Resource newResource,
+    private boolean hasAVariantAlreadyBeenStored(final Resource newResource,
             final Deque<Resource> accumulatedResources) {
 
         boolean alreadyStoredAVariant = false;
@@ -161,22 +161,8 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
 
             LOGGER.debug("Comparing with: " + existingResource.getNewPath());
 
-            if (isPartOfAPackage(newResource)) {
-
-                // compare on filename
-                final int lastSlashPos = existingResource.getNewPath().lastIndexOf("/");
-                final String existingFilename = existingResource.getNewPath().substring(
-                        lastSlashPos);
-
-                // new request is for same filename as already in the list
-                if (newResource.getNewPath().endsWith(existingFilename)) {
-                    LOGGER.debug("found this filename already in the list");
-                    alreadyStoredAVariant = true;
-                    break;
-                }
-                // It's not a Javascript package request and a more specific version
-                // of the file has already been included
-            } else if (existingResource.getOriginalPath().equals(newResource.getOriginalPath())) {
+            if (hasPackageResourceBeenStored(newResource, existingResource)
+                    || hasSingleResourceBeenStored(newResource, existingResource)) {
 
                 alreadyStoredAVariant = true;
                 break;
@@ -184,6 +170,33 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
         }
 
         return alreadyStoredAVariant;
+    }
+
+    private boolean hasSingleResourceBeenStored(final Resource newResource,
+            final Resource existingResource) {
+
+        if (isPartOfAPackage(newResource)) {
+            return false;
+        }
+
+        // It's not a Javascript package request
+        return existingResource.getOriginalPath().equals(newResource.getOriginalPath());
+    }
+
+    private boolean hasPackageResourceBeenStored(final Resource newResource,
+            final Resource existingResource) {
+
+        if (!isPartOfAPackage(newResource)) {
+            return false;
+        }
+
+        // compare on filename
+        final int lastSlashPos = existingResource.getNewPath().lastIndexOf("/");
+        final String existingFilename = existingResource.getNewPath().substring(
+                lastSlashPos);
+
+        // new request is for same filename as already in the list
+        return newResource.getNewPath().endsWith(existingFilename);
     }
 
     private File getPackageDir(final String requestedResourcePath,

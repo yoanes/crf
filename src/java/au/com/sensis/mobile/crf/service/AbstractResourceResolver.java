@@ -137,9 +137,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             final List<Resource> resolvedPaths,
             final ResourceAccumulator allResourcePaths) {
 
-        if (!resolvedPaths.isEmpty()
-                && ((allResourcePaths != null)
-                        && (allResourcePaths.getAllResourcePaths() != null))) {
+        if (!resolvedPaths.isEmpty() && (allResourcePaths != null)) {
 
             Collections.reverse(resolvedPaths);
 

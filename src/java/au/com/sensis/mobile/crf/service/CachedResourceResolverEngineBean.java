@@ -109,16 +109,38 @@ implements ResourceResolverEngine {
         return resource;
     }
 
+    /**
+     * Generates a unique hash key for the given {@link Device} and requested resource.
+     *
+     * @param device for which the given requested resource is for
+     * @param requestedResourcePath to be resolved for the given {@link Device}
+     * @return a unique hash key for the given {@link Device} and requested resource
+     */
     protected int generateHashKey(final Device device, final String requestedResourcePath) {
         return (device.getUserAgent() + requestedResourcePath).hashCode();
     }
 
+    /**
+     * Delegates to the underlying {@link ResourceResolverEngine} to get all matching resources
+     * for the given {@link Device}.
+     * @param device to get all resources for
+     * @param requestedResourcePath to resolve all resources for the given {@link Device}
+     * @return a list of matching {@link Resource}s
+     */
     protected List<Resource> fetchAllResources(final Device device,
             final String requestedResourcePath) {
 
         return getResourceResolverEngine().getAllResources(device, requestedResourcePath);
     }
 
+    /**
+     * Delegates to the underlying {@link ResourceResolverEngine} to get the matching resource
+     * for the given {@link Device}.
+     * @param device to get the resource for
+     * @param requestedResourcePath for which to find a matching {@link Resource} for the
+     * given {@link Device}
+     * @return the {@link Resource} matching the given {@link Device}
+     */
     protected Resource fetchResource(final Device device, final String requestedResourcePath) {
 
         return getResourceResolverEngine().getResource(device, requestedResourcePath);

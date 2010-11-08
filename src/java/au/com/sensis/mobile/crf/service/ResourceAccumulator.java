@@ -10,6 +10,14 @@ import java.util.Deque;
  */
 public class ResourceAccumulator {
 
+    /**
+     * An initial value for a <code>hashCode</code>, to which is added contributions
+     * from fields. Using a non-zero value decreases collisons of <code>hashCode</code>
+     * values.
+     */
+    private static final int SEED = 23;
+
+
     private Deque<Resource> allResourcePaths;
 
 
@@ -48,23 +56,26 @@ public class ResourceAccumulator {
         return false;
     }
 
+    /**
+     * Provides a hash code for this {@link ResourceAccumulator} so that when one
+     * resourceAccumulator.equals(this) then resourceAccumulator.hashCode() also equals
+     * this.hashCode().
+     *
+     * @return a hash code for this {@link ResourceAccumulator}
+     */
+    @Override
+    public int hashCode() {
+        return SEED + getAllResourcePaths().hashCode();
+    }
 
     /**
-     * Returns a String representing the content of this ResourceAccumulator.
+     * @return a String representing the content of this ResourceAccumulator.
      */
     @Override
     public String toString() {
 
         return allResourcePaths.toString();
     }
-
-    /**
-     * Delegates to the Object.hashCode() method.
-     */
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    };
 
     /**
      * @return the allResourcePaths
