@@ -351,7 +351,7 @@ public class ResourcePathTestData {
     }
 
     public Resource getMappedIphoneGroupPngImageResourcePath() {
-        return new ResourceBean(getRequestedImageResourcePath(),
+        return new ImageResourceBean(getRequestedImageResourcePath(),
                 getDeploymentVersion() + "/iPhone/common/unmetered.png", getRootResourcesPath());
     }
 

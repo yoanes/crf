@@ -34,8 +34,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     public void setUp() throws Exception {
 
         setObjectUnderTest(new ImageResourceResolverBean(
-                getResourcePathTestData()
-                .getAbstractImageExtensionWithLeadingDot(),
+                getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
                 getDeploymentMetadata(), FILE_EXTENSION_WILDCARDS));
     }

@@ -25,6 +25,7 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
+import au.com.sensis.mobile.crf.service.ImageResourceBean;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
@@ -43,6 +44,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private static final String DYN_ATTR_URI = "http://www.w3.org/2002/06/xhtml2";
     private static final String BODY_CONTENT = "+";
+    private static final int IMG_WIDTH = 100;
+    private static final int IMG_HEIGHT = 50;
 
     private ImageTag objectUnderTest;
     private Device mockDevice;
@@ -52,7 +55,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private StringWriter stringWriter;
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
 
     private MockServletContext springMockServletContext;
     private WebApplicationContext mockWebApplicationContext;
@@ -60,7 +63,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private ImageTagDependencies imageTagDependencies;
     private FileIoFacade mockFileIoFacade;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
-    private Resource mockResource;
+    private ImageResourceBean mockResource;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
 
@@ -116,8 +119,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testDoTagWithInvalidHref() throws Throwable {
         final String[] testSrcs =
-                { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
-                        "  " };
+        { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
+        "  " };
 
         for (final String testSrc : testSrcs) {
             try {
@@ -130,9 +133,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testSrc: '"
-                                + testSrc + "'",
+                        + testSrc + "'",
                         "path must not start with '..' or '/'. Was: '"
-                                + testSrc + "'", e.getMessage());
+                        + testSrc + "'", e.getMessage());
             }
         }
 
@@ -148,12 +151,13 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
                 recordGetImageTagDependencies();
 
-                recordLookupRequestedResourceWhenFound(testDataArray[i]
-                        .getResource());
+                recordLookupRequestedResourceWhenFound(testDataArray[i].getResource());
 
                 if (testDataArray[i].getResource() != null) {
                     recordResourceEndsWithDotNull(Boolean.FALSE);
                     recordGetResourceNewPath();
+                    recordGetResourceWidth();
+                    recordGetResourceHeight();
                     recordGetJspWriter();
                 } else {
                     recordLogResourceNotFoundWarning();
@@ -164,10 +168,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
                 getObjectUnderTest().doTag();
 
-                Assert.assertEquals("incorrect output for testData at index "
-                        + i + ": '" + testDataArray[i] + "'", testDataArray[i]
-                        .getOutputString(), getStringWriter().getBuffer()
-                        .toString());
+                Assert.assertEquals("incorrect output for testData at index " + i + ": '",
+                        testDataArray[i].getOutputString(),
+                        getStringWriter().getBuffer().toString());
 
                 // Explicit verify since we are in a loop.
                 verify();
@@ -181,11 +184,11 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordLogResourceNotFoundWarning() {
         EasyMock.expect(getMockResolutionWarnLogger().isWarnEnabled())
-            .andReturn(Boolean.TRUE);
+        .andReturn(Boolean.TRUE);
         getMockResolutionWarnLogger().warn(
                 "No resource was found for requested resource '"
-                        + getResourcePathTestData().getRequestedImageResourcePath()
-                        + "' and device " + getMockDevice() + "");
+                + getResourcePathTestData().getRequestedImageResourcePath()
+                + "' and device " + getMockDevice() + "");
     }
 
     @Test
@@ -230,7 +233,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordResourceEndsWithDotNull(final Boolean endsWithDotNull) {
         EasyMock.expect(getMockResource().newPathEndsWithDotNull())
-                .andReturn(endsWithDotNull);
+        .andReturn(endsWithDotNull);
     }
 
     private void initObjectUnderTest(final TestData testData) throws Exception {
@@ -266,9 +269,19 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private void recordGetResourceNewPath() {
 
         EasyMock.expect(getMockResource().getNewPath())
-                .andReturn(
-                        getMappedDefaultGroupPngImageResourcePath()
-                                .getNewPath()).atLeastOnce();
+        .andReturn(
+                getMappedDefaultGroupPngImageResourcePath()
+                .getNewPath()).atLeastOnce();
+    }
+
+    private void recordGetResourceWidth() {
+
+        EasyMock.expect(getMockResource().getImageWidth()).andReturn(IMG_WIDTH).atLeastOnce();
+    }
+
+    private void recordGetResourceHeight() {
+
+        EasyMock.expect(getMockResource().getImageHeight()).andReturn(IMG_HEIGHT).atLeastOnce();
     }
 
     private Resource getMappedDefaultGroupPngImageResourcePath() {
@@ -282,8 +295,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 getMockResourceResolverEngine().getResource(
                         getMockDevice(),
                         getResourcePathTestData()
-                                .getRequestedImageResourcePath())).andReturn(
-                resource);
+                        .getRequestedImageResourcePath())).andReturn(
+                                resource);
     }
 
     private void recordGetImageTagDependencies() {
@@ -418,7 +431,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
      * @return the mockResourceResolverEngine
      */
     public ResourceResolverEngine
-        getMockResourceResolverEngine() {
+    getMockResourceResolverEngine() {
         return mockResourceResolverEngine;
     }
 
@@ -468,13 +481,13 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private TestData[] getTestData() {
         return new TestData [] {
-            createTestDataNoDynamicAttributesSingleMappedResource(),
-            createTestDataOneDynamicAttributeSingleMappedResource(),
-            createTestDataTwoDynamicAttributesSingleMappedResource(),
+                createTestDataNoDynamicAttributesSingleMappedResource(),
+                createTestDataOneDynamicAttributeSingleMappedResource(),
+                createTestDataTwoDynamicAttributesSingleMappedResource(),
 
-            createTestDataNoDynamicAttributesNoMappedResourceAndNoBodyContent(),
+                createTestDataNoDynamicAttributesNoMappedResourceAndNoBodyContent(),
 
-            createTestDataNoDynamicAttributesNoMappedResourceButWithBodyContent()
+                createTestDataNoDynamicAttributesNoMappedResourceButWithBodyContent()
         };
     }
 
@@ -483,7 +496,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 new ArrayList<DynamicTagAttribute>(),
                 getMockResource(),
                 "<img src=\"" + getMappedDefaultGroupPngImageResourceHref()
-                    + "\" " + "/>",
+                + "\" " + "width=\"" + IMG_WIDTH + "\" " + "height=\"" + IMG_HEIGHT + "\" " + "/>",
                 BODY_CONTENT);
     }
 
@@ -491,9 +504,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         return new TestData(
                 Arrays.asList(createTitleDynamicAttribute()),
                 getMockResource(),
-                "<img src=\""
-                + getMappedDefaultGroupPngImageResourceHref()
-                + "\" title=\"unmetered usage\" />",
+                "<img src=\"" + getMappedDefaultGroupPngImageResourceHref() + "\" "
+                + "width=\"" + IMG_WIDTH + "\" " + "height=\"" + IMG_HEIGHT + "\" "
+                + "title=\"unmetered usage\" />",
                 BODY_CONTENT);
     }
 
@@ -501,9 +514,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         return new TestData(
                 Arrays.asList(createTitleDynamicAttribute(), createAltDynamicAttribute()),
                 getMockResource(),
-                "<img src=\""
-                + getMappedDefaultGroupPngImageResourceHref()
-                + "\" title=\"unmetered usage\" alt=\"unmetered\" />",
+                "<img src=\"" + getMappedDefaultGroupPngImageResourceHref() + "\" "
+                + "width=\"" + IMG_WIDTH + "\" " + "height=\"" + IMG_HEIGHT + "\" "
+                + "title=\"unmetered usage\" alt=\"unmetered\" />",
                 BODY_CONTENT);
     }
 
@@ -523,12 +536,12 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private DynamicTagAttribute createTitleDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "title",
-                "unmetered usage");
+        "unmetered usage");
     }
 
     private DynamicTagAttribute createAltDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "alt",
-            "unmetered");
+        "unmetered");
     }
 
     private String getMappedDefaultGroupPngImageResourceHref() {
@@ -538,14 +551,14 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the mockResource
      */
-    public Resource getMockResource() {
+    public ImageResourceBean getMockResource() {
         return mockResource;
     }
 
     /**
      * @param mockResource the mockResource to set
      */
-    public void setMockResource(final Resource mockResource) {
+    public void setMockResource(final ImageResourceBean mockResource) {
         this.mockResource = mockResource;
     }
 

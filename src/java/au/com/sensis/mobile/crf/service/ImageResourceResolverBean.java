@@ -1,9 +1,17 @@
 package au.com.sensis.mobile.crf.service;
 
+import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -23,7 +31,7 @@ import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 public class ImageResourceResolverBean extends AbstractResourceResolver {
 
     private static final Logger LOGGER =
-            Logger.getLogger(ImageResourceResolverBean.class);
+        Logger.getLogger(ImageResourceResolverBean.class);
 
     private final String [] fileExtensionWildcards;
 
@@ -64,7 +72,7 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
                 || containsBlanks(fileExtensionWildcards)) {
             throw new IllegalArgumentException(
                     "fileExtensionWildcards must be an array of non-blank Strings but was: '"
-                            + ArrayUtils.toString(fileExtensionWildcards) + "'");
+                    + ArrayUtils.toString(fileExtensionWildcards) + "'");
         }
     }
 
@@ -96,17 +104,17 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
         // TODO: possibly cache the result since we are accessing the file
         // system?
         final File[] matchedFiles =
-                FileIoFacadeFactory.getFileIoFacadeSingleton().list(
-                        getRootResourcesDir(),
-                        newResourcesBasePath,
-                        getFileExtensionWildcards());
+            FileIoFacadeFactory.getFileIoFacadeSingleton().list(
+                    getRootResourcesDir(),
+                    newResourcesBasePath,
+                    getFileExtensionWildcards());
 
         warnIfMultipleResourcesWithExtensionsFound(requestedResourcePath, matchedFiles);
 
         if (matchedFiles.length > 0) {
             return Arrays
-                    .asList(createFoundResource(requestedResourcePath, newResourcesBasePath,
-                            matchedFiles[0]));
+            .asList(createFoundResource(requestedResourcePath, newResourcesBasePath,
+                    matchedFiles[0]));
         } else {
             return new ArrayList<Resource>();
         }
@@ -114,9 +122,47 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
 
     private Resource createFoundResource(final String requestedResourcePath,
             final String newResourcePath, final File foundFile) {
-        return new ResourceBean(requestedResourcePath,
+
+        final ImageResourceBean resource =  new ImageResourceBean(requestedResourcePath,
                 getNewResourcePathPlusFileExtension(foundFile, newResourcePath),
                 getRootResourcesDir());
+
+        final Dimension dimensions = getImageDimensions(foundFile);
+
+        if (dimensions != null) {
+            resource.setImageHeight((int) dimensions.getHeight());
+            resource.setImageWidth((int) dimensions.getWidth());
+        }
+        return resource;
+    }
+
+    private Dimension getImageDimensions(final File imageFile) {
+
+        Dimension dimensions = null;
+
+        final Iterator<ImageReader> readers = ImageIO.getImageReadersBySuffix(
+                FilenameUtils.getExtension(imageFile.getName()));
+
+        if (readers.hasNext()) {
+            final ImageReader reader = readers.next();
+
+            try {
+                final ImageInputStream stream = new FileImageInputStream(imageFile);
+                reader.setInput(stream);
+
+                dimensions = new Dimension(reader.getWidth(reader.getMinIndex()),
+                        reader.getHeight(reader.getMinIndex()));
+
+            } catch (final IOException e) {
+                // It will work OK without width and height, but this error shouldn't happen.
+                LOGGER.warn("Unable to retrieve image dimensions for " + imageFile.getName()
+                        + "\n " + e);
+            } finally {
+                reader.dispose();
+            }
+        }
+
+        return dimensions;
     }
 
     private String getNewResourcePathPlusFileExtension(final File matchedFile,

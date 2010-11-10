@@ -9,6 +9,7 @@ import javax.servlet.jsp.PageContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import au.com.sensis.mobile.crf.service.ImageResourceBean;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -32,14 +33,17 @@ public class ImageTag extends AbstractTag {
         validatePathAttribute(getSrc());
 
         final Resource resource =
-                getResourceResolverEngine().getResource(getDevice(),
-                        getSrc());
+            getResourceResolverEngine().getResource(getDevice(),
+                    getSrc());
+
+
+
         if (resource != null) {
             doTagWhenResourceFound(resource);
         } else {
             doTagWhenResourceNotFound();
         }
-            }
+    }
 
     private void doTagWhenResourceFound(final Resource resource) throws IOException, JspException {
         if (resource.newPathEndsWithDotNull()) {
@@ -50,14 +54,14 @@ public class ImageTag extends AbstractTag {
     }
 
     private void doTagWhenResourceNotFound() throws IOException {
-            if (getResourceResolutionWarnLogger().isWarnEnabled()) {
-                getResourceResolutionWarnLogger().warn(
-                        "No resource was found for requested resource '"
-                                + getSrc() + "' and device " + getDevice());
-            }
+        if (getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "No resource was found for requested resource '"
+                    + getSrc() + "' and device " + getDevice());
+        }
 
         writeSingleBrokenImageTag(getJspContext().getOut());
-        }
+    }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
         return getTagDependencies().getResourceResolutionWarnLogger();
@@ -65,7 +69,11 @@ public class ImageTag extends AbstractTag {
 
     private void writeSingleImageTag(final JspWriter jspWriter,
             final Resource resource) throws IOException {
-        writeSingleImageTag(jspWriter, resource.getNewPath());
+
+        final ImageResourceBean imageResource = (ImageResourceBean) resource;
+
+        writeSingleImageTag(jspWriter, imageResource.getNewPath(), imageResource.getImageWidth(),
+                imageResource.getImageHeight());
     }
 
     private void writeSingleBrokenImageTag(final JspWriter jspWriter) throws IOException {
@@ -79,11 +87,18 @@ public class ImageTag extends AbstractTag {
     }
 
     private void writeSingleImageTag(final JspWriter jspWriter,
-            final String imageSrc) throws IOException {
+            final String imageSrc, final int imageWidth, final int imageHeight) throws IOException {
         jspWriter.print("<img ");
 
         jspWriter.print("src=\"" + getTagDependencies().getClientPathPrefix()
                 + imageSrc + "\" ");
+
+        if (imageWidth != 0) {
+            jspWriter.print("width=\"" + imageWidth + "\" ");
+        }
+        if (imageHeight != 0) {
+            jspWriter.print("height=\"" + imageHeight + "\" ");
+        }
 
         writeDynamicTagAttributes(jspWriter);
 
@@ -107,10 +122,10 @@ public class ImageTag extends AbstractTag {
         final PageContext pc = (PageContext) getJspContext();
 
         final WebApplicationContext webApplicationContext =
-                WebApplicationContextUtils.getRequiredWebApplicationContext(pc
-                        .getServletContext());
+            WebApplicationContextUtils.getRequiredWebApplicationContext(pc
+                    .getServletContext());
         return (ImageTagDependencies) webApplicationContext
-                .getBean(ImageTagDependencies.BEAN_NAME);
+        .getBean(ImageTagDependencies.BEAN_NAME);
     }
 
     /**
