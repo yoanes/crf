@@ -5,16 +5,6 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<%--
-  - Acceptance criteria covered by the following images (Jira CRF-12).
-  - 
-  - iphone or ipod:
-  -     resource found in mapComponent-iphone-ipod group only; png format:
-  -         resources/images/mapComponent-iphone-ipod/component/map/in.png
-  - All other devices:
-  -     no img tag output.
-  --%>
 <div><crf:img src="selenium/component/map/in.image" id="mapZoomIn" alt="Map Zoom In" title="Map Zoom In" device="${context.device}"/></div>
 
 <%--

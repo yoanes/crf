@@ -27,9 +27,17 @@ public class IphoneOS3xBdpPage extends IphoneBdpPage {
     }
 
     private void assertIphoneOS3xImg() {
+        assertImgFoundInDefaultGroupPngFormat();
+        assertImgFoundInIntermediateGroupPngFormat();
+    }
+
+    private void assertImgFoundInDefaultGroupPngFormat() {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
                 "default/selenium/common/unmetered.png", 310, 42);
+    }
+
+    private void assertImgFoundInIntermediateGroupPngFormat() {
         assertImg("appStore img not found",
                 "appStoreImg", "App Store", "App Store",
                 "applewebkit/selenium/common/app_store.png", 244, 80);

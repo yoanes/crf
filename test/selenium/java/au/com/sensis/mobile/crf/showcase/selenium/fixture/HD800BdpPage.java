@@ -84,12 +84,12 @@ public class HD800BdpPage extends BdpPage {
     private void assertHD800Img() {
         final int expectedNumImages = 3;
         assertNumImgElements(expectedNumImages);
-        assertImgWhenDefaultGroupNodeImageFound();
+        assertImgWhenDefaultGroupNodeImageFoundPngFormat();
         assertBrokenImgWhenNoImageFound();
-        assertBodyContentImgWhenImgFound();
+        assertBodyContentIgnoredWhenImgFound();
     }
 
-    private void assertImgWhenDefaultGroupNodeImageFound() {
+    private void assertImgWhenDefaultGroupNodeImageFoundPngFormat() {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
                 "default/selenium/common/unmetered.png", 310, 42);
@@ -101,7 +101,7 @@ public class HD800BdpPage extends BdpPage {
                 "selenium/common/app_store.image");
     }
 
-    private void assertBodyContentImgWhenImgFound() {
+    private void assertBodyContentIgnoredWhenImgFound() {
         assertImg("wm img not found",
                 "wherisMobileImg", "Whereis Mobile", "Whereis Mobile",
                 "HD800/selenium/common/wm.gif", 79, 75);

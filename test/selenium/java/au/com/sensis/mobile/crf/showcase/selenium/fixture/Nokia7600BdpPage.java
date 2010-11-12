@@ -83,12 +83,12 @@ public class Nokia7600BdpPage extends BdpPage {
 
     private void assertNokia7600Img() {
         assertNumImgElements(2);
-        assertImgWhenLeafGroupNodeImageFound();
+        assertImgWhenLeafGroupNodeImageFoundGifFormat();
         assertBrokenImgWhenNoImageFound();
-        assertBodyContentImgWhenDotNullImgFound();
+        assertBodyContentOutputWhenDotNullImgFound();
     }
 
-    private void assertImgWhenLeafGroupNodeImageFound() {
+    private void assertImgWhenLeafGroupNodeImageFoundGifFormat() {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
                 "nokia7600/selenium/common/unmetered.gif", 115, 15);
@@ -100,7 +100,7 @@ public class Nokia7600BdpPage extends BdpPage {
                 "selenium/common/app_store.image");
     }
 
-    private void assertBodyContentImgWhenDotNullImgFound() {
+    private void assertBodyContentOutputWhenDotNullImgFound() {
         assertTrue("WM text should be present resulting from img body content",
                 getBrowser().isTextPresent("WM"));
     }

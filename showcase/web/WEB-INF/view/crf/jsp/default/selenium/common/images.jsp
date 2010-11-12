@@ -5,34 +5,6 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
 
-<%-- 
-  - TODO: refactor so that the semantics of these comments are captured
-  - in the selenium tests.
-  -
-  - Acceptance criteria covered by the following images (Jira CRF-23).
-  -
-  - Nokia 7600:
-  -     resource found in default group only; gif format:
-  -         resources/images/nokia7600/common/unmetered.gif
-  -     resource not found in any group:  
-  -         no img tag written out for common/app_store.image
-  - HD800 device:
-  -     resource found in default group only; png format:
-  -         resources/images/default/common/unmetered.png
-  -     resource not found in any group:  
-  -         no img tag written out for common/app_store.image
-  - iPhone OS 2.x:
-  -     resource found in non-default group; png format:
-  -         resources/images/iphone-ipod-os2/common/unmetered.png
-  -     image explicitly null:
-  -         no img tag written out for common/app_store.image  
-  - iPhone OS 3+:
-  -     resource found in default group only; png format:
-  -         resources/images/default/common/unmetered.png
-  -     resource found in intermediate group; png format:
-  -         resources/images/applewebkit/common/app_store.png
-  --%>
-
 <div><crf:img src="selenium/common/unmetered.image" id="unmeteredImg" alt="Unmetered" title="Unmetered" device="${context.device}"/></div>
 <div><crf:img src="selenium/common/app_store.image" id="appStoreImg" alt="App Store" title="App Store" device="${context.device}"/></div>
 <div><crf:img src="selenium/common/wm.image" id="wherisMobileImg" alt="Whereis Mobile" title="Whereis Mobile" device="${context.device}">WM</crf:img></div>
