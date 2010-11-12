@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.showcase.selenium.fixture;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import junit.framework.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -28,22 +29,27 @@ public abstract class BdpPage extends AbstractPageFixture {
     public void assertPageStructure() {
         assertTrue(getBrowser().isTextPresent("[default] logo.jsp"));
 
-        final String myScriptVariable = getBrowser().getEval("window.myScript");
-        assertEquals("myScriptVariable has wrong value",
-                "I am here and you should see me only once", myScriptVariable);
+        assertInlineScriptPresent();
 
         assertAbsolutelyReferencedScript("external, absolutely referenced script not found",
-        "http://localhost:8080/something.js");
+	        "http://localhost:8080/something.js");
 
-        assertAppProperty1();
+        assertAppProperty1LoadedFromMainPropertiesFile();
 
         doAssertPageStructure();
     }
 
+    private void assertInlineScriptPresent() {
+        final String myScriptVariable = getBrowser().getEval("window.myScript");
+        assertEquals("myScriptVariable set by inline script has wrong value",
+                "I am here and you should see me only once", myScriptVariable);
+    }
+
     /**
-     * Assert that that action we hit has successfully retrieved a properties file.
+     * Assert that the action we hit has successfully retrieved a properties file via
+     * the framework.
      */
-    protected void assertAppProperty1() {
+    protected void assertAppProperty1LoadedFromMainPropertiesFile() {
         assertTrue("app.property1 not found on page",
                 getBrowser().isTextPresent("'app.property1': appProperty1DefaultValue"));
     }
@@ -105,6 +111,24 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "and @href=\"/uidev/crfshowcase/uiresources/css/"
                 + getProjectVersion() + "/"
                 + expectedHref + "\""
+                + "]"));
+
+    }
+
+    /**
+     * Helper method for asserting that a CSS link element is not present with an href
+     * matching a given regex.
+     *
+     * @param message Message to use if the test fails.
+     * @param expectedHrefRegex Regex to test against the link's href.
+     */
+    // TODO: this just doesn't seem to work
+    protected final void assertCssLinkNotPresent(final String message,
+        final String expectedHrefRegex) {
+        getBrowser().allowNativeXpath("false");
+        Assert.assertFalse(message, getBrowser().isElementPresent(
+                "//head/link["
+                + "matches(@href, \"" + expectedHrefRegex + "\") "
                 + "]"));
 
     }

@@ -35,8 +35,19 @@ public class Nokia7600BdpPage extends BdpPage {
     private void assertNokia7600Css() {
         final int expectedNumNokia7600CssLinks = 2;
         assertNumCssLinks(expectedNumNokia7600CssLinks);
+        assertOnlyDefaultGroupCssResolved();
+    }
+
+    private void assertOnlyDefaultGroupCssResolved() {
         assertCssLink("main.css link not found", "default/selenium/common/main.css");
         assertCssLink("results.css link not found", "default/selenium/results/results.css");
+
+        /* TODO: implementation of assertCssLinkNotPresent just does not work. */
+/*
+        assertCssLinkNotPresent("jazz.css link should not be found", "jazz\\.css$");
+        assertCssLinkNotPresent("decorations.css link should not be found", "decorations\\.css$");
+        assertCssLinkNotPresent("columns.css link should not be found", "columns\\.css$");
+*/
     }
 
     private void assertNokia7600Script() {

@@ -25,7 +25,7 @@ public abstract class IphoneBdpPage extends BdpPage {
      * {@inheritDoc}
      */
     @Override
-    protected void assertAppProperty1() {
+    protected void assertAppProperty1LoadedFromMainPropertiesFile() {
         assertTrue("app.property1 not found on page",
                 getBrowser().isTextPresent("'app.property1': appProperty1IponeIpodValue"));
     }
@@ -79,32 +79,58 @@ public abstract class IphoneBdpPage extends BdpPage {
     private void assertIphoneCss() {
         final int expectedNumIphoneCssLinks = 10;
         assertNumCssLinks(expectedNumIphoneCssLinks);
-        assertCssLink("default/selenium/common/main.css link not found",
-        "default/selenium/common/main.css");
-        assertCssLink("webkit/selenium/common/main.css link not found",
-        "webkit/selenium/common/main.css");
-        assertCssLink("applewebkit/selenium/common/main.css link not found",
-        "applewebkit/selenium/common/main.css");
-        assertCssLink("iphone-ipod/selenium/common/main.css link not found",
-        "iphone-ipod/selenium/common/main.css");
 
+        assertCssLinksFoundInLeafGroupUptoDefaultGroup();
+
+        assertCssLinkFoundInLeafGroupOnly();
+
+        assertCssLinkFoundInDefaultGroupOnly();
+
+        assertCssLinkFoundInIntermediateGroupOnly();
+
+        assertCssLinkFoundInMultipleIntermediateGroupsOnly();
+
+        assertCssLinkFoundFromMapComponent();
+
+    }
+
+    private void assertCssLinksFoundInLeafGroupUptoDefaultGroup() {
+        assertCssLink("default/selenium/common/main.css link not found",
+                "default/selenium/common/main.css");
+        assertCssLink("webkit/selenium/common/main.css link not found",
+                "webkit/selenium/common/main.css");
+        assertCssLink("applewebkit/selenium/common/main.css link not found",
+                "applewebkit/selenium/common/main.css");
+        assertCssLink("iphone-ipod/selenium/common/main.css link not found",
+                "iphone-ipod/selenium/common/main.css");
+    }
+
+    private void assertCssLinkFoundInLeafGroupOnly() {
         assertCssLink("iphone-ipod/selenium/common/columns.css link not found",
         "iphone-ipod/selenium/common/columns.css");
+    }
 
+    private void assertCssLinkFoundInDefaultGroupOnly() {
         assertCssLink("default/selenium/results/results.css link not found",
         "default/selenium/results/results.css");
+    }
 
+    private void assertCssLinkFoundInIntermediateGroupOnly() {
         assertCssLink("webkit/selenium/common/jazz.css link not found",
         "webkit/selenium/common/jazz.css");
+    }
 
+    private void assertCssLinkFoundInMultipleIntermediateGroupsOnly() {
         assertCssLink("webkit/selenium/common/decorations.css link not found",
         "webkit/selenium/common/decorations.css");
         assertCssLink("applewebkit/selenium/common/decorations.css link not found",
         "applewebkit/selenium/common/decorations.css");
 
+    }
+
+    private void assertCssLinkFoundFromMapComponent() {
         assertCssLink("mapComponent-iphone-ipod/selenium/component/map/map.css link not found",
         "mapComponent-iphone-ipod/selenium/component/map/map.css");
-
     }
 
     private void assertIphoneScript() {
