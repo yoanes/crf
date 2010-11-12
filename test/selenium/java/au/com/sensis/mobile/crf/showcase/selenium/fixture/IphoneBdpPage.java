@@ -51,7 +51,7 @@ public abstract class IphoneBdpPage extends BdpPage {
         assertNumImgElements(getExpectedNumImgElements());
         assertImg("in.img not found",
                 "mapZoomIn", "Map Zoom In", "Map Zoom In",
-        "mapComponent-iphone-ipod/selenium/component/map/in.png");
+        "mapComponent-iphone-ipod/selenium/component/map/in.png", 45, 32);
         assertBodyContentImgWhenImgFound();
         doAssertImg();
     }
@@ -66,7 +66,7 @@ public abstract class IphoneBdpPage extends BdpPage {
     private void assertBodyContentImgWhenImgFound() {
         assertImg("wm img not found",
                 "wherisMobileImg", "Whereis Mobile", "Whereis Mobile",
-                "iphone-ipod/selenium/common/wm.gif");
+                "iphone-ipod/selenium/common/wm.gif", 60, 90);
         assertFalse("WM text should not be present resulting from img body content",
                 getBrowser().isTextPresent("WM"));
     }

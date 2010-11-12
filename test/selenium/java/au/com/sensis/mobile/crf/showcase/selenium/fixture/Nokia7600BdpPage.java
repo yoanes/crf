@@ -80,7 +80,7 @@ public class Nokia7600BdpPage extends BdpPage {
     private void assertImgWhenLeafGroupNodeImageFound() {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
-                "nokia7600/selenium/common/unmetered.gif");
+                "nokia7600/selenium/common/unmetered.gif", 115, 15);
     }
 
     private void assertBrokenImgWhenNoImageFound() {

@@ -29,7 +29,7 @@ public class IphoneOS2xBdpPage extends IphoneBdpPage {
     private void assertIphoneOS2xImg() {
         assertImg("unmetered img not found",
                 "unmeteredImg", "Unmetered", "Unmetered",
-                "iphone-ipod-os2/selenium/common/unmetered.png");
+                "iphone-ipod-os2/selenium/common/unmetered.png", 155, 21);
     }
 
     /**

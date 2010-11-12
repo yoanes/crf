@@ -154,10 +154,12 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @param expectedAlt Expected alt attribute.
      * @param expectedSrc Expected src value of the link, relative to the root
      *      resources/images dir.
+     * @param expectedWidth Expected width attribute of the img.
+     * @param expectedHeight Expected height attribute of the img.
      */
     protected final void assertImg(final String message, final String expectedId,
             final String expectedTitle, final String expectedAlt,
-            final String expectedSrc) {
+            final String expectedSrc, final int expectedWidth, final int expectedHeight) {
         assertTrue(message, getBrowser().isElementPresent(
                 "//body//img["
                 + "@id=\"" + expectedId + "\" "
@@ -165,7 +167,9 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "and @alt=\"" + expectedAlt + "\" "
                 + "and @src=\"/uidev/crfshowcase/uiresources/images/"
                 + getProjectVersion() + "/"
-                + expectedSrc + "\""
+                + expectedSrc + "\" "
+                + "and @width=\"" + expectedWidth + "\" "
+                + "and @height=\"" + expectedHeight + "\" "
                 + "]"));
 
     }
