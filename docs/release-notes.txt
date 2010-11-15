@@ -1,3 +1,19 @@
+==== Version 0.1.2-104 (tag: contentRenderingFramework_v0_1_2-104) ==== 
+
+Jiras:
+- CRF-75: NEW - Runtime reloading of crp-config.xml appears to be broken
+    - Modified src/resources/au/com/sensis/mobile/crf/crf-environment.properties.desk to
+      disable caching:
+      
+        env.cache.ui.configuration=false
+        env.cache.resources=false
+      
+      Removed now redundant setting of the same properties in 
+      showcase/resources/crf-environment.properties.desk.
+
+Upgrade notes:
+- Should be transparent.
+
 ==== Version 0.1.2-103 (tag: contentRenderingFramework_v0_1_2-103) ==== 
 
 Merged changes between contentRenderingFramework_v0_1_2-003 and 
