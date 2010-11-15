@@ -26,8 +26,8 @@ public class Nokia7600BdpPage extends BdpPage {
     @Override
     protected void doAssertPageStructure() {
         assertNokia7600Css();
-        assertNokia7600Script();
-        assertNokia7600Jsp();
+        assertNokia7600Scripts();
+        assertDefaultGroupJsp();
         assertNokia7600Img();
         assertDeviceProperties();
     }
@@ -50,34 +50,53 @@ public class Nokia7600BdpPage extends BdpPage {
 */
     }
 
-    private void assertNokia7600Script() {
-        final int expectedNumNokia7600Scripts = 7;
+    private void assertNokia7600Scripts() {
+        final int expectedNumNokia7600Scripts = 9;
         assertNumScripts(expectedNumNokia7600Scripts + super.getNumExpectedScripts());
 
-        assertNokia7600ScriptByNameNoBundling();
-        assertNokia7600ScriptByAllNoBundling();
+        assertNokia7600ScriptByName();
+        assertNokia7600ScriptByPackageNoBundling();
     }
 
-    private void assertNokia7600ScriptByAllNoBundling() {
+    private void assertNokia7600ScriptByName() {
+        assertScript("main.js script not found", "default/selenium/common/main.js");
+        assertScript("results.js script not found", "default/selenium/results/results.js");
+    }
+
+    private void assertNokia7600ScriptByPackageNoBundling() {
+        assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithArbitraryOrder();
+
+        assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrder();
+
+        assertMapComponentScriptsResolvedByPackageNoBundlingWithArbitraryOrder();
+    }
+
+    private void assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithArbitraryOrder() {
+        assertScript("default/selenium/reporting/default-reporting1.js script not found",
+                "default/selenium/reporting/default-reporting1.js");
+        assertScript("default/selenium/reporting/default-reporting2.js script not found",
+                "default/selenium/reporting/default-reporting2.js");
+    }
+
+    private void
+        assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrder() {
+
         assertScript("default/selenium/fielddecorators/decorator2.js script not found",
                 "default/selenium/fielddecorators/decorator2.js");
         assertScript("default/selenium/fielddecorators/decorator1.js script not found",
                 "default/selenium/fielddecorators/decorator1.js");
         assertScript("default/selenium/fielddecorators/decorator3.js script not found",
                 "default/selenium/fielddecorators/decorator3.js");
+    }
 
+    private void assertMapComponentScriptsResolvedByPackageNoBundlingWithArbitraryOrder() {
         assertScript("default/selenium/component/map/map1.js script not found",
                 "default/selenium/component/map/map1.js");
         assertScript("default/selenium/component/map/map2.js script not found",
                 "default/selenium/component/map/map2.js");
     }
 
-    private void assertNokia7600ScriptByNameNoBundling() {
-        assertScript("main.js script not found", "default/selenium/common/main.js");
-        assertScript("results.js script not found", "default/selenium/results/results.js");
-    }
-
-    private void assertNokia7600Jsp() {
+    private void assertDefaultGroupJsp() {
         assertTrue(getBrowser().isTextPresent("[default] bdp.jsp"));
     }
 

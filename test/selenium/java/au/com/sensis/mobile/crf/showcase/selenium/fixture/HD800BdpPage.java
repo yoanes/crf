@@ -28,7 +28,7 @@ public class HD800BdpPage extends BdpPage {
     protected void doAssertPageStructure() {
         assertHD800Css();
         assertHD800Scripts();
-        assertHD800Jsp();
+        assertLeafGroupJsp();
         assertHD800Img();
         assertDeviceProperties();
     }
@@ -51,33 +51,54 @@ public class HD800BdpPage extends BdpPage {
     }
 
     private void assertHD800Scripts() {
-        final int expectedNumHD800Scripts = 7;
+        final int expectedNumHD800Scripts = 9;
         assertNumScripts(expectedNumHD800Scripts + super.getNumExpectedScripts());
 
-        assertHD800ScriptsByNameNoBundling();
-        assertHD800ScriptsByAllNoBundling();
+        assertHD800ScriptsByName();
+        assertHD800ScriptsByPackageNoBundling();
     }
 
-    private void assertHD800ScriptsByAllNoBundling() {
+    private void assertHD800ScriptsByName() {
+        assertOnlyDefaultGroupScriptsResolvedByNameNoBundilng();
+    }
+
+    private void assertHD800ScriptsByPackageNoBundling() {
+        assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithArbitraryOrder();
+        assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrder();
+        assertMapComponentScriptsResolvedByPackageNoBundlingWithArbitraryOrder();
+    }
+
+    private void assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithArbitraryOrder() {
+        assertScript("default/selenium/reporting/default-reporting1.js script not found",
+                "default/selenium/reporting/default-reporting1.js");
+        assertScript("default/selenium/reporting/default-reporting2.js script not found",
+                "default/selenium/reporting/default-reporting2.js");
+    }
+
+    private void
+        assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrder() {
+
         assertScript("default/selenium/fielddecorators/decorator2.js script not found",
                 "default/selenium/fielddecorators/decorator2.js");
         assertScript("default/selenium/fielddecorators/decorator1.js script not found",
                 "default/selenium/fielddecorators/decorator1.js");
         assertScript("default/selenium/fielddecorators/decorator3.js script not found",
                 "default/selenium/fielddecorators/decorator3.js");
+    }
 
+    private void assertMapComponentScriptsResolvedByPackageNoBundlingWithArbitraryOrder() {
         assertScript("default/selenium/component/map/map1.js script not found",
                 "default/selenium/component/map/map1.js");
         assertScript("default/selenium/component/map/map2.js script not found",
                 "default/selenium/component/map/map2.js");
     }
 
-    private void assertHD800ScriptsByNameNoBundling() {
+    private void assertOnlyDefaultGroupScriptsResolvedByNameNoBundilng() {
         assertScript("main.js script not found", "default/selenium/common/main.js");
         assertScript("results.js script not found", "default/selenium/results/results.js");
     }
 
-    private void assertHD800Jsp() {
+    private void assertLeafGroupJsp() {
         assertTrue(getBrowser().isTextPresent("[HD800] bdp.jsp"));
     }
 
