@@ -3,6 +3,7 @@ package au.com.sensis.mobile.crf.debug;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Before;
@@ -49,11 +50,19 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
         setResourceTreeNode6(new JspResourceTreeNode(getMockResource6()));
         setResourceTreeNode7(new JspResourceTreeNode(getMockResource7()));
 
-        setObjectUnderTest(new ResourceResolutionTree());
+        setObjectUnderTest(createEnabledObjectUnderTest());
+    }
+
+    private ResourceResolutionTree createEnabledObjectUnderTest() {
+        return new ResourceResolutionTree(true);
+    }
+
+    private ResourceResolutionTree createDisabledObjectUnderTest() {
+        return new ResourceResolutionTree();
     }
 
     @Test
-    public void testAddNodeWhenNoRoot() throws Throwable {
+    public void testAddChildToCurrentNodeWhenNoRoot() throws Throwable {
         getObjectUnderTest().addChildToCurrentNode(getResourceTreeNode1());
 
         Assert
@@ -66,7 +75,7 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testAddNodeWhenRootExists() throws Throwable {
+    public void testAddChildToCurrentNodeWhenRootExists() throws Throwable {
         getObjectUnderTest().addChildToCurrentNode(getResourceTreeNode1());
         getObjectUnderTest().addChildToCurrentNode(getResourceTreeNode2());
 
@@ -74,6 +83,23 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
                 .assertEquals("Root is wrong", getResourceTreeNode1(), getObjectUnderTest()
                         .getRoot());
         Assert.assertEquals("CurrNode is wrong", getResourceTreeNode1(), getObjectUnderTest()
+                .getCurrentNode());
+    }
+
+    @Test
+    public void testAddChildToCurrentNodeWhenTreeDisabled() throws Throwable {
+        setObjectUnderTest(createDisabledObjectUnderTest());
+
+        getObjectUnderTest().addChildToCurrentNode(getResourceTreeNode1());
+
+        assertDisabledTreeState();
+    }
+
+    private void assertDisabledTreeState() {
+        Assert
+                .assertNull("Root should be null", getObjectUnderTest()
+                        .getRoot());
+        Assert.assertNull("CurrNode should be null", getObjectUnderTest()
                 .getCurrentNode());
     }
 
@@ -103,6 +129,17 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
                         .getRoot());
         Assert.assertEquals("CurrNode is wrong", getResourceTreeNode2(), getObjectUnderTest()
                 .getCurrentNode());
+    }
+
+    @Test
+    public void testAddChildToCurrentNodeAndPromoteToCurrentWhenTreeDisabled() throws Throwable {
+        setObjectUnderTest(createDisabledObjectUnderTest());
+
+        getObjectUnderTest().addChildToCurrentNodeAndPromoteToCurrent(getResourceTreeNode1());
+
+        getObjectUnderTest().addChildToCurrentNodeAndPromoteToCurrent(getResourceTreeNode2());
+
+        assertDisabledTreeState();
     }
 
     @Test
@@ -138,6 +175,20 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("CurrNode is wrong", getResourceTreeNode1(), getObjectUnderTest()
                 .getCurrentNode());
+
+    }
+
+    @Test
+    public void testPromoteParentToCurrentWhenTreeDisabled() throws Throwable {
+        setObjectUnderTest(createDisabledObjectUnderTest());
+
+        getObjectUnderTest().addChildToCurrentNodeAndPromoteToCurrent(getResourceTreeNode1());
+
+        getObjectUnderTest().addChildToCurrentNodeAndPromoteToCurrent(getResourceTreeNode2());
+
+        getObjectUnderTest().promoteParentToCurrent();
+
+        assertDisabledTreeState();
 
     }
 
@@ -222,6 +273,16 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
+    public void testPreOrderIteratorWhenTreeDisabled() throws Throwable {
+        setObjectUnderTest(createDisabledObjectUnderTest());
+
+        final Iterator<ResourceTreeNode> preOrderIterator = getObjectUnderTest().preOrderIterator();
+
+        Assert.assertFalse("preOrderIterator.hasNext() should be false",
+                preOrderIterator.hasNext());
+    }
+
+    @Test
     public void testGraphAsPlainText() throws Throwable {
         // Root.
         EasyMock.expect(getMockResource1().getNewPath()).andReturn(
@@ -259,6 +320,15 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("graphAsPlainText is wrong", expectedGraph, actualGraph);
 
+    }
+
+    @Test
+    public void testGraphAsPlainTextWhenTreeDisabled() throws Throwable {
+        setObjectUnderTest(createDisabledObjectUnderTest());
+
+        final String actualGraph = getObjectUnderTest().graphAsPlainText();
+
+        Assert.assertEquals("graphAsPlainText is wrong", StringUtils.EMPTY, actualGraph);
     }
 
     /**

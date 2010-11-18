@@ -6,3 +6,6 @@
 # reloaded to reflect changes. 
 env.cache.ui.configuration=false
 env.cache.resources=false
+
+# True if you want the resolved resource graph to be logged. 
+env.debug.resource.graph=true

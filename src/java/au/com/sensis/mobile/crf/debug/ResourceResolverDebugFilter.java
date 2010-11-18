@@ -26,6 +26,8 @@ public class ResourceResolverDebugFilter implements Filter {
 
     private static final Logger LOGGER = Logger.getLogger(ResourceResolverDebugFilter.class);
 
+    private boolean enabled = false;
+
     /**
      * {@inheritDoc}
      */
@@ -42,6 +44,23 @@ public class ResourceResolverDebugFilter implements Filter {
             final ServletResponse servletResponse, final FilterChain filterChain)
             throws IOException, ServletException {
 
+        if (isEnabled()) {
+
+            logDebugWhenEnabled();
+
+            filterResponseToInsertResolvedResourceTree(servletRequest, servletResponse,
+                    filterChain);
+        } else {
+
+            logDebugWhenDisabled();
+
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
+    }
+
+    private void filterResponseToInsertResolvedResourceTree(final ServletRequest servletRequest,
+            final ServletResponse servletResponse, final FilterChain filterChain)
+            throws IOException, ServletException {
         initResourceResolutionTreeForCurrentThread();
 
         try {
@@ -77,7 +96,7 @@ public class ResourceResolverDebugFilter implements Filter {
     }
 
     private void initResourceResolutionTreeForCurrentThread() {
-        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
     }
 
     private void removeResourceResolutionTreeForCurrentThread() {
@@ -87,6 +106,9 @@ public class ResourceResolverDebugFilter implements Filter {
     private void addTreeGraphToResponse(final String resolvedResourcesGraph,
             final String capturedResponseOutput, final HttpServletResponse httpServletResponse)
             throws IOException {
+        // Use regex replacement instead of XML parsing. We tried using StaX (ie. the Streaming API
+        // for XML) but the XMLEventWriter will not gurantee that empty tags in the source
+        // remain as empty tags instead of being self closing tags.
         final String modifiedResponse =
                 capturedResponseOutput.replaceFirst("(<html.*?>)", "$1<!--\n"
                         + resolvedResourcesGraph + "-->");
@@ -101,4 +123,31 @@ public class ResourceResolverDebugFilter implements Filter {
         // Do nothing.
     }
 
+    /**
+     * @return true if this filter is enabled.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * @param enabled true if this filter is enabled.
+     */
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    private void logDebugWhenDisabled() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("ResourceResolverDebugFilter disabled. "
+                    + "Will pass response straight through.");
+        }
+    }
+
+    private void logDebugWhenEnabled() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("ResourceResolverDebugFilter enabled. "
+                    + "Will wrap response and insert debug graph into it.");
+        }
+    }
 }

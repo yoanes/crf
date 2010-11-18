@@ -145,4 +145,8 @@
         <constructor-arg><value>@{global.version}.@{global.build}</value></constructor-arg>
         <property name="cacheUiConfiguration" value="@{crf.env.cache.ui.configuration}" />
     </bean>
+    
+    <bean id="crf.resourceResolverDebugFilter" class="au.com.sensis.mobile.crf.debug.ResourceResolverDebugFilter">
+        <property name="enabled" value="@{crf.env.debug.resource.graph}" />
+    </bean>
 </beans>

@@ -15,6 +15,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
 import au.com.sensis.mobile.crf.debug.JspResourceTreeNode;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -95,7 +96,7 @@ public class ResourceResolverServlet extends HttpServletBean {
             requestDispatcher.forward(req, resp);
         }
 
-        ResourceResolutionTreeHolder.getResourceResolutionTree().promoteParentToCurrent();
+        getResourceResolutionTree().promoteParentToCurrent();
     }
 
     /**
@@ -117,22 +118,17 @@ public class ResourceResolverServlet extends HttpServletBean {
             final HttpServletRequestInterrogator httpServletRequestInterrogator)
                 throws IOException {
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Requested URI [" + httpServletRequestInterrogator
-                    + "]");
-        }
+        logDebugRewriteUrlEntry(httpServletRequestInterrogator);
 
         final Resource resource =
             getResourceResourceResolverEngine().getResource(
                         getDevice(httpServletRequestInterrogator
                                 .getHttpServletRequest()),
                         httpServletRequestInterrogator.getRequestUri());
-        ResourceResolutionTreeHolder.getResourceResolutionTree()
-            .addChildToCurrentNodeAndPromoteToCurrent(new JspResourceTreeNode(resource));
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("resource [" + resource + "].");
-        }
+        addResourceToResourceResolutionTreeIfEnabled(resource);
+
+        logDebugRewriteUrlExit(resource);
 
         if (resource != null) {
             return resource.getNewPath();
@@ -140,6 +136,32 @@ public class ResourceResolverServlet extends HttpServletBean {
             throw new IOException("No concrete resource found for requested path: '"
                     + httpServletRequestInterrogator.getRequestUri() + "'");
         }
+    }
+
+    private void addResourceToResourceResolutionTreeIfEnabled(final Resource resource) {
+        if (getResourceResolutionTree().isEnabled()) {
+            getResourceResolutionTree()
+                .addChildToCurrentNodeAndPromoteToCurrent(new JspResourceTreeNode(resource));
+        }
+    }
+
+    private void logDebugRewriteUrlEntry(
+            final HttpServletRequestInterrogator httpServletRequestInterrogator) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Requested URI [" + httpServletRequestInterrogator
+                    + "]");
+        }
+    }
+
+    private void logDebugRewriteUrlExit(final Resource resource) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("resource [" + resource + "].");
+        }
+    }
+
+
+    private ResourceResolutionTree getResourceResolutionTree() {
+        return ResourceResolutionTreeHolder.getResourceResolutionTree();
     }
 
     private Device getDevice(final HttpServletRequest req) {

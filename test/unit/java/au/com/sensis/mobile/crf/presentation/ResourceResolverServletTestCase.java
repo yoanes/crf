@@ -71,6 +71,8 @@ public class ResourceResolverServletTestCase extends
         setSpringMockHttpServletResponse(new MockHttpServletResponse());
         setSpringMockServletConfig(new MockServletConfig(getSpringMockServletContext()));
         setSprngMockHttpSession(new MockHttpSession());
+
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
     }
 
     /**

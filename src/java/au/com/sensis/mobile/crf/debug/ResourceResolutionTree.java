@@ -41,6 +41,25 @@ public class ResourceResolutionTree {
     private ResourceTreeNode root;
     private ResourceTreeNode currentNode;
 
+    private boolean enabled = false;
+
+    /**
+     * Default constructor.
+     */
+    public ResourceResolutionTree() {
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param enabled
+     *            true if this tree is enabled (ie. whether it should store
+     *            added nodes).
+     */
+    public ResourceResolutionTree(final boolean enabled) {
+        setEnabled(enabled);
+    }
+
     /**
      * Add the given node to this tree. If {@link #getRoot()} is null, the added
      * node becomes the root. Otherwise, the added node is added as a child of
@@ -50,6 +69,12 @@ public class ResourceResolutionTree {
      *            Node to be added.
      */
     public void addChildToCurrentNode(final ResourceTreeNode treeNode) {
+        if (isEnabled()) {
+            doAddChildToCurrentNode(treeNode);
+        }
+    }
+
+    private void doAddChildToCurrentNode(final ResourceTreeNode treeNode) {
         if (getRoot() == null) {
             initRoot(treeNode);
         } else {
@@ -65,6 +90,12 @@ public class ResourceResolutionTree {
      *            Node to be added.
      */
     public void addChildToCurrentNodeAndPromoteToCurrent(final ResourceTreeNode treeNode) {
+        if (isEnabled()) {
+            doAddChildToCurrentNodeAndPromoteToCurrent(treeNode);
+        }
+    }
+
+    private void doAddChildToCurrentNodeAndPromoteToCurrent(final ResourceTreeNode treeNode) {
         if (getRoot() == null) {
             initRoot(treeNode);
         } else {
@@ -82,16 +113,19 @@ public class ResourceResolutionTree {
      * The parent of {@link #getCurrentNode()} becomes the new current node.
      */
     public void promoteParentToCurrent() {
+        if (isEnabled()) {
+            doPromoteParentToCurrent();
+        }
+    }
+
+    private void doPromoteParentToCurrent() {
         if (getRoot() == null) {
             throw new IllegalStateException("Illegal call when root node is null");
         }
 
         if (getCurrentNode().getParent() != null) {
             setCurrentNode(getCurrentNode().getParent());
-        } else {
-            // Do nothing. Current node remains as it is.
         }
-
     }
 
     /**
@@ -100,6 +134,14 @@ public class ResourceResolutionTree {
      * @return Graph of this tree as plain text.
      */
     public String graphAsPlainText() {
+        if (isEnabled()) {
+            return doGraphAsPlainText();
+        } else {
+            return StringUtils.EMPTY;
+        }
+    }
+
+    private String doGraphAsPlainText() {
         final StringBuilder graph = new StringBuilder();
         final Iterator<ResourceTreeNode> preOrderIterator = preOrderIterator();
         while (preOrderIterator.hasNext()) {
@@ -122,7 +164,11 @@ public class ResourceResolutionTree {
      *         traversal algorithm.
      */
     public Iterator<ResourceTreeNode> preOrderIterator() {
-        return new PreOrderTreeIterator(getRoot());
+        if (isEnabled()) {
+            return new PreOrderTreeIterator(getRoot());
+        } else {
+            return new ArrayList<ResourceTreeNode>().iterator();
+        }
     }
 
     /**
@@ -153,6 +199,20 @@ public class ResourceResolutionTree {
      */
     private void setCurrentNode(final ResourceTreeNode currentNode) {
         this.currentNode = currentNode;
+    }
+
+    /**
+     * @return true if this tree is enabled (ie. whether it should store added nodes).
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * @param enabled true if this tree is enabled (ie. whether it should store added nodes).
+     */
+    private void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
     }
 
     private static class PreOrderTreeIterator implements Iterator<ResourceTreeNode> {

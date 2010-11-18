@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,19 +59,29 @@ public class ResourceResolverDebugFilterTestCase extends AbstractJUnit4TestCase 
     public void setUp() throws Exception {
         setObjectUnderTest(new ResourceResolverDebugFilter());
 
+        getObjectUnderTest().setEnabled(true);
+
         setStubbedFilterChain(new StubbedFilterChain());
     }
 
+    /**
+     * Tear down test data.
+     *
+     * @throws Exception Thrown if any error occurs.
+     */
+    @After
+    public void tearDown() throws Exception {
+        ResourceResolutionTreeHolder.removeResourceResolutionTree();
+    }
+
     @Test
-    public void testDoFilter() throws Throwable {
+    public void testDoFilterWhenEnabled() throws Throwable {
 
         final StringWriter stringWriter = new StringWriter();
         EasyMock.expect(getMockHttpServletResponse().getWriter()).andReturn(
                 new PrintWriter(stringWriter));
 
-
-        EasyMock.expect(getMockResource().getNewPath()).andReturn(
-                RESOLVED_RESOURCE_PATH);
+        EasyMock.expect(getMockResource().getNewPath()).andReturn(RESOLVED_RESOURCE_PATH);
 
         replay();
 
@@ -81,7 +92,37 @@ public class ResourceResolverDebugFilterTestCase extends AbstractJUnit4TestCase 
                 "ResourceResolutionTree should not have been null during filter chain invocation",
                 getStubbedFilterChain().getResourceResolutionTree());
 
+        Assert.assertTrue(
+                "ResourceResolutionTree should have been enabled during filter chain invocation",
+                getStubbedFilterChain().getResourceResolutionTree().isEnabled());
+
         Assert.assertEquals("Response is incorrect", EXPECTED_MODIFIED_RESPONSE, stringWriter
+                .toString());
+    }
+
+    @Test
+    public void testDoFilterWhenDisabled() throws Throwable {
+
+        getObjectUnderTest().setEnabled(false);
+
+        final StringWriter stringWriter = new StringWriter();
+        EasyMock.expect(getMockHttpServletResponse().getWriter()).andReturn(
+                new PrintWriter(stringWriter));
+
+        replay();
+
+        getObjectUnderTest().doFilter(getMockHttpServletRequest(), getMockHttpServletResponse(),
+                getStubbedFilterChain());
+
+        Assert.assertNotNull(
+                "ResourceResolutionTree should not have been null during filter chain invocation",
+                getStubbedFilterChain().getResourceResolutionTree());
+
+        Assert.assertFalse(
+                "ResourceResolutionTree should have been disabled during filter chain invocation",
+                getStubbedFilterChain().getResourceResolutionTree().isEnabled());
+
+        Assert.assertEquals("Response is incorrect", ORIGINAL_RESPONSE, stringWriter
                 .toString());
     }
 
