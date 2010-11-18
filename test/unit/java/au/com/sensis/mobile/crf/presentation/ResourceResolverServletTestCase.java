@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.presentation;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +19,9 @@ import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNode;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
@@ -77,6 +81,7 @@ public class ResourceResolverServletTestCase extends
     @After
     public void tearDown() throws Exception {
         FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
     }
 
     @Test
@@ -151,9 +156,23 @@ public class ResourceResolverServletTestCase extends
     @Test
     public void testDoGetWhenRequestIsViaAForward() throws Throwable {
         setupForRequestViaForward();
-        getObjectUnderTest().doGet(getMockHttpServletRequest(),
-                getSpringMockHttpServletResponse());
+        getObjectUnderTest().doGet(getMockHttpServletRequest(), getSpringMockHttpServletResponse());
 
+        assertResourceResolutionTreeUpdated();
+    }
+
+    private void assertResourceResolutionTreeUpdated() {
+        final Iterator<ResourceTreeNode> treePreOrderIterator =
+                ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
+        Assert.assertTrue("ResourceResolutionTree treePreOrderIterator should have a next item",
+                treePreOrderIterator.hasNext());
+
+        final ResourceTreeNode resourceTreeNode = treePreOrderIterator.next();
+        Assert
+                .assertNotNull("next item from preOrderIterator should not be null",
+                        resourceTreeNode);
+        Assert.assertEquals("next item from preOrderIterator has wrong resource",
+                getMockResource(), resourceTreeNode.getResource());
     }
 
     @Test
@@ -161,6 +180,8 @@ public class ResourceResolverServletTestCase extends
         setupForRequestViaForward();
         getObjectUnderTest().doPost(getMockHttpServletRequest(),
                 getSpringMockHttpServletResponse());
+
+        assertResourceResolutionTreeUpdated();
     }
 
     private void setupForRequestViaForward() throws ServletException,
@@ -178,11 +199,10 @@ public class ResourceResolverServletTestCase extends
         recordGetResourceFromResourceResolverEngine(
                 requestedResourceServletPath);
 
-        final String actualResourceServletPath =
-            "/WEB-INF/view/master/home/home.jsp";
-        recordGetNewPath(actualResourceServletPath);
+        final String actualResourcePath = "/WEB-INF/view/master/home/home.jsp";
+        recordGetNewPath(actualResourcePath);
 
-        recordGetRequestDispatcher(actualResourceServletPath);
+        recordGetRequestDispatcher(actualResourcePath);
 
         recordRequestDispatcherForward();
 
@@ -203,6 +223,7 @@ public class ResourceResolverServletTestCase extends
         getObjectUnderTest().doGet(getMockHttpServletRequest(),
                 getSpringMockHttpServletResponse());
 
+        assertResourceResolutionTreeUpdated();
     }
 
     @Test
@@ -211,6 +232,7 @@ public class ResourceResolverServletTestCase extends
         getObjectUnderTest().doPost(getMockHttpServletRequest(),
                 getSpringMockHttpServletResponse());
 
+        assertResourceResolutionTreeUpdated();
     }
 
     private void setupForRequestViaInclude() throws ServletException,

@@ -1,3 +1,10 @@
+==== (PENDING) Version 0.1.2-105 (tag: contentRenderingFramework_v0_1_2-105) ==== 
+
+Jiras:
+- CRF-14: Debug page composition
+    - Plain text graph of resolved JSP resources output as a comment directly under the html
+      element of the output stream. Also logged if debug is enabled. 
+
 ==== Version 0.1.2-104 (tag: contentRenderingFramework_v0_1_2-104) ==== 
 
 Jiras:

@@ -14,6 +14,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
+import au.com.sensis.mobile.crf.debug.JspResourceTreeNode;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -92,6 +94,8 @@ public class ResourceResolverServlet extends HttpServletBean {
         } else {
             requestDispatcher.forward(req, resp);
         }
+
+        ResourceResolutionTreeHolder.getResourceResolutionTree().promoteParentToCurrent();
     }
 
     /**
@@ -123,6 +127,8 @@ public class ResourceResolverServlet extends HttpServletBean {
                         getDevice(httpServletRequestInterrogator
                                 .getHttpServletRequest()),
                         httpServletRequestInterrogator.getRequestUri());
+        ResourceResolutionTreeHolder.getResourceResolutionTree()
+            .addChildToCurrentNodeAndPromoteToCurrent(new JspResourceTreeNode(resource));
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("resource [" + resource + "].");

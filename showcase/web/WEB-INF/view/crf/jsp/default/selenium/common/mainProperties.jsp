@@ -3,8 +3,6 @@
 <jsp:directive.include file="/WEB-INF/view/common/jsp/commonTagLibs.jsp"/>
 <jsp:directive.include file="/WEB-INF/view/common/jsp/projectTagLibs.jsp"/>
 
-<?xml version="1.0" encoding="UTF-8"?>
-
 <%--
   - Acceptance criteria covered by the following (Jira CRF-67):
   - property file successfully looked up via CRF by the underlying Struts action, then a property 

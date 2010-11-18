@@ -56,8 +56,8 @@
    
     <!--=============
      - FILTERS 
-     ==============--> 
-        
+     ==============-->
+     
     <filter>
         <filter-name>userAgentFilter</filter-name>
         <filter-class>au.com.sensis.wireless.web.filter.UserAgentFilter</filter-class>
@@ -67,7 +67,6 @@
         <filter-name>userAgentFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
     
     <filter>
         <filter-name>contextSetUpFilter</filter-name>
@@ -110,7 +109,17 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
-    
+
+    <!-- Content Rendering Framework Resource Resolution Debug Filter. -->    
+    <filter>
+        <filter-name>resourceResolverDebugFilter</filter-name>
+        <filter-class>au.com.sensis.mobile.crf.debug.ResourceResolverDebugFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>resourceResolverDebugFilter</filter-name>
+        <url-pattern>*.action</url-pattern>
+    </filter-mapping>    
 
     <!-- Capture Filter -->
     <filter>
