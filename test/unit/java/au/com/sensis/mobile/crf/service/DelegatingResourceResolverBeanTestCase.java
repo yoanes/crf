@@ -10,8 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.config.GroupTestData;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -22,10 +22,11 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCase {
 
     private DelegatingResourceResolverBean objectUnderTest;
+    private Device mockDevice;
     private ResourceResolver mockResourceResolver1;
     private ResourceResolver mockResourceResolver2;
     private final GroupTestData groupTestData = new GroupTestData();
-    private final ResourceAccumulator resolvedResourcePaths = new ResourceAccumulator();
+    private final ResourceAccumulator resourceAccumulator = new ResourceAccumulatorBean();
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
 
     /**
@@ -80,14 +81,14 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         .andReturn(Boolean.TRUE);
 
         EasyMock.expect(getMockResourceResolver1().resolve(
-                getRequestedPath(), getGroup(), getResolvedResourcePaths()))
+                getRequestedPath(), getMockDevice()))
                 .andReturn(getExpectedResources());
 
         replay();
 
         final List<Resource> actualResources =
             getObjectUnderTest().resolve(getRequestedPath(),
-                    getGroup(), getResolvedResourcePaths());
+                    getMockDevice());
 
         Assert.assertEquals("actualResource is wrong",
                 getExpectedResources(), actualResources);
@@ -103,14 +104,13 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         .andReturn(Boolean.TRUE);
 
         EasyMock.expect(getMockResourceResolver2().resolve(
-                getRequestedPath(), getGroup(), getResolvedResourcePaths()))
+                getRequestedPath(), getMockDevice()))
                 .andReturn(getExpectedResources());
 
         replay();
 
         final List<Resource> actualResources =
-            getObjectUnderTest().resolve(getRequestedPath(), getGroup(),
-                    getResolvedResourcePaths());
+            getObjectUnderTest().resolve(getRequestedPath(), getMockDevice());
 
         Assert.assertEquals("actualResource is wrong",
                 getExpectedResources(), actualResources);
@@ -130,8 +130,7 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         replay();
 
         final List<Resource> actualResources =
-            getObjectUnderTest().resolve(getRequestedPath(), getGroup(),
-                    getResolvedResourcePaths());
+            getObjectUnderTest().resolve(getRequestedPath(), getMockDevice());
 
         Assert.assertNotNull("actualResource should not be null",
                 actualResources);
@@ -190,10 +189,6 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         return Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath());
     }
 
-    private Group getGroup() {
-        return getGroupTestData().createIPhoneGroup();
-    }
-
     private String getRequestedPath() {
         return getResourcePathTestData()
         .getRequestedJspResourcePath();
@@ -242,6 +237,23 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     }
 
     /**
+     * @return the mockDevice
+     */
+    public Device getMockDevice() {
+
+        return mockDevice;
+    }
+
+
+    /**
+     * @param mockDevice  the mockDevice to set
+     */
+    public void setMockDevice(final Device mockDevice) {
+
+        this.mockDevice = mockDevice;
+    }
+
+    /**
      * @return the groupTestData
      */
     private GroupTestData getGroupTestData() {
@@ -251,8 +263,8 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
     /**
      * @return the resolvedResourcePaths
      */
-    protected ResourceAccumulator getResolvedResourcePaths() {
-        return resolvedResourcePaths;
+    protected ResourceAccumulator getResourceAccumulator() {
+        return resourceAccumulator;
     }
 
     /**

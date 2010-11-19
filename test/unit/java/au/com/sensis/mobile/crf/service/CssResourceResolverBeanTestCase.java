@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.easymock.EasyMock;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.config.Group;
 
 /**
  * Unit test {@link CssResourceResolverBean}.
@@ -29,41 +31,58 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
     @Before
     public void setUp() throws Exception {
 
-        setObjectUnderTest(new CssResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(), getDeploymentMetadata()));
+        setObjectUnderTest(new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                getResourcesRootDir()));
     }
+
+    // Override Abstract test methods //
 
     @Override
     protected CssResourceResolverBean createWithAbstractResourceExtension(
             final String abstractResourceExtension) {
-        return new CssResourceResolverBean(abstractResourceExtension,
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata());
+
+        return new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
+                abstractResourceExtension,
+                getResourcesRootDir());
     }
 
     @Override
     protected CssResourceResolverBean createWithRootResourcesDir(final File rootResourcesDir) {
-        return new CssResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), rootResourcesDir,
-                getMockResourceResolutionWarnLogger(), getDeploymentMetadata());
+
+        return new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(), rootResourcesDir);
     }
 
     @Override
     protected CssResourceResolverBean createWithResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        return new CssResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                resourceResolutionWarnLogger, getDeploymentMetadata());
+
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    resourceResolutionWarnLogger, getDeploymentMetadata(),
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new CssResourceResolverBean(commonParams,
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                getResourcesRootDir());
     }
 
     @Override
     protected CssResourceResolverBean createWithDeploymentMetadata(
             final DeploymentMetadata deploymentMetadata) {
-        return new CssResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(), deploymentMetadata);
+
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    getMockResourceResolutionWarnLogger(), deploymentMetadata,
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new CssResourceResolverBean(commonParams,
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                getResourcesRootDir());
     }
+
+    // Tests //
 
     @Test
     public void testResolveWhenMappingPerformedAndResourceExists() throws Throwable {
@@ -74,6 +93,8 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordCheckIfNewPathExists(Boolean.TRUE);
 
             replay();
@@ -81,8 +102,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedCssResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             Assert.assertEquals("actualResources is wrong",
                     Arrays.asList(getResourcePathTestData()
@@ -106,6 +126,8 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordCheckIfNewPathExists(Boolean.FALSE);
 
             replay();
@@ -113,8 +135,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedCssResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             Assert.assertNotNull("actualResources should not be null",
                     actualResources);
@@ -128,23 +149,15 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
     }
 
-    private void recordCheckIfNewPathExists(final Boolean exists) {
-        EasyMock.expect(
-                getMockFileIoFacade().fileExists(
-                        getResourcePathTestData().getRootResourcesPath(),
-                        getResourcePathTestData()
-                        .getMappedIphoneGroupCssResourcePath()
-                        .getNewPath())).andReturn(exists);
-
-    }
-
     @Test
     public void testResolveWhenNoMappingPerformed() throws Throwable {
+
+        recordGetMatchingGroupIterator();
+
         final List<Resource> actualResources =
             getObjectUnderTest().resolve(
                     getResourcePathTestData().getRequestedJspResourcePath(),
-                    getGroupTestData().createIPhoneGroup(),
-                    getResolvedResourcePaths());
+                    getMockDevice());
 
         Assert.assertNotNull("actualResources should not be null",
                 actualResources);
@@ -167,6 +180,36 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
                         getResourcePathTestData().getRequestedJspResourcePath()));
     }
 
+    @Test
+    public void testGetResourceAccumulator() throws Throwable {
+
+        final ResourceAccumulator actualAccumulator =
+            getObjectUnderTest().createResourceAccumulator();
+
+        Assert.assertTrue(actualAccumulator instanceof BundleResourceAccumulatorBean);
+    }
+
+
+    private void recordGetMatchingGroupIterator() {
+
+        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
+                getResourcePathTestData().getRequestedCssResourcePath())).andReturn(
+                        getMockUiConfiguration());
+
+        final Iterator<Group> matchingGroupsIterator =
+            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
+        .andReturn(matchingGroupsIterator);
+
+    }
+
+    private void recordCheckIfNewPathExists(final Boolean exists) {
+        EasyMock.expect(getMockFileIoFacade().fileExists(
+                getResourcePathTestData().getRootResourcesPath(),
+                getResourcePathTestData().getMappedIphoneGroupCssResourcePath().getNewPath()))
+                .andReturn(exists);
+    }
 
     /**
      * @return the objectUnderTest

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -20,7 +21,7 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 public class CachedResourceResolverEngineBean
 implements ResourceResolverEngine {
 
-
+    private static final Logger LOGGER = Logger.getLogger(CachedResourceResolverEngineBean.class);
     private ConcurrentHashMap<Integer, List<Resource>> resourceMapCache;
     private final ResourceResolverEngine resourceResolverEngine;
     private final boolean cachingEnabled;
@@ -106,6 +107,10 @@ implements ResourceResolverEngine {
             resource = fetchResource(device, requestedResourcePath);
         }
 
+        if (requestedResourcePath.indexOf(".crf") > -1) {
+            // can add it to list, put into req to be accessed & output in JSP
+            LOGGER.info("Including JSP: " + resource.getNewPath());
+        }
         return resource;
     }
 

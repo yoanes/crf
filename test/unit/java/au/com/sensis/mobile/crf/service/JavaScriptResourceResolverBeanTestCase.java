@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,8 +15,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Unit test {@link JavaScriptResourceResolverBean}.
@@ -29,6 +32,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     private JavaScriptResourceResolverBean objectUnderTest;
 
     private JavaScriptFileFinder mockJavaScriptFileFinder;
+    private Device mockDevice;
 
     /**
      * Setup test data.
@@ -42,9 +46,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
         setObjectUnderTest(new JavaScriptResourceResolverBean(
+                getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                getResourcesRootDir(), ABSTRACT_PATH_PACKAGE_KEYWORD,
                 getMockJavaScriptFileFinder()));
     }
 
@@ -53,9 +57,8 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     protected JavaScriptResourceResolverBean createWithAbstractResourceExtension(
             final String abstractResourceExtension) {
 
-        return new JavaScriptResourceResolverBean(abstractResourceExtension,
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+        return new JavaScriptResourceResolverBean(getResourceResolverCommonParamHolder(),
+                abstractResourceExtension, getResourcesRootDir(), ABSTRACT_PATH_PACKAGE_KEYWORD,
                 getMockJavaScriptFileFinder());
     }
 
@@ -63,19 +66,23 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     protected JavaScriptResourceResolverBean createWithResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
 
-        return new JavaScriptResourceResolverBean(getResourcePathTestData()
-                .getScriptExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                resourceResolutionWarnLogger, getDeploymentMetadata(),
-                ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    resourceResolutionWarnLogger, getDeploymentMetadata(),
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new JavaScriptResourceResolverBean(commonParams,
+                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
+                getResourcesRootDir(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                getMockJavaScriptFileFinder());
     }
 
     @Override
     protected JavaScriptResourceResolverBean createWithRootResourcesDir(
             final File rootResourcesDir) {
 
-        return new JavaScriptResourceResolverBean(getResourcePathTestData()
-                .getScriptExtensionWithoutLeadingDot(), rootResourcesDir,
-                getMockResourceResolutionWarnLogger(), getDeploymentMetadata(),
+        return new JavaScriptResourceResolverBean(getResourceResolverCommonParamHolder(),
+                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(), rootResourcesDir,
                 ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
     }
 
@@ -84,10 +91,15 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     protected JavaScriptResourceResolverBean createWithDeploymentMetadata(
             final DeploymentMetadata deploymentMetadata) {
 
-        return new JavaScriptResourceResolverBean(getResourcePathTestData()
-                .getScriptExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(), deploymentMetadata,
-                ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    getMockResourceResolutionWarnLogger(), deploymentMetadata,
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new JavaScriptResourceResolverBean(commonParams,
+                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
+                getResourcesRootDir(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                getMockJavaScriptFileFinder());
     }
 
     /**
@@ -107,11 +119,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  "};
         for (final String testValue : testValues) {
             try {
-                new JavaScriptResourceResolverBean(
+                new JavaScriptResourceResolverBean(getResourceResolverCommonParamHolder(),
                         getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                         getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger(),
-                        getDeploymentMetadata(),
                         testValue,
                         getMockJavaScriptFileFinder());
 
@@ -130,11 +140,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     throws Throwable {
 
         try {
-            new JavaScriptResourceResolverBean(
+            new JavaScriptResourceResolverBean(getResourceResolverCommonParamHolder(),
                     getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                    getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                    getDeploymentMetadata(), ABSTRACT_PATH_PACKAGE_KEYWORD,
-                    null);
+                    getResourcesRootDir(), ABSTRACT_PATH_PACKAGE_KEYWORD, null);
 
             Assert.fail("IllegalArgumentException expected");
         } catch (final IllegalArgumentException e) {
@@ -157,6 +165,8 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIteratorForPackage();
+
             EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
                     getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
                     .getNewFile())).andReturn(createExistsByFilterExpectedFileFilterResults());
@@ -166,8 +176,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedPackageScriptResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -191,6 +200,8 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIteratorForPackage();
+
             EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
                     getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
                     .getNewFile())).andReturn(new ArrayList<File>());
@@ -200,8 +211,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedPackageScriptResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -231,9 +241,9 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
 
         return Arrays.asList(
                 getResourcePathTestData()
-                .getMappedDefaultGroupPackagedScriptResourcePath2(),
+                .getMappedDefaultGroupPackagedScriptResourcePath1(),
                 getResourcePathTestData()
-                .getMappedDefaultGroupPackagedScriptResourcePath1());
+                .getMappedDefaultGroupPackagedScriptResourcePath2());
     }
 
     @Test
@@ -246,6 +256,8 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIteratorForSingleJS();
+
             recordCheckIfNewPathExists(Boolean.TRUE);
 
             replay();
@@ -253,8 +265,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedNamedScriptResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -278,6 +289,8 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIteratorForSingleJS();
+
             recordCheckIfNewPathExists(Boolean.FALSE);
 
             replay();
@@ -285,8 +298,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedNamedScriptResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -306,8 +318,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
             getObjectUnderTest()
             .resolve(
                     getResourcePathTestData().getRequestedJspResourcePath(),
-                    getGroupTestData().createIPhoneGroup(),
-                    getResolvedResourcePaths());
+                    getMockDevice());
 
         Assert.assertNotNull("actualResources should not be null",
                 actualResources);
@@ -321,17 +332,19 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
     throws Throwable {
 
         final IOException expectedWrappedException = new IOException("test");
+
         EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
                 getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
                 .getNewFile())).andThrow(expectedWrappedException);
+
+        recordGetMatchingGroupIteratorForPackage();
 
         replay();
 
         try {
             getObjectUnderTest().resolve(
                     getResourcePathTestData().getRequestedPackageScriptResourcePath(),
-                    getGroupTestData().createIPhoneGroup(),
-                    getResolvedResourcePaths());
+                    getMockDevice());
 
             Assert.fail("ResourceResolutionRuntimeException expected");
         } catch (final ResourceResolutionRuntimeException e) {
@@ -365,82 +378,33 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
                         getResourcePathTestData().getRequestedCssResourcePath()));
     }
 
-    @Test
-    public void testAccumulateGroupResourcesOverridesSameFilename() throws Throwable {
+    private void recordGetMatchingGroupIteratorForPackage() {
 
-        final ResourceAccumulator resourceAccumulator = new ResourceAccumulator();
-        resourceAccumulator.getAllResourcePaths().push(
-                getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
+        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
+                getResourcePathTestData().getRequestedPackageScriptResourcePath())).andReturn(
+                        getMockUiConfiguration());
 
-        // Matches 3 different versions of the same Javascript file
-        final List<Resource> resolvedPaths = new ArrayList<Resource>();
-        resolvedPaths.add(getResourcePathTestData().getMappedAppleGroupNamedScriptResourcePath());
-        resolvedPaths.add(getResourcePathTestData().getMappedDefaultGroupNamedScriptResourcePath());
+        final Iterator<Group> matchingGroupsIterator =
+            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
 
-        getObjectUnderTest().accumulateGroupResources(resolvedPaths, resourceAccumulator);
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
+        .andReturn(matchingGroupsIterator);
 
-        // Expect to only return the most specific version of the Javascript file
-        final ResourceAccumulator expectedResourceAccumulator = new ResourceAccumulator();
-        expectedResourceAccumulator.getAllResourcePaths().add(
-                getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
-
-        Assert.assertEquals(expectedResourceAccumulator, resourceAccumulator);
     }
 
-    @Test
-    public void testAccumulateGroupResourcesOverridesPackages() throws Throwable {
+    private void recordGetMatchingGroupIteratorForSingleJS() {
 
-        final ResourceAccumulator resourceAccumulator = new ResourceAccumulator();
-        resourceAccumulator.getAllResourcePaths().push(
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath2());
-        resourceAccumulator.getAllResourcePaths().push(
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath1());
+        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
+                getResourcePathTestData().getRequestedNamedScriptResourcePath())).andReturn(
+                        getMockUiConfiguration());
 
-        // Matches 2 sets of the Javascript package
-        final List<Resource> resolvedPaths = new ArrayList<Resource>();
-        resolvedPaths.add(
-                getResourcePathTestData().getMappedAppleGroupBundledScriptResourcePath1());
-        resolvedPaths.add(
-                getResourcePathTestData().getMappedAppleGroupBundledScriptResourcePath2());
+        final Iterator<Group> matchingGroupsIterator =
+            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
 
-        getObjectUnderTest().accumulateGroupResources(resolvedPaths, resourceAccumulator);
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
+        .andReturn(matchingGroupsIterator);
 
-        // Expect to only return the most specific version of the Javascript file
-        final ResourceAccumulator expectedResourceAccumulator = new ResourceAccumulator();
-        expectedResourceAccumulator.getAllResourcePaths().add(
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath1());
-        expectedResourceAccumulator.getAllResourcePaths().add(
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath2());
-
-        Assert.assertEquals(expectedResourceAccumulator, resourceAccumulator);
     }
-
-    @Test
-    public void testAccumulateGroupResourcesReturnsAllUnique() throws Throwable {
-
-        final ResourceAccumulator resourceAccumulator = new ResourceAccumulator();
-
-        // Matches 2 different versions of the same 2 Javascript files
-        final List<Resource> resolvedPaths = new ArrayList<Resource>();
-        resolvedPaths.add(getResourcePathTestData().getMappedDefaultGroupNamedScriptResourcePath());
-        resolvedPaths.add(
-                getResourcePathTestData().getMappedDefaultGroupNamedScriptResourcePath2());
-        resolvedPaths.add(getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
-        resolvedPaths.add(getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath2());
-
-
-        getObjectUnderTest().accumulateGroupResources(resolvedPaths, resourceAccumulator);
-
-        // Expect to only return the most specific versions of the Javascript files
-        final ResourceAccumulator expectedResourceAccumulator = new ResourceAccumulator();
-        expectedResourceAccumulator.getAllResourcePaths().add(
-                getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath());
-        expectedResourceAccumulator.getAllResourcePaths().add(
-                getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath2());
-
-        Assert.assertEquals(expectedResourceAccumulator, resourceAccumulator);
-    }
-
 
     private void recordCheckIfNewPathExists(final Boolean exists) {
         EasyMock.expect(
@@ -474,4 +438,23 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
             final JavaScriptFileFinder mockJavaScriptFileFinder) {
         this.mockJavaScriptFileFinder = mockJavaScriptFileFinder;
     }
+
+    /**
+     * @return the mockDevice
+     */
+    @Override
+    public Device getMockDevice() {
+
+        return mockDevice;
+    }
+
+    /**
+     * @param mockDevice  the mockDevice to set
+     */
+    @Override
+    public void setMockDevice(final Device mockDevice) {
+
+        this.mockDevice = mockDevice;
+    }
+
 }

@@ -3,17 +3,18 @@ package au.com.sensis.mobile.crf.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Standard base class for {@link ResourceResolver}s.
@@ -33,69 +34,38 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     private final File rootResourcesDir;
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
     private final DeploymentMetadata deploymentMetadata;
+    private final ResourceAccumulatorFactory resourceAccumulatorFactory;
+    private final ConfigurationFactory configurationFactory;
 
     /**
      * Constructor.
      *
+     * @param commonParams
+     *            Holds the common parameters used in constructing all {@link ResourceResolver}s.
      * @param abstractResourceExtension
      *            Extension of resources (eg. "css" or "crf") that this class
      *            knows how to resolve.
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
-     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
+
      */
-    public AbstractResourceResolver(final String abstractResourceExtension,
-            final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
-            final DeploymentMetadata deploymentMetadata) {
+    public AbstractResourceResolver(final ResourceResolverCommonParamHolder commonParams,
+            final String abstractResourceExtension,
+            final File rootResourcesDir) {
+
         validateAbstractResourceExtension(abstractResourceExtension);
         validateRootResourcesDir(rootResourcesDir);
-        validateResourceResolutionWarnLogger(resourceResolutionWarnLogger);
-        validateDeploymentMetadata(deploymentMetadata);
+
+        resourceResolutionWarnLogger = commonParams.getResourceResolutionWarnLogger();
+        deploymentMetadata = commonParams.getDeploymentMetadata();
+        resourceAccumulatorFactory = commonParams.getResourceAccumulatorFactory();
+        configurationFactory = commonParams.getConfigurationFactory();
 
         this.abstractResourceExtension =
             prefixWithLeadingDotIfRequired(abstractResourceExtension);
         this.rootResourcesDir = rootResourcesDir;
-        this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
-        this.deploymentMetadata = deploymentMetadata;
-    }
 
-    private void validateAbstractResourceExtension(
-            final String abstractResourceExtension) {
-        if (StringUtils.isBlank(abstractResourceExtension)) {
-            throw new IllegalArgumentException(
-                    "abstractResourceExtension must not be blank: '"
-                    + abstractResourceExtension + "'");
-        }
-    }
-
-    private void validateRootResourcesDir(final File resourcesRootDir) {
-        if (!resourcesRootDir.exists() || !resourcesRootDir.isDirectory()) {
-            throw new IllegalArgumentException(
-                    "rootResourcesDir must be a directory: '"
-                    + resourcesRootDir + "'");
-        }
-    }
-
-    private void validateResourceResolutionWarnLogger(
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        Validate.notNull(resourceResolutionWarnLogger,
-        "resourceResolutionWarnLogger must not be null");
-    }
-
-    private void validateDeploymentMetadata(final DeploymentMetadata deploymentMetadata) {
-        Validate.notNull(deploymentMetadata, "deploymentMetadata must not be null");
-    }
-
-    private String prefixWithLeadingDotIfRequired(final String path) {
-        if (path.startsWith(EXTENSION_LEADING_DOT)) {
-            return path;
-        } else {
-            return EXTENSION_LEADING_DOT + path;
-        }
     }
 
     /**
@@ -104,22 +74,33 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    public List<Resource> resolve(final String requestedResourcePath,
-            final Group group, final ResourceAccumulator results)
-            throws ResourceResolutionRuntimeException {
+    public List<Resource> resolve(final String requestedResourcePath, final Device device)
+    throws ResourceResolutionRuntimeException {
 
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
 
-            debugLogAttemptingResolution(requestedResourcePath);
+            final ResourceAccumulator accumulator = createResourceAccumulator();
 
-            final List<Resource> resolvedResources =
-                doResolve(requestedResourcePath, group);
+            // TODO in future will check cache
+            final Iterator<Group> matchingGroupIterator =
+                getMatchingGroupIterator(device, requestedResourcePath);
 
-            accumulateGroupResources(resolvedResources, results);
+            while (matchingGroupIterator.hasNext()) {
 
-            debugLogResolutionResults(requestedResourcePath, resolvedResources);
+                final Group currGroup = matchingGroupIterator.next();
 
-            return resolvedResources;
+                getLogger().debug("Group: " + currGroup.getName());
+
+                debugLogCheckingGroup(requestedResourcePath, currGroup);
+
+                accumulator.accumulate(
+                        resolveForGroup(requestedResourcePath, currGroup));
+
+                getLogger().debug("We now have these results: " + accumulator.getResources());
+            }
+
+            return accumulator.getResources();
+
         } else {
 
             debugLogRequestIgnored(requestedResourcePath);
@@ -129,23 +110,29 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
-     * Accumulates all of the given {@link Resource}s together.
-     * @param resolvedPaths to be added to the combined list
-     * @param allResourcePaths the {@link ResourceAccumulator}
+     * Returns the {@link Resource}s that are resolved for the given {@link Group}.
+     *
+     * @param requestedResourcePath for the resource to be resolved
+     * @param group in which to look for the given requestedResourcePath
+     * @return a list of {@link Resource}s resolved for the given {@link Group}
      */
-    protected void accumulateGroupResources(
-            final List<Resource> resolvedPaths,
-            final ResourceAccumulator allResourcePaths) {
+    protected List<Resource> resolveForGroup(final String requestedResourcePath,
+            final Group group) {
 
-        if (!resolvedPaths.isEmpty() && (allResourcePaths != null)) {
+        debugLogAttemptingResolution(requestedResourcePath);
 
-            Collections.reverse(resolvedPaths);
+        final List<Resource> resolvedResources =
+            doResolveForGroup(requestedResourcePath, group);
 
-            for (final Resource currPath : resolvedPaths) {
-                allResourcePaths.getAllResourcePaths().push(currPath);
-            }
-        }
+        debugLogResolutionResults(requestedResourcePath, resolvedResources);
+
+        return resolvedResources;
     }
+
+    /**
+     * @return Returns a new {@link ResourceAccumulator} for this {@link ResourceResolver}.
+     */
+    protected abstract ResourceAccumulator createResourceAccumulator();
 
     /**
      * Workhorse method that is only called if
@@ -167,7 +154,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @throws ResourceResolutionRuntimeException
      *             Thrown if any error occurs.
      */
-    protected List<Resource> doResolve(final String requestedResourcePath,
+    protected List<Resource> doResolveForGroup(final String requestedResourcePath,
             final Group group)
             throws ResourceResolutionRuntimeException {
 
@@ -340,10 +327,58 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
+     * @return the {@link ResourceAccumulatorFactory} from which to obtain a
+     *         {@link ResourceAccumulator} implementation.
+     */
+    protected ResourceAccumulatorFactory getResourceAccumulatorFactory() {
+        return resourceAccumulatorFactory;
+    }
+
+    /**
+     * @return the {@link ConfigurationFactory} from which to obtain the
+     * {@link au.com.sensis.mobile.crf.config.UiConfiguration}.
+     */
+    protected ConfigurationFactory getConfigurationFactory() {
+        return configurationFactory;
+    }
+
+    /**
      * @return the {@link ResourceResolutionWarnLogger} to use to log warnings.
      */
     protected final ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
         return resourceResolutionWarnLogger;
+    }
+
+    private void validateAbstractResourceExtension(
+            final String abstractResourceExtension) {
+        if (StringUtils.isBlank(abstractResourceExtension)) {
+            throw new IllegalArgumentException(
+                    "abstractResourceExtension must not be blank: '"
+                    + abstractResourceExtension + "'");
+        }
+    }
+
+    private void validateRootResourcesDir(final File resourcesRootDir) {
+        if (!resourcesRootDir.exists() || !resourcesRootDir.isDirectory()) {
+            throw new IllegalArgumentException(
+                    "rootResourcesDir must be a directory: '"
+                    + resourcesRootDir + "'");
+        }
+    }
+
+    private String prefixWithLeadingDotIfRequired(final String path) {
+        if (path.startsWith(EXTENSION_LEADING_DOT)) {
+            return path;
+        } else {
+            return EXTENSION_LEADING_DOT + path;
+        }
+    }
+
+    private Iterator<Group> getMatchingGroupIterator(final Device device,
+            final String requestedResourcePath) {
+
+        return getConfigurationFactory().getUiConfiguration(requestedResourcePath)
+        .matchingGroupIterator(device);
     }
 
     private void debugLogAttemptingResolution(final String requestedResourcePath) {
@@ -379,7 +414,17 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         }
     }
 
+    private void debugLogCheckingGroup(final String requestedResourcePath,
+            final Group currGroup) {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Looking for '" + requestedResourcePath
+                    + "' in matching group: " + currGroup);
+        }
+    }
+
     private DeploymentMetadata getDeploymentMetadata() {
         return deploymentMetadata;
     }
+
+
 }

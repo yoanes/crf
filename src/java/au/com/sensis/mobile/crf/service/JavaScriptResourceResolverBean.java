@@ -3,8 +3,6 @@ package au.com.sensis.mobile.crf.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -12,7 +10,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
-import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 
@@ -37,15 +34,14 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     /**
      * Constructor.
      *
+     * @param commonParams
+     *            Holds the common parameters used in constructing all {@link ResourceResolver}s.
      * @param abstractResourceExtension
      *            Extension of resources (eg. "css" or "crf") that this class
      *            knows how to resolve.
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
-     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
      * @param abstractPathPackageKeyword
      *            Keyword recognised at the end of abstract paths that signifies
      *            a "package" of JavaScript is being requested.
@@ -53,15 +49,13 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      *            {@link JavaScriptFileFinder} delegate to use to find a list of
      *            JavaScript files in a directory.
      */
-    public JavaScriptResourceResolverBean(
+    public JavaScriptResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
             final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
-            final DeploymentMetadata deploymentMetadata,
             final String abstractPathPackageKeyword,
             final JavaScriptFileFinder javaScriptFileFinder) {
-        super(abstractResourceExtension, rootResourcesDir,
-                resourceResolutionWarnLogger, deploymentMetadata);
+
+        super(commonParams, abstractResourceExtension, rootResourcesDir);
 
         validateAbstractPathPackageKeyword(abstractPathPackageKeyword);
         validateJavaScriptFileFinder(javaScriptFileFinder);
@@ -103,100 +97,15 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    protected List<Resource> doResolve(final String requestedResourcePath,
+    protected List<Resource> doResolveForGroup(final String requestedResourcePath,
             final Group group)
             throws ResourceResolutionRuntimeException {
 
         if (isPackageRequested(requestedResourcePath)) {
             return findBundleResources(requestedResourcePath, group);
         } else {
-            return super.doResolve(requestedResourcePath, group);
+            return super.doResolveForGroup(requestedResourcePath, group);
         }
-    }
-
-    /**
-     * Accumulates unique resources, overriding duplicate matches with the most specific version,
-     * whilst preserving specifically set file order for packages
-     * (set using the package.properties).
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    protected void accumulateGroupResources(
-            final List<Resource> resolvedPaths,
-            final ResourceAccumulator allResourcePaths) {
-
-        if (!resolvedPaths.isEmpty()) {
-
-            // We reverse the files so that when they're output in the HTML page
-            // they're still in the original order.
-            Collections.reverse(resolvedPaths);
-
-            // for each found resource decide if we want to add it to the final list
-            for (final Resource newResource : resolvedPaths) {
-
-                LOGGER.debug("looking at: " + newResource.getNewPath());
-
-                if (!hasAVariantAlreadyBeenStored(newResource,
-                        allResourcePaths.getAllResourcePaths())) {
-
-                    LOGGER.debug("Adding " + newResource.getNewPath() + " to the list.");
-                    allResourcePaths.getAllResourcePaths().push(newResource);
-                }
-            }
-        }
-    }
-
-    private boolean isPartOfAPackage(final Resource requestedResource) {
-        return requestedResource.getOriginalPath().endsWith(getAbstractPathPackageKeyword());
-    }
-
-    private boolean hasAVariantAlreadyBeenStored(final Resource newResource,
-            final Deque<Resource> accumulatedResources) {
-
-        boolean alreadyStoredAVariant = false;
-
-        // loop through the final list to see if our new ones are already there
-        for (final Resource existingResource : accumulatedResources) {
-
-            LOGGER.debug("Comparing with: " + existingResource.getNewPath());
-
-            if (hasPackageResourceBeenStored(newResource, existingResource)
-                    || hasSingleResourceBeenStored(newResource, existingResource)) {
-
-                alreadyStoredAVariant = true;
-                break;
-            }
-        }
-
-        return alreadyStoredAVariant;
-    }
-
-    private boolean hasSingleResourceBeenStored(final Resource newResource,
-            final Resource existingResource) {
-
-        if (isPartOfAPackage(newResource)) {
-            return false;
-        }
-
-        // It's not a Javascript package request
-        return existingResource.getOriginalPath().equals(newResource.getOriginalPath());
-    }
-
-    private boolean hasPackageResourceBeenStored(final Resource newResource,
-            final Resource existingResource) {
-
-        if (!isPartOfAPackage(newResource)) {
-            return false;
-        }
-
-        // compare on filename
-        final int lastSlashPos = existingResource.getNewPath().lastIndexOf("/");
-        final String existingFilename = existingResource.getNewPath().substring(
-                lastSlashPos);
-
-        // new request is for same filename as already in the list
-        return newResource.getNewPath().endsWith(existingFilename);
     }
 
     private File getPackageDir(final String requestedResourcePath,
@@ -275,6 +184,16 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
     @Override
     protected Logger getLogger() {
         return LOGGER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ResourceAccumulator createResourceAccumulator() {
+
+        return getResourceAccumulatorFactory().getJavaScriptResourceAccumulator(
+                getAbstractPathPackageKeyword());
     }
 
     /**

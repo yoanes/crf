@@ -8,11 +8,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.config.GroupTestData;
+import au.com.sensis.mobile.crf.config.UiConfiguration;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -24,13 +27,20 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
-    private final ResourceAccumulator resolvedResourcePaths = new ResourceAccumulator();
+    private final ResourceAccumulator resolvedResourcePaths = new ResourceAccumulatorBean();
+    private Device mockDevice;
+    private File resourcesRootDir;
+    private FileIoFacade mockFileIoFacade;
+
+    private ResourceResolverCommonParamHolder resourceResolverCommonParamHolder;
+    private ConfigurationFactory mockConfigurationFactory;
+    private UiConfiguration mockUiConfiguration;
     private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
     private final DeploymentMetadataTestData deploymentMetadataTestData
     = new DeploymentMetadataTestData();
     private DeploymentMetadata deploymentMetadata;
-    private File resourcesRootDir;
-    private FileIoFacade mockFileIoFacade;
+    private final ResourceAccumulatorFactory resourceAccumulatorFactory =
+        new ResourceAccumulatorFactory(true);
 
     /**
      * Setup test data.
@@ -44,6 +54,12 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
         setDeploymentMetadata(getDeploymentMetadataTestData().createDevDeploymentMetadata());
+
+        setResourceResolverCommonParamHolder(new ResourceResolverCommonParamHolder(
+                getMockResourceResolutionWarnLogger(),
+                getDeploymentMetadata(),
+                getResourceAccumulatorFactory(),
+                getMockConfigurationFactory()));
     }
 
     /**
@@ -237,6 +253,10 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         return resourcesRootDir;
     }
 
+    protected ResourceAccumulatorFactory getResourceAccumulatorFactory() {
+        return resourceAccumulatorFactory;
+    }
+
     /**
      * @param resourcesRootDir the resourcesRootDir to set
      */
@@ -252,5 +272,66 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         this.mockFileIoFacade = mockFileIoFacade;
     }
 
+    /**
+     * @return the mockConfigurationFactory
+     */
+    public ConfigurationFactory getMockConfigurationFactory() {
+        return mockConfigurationFactory;
+    }
+
+    /**
+     * @param mockConfigurationFactory the mockConfigurationFactory to set
+     */
+    public void setMockConfigurationFactory(
+            final ConfigurationFactory mockConfigurationFactory) {
+        this.mockConfigurationFactory = mockConfigurationFactory;
+    }
+
+    /**
+     * @return the mockUiConfiguration
+     */
+    public UiConfiguration getMockUiConfiguration() {
+        return mockUiConfiguration;
+    }
+
+    /**
+     * @param mockUiConfiguration the mockUiConfiguration to set
+     */
+    public void setMockUiConfiguration(final UiConfiguration mockUiConfiguration) {
+        this.mockUiConfiguration = mockUiConfiguration;
+    }
+
+    /**
+     * @return the mockDevice
+     */
+    public Device getMockDevice() {
+
+        return mockDevice;
+    }
+
+    /**
+     * @param mockDevice  the mockDevice to set
+     */
+    public void setMockDevice(final Device mockDevice) {
+
+        this.mockDevice = mockDevice;
+    }
+
+    /**
+     * @return the resourceResolverCommonParamHolder
+     */
+    public ResourceResolverCommonParamHolder getResourceResolverCommonParamHolder() {
+
+        return resourceResolverCommonParamHolder;
+    }
+
+    /**
+     * @param resourceResolverCommonParamHolder  the resourceResolverCommonParamHolder to set
+     */
+    public void setResourceResolverCommonParamHolder(
+            final ResourceResolverCommonParamHolder resourceResolverCommonParamHolder) {
+
+        this.resourceResolverCommonParamHolder = resourceResolverCommonParamHolder;
+    }
 
 }

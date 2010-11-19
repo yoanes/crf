@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 
-import au.com.sensis.mobile.crf.config.DeploymentMetadata;
-
 /**
  * {@link ResourceResolver} that resolves abstract CSS paths to real CSS paths.
  *
@@ -18,22 +16,20 @@ public class CssResourceResolverBean extends AbstractResourceResolver {
     /**
      * Constructor.
      *
+     * @param commonParams
+     *            Holds the common parameters used in constructing all {@link ResourceResolver}s.
      * @param abstractResourceExtension
      *            Extension of resources (eg. "css" or "crf") that this class
      *            knows how to resolve.
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
-     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
      */
-    public CssResourceResolverBean(final String abstractResourceExtension,
-            final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
-            final DeploymentMetadata deploymentMetadata) {
-        super(abstractResourceExtension, rootResourcesDir,
-                resourceResolutionWarnLogger, deploymentMetadata);
+    public CssResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
+            final String abstractResourceExtension,
+            final File rootResourcesDir) {
+
+        super(commonParams, abstractResourceExtension, rootResourcesDir);
     }
 
     /**
@@ -43,7 +39,6 @@ public class CssResourceResolverBean extends AbstractResourceResolver {
     protected String getRealResourcePathExtension() {
         return ".css";
     }
-
 
     /**
      * {@inheritDoc}
@@ -60,4 +55,14 @@ public class CssResourceResolverBean extends AbstractResourceResolver {
     protected String getDebugResourceTypeName() {
         return "CSS";
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ResourceAccumulator createResourceAccumulator() {
+
+        return getResourceAccumulatorFactory().getCSSResourceAccumulator();
+    }
+
 }

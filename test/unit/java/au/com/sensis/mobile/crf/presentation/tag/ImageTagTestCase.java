@@ -231,6 +231,42 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     }
 
+    @Test
+    public void testDoTagWithRealImageResourceBean() throws Throwable {
+
+        final int width = 222;
+        final int height = 111;
+
+        final Resource toGetValuesFrom =
+            getResourcePathTestData().getMappedDefaultGroupPngImageResourcePath();
+
+        final ImageResourceBean imageResource = new ImageResourceBean(
+                toGetValuesFrom.getOriginalPath(),
+                toGetValuesFrom.getNewPath(),
+                toGetValuesFrom.getRootResourceDir());
+
+        imageResource.setImageHeight(height);
+        imageResource.setImageWidth(width);
+
+        final String expectedOutputTag = "<img src=\"" + getMappedDefaultGroupPngImageResourceHref()
+        + "\" " + "width=\"" + width + "\" " + "height=\"" + height + "\" " + "/>";
+
+        recordGetImageTagDependencies();
+
+        recordLookupRequestedResourceWhenFound(imageResource);
+
+        recordGetJspWriter();
+
+        replay();
+
+        getObjectUnderTest().doTag();
+
+        Assert.assertEquals("incorrect output,",
+                expectedOutputTag,
+                getStringWriter().getBuffer().toString());
+
+    }
+
     private void recordResourceEndsWithDotNull(final Boolean endsWithDotNull) {
         EasyMock.expect(getMockResource().newPathEndsWithDotNull())
         .andReturn(endsWithDotNull);
@@ -430,8 +466,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the mockResourceResolverEngine
      */
-    public ResourceResolverEngine
-    getMockResourceResolverEngine() {
+    public ResourceResolverEngine getMockResourceResolverEngine() {
         return mockResourceResolverEngine;
     }
 

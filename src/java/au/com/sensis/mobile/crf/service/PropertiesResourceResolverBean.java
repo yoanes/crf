@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 
-import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
@@ -19,23 +18,20 @@ public class PropertiesResourceResolverBean extends AbstractResourceResolver {
     /**
      * Constructor.
      *
+     * @param commonParams
+     *            Holds the common parameters used in constructing all {@link ResourceResolver}s.
      * @param abstractResourceExtension
      *            Extension of resources (eg. "css" or "crf") that this class
      *            knows how to resolve.
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
-     * @param deploymentMetadata
-     *            {@link DeploymentMetadata} of the deployed app.
      */
-    public PropertiesResourceResolverBean(final String abstractResourceExtension,
-            final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
-            final DeploymentMetadata deploymentMetadata) {
-        super(abstractResourceExtension, rootResourcesDir, resourceResolutionWarnLogger,
-                deploymentMetadata);
+    public PropertiesResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
+            final String abstractResourceExtension,
+            final File rootResourcesDir) {
+
+        super(commonParams, abstractResourceExtension, rootResourcesDir);
     }
 
     /**
@@ -58,6 +54,14 @@ public class PropertiesResourceResolverBean extends AbstractResourceResolver {
      * {@inheritDoc}
      */
     @Override
+    protected ResourceAccumulator createResourceAccumulator() {
+
+        return getResourceAccumulatorFactory().getPropertiesResourceAccumulator();
+    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected String getDebugResourceTypeName() {
         return "properties";
     }
@@ -73,7 +77,7 @@ public class PropertiesResourceResolverBean extends AbstractResourceResolver {
     protected String insertGroupNameAndDeploymentVersionIntoPath(
             final String requestedResourcePath, final Group group) {
         return group.getName()
-                + RESOURCE_SEPARATOR + requestedResourcePath;
+        + RESOURCE_SEPARATOR + requestedResourcePath;
     }
 
 }

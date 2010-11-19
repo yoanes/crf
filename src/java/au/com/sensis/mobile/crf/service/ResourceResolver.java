@@ -2,8 +2,8 @@ package au.com.sensis.mobile.crf.service;
 
 import java.util.List;
 
-import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Resolves requested resource paths to real resource paths.
@@ -14,20 +14,18 @@ public interface ResourceResolver {
 
     /**
      * Resolves a requested resource path to a real path that corresponds to the
-     * given {@link Group}.
+     * given {@link au.com.sensis.mobile.crf.config.Group}.
      *
      * @param requestedResourcePath
      *            Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
-     * @param group
-     *            {@link Group} to perform the path mapping for.
-     * @param results
-     *            The {@link ResourceAccumulator} to add the results to.
+     * @param device
+     *            {@link Device} to perform the path mapping for.
      * @return List of {@link Resource}s containing the results. If no resources
      *         can be resolved, an empty list is returned. May not be null.
      * @throws ResourceResolutionRuntimeException
      *             Thrown if any error occurs.
      */
-    List<Resource> resolve(String requestedResourcePath, Group group, ResourceAccumulator results)
+    List<Resource> resolve(String requestedResourcePath, Device device)
     throws ResourceResolutionRuntimeException;
 
     /**

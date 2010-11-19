@@ -5,7 +5,6 @@ import java.io.File;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
@@ -22,26 +21,23 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
     /**
      * Constructor.
      *
+     * @param commonParams
+     *            Holds the common parameters used in constructing all {@link ResourceResolver}s.
      * @param abstractResourceExtension
      *            Extension of resources (eg. "css" or "crf") that this class
      *            knows how to resolve.
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
-     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
      * @param jspResourcesRootServletPath
      *            Root of JSP resources, relative to the servlet context root.
      */
-    public JspResourceResolverBean(
+    public JspResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
             final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
-            final DeploymentMetadata deploymentMetadata,
             final String jspResourcesRootServletPath) {
-        super(abstractResourceExtension, rootResourcesDir,
-                resourceResolutionWarnLogger, deploymentMetadata);
+
+        super(commonParams, abstractResourceExtension, rootResourcesDir);
 
         validateJspResourcesRootServletPath(jspResourcesRootServletPath);
 
@@ -53,7 +49,7 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
         if (StringUtils.isBlank(jspResourcesRootServletPath)) {
             throw new IllegalArgumentException(
                     "jspResourcesRootServletPath must not be blank: '"
-                            + jspResourcesRootServletPath + "'");
+                    + jspResourcesRootServletPath + "'");
         }
     }
 
@@ -66,7 +62,7 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
     @Override
     protected boolean isRecognisedAbstractResourceRequest(final String requestedResourcePath) {
         return requestedResourcePath.startsWith(getJspResourcesRootServletPath())
-                && super.isRecognisedAbstractResourceRequest(requestedResourcePath);
+        && super.isRecognisedAbstractResourceRequest(requestedResourcePath);
     }
 
     /**
@@ -87,11 +83,20 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
     protected String insertGroupNameAndDeploymentVersionIntoPath(final String requestedResourcePath,
             final Group group) {
         return getJspResourcesRootServletPath()
-                + group.getName()
-                + RESOURCE_SEPARATOR
-                + StringUtils.substringAfter(requestedResourcePath,
-                        getJspResourcesRootServletPath());
+        + group.getName()
+        + RESOURCE_SEPARATOR
+        + StringUtils.substringAfter(requestedResourcePath,
+                getJspResourcesRootServletPath());
     }
+
+    //    /**
+    //     * {@inheritDoc}
+    //     */
+    //    @Override
+    //    public ResourceAccumulator getResourceAccumulator(final String requestedResourcePath) {
+    //
+    //        return getResourceAccumulatorFactory().getResourceAccumulator(getResourceType());
+    //    }
 
     /**
      * {@inheritDoc}
@@ -99,6 +104,15 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
     @Override
     protected Logger getLogger() {
         return LOGGER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ResourceAccumulator createResourceAccumulator() {
+
+        return getResourceAccumulatorFactory().getJspResourceAccumulator();
     }
 
     /**

@@ -18,7 +18,6 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
@@ -38,27 +37,25 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
     /**
      * Constructor.
      *
+     * @param commonParams
+     *            Holds the common parameters used in constructing all {@link ResourceResolver}s.
      * @param abstractResourceExtension
      *            Extension of resources (eg. "css" or "crf") that this class
      *            knows how to resolve.
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceResolutionWarnLogger
-     *            {@link ResourceResolutionWarnLogger} to use to log warnings.
-     * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
      * @param fileExtensionWildcards
      *            Array of image file extensions to match. Wildcards supported
      *            are '*' as per standard Unix/Windows command line
      *            semantics.
      */
-    public ImageResourceResolverBean(final String abstractResourceExtension,
+    public ImageResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
+            final String abstractResourceExtension,
             final File rootResourcesDir,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
-            final DeploymentMetadata deploymentMetadata,
             final String[] fileExtensionWildcards) {
-        super(abstractResourceExtension, rootResourcesDir,
-                resourceResolutionWarnLogger, deploymentMetadata);
+
+        super(commonParams, abstractResourceExtension, rootResourcesDir);
 
         validateFileExtensionWildcards(fileExtensionWildcards);
 
@@ -93,7 +90,7 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    protected List<Resource> doResolve(
+    protected List<Resource> doResolveForGroup(
             final String requestedResourcePath, final Group group)
             throws ResourceResolutionRuntimeException {
 
@@ -228,6 +225,15 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
     @Override
     protected String getRealResourcePathExtension() {
         return StringUtils.EMPTY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ResourceAccumulator createResourceAccumulator() {
+
+        return getResourceAccumulatorFactory().getImageResourceAccumulator();
     }
 
     private String[] getFileExtensionWildcards() {

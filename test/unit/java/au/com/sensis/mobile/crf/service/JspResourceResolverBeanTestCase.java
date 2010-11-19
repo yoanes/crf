@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.config.Group;
 
 /**
  * Unit test {@link JspResourceResolverBean}.
@@ -29,47 +31,55 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
      */
     @Before
     public void setUp() throws Exception {
-        setObjectUnderTest(new JspResourceResolverBean(
+
+        setObjectUnderTest(new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata(),
                 getResourcePathTestData().getJspResourcesRootServletPath()));
     }
 
     @Override
     protected JspResourceResolverBean createWithAbstractResourceExtension(
             final String abstractResourceExtension) {
-        return new JspResourceResolverBean(abstractResourceExtension,
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata(), getResourcePathTestData()
-                .getJspResourcesRootServletPath());
+
+        return new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
+                abstractResourceExtension, getResourcesRootDir(),
+                getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
     @Override
     protected JspResourceResolverBean createWithResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        return new JspResourceResolverBean(getResourcePathTestData()
-                .getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                resourceResolutionWarnLogger, getDeploymentMetadata(),
+
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    resourceResolutionWarnLogger, getDeploymentMetadata(),
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new JspResourceResolverBean(commonParams,
+                getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
                 getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
     @Override
     protected JspResourceResolverBean createWithRootResourcesDir(
             final File rootResourcesDir) {
-        return new JspResourceResolverBean(getResourcePathTestData()
-                .getCrfExtensionWithoutLeadingDot(), rootResourcesDir,
-                getMockResourceResolutionWarnLogger(), getDeploymentMetadata(),
+        return new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
+                getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), rootResourcesDir,
                 getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
     @Override
     protected JspResourceResolverBean createWithDeploymentMetadata(
             final DeploymentMetadata deploymentMetadata) {
-        return new JspResourceResolverBean(getResourcePathTestData()
-                .getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(), deploymentMetadata,
+
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    getMockResourceResolutionWarnLogger(), deploymentMetadata,
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new JspResourceResolverBean(commonParams,
+                getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
                 getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
@@ -79,12 +89,9 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new JspResourceResolverBean(getResourcePathTestData()
-                        .getCrfExtensionWithoutLeadingDot(),
-                        getResourcesRootDir(),
-                        getMockResourceResolutionWarnLogger(),
-                        getDeploymentMetadata(),
-                        testValue);
+                new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
+                        getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
+                        getResourcesRootDir(), testValue);
 
                 Assert
                 .fail("IllegalArgumentException expected for testValue: '"
@@ -108,6 +115,8 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordCheckIfNewPathExists(Boolean.TRUE);
 
             replay();
@@ -115,8 +124,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             Assert.assertEquals("actualResources is wrong",
                     Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath()),
@@ -140,6 +148,8 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordCheckIfNewPathExists(Boolean.FALSE);
 
             replay();
@@ -147,8 +157,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedJspResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             Assert.assertNotNull("actualResources should not be null",
                     actualResources);
@@ -177,8 +186,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         final List<Resource> actualResources =
             getObjectUnderTest().resolve(
                     getResourcePathTestData().getRequestedCssResourcePath(),
-                    getGroupTestData().createIPhoneGroup(),
-                    getResolvedResourcePaths());
+                    getMockDevice());
 
         Assert.assertNotNull("actualResources should not be null",
                 actualResources);
@@ -198,6 +206,20 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         Assert.assertFalse("supports should be false",
                 getObjectUnderTest().supports(
                         getResourcePathTestData().getRequestedCssResourcePath()));
+    }
+
+    private void recordGetMatchingGroupIterator() {
+
+        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
+                getResourcePathTestData().getRequestedJspResourcePath())).andReturn(
+                        getMockUiConfiguration());
+
+        final Iterator<Group> matchingGroupsIterator =
+            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
+        .andReturn(matchingGroupsIterator);
+
     }
 
     /**

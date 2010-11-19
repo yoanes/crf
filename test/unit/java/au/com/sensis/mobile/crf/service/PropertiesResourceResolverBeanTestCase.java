@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.easymock.EasyMock;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.config.Group;
 
 /**
  * Unit test {@link PropertiesResourceResolverBean}.
@@ -27,51 +29,57 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
      */
     @Before
     public void setUp() throws Exception {
+
         setObjectUnderTest(new PropertiesResourceResolverBean(
+                getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata()));
+                getResourcesRootDir()));
     }
 
     @Override
     protected PropertiesResourceResolverBean createWithAbstractResourceExtension(
             final String abstractResourceExtension) {
-        return new PropertiesResourceResolverBean(
+
+        return new PropertiesResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension,
-                getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata());
+                getResourcesRootDir());
     }
 
     @Override
     protected PropertiesResourceResolverBean createWithDeploymentMetadata(
             final DeploymentMetadata deploymentMetadata) {
-        return new PropertiesResourceResolverBean(
+
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    getMockResourceResolutionWarnLogger(), deploymentMetadata,
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new PropertiesResourceResolverBean(commonParams,
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                getResourcesRootDir(),
-                getMockResourceResolutionWarnLogger(),
-                deploymentMetadata);
+                getResourcesRootDir());
     }
 
     @Override
     protected PropertiesResourceResolverBean createWithResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
-        return new PropertiesResourceResolverBean(
+
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    resourceResolutionWarnLogger, getDeploymentMetadata(),
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new PropertiesResourceResolverBean(commonParams,
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                getResourcesRootDir(),
-                resourceResolutionWarnLogger,
-                getDeploymentMetadata());
+                getResourcesRootDir());
     }
 
     @Override
     protected PropertiesResourceResolverBean createWithRootResourcesDir(
             final File rootResourcesDir) {
-        return new PropertiesResourceResolverBean(
+
+        return new PropertiesResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                rootResourcesDir,
-                getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata());
+                rootResourcesDir);
     }
 
     @Test
@@ -83,6 +91,8 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordCheckIfNewPathExists(Boolean.TRUE);
 
             replay();
@@ -90,8 +100,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedPropertiesResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             Assert.assertEquals("actualResources is wrong", Arrays.asList(getResourcePathTestData()
                     .getMappedIphoneGroupPropertiesResourcePath()), actualResources);
@@ -112,6 +121,8 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordCheckIfNewPathExists(Boolean.FALSE);
 
             replay();
@@ -119,8 +130,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedPropertiesResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             Assert.assertNotNull("actualResources should not be null", actualResources);
             Assert.assertTrue("actualResources should be empty", actualResources.isEmpty());
@@ -148,8 +158,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         final List<Resource> actualResources =
             getObjectUnderTest().resolve(
                     getResourcePathTestData().getRequestedJspResourcePath(),
-                    getGroupTestData().createIPhoneGroup(),
-                    getResolvedResourcePaths());
+                    getMockDevice());
 
         Assert.assertNotNull("actualResources should not be null",
                 actualResources);
@@ -172,6 +181,20 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
                         getResourcePathTestData().getRequestedJspResourcePath()));
     }
 
+
+    private void recordGetMatchingGroupIterator() {
+
+        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
+                getResourcePathTestData().getRequestedPropertiesResourcePath())).andReturn(
+                        getMockUiConfiguration());
+
+        final Iterator<Group> matchingGroupsIterator =
+            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
+        .andReturn(matchingGroupsIterator);
+
+    }
 
     /**
      * @return the objectUnderTest

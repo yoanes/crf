@@ -1,14 +1,10 @@
 package au.com.sensis.mobile.crf.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
-import au.com.sensis.mobile.crf.config.ConfigurationFactory;
-import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
@@ -23,16 +19,13 @@ ResourceResolverEngine {
     private static final Logger LOGGER = Logger.getLogger(
             ResourceResolverEngineBean.class);
 
-    private final ConfigurationFactory configurationFactory;
+
     private final ResourceResolver resourceResolver;
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
 
     /**
      * Constructor.
      *
-     * @param configurationFactory
-     *            {@link ConfigurationFactory} to obtain
-     *            the {@link au.com.sensis.mobile.crf.config.UiConfiguration} from.
      * @param resourceResolver
      *            {@link ResourceResolver} to resolve requested resource paths
      *            to real resource paths for a specific group.
@@ -40,16 +33,13 @@ ResourceResolverEngine {
      *            use to log warnings.
      */
     public ResourceResolverEngineBean(
-            final ConfigurationFactory configurationFactory,
             final ResourceResolver resourceResolver,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
 
-        Validate.notNull(configurationFactory, "configurationFactory must not be null");
         Validate.notNull(resourceResolver, "resourceResolver must not be null");
         Validate.notNull(resourceResolutionWarnLogger,
         "resourceResolutionWarnLogger must not be null");
 
-        this.configurationFactory = configurationFactory;
         this.resourceResolver = resourceResolver;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
     }
@@ -65,25 +55,27 @@ ResourceResolverEngine {
                     + "' for device '" + device + "'.");
         }
 
-        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(device,
-                requestedResourcePath);
-        while (matchingGroupIterator.hasNext()) {
 
-            final Group currGroup = matchingGroupIterator.next();
+        //        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(device,
+        //                requestedResourcePath);
+        //        while (matchingGroupIterator.hasNext()) {
+        //
+        //            final Group currGroup = matchingGroupIterator.next();
 
-            debugLogCheckingGroup(requestedResourcePath, currGroup);
+        //            debugLogCheckingGroup(requestedResourcePath, currGroup);
 
-            final List<Resource> resources =
-                resolve(requestedResourcePath, currGroup, null);
+        final List<Resource> resources =
+            //resolve(requestedResourcePath, currGroup, null);
+            getResourceResolver().resolve(requestedResourcePath, device);
 
-            if (!resources.isEmpty()) {
-                debugLogResourcesFound(resources);
+        if (!resources.isEmpty()) {
+            debugLogResourcesFound(resources);
 
-                warnIfMultipleResourcesFound(requestedResourcePath, resources);
+            warnIfMultipleResourcesFound(requestedResourcePath, resources);
 
-                return resources.get(0);
-            }
+            return resources.get(0);
         }
+        //        }
 
         debugLogNoResourcesFound(requestedResourcePath);
 
@@ -91,11 +83,61 @@ ResourceResolverEngine {
         return null;
     }
 
-    private Iterator<Group> getMatchingGroupIterator(final Device device,
-            final String requestedResourcePath) {
-        return getConfigurationFactory().getUiConfiguration(requestedResourcePath)
-        .matchingGroupIterator(device);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Resource> getAllResources(final Device device,
+            final String requestedResourcePath) throws ResourceResolutionRuntimeException {
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Looking for resource '" + requestedResourcePath
+                    + "' for device '" + device + "'.");
+        }
+
+        final List<Resource> resources =
+            getResourceResolver().resolve(requestedResourcePath, device);
+
+        if (resources.isEmpty()) {
+            debugLogNoResourcesFound(requestedResourcePath);
+        }
+
+        return resources;
+
+        //        final ResourceAccumulator accumulatedResults =
+        //            getResourceResolver().getResourceAccumulator(requestedResourcePath);
+
+        //        if (LOGGER.isDebugEnabled()) {
+        //            LOGGER.debug("Looking for resource '" + requestedResourcePath
+        //                    + "' for device '" + device + "'.");
+        //        }
+        //
+        //        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(
+        //                device, requestedResourcePath);
+        //        while (matchingGroupIterator.hasNext()) {
+        //
+        //            final Group currGroup = matchingGroupIterator.next();
+        //
+        //            debugLogCheckingGroup(requestedResourcePath, currGroup);
+        //
+        //            resolve(requestedResourcePath, currGroup, accumulatedResults);
+        //        }
+        //
+        //        if (accumulatedResults.getResources().isEmpty()) {
+        //            debugLogNoResourcesFound(requestedResourcePath);
+        //        }
+        //
+        //        return new ArrayList<Resource>(accumulatedResults.getResources());
     }
+
+    //    private List<Resource> resolve(
+    //            final String requestedResourcePath, final Group currGroup,
+    //            final ResourceAccumulator results) {
+    //
+    //        return getResourceResolver().resolve(
+    //                requestedResourcePath, currGroup, results);
+    //    }
+
 
     private void warnIfMultipleResourcesFound(
             final String requestedResourcePath,
@@ -109,46 +151,6 @@ ResourceResolverEngine {
                     + "Will only return the first. Total found: "
                     + resources + ".");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Resource> getAllResources(final Device device,
-            final String requestedResourcePath) throws ResourceResolutionRuntimeException {
-
-        final ResourceAccumulator accumulatedResults = new ResourceAccumulator();
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Looking for resource '" + requestedResourcePath
-                    + "' for device '" + device + "'.");
-        }
-
-        final Iterator<Group> matchingGroupIterator = getMatchingGroupIterator(
-                device, requestedResourcePath);
-        while (matchingGroupIterator.hasNext()) {
-
-            final Group currGroup = matchingGroupIterator.next();
-
-            debugLogCheckingGroup(requestedResourcePath, currGroup);
-
-            resolve(requestedResourcePath, currGroup, accumulatedResults);
-        }
-
-        if (accumulatedResults.getAllResourcePaths().isEmpty()) {
-            debugLogNoResourcesFound(requestedResourcePath);
-        }
-
-        return new ArrayList<Resource>(accumulatedResults.getAllResourcePaths());
-    }
-
-    private List<Resource> resolve(
-            final String requestedResourcePath, final Group currGroup,
-            final ResourceAccumulator results) {
-
-        return getResourceResolver().resolve(
-                requestedResourcePath, currGroup, results);
     }
 
     private void debugLogResourcesFound(
@@ -169,10 +171,6 @@ ResourceResolverEngine {
         }
     }
 
-    private ConfigurationFactory getConfigurationFactory() {
-        return configurationFactory;
-    }
-
     private ResourceResolver getResourceResolver() {
         return resourceResolver;
     }
@@ -181,11 +179,5 @@ ResourceResolverEngine {
         return resourceResolutionWarnLogger;
     }
 
-    private void debugLogCheckingGroup(final String requestedResourcePath,
-            final Group currGroup) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Looking for '" + requestedResourcePath
-                    + "' in matching group: " + currGroup);
-        }
-    }
+
 }

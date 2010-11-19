@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -12,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Unit test {@link ImageResourceResolverBean}.
@@ -21,7 +24,7 @@ import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
 
     private static final String[] FILE_EXTENSION_WILDCARDS = new String[] { "*" };
-
+    private Device mockDevice;
     private ImageResourceResolverBean objectUnderTest;
 
     /**
@@ -33,28 +36,31 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     @Before
     public void setUp() throws Exception {
 
-        setObjectUnderTest(new ImageResourceResolverBean(
+        setObjectUnderTest(new ImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata(), FILE_EXTENSION_WILDCARDS));
+                getResourcesRootDir(), FILE_EXTENSION_WILDCARDS));
     }
 
     @Override
     protected ImageResourceResolverBean createWithAbstractResourceExtension(
             final String abstractResourceExtension) {
 
-        return new ImageResourceResolverBean(abstractResourceExtension,
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                getDeploymentMetadata(), FILE_EXTENSION_WILDCARDS);
+        return new ImageResourceResolverBean(getResourceResolverCommonParamHolder(),
+                abstractResourceExtension,
+                getResourcesRootDir(), FILE_EXTENSION_WILDCARDS);
     }
 
     @Override
     protected ImageResourceResolverBean createWithResourceResolutionWarnLogger(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
 
-        return new ImageResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                resourceResolutionWarnLogger, getDeploymentMetadata(),
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    resourceResolutionWarnLogger, getDeploymentMetadata(),
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new ImageResourceResolverBean(commonParams,
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
                 FILE_EXTENSION_WILDCARDS);
     }
 
@@ -62,9 +68,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     protected ImageResourceResolverBean createWithRootResourcesDir(
             final File rootResourcesDir) {
 
-        return new ImageResourceResolverBean(getResourcePathTestData()
-                .getCssExtensionWithoutLeadingDot(), rootResourcesDir,
-                getMockResourceResolutionWarnLogger(), getDeploymentMetadata(),
+        return new ImageResourceResolverBean(getResourceResolverCommonParamHolder(),
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(), rootResourcesDir,
                 FILE_EXTENSION_WILDCARDS);
     }
 
@@ -72,10 +77,14 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     protected ImageResourceResolverBean createWithDeploymentMetadata(
             final DeploymentMetadata deploymentMetadata) {
 
-        return new ImageResourceResolverBean(
+        final ResourceResolverCommonParamHolder commonParams =
+            new ResourceResolverCommonParamHolder(
+                    getMockResourceResolutionWarnLogger(), deploymentMetadata,
+                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+
+        return new ImageResourceResolverBean(commonParams,
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
-                getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                deploymentMetadata, FILE_EXTENSION_WILDCARDS);
+                getResourcesRootDir(), FILE_EXTENSION_WILDCARDS);
     }
 
     @Test
@@ -93,10 +102,9 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
         for (final String [] testValue : testVaues) {
             try {
-                new ImageResourceResolverBean(
+                new ImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                         getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        getResourcesRootDir(), getMockResourceResolutionWarnLogger(),
-                        getDeploymentMetadata(), testValue);
+                        getResourcesRootDir(), testValue);
 
                 Assert.fail("IllegalArgumentException expected for testValue: '"
                         + ArrayUtils.toString(testValue) + "'");
@@ -120,6 +128,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordListFilesByExtension(getSingleMatchedPngImageArray());
 
             replay();
@@ -127,12 +137,13 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedImageResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             assertComplexObjectsEqual("actualResources is wrong",
                     Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
                     actualResources);
+
+            Assert.assertTrue(actualResources.get(0) instanceof ImageResourceBean);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -172,6 +183,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordListFilesByExtension(getMultipleMatchedPngImageArray());
 
             recordLogWarningResolveToSingleFoundMultipleResources();
@@ -181,8 +194,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedImageResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             assertComplexObjectsEqual("actualResources is wrong",
                     Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
@@ -192,6 +204,20 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
             verify();
             reset();
         }
+
+    }
+
+    private void recordGetMatchingGroupIterator() {
+
+        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
+                getResourcePathTestData().getRequestedImageResourcePath())).andReturn(
+                        getMockUiConfiguration());
+
+        final Iterator<Group> matchingGroupsIterator =
+            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
+        .andReturn(matchingGroupsIterator);
 
     }
 
@@ -222,6 +248,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetMatchingGroupIterator();
+
             recordListFilesByExtension(new File[] {});
 
             replay();
@@ -229,8 +257,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
             final List<Resource> actualResources =
                 getObjectUnderTest().resolve(
                         getResourcePathTestData().getRequestedImageResourcePath(),
-                        getGroupTestData().createIPhoneGroup(),
-                        getResolvedResourcePaths());
+                        getMockDevice());
 
             Assert.assertNotNull("actualResources should not be null",
                     actualResources);
@@ -277,8 +304,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         final List<Resource> actualResources =
             getObjectUnderTest().resolve(
                     getResourcePathTestData().getRequestedCssResourcePath(),
-                    getGroupTestData().createIPhoneGroup(),
-                    getResolvedResourcePaths());
+                    getMockDevice());
 
         Assert.assertNotNull("actualResources should not be null",
                 actualResources);
@@ -315,5 +341,23 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
      */
     private void setObjectUnderTest(final ImageResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
+    }
+
+    /**
+     * @return the mockDevice
+     */
+    @Override
+    public Device getMockDevice() {
+
+        return mockDevice;
+    }
+
+    /**
+     * @param mockDevice  the mockDevice to set
+     */
+    @Override
+    public void setMockDevice(final Device mockDevice) {
+
+        this.mockDevice = mockDevice;
     }
 }
