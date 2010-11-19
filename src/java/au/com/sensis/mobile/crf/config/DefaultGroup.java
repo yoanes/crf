@@ -29,4 +29,14 @@ public class DefaultGroup extends Group {
         throw new IllegalStateException(
                 "It is illegal to set the expr for DefaultGroup.");
     }
+
+    /**
+     * Always returns true.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isDefault() {
+        return true;
+    }
 }

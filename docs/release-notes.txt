@@ -1,10 +1,19 @@
 ==== (PENDING) Version 0.1.2-105 (tag: contentRenderingFramework_v0_1_2-105) ==== 
 
 Jiras:
+- CRF-3: ContentRenderingPlatformConfigurationFactory - validate config
+    - if one or more groups do not exist as a directory(ies) in any of the resource directory roots,
+      a warning is logged using ResourceResolutionWarnLogger.
+    - if a directory(ies) exist in one of the resource directory roots but no corresponding group 
+      is found in any UiConfiguration, a warning is logged using ResourceResolutionWarnLogger.
+      
 - CRF-14: Debug page composition
     - if env.debug.resource.graph=true in crf-environment.properties, plain text graph of resolved 
       JSP resources output as a comment directly under the html element of the output stream. 
       Also logged at DEBUG level if log4j debug is enabled. 
+      
+Now depends on:
+- <dependency org="apache" name="commons-io" rev="1.3" conf="default"/>      
 
 ==== Version 0.1.2-104 (tag: contentRenderingFramework_v0_1_2-104) ==== 
 

@@ -193,6 +193,14 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
         }
     }
 
+    @Test
+    public void testIsDefault() throws Throwable {
+        final Group group = new Group();
+
+        Assert.assertFalse("isDefault() should be false",
+                group.isDefault());
+    }
+
     /**
      * @return the mockDevice
      */

@@ -1,11 +1,15 @@
 package au.com.sensis.mobile.crf.config;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -17,6 +21,8 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
 import au.com.sensis.mobile.crf.exception.GroupEvaluationRuntimeException;
 import au.com.sensis.mobile.crf.exception.XmlValidationRuntimeException;
+import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
+import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.util.XmlBinder;
 import au.com.sensis.mobile.crf.util.XmlValidator;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.DefaultDevice;
@@ -48,6 +54,9 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     private final ResourcePatternResolver resourcePatternResolver;
     private List<UiConfiguration> uiConfigurations;
 
+    private final List<File> uiResourceRootDirectories;
+    private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
+
     /**
      * The constructor which sets up the mappingConfiguration.
      *
@@ -61,18 +70,27 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
      * @param xmlValidator
      *            {@link XmlValidator} to use to validate the XML configuration
      *            file.
+     * @param resourceResolutionWarnLogger {@link ResourceResolutionWarnLogger}.
      * @param mappingConfigurationClasspathPattern
      *            Classpath of the file containing the configuration.
+     * @param uiResourceRootDirectories List of root directories where UI resources
+     *            are expected to be found. Each group in the configuration should correspond
+     *            to a directory directly under one of these directories.
      */
     // TODO: validate args.
     public ConfigurationFactoryBean(final DeploymentMetadata deploymentMetadata,
             final ResourcePatternResolver resourcePatternResolver, final XmlBinder xmlBinder,
-            final XmlValidator xmlValidator, final String mappingConfigurationClasspathPattern) {
+            final XmlValidator xmlValidator,
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final String mappingConfigurationClasspathPattern,
+            final List<File> uiResourceRootDirectories) {
         this.deploymentMetadata = deploymentMetadata;
         this.resourcePatternResolver = resourcePatternResolver;
         this.mappingConfigurationClasspathPattern = mappingConfigurationClasspathPattern;
         this.xmlBinder = xmlBinder;
         this.xmlValidator = xmlValidator;
+        this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
+        this.uiResourceRootDirectories = uiResourceRootDirectories;
 
         initUiConfigurations();
     }
@@ -196,6 +214,15 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void validateLoadedConfigurationData() {
 
+        validateGroupExpressions();
+
+        validateGroupDirsExist();
+
+        validateUiResourceDirsExistAsGroups();
+
+    }
+
+    private void validateGroupExpressions() {
         for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
             final Iterator<Group> groupIterator = uiConfiguration.groupIterator();
             while (groupIterator.hasNext()) {
@@ -206,6 +233,128 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
                             + uiConfiguration.getSourceUrl() + "' is invalid.", e);
                 }
             }
+        }
+    }
+
+    private void validateGroupDirsExist() {
+        final Set<String> allUiResourceGroupDirNames = findAllUiResourceGroupDirNames();
+
+        for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
+            final Iterator<Group> groupIterator = uiConfiguration.groupIterator();
+
+            final Set<String> groupsMissingADir =
+                    getGroupsMissingADir(allUiResourceGroupDirNames, groupIterator);
+
+            logMissingGroupDirsWarningIfRequired(uiConfiguration, groupsMissingADir);
+
+        }
+
+    }
+
+    private void logMissingGroupDirsWarningIfRequired(final UiConfiguration uiConfiguration,
+            final Set<String> groupsMissingADir) {
+        if (!groupsMissingADir.isEmpty() && getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "No group directories found for groups: " + groupsMissingADir
+                            + " for UiConfiguration loaded from: "
+                            + uiConfiguration.getSourceUrl() + ". Searched directories: "
+                            + getUiResourceRootDirectories());
+        }
+    }
+
+    private Set<String> getGroupsMissingADir(final Set<String> allUiResourceGroupDirNames,
+            final Iterator<Group> groupIterator) {
+        final Set<String> groupsMissingADir = new LinkedHashSet<String>();
+
+        while (groupIterator.hasNext()) {
+            final Group currentGroup = groupIterator.next();
+            if (!currentGroup.isDefault()
+                    && !allUiResourceGroupDirNames.contains(currentGroup.getName())) {
+                groupsMissingADir.add(currentGroup.getName());
+            }
+        }
+        return groupsMissingADir;
+    }
+
+    private void validateUiResourceDirsExistAsGroups() {
+        final Set<String> allGroupNames = findAllGroupNames();
+        final Set<File> dirsWithoutGroup = new LinkedHashSet<File>();
+
+        for (final File uiResourceRootDir : getUiResourceRootDirectories()) {
+            accumulateDirsWithoutGroup(allGroupNames, uiResourceRootDir, dirsWithoutGroup);
+        }
+
+        logDirsWithoutGroupWarningIfRequired(dirsWithoutGroup);
+
+    }
+
+    private void logDirsWithoutGroupWarningIfRequired(final Set<File> dirsWithoutGroup) {
+        if (!dirsWithoutGroup.isEmpty() && getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "Found group directories that are not configured in any config file: "
+                            + dirsWithoutGroup);
+        }
+    }
+
+    private void accumulateDirsWithoutGroup(final Set<String> allGroupNames,
+            final File uiResourceRootDir, final Set<File> dirsWithoutGroup) {
+        for (final File dir : getDirs(uiResourceRootDir)) {
+            if (!allGroupNames.contains(dir.getName())) {
+                dirsWithoutGroup.add(dir);
+            }
+        }
+    }
+
+    private Set<String> findAllGroupNames() {
+        final Set<String> allGroupNames = new HashSet<String>();
+
+        for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
+            final Iterator<Group> groupIterator = uiConfiguration.groupIterator();
+            while (groupIterator.hasNext()) {
+                allGroupNames.add(groupIterator.next().getName());
+            }
+        }
+
+        return allGroupNames;
+    }
+
+    private Set<String> findAllUiResourceGroupDirNames() {
+        final Set<String> allGroupDirNames = new HashSet<String>();
+
+        for (final File uiResourceRootDir : getUiResourceRootDirectories()) {
+            final String [] dirNames = getDirNames(uiResourceRootDir);
+            addDirNamesToSet(dirNames, allGroupDirNames);
+        }
+
+        return allGroupDirNames;
+    }
+
+    private String[] getDirNames(final File uiResourceRootDir) {
+        final List<String> dirNamess = new ArrayList<String>();
+        for (final File fileOrDir : getDirs(uiResourceRootDir)) {
+            dirNamess.add(fileOrDir.getName());
+        }
+
+        return dirNamess.toArray(new String[] {});
+    }
+
+    private File[] getDirs(final File uiResourceRootDir) {
+        final File[] allFilesAndDirs =
+            FileIoFacadeFactory.getFileIoFacadeSingleton().list(uiResourceRootDir,
+                    new String[] { "*" });
+        final List<File> dirs = new ArrayList<File>();
+        for (final File fileOrDir : allFilesAndDirs) {
+            if (fileOrDir.isDirectory()) {
+                dirs.add(fileOrDir);
+            }
+        }
+
+        return dirs.toArray(new File[] {});
+    }
+
+    private void addDirNamesToSet(final String[] dirNames, final Set<String> allGroupDirNames) {
+        for (final String dirName : dirNames) {
+            allGroupDirNames.add(dirName);
         }
     }
 
@@ -318,6 +467,20 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private DeploymentMetadata getDeploymentMetadata() {
         return deploymentMetadata;
+    }
+
+    /**
+     * @return the uiResourceRootDirectories
+     */
+    private List<File> getUiResourceRootDirectories() {
+        return uiResourceRootDirectories;
+    }
+
+    /**
+     * @return the resourceResolutionWarnLogger
+     */
+    private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
+        return resourceResolutionWarnLogger;
     }
 
     private void debugLogUiConfigurationFound(final UiConfiguration uiConfiguration) {

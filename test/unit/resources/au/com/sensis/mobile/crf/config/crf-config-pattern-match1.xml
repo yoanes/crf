@@ -7,6 +7,8 @@
     <config-path>component/component1</config-path>
     <groups>
         <group name="iphone" expr="device.name =~ '.*iPhone.*'" />
+        <group name="iPad" expr = "device.name =~ '.*iPad.*'" />
+        <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
         
         <default-group name="default" />
     </groups>

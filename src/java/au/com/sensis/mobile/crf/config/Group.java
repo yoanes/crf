@@ -102,6 +102,14 @@ public class Group {
     }
 
     /**
+     * @return true if this group is a default group. The default implementation
+     *         always returns false.
+     */
+    public boolean isDefault() {
+        return false;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

@@ -45,6 +45,12 @@ public class DefaultGroupTestCase extends Group {
         }
     }
 
+    @Test
+    public void testIsDefault() throws Throwable {
+        Assert.assertTrue("isDefault() should be true",
+                getObjectUnderTest().isDefault());
+    }
+
     /**
      * @return the objectUnderTest
      */

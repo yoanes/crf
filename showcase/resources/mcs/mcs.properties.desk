@@ -1,5 +1,5 @@
 mcs.devicerepository.filepath=D:/var/mcs/devices/devices.mdpr
-mcs.policies.filepath=D:/Workspace/contentRenderingFramework/showcase/resources/mcs/policies
+mcs.policies.filepath=D:/Data/eclipse-projects/contentRenderingFramework/showcase/resources/mcs/policies
 
 mcs.mgrp.component.scripts.base.url=/wl-crf-showcase/comp/
 mcs.mgrp.component.images.base.url=http://localhost:8080/common-imageserver/

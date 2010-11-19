@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.WildcardFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 
 
@@ -77,12 +77,12 @@ public class FileIoFacadeBean implements FileIoFacade {
 
     private FileFilter createWildcardFilter(final String fileName,
             final String[] extensions) {
-        return new WildcardFilter(createWildcards(fileName,
+        return new WildcardFileFilter(createWildcards(fileName,
                 extensions));
     }
 
     private FileFilter createWildcardFilter(final String[] wildcards) {
-        return new WildcardFilter(wildcards);
+        return new WildcardFileFilter(wildcards);
     }
 
     private String[] createWildcards(final String fileName,
