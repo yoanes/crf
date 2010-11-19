@@ -170,7 +170,8 @@ extends AbstractJUnit4TestCase {
         final List<Resource> sameResolvedPaths = new ArrayList<Resource>(resolvedPaths);
 
         // Create an accumulator the same as the one under test
-        final ResourceAccumulatorBean accumulator = new ResourceAccumulatorBean();
+        final JavaScriptResourceAccumulatorBean accumulator =
+            new JavaScriptResourceAccumulatorBean(PACKAGE_KEYWORD, false);
         accumulator.accumulate(sameResolvedPaths);
 
         getObjectUnderTest().accumulate(resolvedPaths);
