@@ -9,7 +9,7 @@ Jiras:
       
 - CRF-14: Debug page composition
     - if env.debug.resource.graph=true in crf-environment.properties, plain text graph of resolved 
-      JSP resources output as a comment directly under the html element of the output stream. 
+      resources output as a comment directly under the html element of the output stream. 
       Also logged at DEBUG level if log4j debug is enabled. 
       
 Now depends on:
