@@ -10,15 +10,15 @@ import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Base test case for {@link AbstractResourceTreeNode}.
+ * Base test case for {@link ResourceTreeNodeBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public abstract class AbstractResourceTreeNodeTestCase extends AbstractJUnit4TestCase {
+public class AbstractResourceTreeNodeTestCase extends AbstractJUnit4TestCase {
 
-    private AbstractResourceTreeNode objectUnderTest;
-    private AbstractResourceTreeNode resourceTreeNode1;
-    private AbstractResourceTreeNode resourceTreeNode2;
+    private ResourceTreeNodeBean objectUnderTest;
+    private ResourceTreeNodeBean resourceTreeNode1;
+    private ResourceTreeNodeBean resourceTreeNode2;
     private Resource mockResource;
 
     /**
@@ -71,58 +71,59 @@ public abstract class AbstractResourceTreeNodeTestCase extends AbstractJUnit4Tes
 
     }
 
-    @Test
-    public void testGetTypeDescription() throws Throwable {
-        Assert.assertEquals("typeDescription is wrong", getExpectedTypeDescription(),
-                getObjectUnderTest().getTypeDescription());
-
-    }
-
-    protected abstract String getExpectedTypeDescription();
-
     /**
      * @return the objectUnderTest
      */
-    private AbstractResourceTreeNode getObjectUnderTest() {
+    private ResourceTreeNodeBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final AbstractResourceTreeNode objectUnderTest) {
+    private void setObjectUnderTest(final ResourceTreeNodeBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 
-    protected abstract AbstractResourceTreeNode createObjectUnderTest(Resource resource);
-    protected abstract AbstractResourceTreeNode createResourceTreeNode1(Resource resource);
-    protected abstract AbstractResourceTreeNode createResourceTreeNode2(Resource resource);
+    protected ResourceTreeNodeBean createObjectUnderTest(final Resource resource) {
+        return new ResourceTreeNodeBean(resource);
+    }
+
+    protected ResourceTreeNodeBean createResourceTreeNode1(final Resource resource) {
+        final ResourceTreeNodeBean node = new ResourceTreeNodeBean(resource);
+        return node;
+    }
+
+    protected ResourceTreeNodeBean createResourceTreeNode2(final Resource resource) {
+        final ResourceTreeNodeBean node = new ResourceTreeNodeBean(resource);
+        return node;
+    }
 
     /**
      * @return the resourceTreeNode1
      */
-    private AbstractResourceTreeNode getResourceTreeNode1() {
+    private ResourceTreeNodeBean getResourceTreeNode1() {
         return resourceTreeNode1;
     }
 
     /**
      * @param resourceTreeNode1 the resourceTreeNode1 to set
      */
-    private void setResourceTreeNode1(final AbstractResourceTreeNode resourceTreeNode1) {
+    private void setResourceTreeNode1(final ResourceTreeNodeBean resourceTreeNode1) {
         this.resourceTreeNode1 = resourceTreeNode1;
     }
 
     /**
      * @return the resourceTreeNode2
      */
-    private AbstractResourceTreeNode getResourceTreeNode2() {
+    private ResourceTreeNodeBean getResourceTreeNode2() {
         return resourceTreeNode2;
     }
 
     /**
      * @param resourceTreeNode2 the resourceTreeNode2 to set
      */
-    private void setResourceTreeNode2(final AbstractResourceTreeNode resourceTreeNode2) {
+    private void setResourceTreeNode2(final ResourceTreeNodeBean resourceTreeNode2) {
         this.resourceTreeNode2 = resourceTreeNode2;
     }
 

@@ -2,12 +2,17 @@ package au.com.sensis.mobile.crf.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNode;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 
@@ -39,8 +44,19 @@ extends AbstractJUnit4TestCase {
         resolvedPaths = new ArrayList<Resource>();
         resolvedPaths.add(testData.getMappedDefaultGroupNamedScriptResourcePath());
         resolvedPaths.add(testData.getMappedDefaultGroupNamedScriptResourcePath2());
+
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
     }
 
+    /**
+     * Tear down test data.
+     *
+     * @throws Exception Thrown if any error occurs.
+     */
+    @After
+    public void tearDown() throws Exception {
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
+    }
 
     // Tests //
 
@@ -59,6 +75,29 @@ extends AbstractJUnit4TestCase {
         Collections.reverse(resolvedPaths);
 
         Assert.assertEquals(resolvedPaths, getObjectUnderTest().getResources());
+
+        assertResourceResolutionTreeUpdated();
+    }
+
+    private void assertResourceResolutionTreeUpdated() {
+        final Iterator<ResourceTreeNode> treePreOrderIterator =
+                ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
+
+        Assert.assertTrue("ResourceResolutionTree treePreOrderIterator should have a next item",
+                treePreOrderIterator.hasNext());
+        ResourceTreeNode resourceTreeNode = treePreOrderIterator.next();
+        Assert.assertNotNull("first item from preOrderIterator should not be null",
+                resourceTreeNode);
+        Assert.assertEquals("first item from preOrderIterator has wrong resource", resolvedPaths
+                .get(0), resourceTreeNode.getResource());
+
+        Assert.assertTrue("ResourceResolutionTree treePreOrderIterator should have a second next "
+                + "item", treePreOrderIterator.hasNext());
+        resourceTreeNode = treePreOrderIterator.next();
+        Assert.assertNotNull("second item from preOrderIterator should not be null",
+                resourceTreeNode);
+        Assert.assertEquals("secnod item from preOrderIterator has wrong resource", resolvedPaths
+                .get(1), resourceTreeNode.getResource());
     }
 
     @Test

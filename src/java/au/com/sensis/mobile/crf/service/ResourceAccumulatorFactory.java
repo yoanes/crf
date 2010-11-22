@@ -28,7 +28,7 @@ public class ResourceAccumulatorFactory {
      */
     public ResourceAccumulator getJspResourceAccumulator() {
 
-        return makeNewSingleResourceAccumulator();
+        return makeNewJspSingleResourceAccumulator();
     }
 
     /**
@@ -110,6 +110,13 @@ public class ResourceAccumulatorFactory {
      */
     protected SingleResourceAccumulatorBean makeNewSingleResourceAccumulator() {
         return new SingleResourceAccumulatorBean();
+    }
+
+    /**
+     * @return a new {@link SingleResourceAccumulatorBean}.
+     */
+    protected JspSingleResourceAccumulatorBean makeNewJspSingleResourceAccumulator() {
+        return new JspSingleResourceAccumulatorBean();
     }
 
     /**

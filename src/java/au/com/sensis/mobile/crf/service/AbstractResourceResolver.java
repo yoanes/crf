@@ -96,7 +96,6 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
                 accumulator.accumulate(
                         resolveForGroup(requestedResourcePath, currGroup));
 
-                getLogger().debug("We now have these results: " + accumulator.getResources());
             }
 
             return accumulator.getResources();

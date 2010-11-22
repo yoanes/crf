@@ -6,11 +6,11 @@ import java.util.List;
 import au.com.sensis.mobile.crf.service.Resource;
 
 /**
- * Base {@link ResourceTreeNode}.
+ * Standard {@link ResourceTreeNode} implementation.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public abstract class AbstractResourceTreeNode implements ResourceTreeNode {
+public class ResourceTreeNodeBean implements ResourceTreeNode {
 
     private final Resource resource;
     private final List<ResourceTreeNode> children = new ArrayList<ResourceTreeNode>();
@@ -22,7 +22,7 @@ public abstract class AbstractResourceTreeNode implements ResourceTreeNode {
      *
      * @param resource {@link Resource} that this node wraps.
      */
-    public AbstractResourceTreeNode(final Resource resource) {
+    public ResourceTreeNodeBean(final Resource resource) {
         this.resource = resource;
     }
 

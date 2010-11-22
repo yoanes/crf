@@ -42,13 +42,13 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        setResourceTreeNode1(new JspResourceTreeNode(getMockResource1()));
-        setResourceTreeNode2(new JspResourceTreeNode(getMockResource2()));
-        setResourceTreeNode3(new JspResourceTreeNode(getMockResource3()));
-        setResourceTreeNode4(new JspResourceTreeNode(getMockResource4()));
-        setResourceTreeNode5(new JspResourceTreeNode(getMockResource5()));
-        setResourceTreeNode6(new JspResourceTreeNode(getMockResource6()));
-        setResourceTreeNode7(new JspResourceTreeNode(getMockResource7()));
+        setResourceTreeNode1(new ResourceTreeNodeBean(getMockResource1()));
+        setResourceTreeNode2(new ResourceTreeNodeBean(getMockResource2()));
+        setResourceTreeNode3(new ResourceTreeNodeBean(getMockResource3()));
+        setResourceTreeNode4(new ResourceTreeNodeBean(getMockResource4()));
+        setResourceTreeNode5(new ResourceTreeNodeBean(getMockResource5()));
+        setResourceTreeNode6(new ResourceTreeNodeBean(getMockResource6()));
+        setResourceTreeNode7(new ResourceTreeNodeBean(getMockResource7()));
 
         setObjectUnderTest(createEnabledObjectUnderTest());
     }
@@ -309,13 +309,13 @@ public class ResourceResolutionTreeTestCase extends AbstractJUnit4TestCase {
         populateTree();
 
         final String expectedGraph
-            = "1. jsp: /WEB-INF/view/jsp/iphone-ipod/detail/bdp.jsp\n"
-                + "    2. jsp: /WEB-INF/view/jsp/default/detail/head.jsp\n"
-                + "        3. jsp: /WEB-INF/view/jsp/iphone-ipod/detail/styles.jsp\n"
-                + "        3. jsp: /WEB-INF/view/jsp/webkit/detail/scripts.jsp\n"
-                + "    2. jsp: /WEB-INF/view/jsp/default/detail/body.jsp\n"
-                + "        3. jsp: /WEB-INF/view/jsp/default/detail/header.jsp\n"
-                + "        3. jsp: /WEB-INF/view/jsp/default/detail/footer.jsp\n";
+            = "1. /WEB-INF/view/jsp/iphone-ipod/detail/bdp.jsp\n"
+                + "    2. /WEB-INF/view/jsp/default/detail/head.jsp\n"
+                + "        3. /WEB-INF/view/jsp/iphone-ipod/detail/styles.jsp\n"
+                + "        3. /WEB-INF/view/jsp/webkit/detail/scripts.jsp\n"
+                + "    2. /WEB-INF/view/jsp/default/detail/body.jsp\n"
+                + "        3. /WEB-INF/view/jsp/default/detail/header.jsp\n"
+                + "        3. /WEB-INF/view/jsp/default/detail/footer.jsp\n";
         final String actualGraph = getObjectUnderTest().graphAsPlainText();
 
         Assert.assertEquals("graphAsPlainText is wrong", expectedGraph, actualGraph);

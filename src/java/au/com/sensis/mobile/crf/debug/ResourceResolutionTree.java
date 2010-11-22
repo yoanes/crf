@@ -150,8 +150,6 @@ public class ResourceResolutionTree {
                     .getZeroBasedDepth()));
             graph.append(resourceTreeNode.getZeroBasedDepth() + 1);
             graph.append(". ");
-            graph.append(resourceTreeNode.getTypeDescription());
-            graph.append(": ");
             graph.append(resourceTreeNode.getResource().getNewPath());
             graph.append("\n");
         }

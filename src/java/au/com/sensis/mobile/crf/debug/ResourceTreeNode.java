@@ -12,11 +12,6 @@ import au.com.sensis.mobile.crf.service.Resource;
 public interface ResourceTreeNode {
 
     /**
-     * @return a friendly description of the type of resource. eg. "jsp"
-     */
-    String getTypeDescription();
-
-    /**
      * @param depth Depth of this node in the tree, where the root has a depth of 0.
      */
     void setZeroBasedDepth(int depth);

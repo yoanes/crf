@@ -35,7 +35,8 @@ extends AbstractJUnit4TestCase {
 
         final ResourceAccumulator accumulator = getObjectUnderTest().getJspResourceAccumulator();
 
-        Assert.assertTrue(accumulator instanceof SingleResourceAccumulatorBean);
+        Assert.assertTrue("accumulator not instance of JspSingleResourceAccumulatorBean",
+                accumulator instanceof JspSingleResourceAccumulatorBean);
     }
 
     @Test

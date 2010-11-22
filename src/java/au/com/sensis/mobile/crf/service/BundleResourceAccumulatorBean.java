@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author Tony Filipe
  */
-public class BundleResourceAccumulatorBean implements ResourceAccumulator {
+public class BundleResourceAccumulatorBean extends AbstractResourceAccumulatorBean {
 
     /**
      * An initial value for a <code>hashCode</code>, to which is added contributions
@@ -80,9 +80,17 @@ public class BundleResourceAccumulatorBean implements ResourceAccumulator {
     }
 
     /**
-     * @return the allResourcePaths
+     * @return the combined list of {@link Resource}s.
      */
     public List<Resource> getResources() {
+        final List<Resource> result = doGetResources();
+
+        addResourcesToResourceResolutionTreeIfEnabled(result);
+
+        return result;
+    }
+
+    private List<Resource> doGetResources() {
 
         return new ArrayList<Resource>(allResourcePaths);
     }

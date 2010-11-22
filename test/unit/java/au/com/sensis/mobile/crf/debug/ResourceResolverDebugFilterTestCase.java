@@ -36,7 +36,7 @@ public class ResourceResolverDebugFilterTestCase extends AbstractJUnit4TestCase 
         = "/WEB-INF/view/jsp/iphone-ipod/detail/bdp.jsp";
 
     private static final String EXPECTED_MODIFIED_RESPONSE = "<?xml version='1.0'?>"
-        + "<html xmlns=\"http://www.w3.org/1999/xhtml\"><!--\n1. jsp: "
+        + "<html xmlns=\"http://www.w3.org/1999/xhtml\"><!--\n1. "
         + RESOLVED_RESOURCE_PATH
         + "\n--><head>"
         + "<script src=\"blah.js\" type=\"text/javascript\"></script></head>"
@@ -210,7 +210,7 @@ public class ResourceResolverDebugFilterTestCase extends AbstractJUnit4TestCase 
 
             ResourceResolutionTreeHolder.getResourceResolutionTree()
                     .addChildToCurrentNodeAndPromoteToCurrent(
-                            new JspResourceTreeNode(getMockResource()));
+                            new ResourceTreeNodeBean(getMockResource()));
 
             setResourceResolutionTree(ResourceResolutionTreeHolder.getResourceResolutionTree());
         }

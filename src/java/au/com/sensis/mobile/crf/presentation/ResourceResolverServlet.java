@@ -14,7 +14,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
-import au.com.sensis.mobile.crf.debug.JspResourceTreeNode;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
 import au.com.sensis.mobile.crf.service.Resource;
@@ -141,7 +141,7 @@ public class ResourceResolverServlet extends HttpServletBean {
     private void addResourceToResourceResolutionTreeIfEnabled(final Resource resource) {
         if (getResourceResolutionTree().isEnabled()) {
             getResourceResolutionTree()
-                .addChildToCurrentNodeAndPromoteToCurrent(new JspResourceTreeNode(resource));
+                .addChildToCurrentNodeAndPromoteToCurrent(new ResourceTreeNodeBean(resource));
         }
     }
 

@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
  *
  * @author Tony Filipe
  */
-public class JavaScriptResourceAccumulatorBean implements ResourceAccumulator {
+public class JavaScriptResourceAccumulatorBean extends AbstractResourceAccumulatorBean {
 
     private static final Logger LOGGER = Logger.getLogger(JavaScriptResourceAccumulatorBean.class);
     private final String javascriptPackageKeyword;
@@ -96,10 +96,17 @@ public class JavaScriptResourceAccumulatorBean implements ResourceAccumulator {
     }
 
     /**
-     * @return the allResourcePaths
+     * @return the combined list of {@link Resource}s.
      */
     public List<Resource> getResources() {
+        final List<Resource> result = doGetResources();
 
+        addResourcesToResourceResolutionTreeIfEnabled(result);
+
+        return result;
+    }
+
+    private List<Resource> doGetResources() {
         return new ArrayList<Resource>(allResourcePaths);
     }
 

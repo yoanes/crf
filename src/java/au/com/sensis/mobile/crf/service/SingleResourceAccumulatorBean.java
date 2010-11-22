@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Tony Filipe
  */
-public class SingleResourceAccumulatorBean implements ResourceAccumulator {
+public class SingleResourceAccumulatorBean extends AbstractResourceAccumulatorBean {
 
     /**
      * An initial value for a <code>hashCode</code>, to which is added contributions
@@ -93,6 +93,19 @@ public class SingleResourceAccumulatorBean implements ResourceAccumulator {
      * @return the combined list of {@link Resource}s.
      */
     public List<Resource> getResources() {
+        final List<Resource> result = doGetResources();
+
+        addResourcesToResourceResolutionTreeIfEnabled(result);
+
+        return result;
+    }
+
+    /**
+     * Work horse method for {@link #getResources()}.
+     *
+     * @return the combined list of {@link Resource}s.
+     */
+    protected List<Resource> doGetResources() {
 
         return allResources;
     }
