@@ -65,14 +65,20 @@ public class FileIoFacadeBean implements FileIoFacade {
      */
     @Override
     public File[] list(final File directory, final String[] wildcards) {
-        final File[] foundFiles = directory.listFiles(
-                createWildcardFilter(wildcards));
+        return list(directory, createWildcardFilter(wildcards));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public File[] list(final File directory, final FileFilter fileFilter) {
+        final File[] foundFiles = directory.listFiles(fileFilter);
         if (foundFiles != null) {
             return foundFiles;
         } else {
-            return new File [] {};
+            return new File[] {};
         }
-
     }
 
     private FileFilter createWildcardFilter(final String fileName,

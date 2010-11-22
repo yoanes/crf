@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.config;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,6 +12,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.filefilter.AndFileFilter;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
@@ -341,7 +346,8 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     private File[] getDirs(final File uiResourceRootDir) {
         final File[] allFilesAndDirs =
             FileIoFacadeFactory.getFileIoFacadeSingleton().list(uiResourceRootDir,
-                    new String[] { "*" });
+                    createDirFileFilter());
+
         final List<File> dirs = new ArrayList<File>();
         for (final File fileOrDir : allFilesAndDirs) {
             if (fileOrDir.isDirectory()) {
@@ -350,6 +356,16 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         }
 
         return dirs.toArray(new File[] {});
+    }
+
+    private FileFilter createDirFileFilter() {
+        final WildcardFileFilter allDirs = new WildcardFileFilter("*");
+
+        // We hard code ignoring of CVS dirs since we'd never want them and yet they
+        // can be there during test case runs.
+        final NotFileFilter notCvsDir = new NotFileFilter(new NameFileFilter("CVS"));
+
+        return new AndFileFilter(allDirs, notCvsDir);
     }
 
     private void addDirNamesToSet(final String[] dirNames, final Set<String> allGroupDirNames) {

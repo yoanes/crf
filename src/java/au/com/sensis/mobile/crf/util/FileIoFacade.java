@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.util;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -66,6 +67,20 @@ public interface FileIoFacade {
      *         wildcard patterns. May not be null.
      */
     File[] list(File directory, String[] wildcards);
+
+    /**
+     *
+     * Returns a list of files in the given directory that match the given
+     * file filter.
+     *
+     * @param directory
+     *            Directory in which to find the files.
+     * @param fileFilter
+     *            {@link FileFilter} to use for matching files.
+     * @return a list of files in the given directory that match the given
+     *         {@link FileFilter}. May not be null.
+     */
+    File[] list(File directory, FileFilter fileFilter);
 
     /**
      * Writes the given inputFile to the outputStream, then closes the outputStream.
