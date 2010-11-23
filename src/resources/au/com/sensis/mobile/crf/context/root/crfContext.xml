@@ -151,15 +151,24 @@
             <bean class="au.com.sensis.mobile.crf.util.XsdXmlValidatorBean"/>
         </constructor-arg>
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />
-        <constructor-arg value="@{crf.resources.config.path.patterns}"/>
         <constructor-arg>
-            <list>
-                <value>@{crf.env.resources.jsp.root.dir}/@{crf.resources.jsp.root.servlet.path}</value>
-                <value>@{crf.env.resources.properties.root.dir}</value>
-                <value>@{crf.env.resources.css.root.dir}/@{global.version}.@{global.build}</value>
-                <value>@{crf.env.resources.javascript.root.dir}/@{global.version}.@{global.build}</value>
-                <value>@{crf.env.resources.images.root.dir}/@{global.version}.@{global.build}</value>
-            </list>
+            <bean class="au.com.sensis.mobile.crf.config.ConfigurationPaths">
+                <constructor-arg value="@{crf.resources.config.path.patterns}"/>
+                <constructor-arg>
+                    <list>
+                        <value>@{crf.env.resources.jsp.root.dir}/@{crf.resources.jsp.root.servlet.path}</value>
+                        <value>@{crf.env.resources.properties.root.dir}</value>
+                        <value>@{crf.env.resources.css.root.dir}/@{global.version}.@{global.build}</value>
+                        <value>@{crf.env.resources.javascript.root.dir}/@{global.version}.@{global.build}</value>
+                        <value>@{crf.env.resources.images.root.dir}/@{global.version}.@{global.build}</value>
+                    </list>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="au.com.sensis.mobile.crf.config.SimpleGroupsCacheFactoryBean">
+                <constructor-arg value="@{crf.env.cache.resources}" />
+            </bean>
         </constructor-arg>
     </bean>
 

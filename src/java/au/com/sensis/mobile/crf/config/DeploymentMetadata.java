@@ -26,6 +26,8 @@ public class DeploymentMetadata {
 
     private final Platform platform;
     private final String version;
+
+    // TODO: get rid of this. Inject directly into what needs it.
     private boolean cacheUiConfiguration = true;
 
     /**

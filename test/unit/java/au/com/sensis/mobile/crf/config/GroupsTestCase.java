@@ -1,6 +1,9 @@
 package au.com.sensis.mobile.crf.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
@@ -94,6 +97,17 @@ public class GroupsTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
+    public void testMatchingGroupsWhenNoMatches() throws Throwable {
+        EasyMock.expect(getMockAppleIphoneGroup().match(getMockDevice())).andReturn(Boolean.FALSE);
+        EasyMock.expect(getMockDefaultGroup().match(getMockDevice())).andReturn(Boolean.FALSE);
+
+        replay();
+
+        final List<Group> groups = getObjectUnderTest().matchingGroups(getMockDevice());
+        Assert.assertEquals("groups are wrong", new ArrayList<Group>(), groups);
+    }
+
+    @Test
     public void testMatchingGroupIteratorWhenOnlyDefaultGroupMatches() throws Throwable {
         EasyMock.expect(getMockAppleIphoneGroup().match(getMockDevice()))
             .andReturn(Boolean.FALSE);
@@ -107,6 +121,17 @@ public class GroupsTestCase extends AbstractJUnit4TestCase {
         Assert.assertTrue("hasNext() should initally be true", itGroups.hasNext());
         Assert.assertEquals("next() is wrong", getMockDefaultGroup(), itGroups.next());
         Assert.assertFalse("hasNext() should now be false", itGroups.hasNext());
+    }
+
+    @Test
+    public void testMatchingGroupsWhenOnlyDefaultGroupMatches() throws Throwable {
+        EasyMock.expect(getMockAppleIphoneGroup().match(getMockDevice())).andReturn(Boolean.FALSE);
+        EasyMock.expect(getMockDefaultGroup().match(getMockDevice())).andReturn(Boolean.TRUE);
+
+        replay();
+
+        final List<Group> groups = getObjectUnderTest().matchingGroups(getMockDevice());
+        Assert.assertEquals("groups are wrong", Arrays.asList(getMockDefaultGroup()), groups);
     }
 
     @Test
@@ -129,6 +154,18 @@ public class GroupsTestCase extends AbstractJUnit4TestCase {
         Assert.assertEquals("second next() is wrong", getMockDefaultGroup(),
                 itGroups.next());
         Assert.assertFalse("hasNext() should now be false", itGroups.hasNext());
+    }
+
+    @Test
+    public void testMatchingGroupsWhenMultipleMatches() throws Throwable {
+        EasyMock.expect(getMockAppleIphoneGroup().match(getMockDevice())).andReturn(Boolean.TRUE);
+        EasyMock.expect(getMockDefaultGroup().match(getMockDevice())).andReturn(Boolean.TRUE);
+
+        replay();
+
+        final List<Group> groups = getObjectUnderTest().matchingGroups(getMockDevice());
+        Assert.assertEquals("groups are wrong", Arrays.asList(getMockAppleIphoneGroup(),
+                getMockDefaultGroup()), groups);
     }
 
     /**

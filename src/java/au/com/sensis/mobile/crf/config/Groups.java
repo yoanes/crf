@@ -46,6 +46,16 @@ public class Groups {
      *         match the given {@link Device}.
      */
     public Iterator<Group> matchingGroupIterator(final Device device) {
+        return matchingGroups(device).iterator();
+    }
+
+    /**
+     * @param device
+     *            {@link Device} to match against each group.
+     * @return {@link List} containing {@link Group}s that match the given
+     *         {@link Device}.
+     */
+    public List<Group> matchingGroups(final Device device) {
         final List<Group> matchingGroups = new ArrayList<Group>();
         for (final Group group : getGroups()) {
             if (group.match(device)) {
@@ -61,7 +71,7 @@ public class Groups {
             matchingGroups.add(getDefaultGroup());
         }
 
-        return matchingGroups.iterator();
+        return matchingGroups;
     }
 
     /**

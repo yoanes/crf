@@ -89,6 +89,8 @@ public class ConfigurationFactoryBeanTestCase extends
     private Resource mockResource2;
     private ResourceResolutionWarnLogger mockResourceResolutionWarnLogger;
     private List<File> uiResourceRootDirectories;
+    private GroupsCacheFactory mockGroupsCacheFactory;
+    private GroupsCache mockGroupsCache;
 
     /**
      * Setup test data.
@@ -104,6 +106,13 @@ public class ConfigurationFactoryBeanTestCase extends
                 getValidUiResourcesImagesRootDir()));
     }
 
+    private ConfigurationPaths createConfigurationPaths(
+            final String mappingConfigurationClasspathPattern,
+            final List<File> uiResourceRootDirectories) {
+        return new ConfigurationPaths(mappingConfigurationClasspathPattern,
+                uiResourceRootDirectories);
+    }
+
     @Test
     public void testConstructorWhenFileNotFound() throws Throwable {
         final String mappingConfigurationClasspath =
@@ -112,7 +121,8 @@ public class ConfigurationFactoryBeanTestCase extends
             new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                     getResourcePatternResolver(), getXmlBinder(),
                     getXmlValidator(), getMockResourceResolutionWarnLogger(),
-                    mappingConfigurationClasspath, getUiResourceRootDirectories());
+                    createConfigurationPaths(mappingConfigurationClasspath,
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
             Assert.fail("ConfigurationRuntimeException expected");
         } catch (final ConfigurationRuntimeException e) {
 
@@ -138,7 +148,8 @@ public class ConfigurationFactoryBeanTestCase extends
             new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                     getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     getMockResourceResolutionWarnLogger(),
-                    testData.getConfigFileClasspathLocation(), getUiResourceRootDirectories());
+                    createConfigurationPaths(testData.getConfigFileClasspathLocation(),
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
             Assert.fail("XmlValidationRuntimeException expected for testData: "
                     + testData);
         } catch (final XmlValidationRuntimeException e) {
@@ -167,7 +178,8 @@ public class ConfigurationFactoryBeanTestCase extends
             new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                     getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     getMockResourceResolutionWarnLogger(),
-                    CRF_CONFIG_ONE_INVALID_EXPR, getUiResourceRootDirectories());
+                    createConfigurationPaths(CRF_CONFIG_ONE_INVALID_EXPR,
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
             Assert.fail("ConfigurationRuntimeException expected");
         } catch (final ConfigurationRuntimeException e) {
@@ -190,8 +202,9 @@ public class ConfigurationFactoryBeanTestCase extends
         try {
             new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                     getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
-                    getMockResourceResolutionWarnLogger(), CRF_CONFIG_MULTIPLE_INVALID_EXPR,
-                    getUiResourceRootDirectories());
+                    getMockResourceResolutionWarnLogger(),
+                    createConfigurationPaths(CRF_CONFIG_MULTIPLE_INVALID_EXPR,
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
             Assert.fail("ConfigurationRuntimeException expected");
         } catch (final ConfigurationRuntimeException e) {
@@ -221,13 +234,15 @@ public class ConfigurationFactoryBeanTestCase extends
             EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled()).andReturn(
                     Boolean.FALSE).anyTimes();
 
+            recordCreateGroupsCache();
+
             replay();
 
             new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                     getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     getMockResourceResolutionWarnLogger(),
-                    testData.getConfigFileClasspathLocation(),
-                    getUiResourceRootDirectories());
+                    createConfigurationPaths(testData.getConfigFileClasspathLocation(),
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -242,16 +257,28 @@ public class ConfigurationFactoryBeanTestCase extends
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationWithMultipleValidGroups(),
                 1);
 
+        recordCreateGroupsCache();
+
         replay();
         final ConfigurationFactory configurationFactory =
                 new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                         getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
-                        getMockResourceResolutionWarnLogger(),
-                        CRF_CONFIG_MULTIPLE_VALID_GROUPS, getUiResourceRootDirectories());
+                        getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                                CRF_CONFIG_MULTIPLE_VALID_GROUPS, getUiResourceRootDirectories()),
+                        getMockGroupsCacheFactory());
 
+        final UiConfiguration actualUiConfiguration =
+                configurationFactory.getUiConfiguration("common/main.css");
         assertComplexObjectsEqual("uiConfiguration is wrong",
-                createUiConfigurationWithMultipleValidGroups(), configurationFactory
-                        .getUiConfiguration("common/main.css"));
+                createUiConfigurationWithMultipleValidGroups(), actualUiConfiguration);
+
+        Assert.assertEquals("actualUiConfiguration has wrong matchingGroupsCache",
+                getMockGroupsCache(), actualUiConfiguration.getMatchingGroupsCache());
+    }
+
+    private void recordCreateGroupsCache() {
+        EasyMock.expect(getMockGroupsCacheFactory().createGroupsCache()).andReturn(
+                getMockGroupsCache()).atLeastOnce();
     }
 
     @Test
@@ -261,14 +288,16 @@ public class ConfigurationFactoryBeanTestCase extends
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch2(), 1);
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch3(), 1);
 
+        recordCreateGroupsCache();
+
         replay();
 
         final ConfigurationFactory configurationFactory =
                 new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                         getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                         getMockResourceResolutionWarnLogger(),
-                        CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
-                        getUiResourceRootDirectories());
+                        createConfigurationPaths(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
+                                getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
         assertComplexObjectsEqual("uiConfiguration for pattern match 1 is wrong",
                 createUiConfigurationForPatternMatch1(), configurationFactory
@@ -292,14 +321,16 @@ public class ConfigurationFactoryBeanTestCase extends
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch2(), 1);
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch3(), 1);
 
+        recordCreateGroupsCache();
+
         replay();
 
         final ConfigurationFactory configurationFactory =
                 new ConfigurationFactoryBean(getCacheDisabledDeploymentMetadata(),
                         getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                         getMockResourceResolutionWarnLogger(),
-                        CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
-                        getUiResourceRootDirectories());
+                        createConfigurationPaths(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
+                                getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
         assertComplexObjectsEqual("uiConfiguration for pattern match 1 is wrong",
                 createUiConfigurationForPatternMatch1(), configurationFactory
@@ -349,14 +380,16 @@ public class ConfigurationFactoryBeanTestCase extends
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch2(),
                 1);
 
+        recordCreateGroupsCache();
+
         replay();
 
         final ConfigurationFactory configurationFactory =
                 new ConfigurationFactoryBean(getCacheDisabledDeploymentMetadata(),
                         getMockResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                         getMockResourceResolutionWarnLogger(),
-                        CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
-                        getUiResourceRootDirectories());
+                        createConfigurationPaths(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
+                                getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
         // This call should trigger the config being loaded again.
         configurationFactory.getUiConfiguration("component/component1/main.js");
@@ -401,14 +434,16 @@ public class ConfigurationFactoryBeanTestCase extends
         expectedFoundResource1UiConfiguration.setSourceTimestamp(newTimestamp);
         recordLoggerInfo("Loaded configuration: " + expectedFoundResource1UiConfiguration, 1);
 
+        recordCreateGroupsCache();
+
         replay();
 
         final ConfigurationFactory configurationFactory =
                 new ConfigurationFactoryBean(getCacheDisabledDeploymentMetadata(),
                         getMockResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                         getMockResourceResolutionWarnLogger(),
-                        CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
-                        getUiResourceRootDirectories());
+                        createConfigurationPaths(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN,
+                                getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
         // This call should trigger the config being loaded again.
         configurationFactory.getUiConfiguration("component/component1/main.js");
@@ -438,16 +473,19 @@ public class ConfigurationFactoryBeanTestCase extends
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch2(), 1);
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationForPatternMatch3(), 1);
 
+        recordCreateGroupsCache();
+
         replay();
 
         final ConfigurationFactory configurationFactory =
                 new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                         getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                         getMockResourceResolutionWarnLogger(),
-                        CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1 + ", "
-                                + CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH2 + ", "
-                                + CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH3,
-                                getUiResourceRootDirectories());
+                        createConfigurationPaths(
+                            CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1 + ", "
+                                    + CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH2 + ", "
+                                    + CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH3,
+                                    getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
         assertComplexObjectsEqual("uiConfiguration for pattern match 1 is wrong",
                 createUiConfigurationForPatternMatch1(), configurationFactory
@@ -468,13 +506,15 @@ public class ConfigurationFactoryBeanTestCase extends
             EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled())
                     .andReturn(Boolean.FALSE).atLeastOnce();
 
+            recordCreateGroupsCache();
+
             replay();
 
             new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                     getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     getMockResourceResolutionWarnLogger(),
-                    CRF_CONFIG_EMPTY_PATH_CLASSPATH_PATTERN,
-                    getUiResourceRootDirectories());
+                    createConfigurationPaths(CRF_CONFIG_EMPTY_PATH_CLASSPATH_PATTERN,
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
             Assert.fail("ConfigurationRuntimeException expected");
         } catch (final ConfigurationRuntimeException e) {
@@ -496,8 +536,8 @@ public class ConfigurationFactoryBeanTestCase extends
             new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                     getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
                     getMockResourceResolutionWarnLogger(),
-                    CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1,
-                    getUiResourceRootDirectories());
+                    createConfigurationPaths(CRF_CONFIG_MULTIPLE_FILES_CLASSPATH_PATTERN_MATCH1,
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
             Assert.fail("ConfigurationRuntimeException expected");
         } catch (final ConfigurationRuntimeException e) {
@@ -526,12 +566,15 @@ public class ConfigurationFactoryBeanTestCase extends
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationWithMultipleValidGroups(),
                 1);
 
+        recordCreateGroupsCache();
+
         replay();
         final ConfigurationFactory configurationFactory =
                 new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                         getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
-                        getMockResourceResolutionWarnLogger(), CRF_CONFIG_MULTIPLE_VALID_GROUPS,
-                        getUiResourceRootDirectories());
+                        getMockResourceResolutionWarnLogger(),
+                        createConfigurationPaths(CRF_CONFIG_MULTIPLE_VALID_GROUPS,
+                                getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
         assertComplexObjectsEqual("uiConfiguration is wrong",
                 createUiConfigurationWithMultipleValidGroups(), configurationFactory
@@ -554,12 +597,15 @@ public class ConfigurationFactoryBeanTestCase extends
         recordLoggerInfo("Loaded configuration: " + createUiConfigurationWithMultipleValidGroups(),
                 1);
 
+        recordCreateGroupsCache();
+
         replay();
         final ConfigurationFactory configurationFactory =
             new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
                     getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
-                    getMockResourceResolutionWarnLogger(), CRF_CONFIG_MULTIPLE_VALID_GROUPS,
-                    getUiResourceRootDirectories());
+                    getMockResourceResolutionWarnLogger(),
+                    createConfigurationPaths(CRF_CONFIG_MULTIPLE_VALID_GROUPS,
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
         assertComplexObjectsEqual("uiConfiguration is wrong",
                 createUiConfigurationWithMultipleValidGroups(), configurationFactory
@@ -584,6 +630,8 @@ public class ConfigurationFactoryBeanTestCase extends
         groups.setDefaultGroup(createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
+
+        uiConfiguration.setMatchingGroupsCache(getMockGroupsCache());
 
         return uiConfiguration;
     }
@@ -859,5 +907,33 @@ public class ConfigurationFactoryBeanTestCase extends
 
     private File getExtraImagesGroupDir() throws Exception {
         return new File(getExtraGroupsUiResourcesImagesRootDir(), "android-os");
+    }
+
+    /**
+     * @return the mockGroupsCacheFactory
+     */
+    public GroupsCacheFactory getMockGroupsCacheFactory() {
+        return mockGroupsCacheFactory;
+    }
+
+    /**
+     * @param mockGroupsCacheFactory the mockGroupsCacheFactory to set
+     */
+    public void setMockGroupsCacheFactory(final GroupsCacheFactory mockGroupsCacheFactory) {
+        this.mockGroupsCacheFactory = mockGroupsCacheFactory;
+    }
+
+    /**
+     * @return the mockGroupsCache
+     */
+    public GroupsCache getMockGroupsCache() {
+        return mockGroupsCache;
+    }
+
+    /**
+     * @param mockGroupsCache the mockGroupsCache to set
+     */
+    public void setMockGroupsCache(final GroupsCache mockGroupsCache) {
+        this.mockGroupsCache = mockGroupsCache;
     }
 }

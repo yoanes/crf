@@ -1,6 +1,8 @@
 package au.com.sensis.mobile.crf.config;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
@@ -18,21 +20,31 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
  */
 public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
 
+    private static final String USER_AGENT = "myUserAgent";
+
     private UiConfiguration objectUnderTest;
     private Groups mockGroups;
     private Device mockDevice;
     private Iterator<Group> mockGroupIterator;
+    private GroupsCache mockGroupsCache;
+    private List<Group> groups;
+    private final GroupTestData groupTestData = new GroupTestData();
 
     /**
      * Setup test data.
      *
-     * @throws Exception Thrown if any error occurs.
+     * @throws Exception
+     *             Thrown if any error occurs.
      */
     @Before
     public void setUp() throws Exception {
         setObjectUnderTest(new UiConfiguration());
         getObjectUnderTest().setConfigPath("component/map");
         getObjectUnderTest().setGroups(getMockGroups());
+        getObjectUnderTest().setMatchingGroupsCache(getMockGroupsCache());
+
+        setGroups(Arrays.asList(getGroupTestData().createAppleGroup(), getGroupTestData()
+                .createDefaultGroup()));
     }
 
     @Test
@@ -105,18 +117,56 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testMatchingGroupIterator() throws Throwable {
+    public void testMatchingGroupIteratorWhenNotCached() throws Throwable {
 
-        EasyMock.expect(getMockGroups().matchingGroupIterator(getMockDevice()))
-                .andReturn(getMockGroupIterator());
+        EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
+
+        EasyMock.expect(getMockGroupsCache().contains(USER_AGENT)).andReturn(Boolean.FALSE)
+                .atLeastOnce();
+
+        EasyMock.expect(getMockGroups().matchingGroups(getMockDevice())).andReturn(
+                getGroups());
+
+        getMockGroupsCache().put(EasyMock.eq(USER_AGENT),
+                EasyMock.aryEq(getGroups().toArray(new Group[] {})));
 
         replay();
 
         final Iterator<Group> actualIterator =
                 getObjectUnderTest().matchingGroupIterator(getMockDevice());
 
-        Assert.assertEquals("iterator is wrong",
-                getMockGroupIterator(), actualIterator);
+        Assert.assertNotNull("iterator should not be null", actualIterator);
+        Assert.assertTrue("iterator should have a first item", actualIterator.hasNext());
+        Assert.assertEquals("first item is wrong", getGroups().get(0), actualIterator.next());
+
+        Assert.assertTrue("iterator should have a second item", actualIterator.hasNext());
+        Assert.assertEquals("second item is wrong", getGroups().get(1), actualIterator.next());
+        Assert.assertFalse("iterator should only have two items", actualIterator.hasNext());
+    }
+
+    @Test
+    public void testMatchingGroupIteratorWhenCached() throws Throwable {
+
+        EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
+
+        EasyMock.expect(getMockGroupsCache().contains(USER_AGENT)).andReturn(Boolean.TRUE)
+                .atLeastOnce();
+
+        EasyMock.expect(getMockGroupsCache().get(USER_AGENT)).andReturn(
+                getGroups().toArray(new Group[] {}));
+
+        replay();
+
+        final Iterator<Group> actualIterator =
+                getObjectUnderTest().matchingGroupIterator(getMockDevice());
+
+        Assert.assertNotNull("iterator should not be null", actualIterator);
+        Assert.assertTrue("iterator should have a first item", actualIterator.hasNext());
+        Assert.assertEquals("first item is wrong", getGroups().get(0), actualIterator.next());
+
+        Assert.assertTrue("iterator should have a second item", actualIterator.hasNext());
+        Assert.assertEquals("second item is wrong", getGroups().get(1), actualIterator.next());
+        Assert.assertFalse("iterator should only have two items", actualIterator.hasNext());
     }
 
     /**
@@ -174,5 +224,40 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     public void setMockGroupIterator(
             final Iterator<Group> mockGroupIterator) {
         this.mockGroupIterator = mockGroupIterator;
+    }
+
+    /**
+     * @return the mockGroupsCache
+     */
+    public GroupsCache getMockGroupsCache() {
+        return mockGroupsCache;
+    }
+
+    /**
+     * @param mockGroupsCache the mockGroupsCache to set
+     */
+    public void setMockGroupsCache(final GroupsCache mockGroupsCache) {
+        this.mockGroupsCache = mockGroupsCache;
+    }
+
+    /**
+     * @return the groups
+     */
+    private List<Group> getGroups() {
+        return groups;
+    }
+
+    /**
+     * @param groups the groups to set
+     */
+    private void setGroups(final List<Group> groups) {
+        this.groups = groups;
+    }
+
+    /**
+     * @return the groupTestData
+     */
+    private GroupTestData getGroupTestData() {
+        return groupTestData;
     }
 }

@@ -48,10 +48,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     private static final String SCHEMA_CLASSPATH_LOCATION =
             "/au/com/sensis/mobile/crf/config/crf-config.xsd";
 
-    /**
-     * Classpath of the file containing the configuration.
-     */
-    private final String mappingConfigurationClasspathPattern;
+    private final ConfigurationPaths configurationPaths;
 
     private final DeploymentMetadata deploymentMetadata;
     private final XmlBinder xmlBinder;
@@ -59,8 +56,8 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     private final ResourcePatternResolver resourcePatternResolver;
     private List<UiConfiguration> uiConfigurations;
 
-    private final List<File> uiResourceRootDirectories;
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
+    private final GroupsCacheFactory groupsCacheFactory;
 
     /**
      * The constructor which sets up the mappingConfiguration.
@@ -76,26 +73,24 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
      *            {@link XmlValidator} to use to validate the XML configuration
      *            file.
      * @param resourceResolutionWarnLogger {@link ResourceResolutionWarnLogger}.
-     * @param mappingConfigurationClasspathPattern
-     *            Classpath of the file containing the configuration.
-     * @param uiResourceRootDirectories List of root directories where UI resources
-     *            are expected to be found. Each group in the configuration should correspond
-     *            to a directory directly under one of these directories.
+     * @param configurationPaths {@link ConfigurationPaths}.
+     * @param groupsCacheFactory {@link GroupsCacheFactory} to use to create caches to be injected
+     *            into the loaded {@link UiConfiguration} objects.
      */
     // TODO: validate args.
     public ConfigurationFactoryBean(final DeploymentMetadata deploymentMetadata,
             final ResourcePatternResolver resourcePatternResolver, final XmlBinder xmlBinder,
             final XmlValidator xmlValidator,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
-            final String mappingConfigurationClasspathPattern,
-            final List<File> uiResourceRootDirectories) {
+            final ConfigurationPaths configurationPaths,
+            final GroupsCacheFactory groupsCacheFactory) {
         this.deploymentMetadata = deploymentMetadata;
         this.resourcePatternResolver = resourcePatternResolver;
-        this.mappingConfigurationClasspathPattern = mappingConfigurationClasspathPattern;
         this.xmlBinder = xmlBinder;
         this.xmlValidator = xmlValidator;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
-        this.uiResourceRootDirectories = uiResourceRootDirectories;
+        this.configurationPaths = configurationPaths;
+        this.groupsCacheFactory = groupsCacheFactory;
 
         initUiConfigurations();
     }
@@ -186,6 +181,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
                 (UiConfiguration) getXmlBinder().unmarshall(resource.getURL());
         uiConfiguration.setSourceUrl(resource.getURL());
         uiConfiguration.setSourceTimestamp(resource.lastModified());
+        uiConfiguration.setMatchingGroupsCache(getGroupsCacheFactory().createGroupsCache());
 
         if (logger.isInfoEnabled()) {
             logger.info("Loaded configuration: " + uiConfiguration);
@@ -458,7 +454,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
      * @return the mappingConfigurationClasspathPattern
      */
     private String getMappingConfigurationClasspathPattern() {
-        return mappingConfigurationClasspathPattern;
+        return getConfigurationPaths().getMappingConfigurationClasspathPattern();
     }
 
     private XmlBinder getXmlBinder() {
@@ -481,6 +477,13 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         this.uiConfigurations = uiConfigurations;
     }
 
+    /**
+     * @return the configurationPaths
+     */
+    public ConfigurationPaths getConfigurationPaths() {
+        return configurationPaths;
+    }
+
     private DeploymentMetadata getDeploymentMetadata() {
         return deploymentMetadata;
     }
@@ -489,7 +492,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
      * @return the uiResourceRootDirectories
      */
     private List<File> getUiResourceRootDirectories() {
-        return uiResourceRootDirectories;
+        return getConfigurationPaths().getUiResourceRootDirectories();
     }
 
     /**
@@ -497,6 +500,13 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
      */
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
         return resourceResolutionWarnLogger;
+    }
+
+    /**
+     * @return the groupsCacheFactory
+     */
+    private GroupsCacheFactory getGroupsCacheFactory() {
+        return groupsCacheFactory;
     }
 
     private void debugLogUiConfigurationFound(final UiConfiguration uiConfiguration) {

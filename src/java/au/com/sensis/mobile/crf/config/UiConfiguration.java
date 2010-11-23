@@ -1,12 +1,15 @@
 package au.com.sensis.mobile.crf.config;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
@@ -14,6 +17,8 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  * @author Adrian.Koh2@sensis.com.au
  */
 public class UiConfiguration {
+
+    private static final Logger LOGGER = Logger.getLogger(UiConfiguration.class);
 
     /**
      * URL of the source that this {@link UiConfiguration} was loaded from.
@@ -31,6 +36,8 @@ public class UiConfiguration {
     private String configPath;
 
     private Groups groups;
+
+    private GroupsCache matchingGroupsCache;
 
     /**
      * @return URL of the source that this {@link UiConfiguration} was loaded from.
@@ -125,13 +132,55 @@ public class UiConfiguration {
     }
 
     /**
-    * @param device
-    *            {@link Device} to match against each group.
-    * @return {@link Iterator} for iterating through all {@link Group}s that
-    *         match the given {@link Device}.
-    */
+     * @param device
+     *            {@link Device} to match against each group.
+     * @return {@link Iterator} for iterating through all {@link Group}s that
+     *         match the given {@link Device}.
+     */
     public Iterator<Group> matchingGroupIterator(final Device device) {
-        return getGroups().matchingGroupIterator(device);
+
+        if (getMatchingGroupsCache().contains(device.getUserAgent())) {
+            debugLogGroupsFoundInCache();
+
+            return Arrays.asList(getCachedGroups(device)).iterator();
+        } else {
+            debugLogGroupsNotFoundInCache();
+
+            final List<Group> matchingGroups = getGroups().matchingGroups(device);
+            getMatchingGroupsCache().put(device.getUserAgent(),
+                    matchingGroups.toArray(new Group[] {}));
+            return matchingGroups.iterator();
+        }
+    }
+
+    private void debugLogGroupsFoundInCache() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Returning groups from cache.");
+        }
+    }
+
+    private void debugLogGroupsNotFoundInCache() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Groups not found in cache. Will fetch them.");
+        }
+    }
+
+    private Group[] getCachedGroups(final Device device) {
+        return getMatchingGroupsCache().get(device.getUserAgent());
+    }
+
+    /**
+     * @return the matchingGroupsCache
+     */
+    public GroupsCache getMatchingGroupsCache() {
+        return matchingGroupsCache;
+    }
+
+    /**
+     * @param matchingGroupsCache the matchingGroupsCache to set
+     */
+    public void setMatchingGroupsCache(final GroupsCache matchingGroupsCache) {
+        this.matchingGroupsCache = matchingGroupsCache;
     }
 
     /**
@@ -154,6 +203,9 @@ public class UiConfiguration {
         equalsBuilder.append(getSourceTimestamp(), rhs.getSourceTimestamp());
         equalsBuilder.append(getConfigPath(), rhs.getConfigPath());
         equalsBuilder.append(getGroups(), rhs.getGroups());
+
+        // Ignore getMatchingGroupsCache();
+
         return equalsBuilder.isEquals();
     }
 
@@ -167,6 +219,9 @@ public class UiConfiguration {
         hashCodeBuilder.append(getSourceTimestamp());
         hashCodeBuilder.append(getConfigPath());
         hashCodeBuilder.append(getGroups());
+
+        // Ignore getMatchingGroupsCache();
+
         return hashCodeBuilder.toHashCode();
     }
 
@@ -180,6 +235,9 @@ public class UiConfiguration {
         toStringBuilder.append("sourceTimestamp", getSourceTimestamp());
         toStringBuilder.append("configPath", getConfigPath());
         toStringBuilder.append("groups", getGroups());
+
+        // Ignore getMatchingGroupsCache();
+
         return toStringBuilder.toString();
     }
 }

@@ -3,6 +3,8 @@
  */
 package au.com.sensis.mobile.crf.config;
 
+import java.io.Serializable;
+
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
@@ -16,9 +18,15 @@ import au.com.sensis.mobile.crf.exception.GroupEvaluationRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
+ * <p>
+ * <strong>NOTE:</strong> Serializable to support caching of these objects. Caching APIs commonly
+ * require objects stored in the cache to be Serializable.
+ * </p>
  * @author Adrian.Koh2@sensis.com.au
  */
-public class Group {
+public class Group implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Name of this group. See {@link #validate(Device)} for valid values.
