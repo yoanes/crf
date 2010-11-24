@@ -81,7 +81,6 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
             final ResourceAccumulator accumulator = createResourceAccumulator();
 
-            // TODO in future will check cache
             final Iterator<Group> matchingGroupIterator =
                 getMatchingGroupIterator(device, requestedResourcePath);
 
