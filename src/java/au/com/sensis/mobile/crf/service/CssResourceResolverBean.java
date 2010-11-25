@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class CssResourceResolverBean extends AbstractResourceResolver {
+public class CssResourceResolverBean extends AbstractMultipleResourceResolver {
 
     private static final Logger LOGGER = Logger.getLogger(CssResourceResolverBean.class);
 
@@ -24,12 +24,13 @@ public class CssResourceResolverBean extends AbstractResourceResolver {
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
+     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      */
     public CssResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
-            final File rootResourcesDir) {
+            final File rootResourcesDir, final ResourceCache resourceCache) {
 
-        super(commonParams, abstractResourceExtension, rootResourcesDir);
+        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
     }
 
     /**

@@ -18,7 +18,7 @@ import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
+public class JavaScriptResourceResolverBean extends AbstractMultipleResourceResolver {
 
     private static final Logger LOGGER = Logger.getLogger(JavaScriptResourceResolverBean.class);
 
@@ -42,6 +42,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
+     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      * @param abstractPathPackageKeyword
      *            Keyword recognised at the end of abstract paths that signifies
      *            a "package" of JavaScript is being requested.
@@ -51,11 +52,11 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
      */
     public JavaScriptResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
-            final File rootResourcesDir,
+            final File rootResourcesDir, final ResourceCache resourceCache,
             final String abstractPathPackageKeyword,
             final JavaScriptFileFinder javaScriptFileFinder) {
 
-        super(commonParams, abstractResourceExtension, rootResourcesDir);
+        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
 
         validateAbstractPathPackageKeyword(abstractPathPackageKeyword);
         validateJavaScriptFileFinder(javaScriptFileFinder);
@@ -122,7 +123,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
 
         try {
             final File packageDir = getPackageDir(requestedResourcePath, group);
-            return doFindBundleResources(requestedResourcePath, packageDir);
+            return doFindBundleResources(requestedResourcePath, group, packageDir);
         } catch (final IOException e) {
             throw new ResourceResolutionRuntimeException(
                     "Unexpected error when resolving requested resource '"
@@ -132,7 +133,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
 
     private List<Resource> doFindBundleResources(
             final String requestedResourcePath,
-            final File javascriptFilesBaseDir) throws IOException {
+            final Group group, final File javascriptFilesBaseDir) throws IOException {
 
         debugFindingBundleResourcesIn(javascriptFilesBaseDir);
 
@@ -144,7 +145,7 @@ public class JavaScriptResourceResolverBean extends AbstractResourceResolver {
             for (final File file : foundFiles) {
                 final Resource currResource =
                     createResource(requestedResourcePath,
-                            getRootResourceDirRelativePath(file));
+                            getRootResourceDirRelativePath(file), group);
                 result.add(currResource);
             }
         }

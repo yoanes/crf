@@ -11,7 +11,7 @@ import au.com.sensis.mobile.crf.config.Group;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class PropertiesResourceResolverBean extends AbstractResourceResolver {
+public class PropertiesResourceResolverBean extends AbstractMultipleResourceResolver {
 
     private static final Logger LOGGER = Logger.getLogger(PropertiesResourceResolverBean.class);
 
@@ -26,12 +26,13 @@ public class PropertiesResourceResolverBean extends AbstractResourceResolver {
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
+     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      */
     public PropertiesResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
-            final File rootResourcesDir) {
+            final File rootResourcesDir, final ResourceCache resourceCache) {
 
-        super(commonParams, abstractResourceExtension, rootResourcesDir);
+        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
     }
 
     /**

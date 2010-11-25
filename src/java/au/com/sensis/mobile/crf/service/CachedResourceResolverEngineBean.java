@@ -17,7 +17,10 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  * {@link ResourceResolverEngine}.
  *
  * @author Tony Filipe
+ * @deprecated Deprecated in favour of caching at a more fine grained level. Resurrect this class
+ * if requirements change.
  */
+@Deprecated
 public class CachedResourceResolverEngineBean
 implements ResourceResolverEngine {
 

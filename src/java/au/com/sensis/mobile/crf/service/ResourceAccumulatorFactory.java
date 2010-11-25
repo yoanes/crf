@@ -24,24 +24,6 @@ public class ResourceAccumulatorFactory {
 
     /**
      * @return a {@link ResourceAccumulator} implementation appropriate for use by the
-     * {@link JspResourceResolverBean}.
-     */
-    public ResourceAccumulator getJspResourceAccumulator() {
-
-        return makeNewJspSingleResourceAccumulator();
-    }
-
-    /**
-     * @return a {@link ResourceAccumulator} implementation appropriate for use by the
-     * {@link ImageResourceResolverBean}.
-     */
-    public ResourceAccumulator getImageResourceAccumulator() {
-
-        return makeNewSingleResourceAccumulator();
-    }
-
-    /**
-     * @return a {@link ResourceAccumulator} implementation appropriate for use by the
      * {@link PropertiesResourceResolverBean}.
      */
     public ResourceAccumulator getPropertiesResourceAccumulator() {
@@ -103,20 +85,6 @@ public class ResourceAccumulatorFactory {
      */
     protected ResourceAccumulatorBean makeNewResourceAccumulator() {
         return new ResourceAccumulatorBean();
-    }
-
-    /**
-     * @return a new {@link SingleResourceAccumulatorBean}.
-     */
-    protected SingleResourceAccumulatorBean makeNewSingleResourceAccumulator() {
-        return new SingleResourceAccumulatorBean();
-    }
-
-    /**
-     * @return a new {@link SingleResourceAccumulatorBean}.
-     */
-    protected JspSingleResourceAccumulatorBean makeNewJspSingleResourceAccumulator() {
-        return new JspSingleResourceAccumulatorBean();
     }
 
     /**

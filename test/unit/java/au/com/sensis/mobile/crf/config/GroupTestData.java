@@ -48,4 +48,11 @@ public class GroupTestData {
         return group;
     }
 
+    public Group createExtraSmallGroup() {
+        final Group group = new Group();
+        group.setName("extrasmall");
+        group.setExpr("device.imageCategory eq 'XS'");
+        return group;
+    }
+
 }

@@ -1,15 +1,15 @@
-package au.com.sensis.mobile.crf.config;
+package au.com.sensis.mobile.crf.service;
 
 import au.com.sensis.mobile.crf.util.ConcurrentMapCacheBean;
 
 /**
- * Simple {@link GroupsCache} implementation that stores all entries in memory
+ * Simple {@link ResourceCache} implementation that stores all entries in memory
  * and does not replicate across a cluster.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class SimpleGroupsCacheBean extends ConcurrentMapCacheBean<String, Group> implements
-        GroupsCache {
+public class SimpleResourceCacheBean extends ConcurrentMapCacheBean<ResourceCacheKey, Resource>
+    implements ResourceCache {
 
     /**
      * Constructor.
@@ -17,8 +17,9 @@ public class SimpleGroupsCacheBean extends ConcurrentMapCacheBean<String, Group>
      * @param cacheEnabled
      *            True if the cache should be enabled.
      */
-    public SimpleGroupsCacheBean(final boolean cacheEnabled) {
+    public SimpleResourceCacheBean(final boolean cacheEnabled) {
         super(cacheEnabled);
     }
+
 
 }

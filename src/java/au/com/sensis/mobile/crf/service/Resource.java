@@ -2,6 +2,8 @@ package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
 
+import au.com.sensis.mobile.crf.config.Group;
+
 
 /**
  * Represents a resolved resource that is known to exist.
@@ -41,5 +43,10 @@ public interface Resource {
      * @return Length of {@link #getNewFile()} as an int.
      */
     int getNewFileLengthAsInt();
+
+    /**
+     * @return {@link Group} that this {@link Resource} was found in.
+     */
+    Group getGroup();
 
 }

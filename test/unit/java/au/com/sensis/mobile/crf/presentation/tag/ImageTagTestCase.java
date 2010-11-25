@@ -25,6 +25,7 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
+import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.service.ImageResourceBean;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
@@ -65,6 +66,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private ImageResourceBean mockResource;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
+    private final GroupTestData groupTestData = new GroupTestData();
 
 
     /**
@@ -243,7 +245,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         final ImageResourceBean imageResource = new ImageResourceBean(
                 toGetValuesFrom.getOriginalPath(),
                 toGetValuesFrom.getNewPath(),
-                toGetValuesFrom.getRootResourceDir());
+                toGetValuesFrom.getRootResourceDir(),
+                getGroupTestData().createDefaultGroup());
 
         imageResource.setImageHeight(height);
         imageResource.setImageWidth(width);
@@ -610,6 +613,14 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     public void setMockResolutionWarnLogger(
             final ResourceResolutionWarnLogger mockResolutionWarnLogger) {
         this.mockResolutionWarnLogger = mockResolutionWarnLogger;
+    }
+
+
+    /**
+     * @return the groupTestData
+     */
+    private GroupTestData getGroupTestData() {
+        return groupTestData;
     }
 
 

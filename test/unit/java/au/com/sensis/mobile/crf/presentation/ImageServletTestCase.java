@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.presentation.ImageServlet.ImageServletDependencies;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceBean;
@@ -58,6 +59,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private File expectedMappedFile;
     private ImageServletDependencies imageServletDependencies;
+    private final GroupTestData groupTestData = new GroupTestData();
 
     /**
      * Setup test data.
@@ -198,7 +200,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     private Resource getResource() {
         return new ResourceBean(getRequestedResourcePath(),
                 getExpectedMappedFile().getName(), getExpectedMappedFile()
-                        .getParentFile());
+                        .getParentFile(), getGroupTestData().createDefaultGroup());
     }
 
     private void recordGetImageServletDependencies() {
@@ -383,5 +385,12 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     private void setImageServletDependencies(
             final ImageServletDependencies imageServletDependencies) {
         this.imageServletDependencies = imageServletDependencies;
+    }
+
+    /**
+     * @return the groupTestData
+     */
+    private GroupTestData getGroupTestData() {
+        return groupTestData;
     }
 }

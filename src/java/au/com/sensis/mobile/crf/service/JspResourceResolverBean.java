@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -12,7 +13,7 @@ import au.com.sensis.mobile.crf.config.Group;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class JspResourceResolverBean extends AbstractResourceResolver {
+public class JspResourceResolverBean extends AbstractSingleResourceResolver {
 
     private static final Logger LOGGER = Logger.getLogger(JspResourceResolverBean.class);
 
@@ -31,13 +32,14 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
      *            handles are stored.
      * @param jspResourcesRootServletPath
      *            Root of JSP resources, relative to the servlet context root.
+     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      */
     public JspResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
             final File rootResourcesDir,
-            final String jspResourcesRootServletPath) {
+            final String jspResourcesRootServletPath, final ResourceCache resourceCache) {
 
-        super(commonParams, abstractResourceExtension, rootResourcesDir);
+        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
 
         validateJspResourcesRootServletPath(jspResourcesRootServletPath);
 
@@ -89,30 +91,12 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
                 getJspResourcesRootServletPath());
     }
 
-    //    /**
-    //     * {@inheritDoc}
-    //     */
-    //    @Override
-    //    public ResourceAccumulator getResourceAccumulator(final String requestedResourcePath) {
-    //
-    //        return getResourceAccumulatorFactory().getResourceAccumulator(getResourceType());
-    //    }
-
     /**
      * {@inheritDoc}
      */
     @Override
     protected Logger getLogger() {
         return LOGGER;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected ResourceAccumulator createResourceAccumulator() {
-
-        return getResourceAccumulatorFactory().getJspResourceAccumulator();
     }
 
     /**
@@ -128,6 +112,15 @@ public class JspResourceResolverBean extends AbstractResourceResolver {
      */
     private String getJspResourcesRootServletPath() {
         return jspResourcesRootServletPath;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void addResourcesToResourceResolutionTreeIfEnabled(final List<Resource> resources) {
+        // Do nothing. JSP resource resolution debugging occurs in ResourceResolverServlet
+        // since that is the only point which can tell when a JSP is including other resources.
     }
 
 }

@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import au.com.sensis.mobile.crf.config.Group;
+
 
 /**
  * Represents an image {@link Resource}, having the additional image-specific
@@ -11,11 +13,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  *
  * @author Tony Filipe
  */
-public class ImageResourceBean
-extends ResourceBean {
+public class ImageResourceBean extends ResourceBean {
 
     private int imageWidth;
     private int imageHeight;
+
 
     /**
      * Default constructor.
@@ -26,11 +28,12 @@ extends ResourceBean {
      *            New path that originalPath was mapped to.
      * @param rootResourceDir
      *            Root directory which the newPath is relative to.
+     * @param group {@link Group} that this {@link Resource} was found in.
      */
     public ImageResourceBean(final String originalPath, final String newPath,
-            final File rootResourceDir) {
+            final File rootResourceDir, final Group group) {
 
-        super(originalPath, newPath, rootResourceDir);
+        super(originalPath, newPath, rootResourceDir, group);
     }
 
     /**
@@ -39,9 +42,7 @@ extends ResourceBean {
     @Override
     public String toString() {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
-        toStringBuilder.append("originalPath", getOriginalPath());
-        toStringBuilder.append("newPath", getNewPath());
-        toStringBuilder.append("rootResourceDir", getRootResourceDir());
+        toStringBuilder.appendSuper(super.toString());
         toStringBuilder.append("width", getImageWidth());
         toStringBuilder.append("height", getImageHeight());
         return toStringBuilder.toString();

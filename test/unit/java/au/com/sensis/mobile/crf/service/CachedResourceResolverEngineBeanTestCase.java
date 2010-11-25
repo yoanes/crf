@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.DefaultDevice;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
@@ -33,6 +34,7 @@ extends AbstractJUnit4TestCase {
     private List<Resource> resolvedResources;
     private ConcurrentHashMap<Integer, List<Resource>> cache;
     private List<Resource> cachedResolvedResources;
+    private final GroupTestData groupTestData = new GroupTestData();
 
 
     /**
@@ -50,13 +52,15 @@ extends AbstractJUnit4TestCase {
 
         resolvedResources = new ArrayList<Resource>();
         resolvedResources.add(
-                new ResourceBean(requestedResourcePath, "default/common/main.jsp", null));
+                new ResourceBean(requestedResourcePath, "default/common/main.jsp", null,
+                        getGroupTestData().createDefaultGroup()));
 
         cache = new ConcurrentHashMap<Integer, List<Resource>>();
 
         cachedResolvedResources = new ArrayList<Resource>();
         cachedResolvedResources.add(
-                new ResourceBean(requestedResourcePath, "default/common/mapInclude.jsp", null));
+                new ResourceBean(requestedResourcePath, "default/common/mapInclude.jsp", null,
+                        getGroupTestData().createDefaultGroup()));
     }
 
 
@@ -279,6 +283,14 @@ extends AbstractJUnit4TestCase {
             final ResourceResolverEngineBean mockResourceResolverEngineBean) {
 
         this.mockResourceResolverEngineBean = mockResourceResolverEngineBean;
+    }
+
+
+    /**
+     * @return the groupTestData
+     */
+    private GroupTestData getGroupTestData() {
+        return groupTestData;
     }
 
 }

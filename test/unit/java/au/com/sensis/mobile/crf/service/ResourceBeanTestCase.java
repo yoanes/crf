@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
@@ -22,6 +23,7 @@ public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
     private Resource objectUnderTest;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private FileIoFacade mockFileIoFacade;
+    private final GroupTestData groupTestData = new GroupTestData();
 
     /**
      * Setup test data.
@@ -44,25 +46,21 @@ public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testConstructorWhenOriginalPathIsBlank()
-            throws Throwable {
+    public void testConstructorWhenOriginalPathIsBlank() throws Throwable {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
                 new ResourceBean(testValue, getResourcePathTestData()
-                        .getMappedDefaultGroupResourcePath()
-                        .getNewPath(), getResourcePathTestData()
-                        .getRootResourcesPath());
+                        .getMappedDefaultGroupResourcePath().getNewPath(),
+                        getResourcePathTestData().getRootResourcesPath(), getGroupTestData()
+                                .createDefaultGroup());
 
-                Assert.fail("IllegalArgumentException expected for testValue '"
-                        + testValue + "'");
+                Assert.fail("IllegalArgumentException expected for testValue '" + testValue + "'");
             } catch (final IllegalArgumentException e) {
 
-                Assert.assertEquals(
-                        "IllegalArgumentException has wrong message for testValue '"
-                                + testValue + "'",
-                        "originalPath must not be blank: '" + testValue
-                                + "'", e.getMessage());
+                Assert.assertEquals("IllegalArgumentException has wrong message for testValue '"
+                        + testValue + "'", "originalPath must not be blank: '" + testValue + "'", e
+                        .getMessage());
             }
         }
 
@@ -73,20 +71,16 @@ public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
-                new ResourceBean(getResourcePathTestData()
-                        .getMappedDefaultGroupResourcePath()
-                        .getOriginalPath(), testValue,
-                        getResourcePathTestData().getRootResourcesPath());
+                new ResourceBean(getResourcePathTestData().getMappedDefaultGroupResourcePath()
+                        .getOriginalPath(), testValue, getResourcePathTestData()
+                        .getRootResourcesPath(), getGroupTestData().createDefaultGroup());
 
-                Assert.fail("IllegalArgumentException expected for testValue '"
-                        + testValue + "'");
+                Assert.fail("IllegalArgumentException expected for testValue '" + testValue + "'");
             } catch (final IllegalArgumentException e) {
 
-                Assert.assertEquals(
-                        "IllegalArgumentException has wrong message for testValue '"
-                                + testValue + "'",
-                        "newPath must not be blank: '" + testValue
-                                + "'", e.getMessage());
+                Assert.assertEquals("IllegalArgumentException has wrong message for testValue '"
+                        + testValue + "'", "newPath must not be blank: '" + testValue + "'", e
+                        .getMessage());
             }
         }
     }
@@ -164,5 +158,12 @@ public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
      */
     public void setMockFileIoFacade(final FileIoFacade mockFileIoFacade) {
         this.mockFileIoFacade = mockFileIoFacade;
+    }
+
+    /**
+     * @return the groupTestData
+     */
+    private GroupTestData getGroupTestData() {
+        return groupTestData;
     }
 }

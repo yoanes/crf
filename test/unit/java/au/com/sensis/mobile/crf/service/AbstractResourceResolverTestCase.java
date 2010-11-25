@@ -3,6 +3,7 @@ package au.com.sensis.mobile.crf.service;
 import java.io.File;
 
 import org.apache.commons.lang.StringUtils;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,6 +42,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     private DeploymentMetadata deploymentMetadata;
     private final ResourceAccumulatorFactory resourceAccumulatorFactory =
         new ResourceAccumulatorFactory(true);
+    private ResourceCache mockResourceCache;
 
     /**
      * Setup test data.
@@ -332,6 +334,43 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
             final ResourceResolverCommonParamHolder resourceResolverCommonParamHolder) {
 
         this.resourceResolverCommonParamHolder = resourceResolverCommonParamHolder;
+    }
+
+    /**
+     * @return the mockResourceCache
+     */
+    public ResourceCache getMockResourceCache() {
+        return mockResourceCache;
+    }
+
+    /**
+     * @param mockResourceCache the mockResourceCache to set
+     */
+    public void setMockResourceCache(final ResourceCache mockResourceCache) {
+        this.mockResourceCache = mockResourceCache;
+    }
+
+    protected void recordCheckResourceCache(final ResourceCacheKey resourceCacheKey,
+            final Boolean resourceInCache) {
+        EasyMock.expect(getMockResourceCache().contains(resourceCacheKey)).andReturn(
+                resourceInCache);
+    }
+
+    protected void recordPutResourceCache(final ResourceCacheKey resourceCacheKey,
+            final Resource resource) {
+        getMockResourceCache().put(EasyMock.eq(resourceCacheKey),
+                EasyMock.aryEq(new Resource[] { resource }));
+    }
+
+    protected void recordPutResourceCache(final ResourceCacheKey resourceCacheKey,
+            final Resource [] resources) {
+        getMockResourceCache().put(EasyMock.eq(resourceCacheKey),
+                EasyMock.aryEq(resources));
+    }
+
+    protected void recordPutEmptyResultsIntoResourceCache(final ResourceCacheKey resourceCacheKey) {
+        getMockResourceCache()
+                .put(EasyMock.eq(resourceCacheKey), EasyMock.aryEq(new Resource[] {}));
     }
 
 }

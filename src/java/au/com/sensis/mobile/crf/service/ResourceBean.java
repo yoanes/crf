@@ -7,6 +7,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import au.com.sensis.mobile.crf.config.Group;
+
 
 /**
  * Default {@link Resource} implementation.
@@ -24,6 +26,7 @@ public class ResourceBean implements Resource {
     private final String originalPath;
     private final String newPath;
     private final File rootResourceDir;
+    private final Group group;
 
     /**
      * Default constructor.
@@ -34,9 +37,11 @@ public class ResourceBean implements Resource {
      *            New path that originalPath was mapped to.
      * @param rootResourceDir
      *            Root directory which the newPath is relative to.
+     * @param group {@link Group} that this {@link Resource} was found in.
      */
     public ResourceBean(final String originalPath,
-            final String newPath, final File rootResourceDir) {
+            final String newPath, final File rootResourceDir,
+            final Group group) {
         if (StringUtils.isBlank(originalPath)) {
             throw new IllegalArgumentException(
                     "originalPath must not be blank: '"
@@ -51,12 +56,14 @@ public class ResourceBean implements Resource {
         this.originalPath = originalPath;
         this.newPath = newPath;
         this.rootResourceDir = rootResourceDir;
+        this.group = group;
     }
 
     /**
      * @return true if {@link #getNewPath()} ends with the special
      *         extension ".null".
      */
+    @Override
     public boolean newPathEndsWithDotNull() {
         return getNewPath().endsWith(".null");
     }
@@ -64,6 +71,7 @@ public class ResourceBean implements Resource {
     /**
      * @return the originalPath
      */
+    @Override
     public String getOriginalPath() {
         return originalPath;
     }
@@ -71,6 +79,7 @@ public class ResourceBean implements Resource {
     /**
      * @return the newPath
      */
+    @Override
     public String getNewPath() {
         return newPath;
     }
@@ -79,6 +88,7 @@ public class ResourceBean implements Resource {
      * @return {@link File} combining {@link #getRootResourceDir()} and
      *         {@link #getNewPath().
      */
+    @Override
     public File getNewFile() {
         return new File(getRootResourceDir(), getNewPath());
     }
@@ -105,6 +115,8 @@ public class ResourceBean implements Resource {
                 rhs.getNewPath());
         equalsBuilder.append(getRootResourceDir(),
                 rhs.getRootResourceDir());
+        equalsBuilder.append(getGroup(),
+                rhs.getGroup());
         return equalsBuilder.isEquals();
     }
 
@@ -117,6 +129,7 @@ public class ResourceBean implements Resource {
         hashCodeBuilder.append(getOriginalPath());
         hashCodeBuilder.append(getNewPath());
         hashCodeBuilder.append(getRootResourceDir());
+        hashCodeBuilder.append(getGroup());
         return hashCodeBuilder.toHashCode();
     }
 
@@ -129,12 +142,14 @@ public class ResourceBean implements Resource {
         toStringBuilder.append("originalPath", getOriginalPath());
         toStringBuilder.append("newPath", getNewPath());
         toStringBuilder.append("rootResourceDir", getRootResourceDir());
+        toStringBuilder.append("group", getGroup());
         return toStringBuilder.toString();
     }
 
     /**
      * @return the rootResourceDir
      */
+    @Override
     public File getRootResourceDir() {
         return rootResourceDir;
     }
@@ -142,8 +157,17 @@ public class ResourceBean implements Resource {
     /**
      * @return Length of {@link #getNewFile()} as an int.
      */
+    @Override
     public int getNewFileLengthAsInt() {
         return (int) getNewFile().length();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Group getGroup() {
+        return group;
     }
 
 }

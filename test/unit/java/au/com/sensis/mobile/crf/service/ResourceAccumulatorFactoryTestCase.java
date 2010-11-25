@@ -31,23 +31,6 @@ extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testGetJspResourceAccumulator() throws Throwable {
-
-        final ResourceAccumulator accumulator = getObjectUnderTest().getJspResourceAccumulator();
-
-        Assert.assertTrue("accumulator not instance of JspSingleResourceAccumulatorBean",
-                accumulator instanceof JspSingleResourceAccumulatorBean);
-    }
-
-    @Test
-    public void testGetImageResourceAccumulator() throws Throwable {
-
-        final ResourceAccumulator accumulator = getObjectUnderTest().getImageResourceAccumulator();
-
-        Assert.assertTrue(accumulator instanceof SingleResourceAccumulatorBean);
-    }
-
-    @Test
     public void testGetPropertiesResourceAccumulator() throws Throwable {
 
         final ResourceAccumulator accumulator =

@@ -27,7 +27,7 @@ import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ImageResourceResolverBean extends AbstractResourceResolver {
+public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
 
     private static final Logger LOGGER =
         Logger.getLogger(ImageResourceResolverBean.class);
@@ -45,6 +45,7 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
+     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      * @param fileExtensionWildcards
      *            Array of image file extensions to match. Wildcards supported
      *            are '*' as per standard Unix/Windows command line
@@ -53,9 +54,10 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
     public ImageResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
             final File rootResourcesDir,
+            final ResourceCache resourceCache,
             final String[] fileExtensionWildcards) {
 
-        super(commonParams, abstractResourceExtension, rootResourcesDir);
+        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
 
         validateFileExtensionWildcards(fileExtensionWildcards);
 
@@ -90,9 +92,8 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    protected List<Resource> doResolveForGroup(
-            final String requestedResourcePath, final Group group)
-            throws ResourceResolutionRuntimeException {
+    protected List<Resource> doResolveForGroup(final String requestedResourcePath,
+            final Group group) throws ResourceResolutionRuntimeException {
 
         final String newResourcesBasePath = createNewResourcePath(requestedResourcePath, group);
 
@@ -101,28 +102,28 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
         // TODO: possibly cache the result since we are accessing the file
         // system?
         final File[] matchedFiles =
-            FileIoFacadeFactory.getFileIoFacadeSingleton().list(
-                    getRootResourcesDir(),
-                    newResourcesBasePath,
-                    getFileExtensionWildcards());
+                FileIoFacadeFactory.getFileIoFacadeSingleton().list(getRootResourcesDir(),
+                        newResourcesBasePath, getFileExtensionWildcards());
 
         warnIfMultipleResourcesWithExtensionsFound(requestedResourcePath, matchedFiles);
 
         if (matchedFiles.length > 0) {
-            return Arrays
-            .asList(createFoundResource(requestedResourcePath, newResourcesBasePath,
-                    matchedFiles[0]));
+            final Resource foundResource =
+                    createFoundResource(requestedResourcePath, newResourcesBasePath, group,
+                            matchedFiles[0]);
+            addResourcesToResourceResolutionTreeIfEnabled(foundResource);
+            return Arrays.asList(foundResource);
         } else {
             return new ArrayList<Resource>();
         }
     }
 
     private Resource createFoundResource(final String requestedResourcePath,
-            final String newResourcePath, final File foundFile) {
+            final String newResourcePath, final Group group, final File foundFile) {
 
         final ImageResourceBean resource =  new ImageResourceBean(requestedResourcePath,
                 getNewResourcePathPlusFileExtension(foundFile, newResourcePath),
-                getRootResourcesDir());
+                getRootResourcesDir(), group);
 
         final Dimension dimensions = getImageDimensions(foundFile);
 
@@ -225,15 +226,6 @@ public class ImageResourceResolverBean extends AbstractResourceResolver {
     @Override
     protected String getRealResourcePathExtension() {
         return StringUtils.EMPTY;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected ResourceAccumulator createResourceAccumulator() {
-
-        return getResourceAccumulatorFactory().getImageResourceAccumulator();
     }
 
     private String[] getFileExtensionWildcards() {

@@ -101,6 +101,9 @@ public class JavaScriptResourceAccumulatorBean extends AbstractResourceAccumulat
     public List<Resource> getResources() {
         final List<Resource> result = doGetResources();
 
+        // Note that we add resources to the resource resolution tree
+        // here rather than in the accumulate method so that the debug output lists resources
+        // from default group down to most specific group.
         addResourcesToResourceResolutionTreeIfEnabled(result);
 
         return result;

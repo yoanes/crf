@@ -8,11 +8,13 @@
                 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
                 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-    <bean id="crf.cachedResourceResolverEngine" 
+<!--
+    <bean id="crf.resourceResolverEngine" 
         class="au.com.sensis.mobile.crf.service.CachedResourceResolverEngineBean">
         <constructor-arg ref="crf.resourceResolverEngine"/>
         <constructor-arg value="@{crf.env.cache.resources}"/>
     </bean>
+-->    
 
     <bean id="crf.resourceResolverEngine" 
         class="au.com.sensis.mobile.crf.service.ResourceResolverEngineBean">
@@ -33,17 +35,20 @@
                     <constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.jsp.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.jsp.root.dir}"/>
+                    <constructor-arg ref="crf.resourceCache"/>
                     <constructor-arg value="@{crf.resources.jsp.root.servlet.path}"/>
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.CssResourceResolverBean">
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.css.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.css.root.dir}"/>
+                    <constructor-arg ref="crf.resourceCache"/>
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.ImageResourceResolverBean">
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.image.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.images.root.dir}"/>
+                    <constructor-arg ref="crf.resourceCache"/>
                     <constructor-arg>
                         <list>
                             <value>*</value>
@@ -54,6 +59,7 @@
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.javascript.root.dir}"/>
+                    <constructor-arg ref="crf.resourceCache"/>
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.package.keyword}" />
                     <constructor-arg>
                         <bean class="au.com.sensis.mobile.crf.service.JavaScriptFileFinderBean">
@@ -69,6 +75,7 @@
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.properties.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.properties.root.dir}"/>
+                    <constructor-arg ref="crf.resourceCache"/>
                 </bean>
             </list>
         </constructor-arg>
@@ -76,12 +83,12 @@
     
     <bean id="crf.propertiesLoader" 
         class="au.com.sensis.mobile.crf.service.PropertiesLoaderBean">
-        <constructor-arg ref="crf.cachedResourceResolverEngine" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
     </bean>
     
     <bean id="crf.linkTagDependencies" 
         class="au.com.sensis.mobile.crf.presentation.tag.LinkTagDependencies">
-        <constructor-arg ref="crf.cachedResourceResolverEngine" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg ref="crf.cssBundleFactory" />
         <constructor-arg value="@{crf.env.resources.css.client.path.prefix}" />
@@ -90,7 +97,7 @@
     
     <bean id="crf.imageTagDependencies" 
         class="au.com.sensis.mobile.crf.presentation.tag.ImageTagDependencies">
-        <constructor-arg ref="crf.cachedResourceResolverEngine" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
@@ -98,7 +105,7 @@
     
     <bean id="crf.scriptTagDependencies" 
         class="au.com.sensis.mobile.crf.presentation.tag.ScriptTagDependencies">
-        <constructor-arg ref="crf.cachedResourceResolverEngine" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg ref="crf.scriptBundleFactory" />
         <constructor-arg value="@{crf.env.resources.javascript.client.path.prefix}" />
@@ -110,7 +117,7 @@
     
     <bean id="crf.imageServletDependencies" 
         class="au.com.sensis.mobile.crf.presentation.ImageServlet$ImageServletDependencies">
-        <constructor-arg ref="crf.cachedResourceResolverEngine" />
+        <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
     </bean>
     
@@ -171,7 +178,11 @@
             </bean>
         </constructor-arg>
     </bean>
-
+    
+    <bean id="crf.resourceCache" class="au.com.sensis.mobile.crf.service.SimpleResourceCacheBean">
+        <constructor-arg value="@{crf.env.cache.resources}" />
+    </bean>
+    
     <bean id="crf.resourceResolverDebugFilter" class="au.com.sensis.mobile.crf.debug.ResourceResolverDebugFilter">
         <property name="enabled" value="@{crf.env.debug.resource.graph}" />
     </bean>

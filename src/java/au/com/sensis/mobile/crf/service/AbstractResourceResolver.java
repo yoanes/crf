@@ -12,6 +12,9 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -34,8 +37,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     private final File rootResourcesDir;
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
     private final DeploymentMetadata deploymentMetadata;
-    private final ResourceAccumulatorFactory resourceAccumulatorFactory;
     private final ConfigurationFactory configurationFactory;
+
+    private final ResourceCache resourceCache;
 
     /**
      * Constructor.
@@ -48,23 +52,24 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-
+     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      */
     public AbstractResourceResolver(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
-            final File rootResourcesDir) {
+            final File rootResourcesDir, final ResourceCache resourceCache) {
 
         validateAbstractResourceExtension(abstractResourceExtension);
         validateRootResourcesDir(rootResourcesDir);
 
         resourceResolutionWarnLogger = commonParams.getResourceResolutionWarnLogger();
         deploymentMetadata = commonParams.getDeploymentMetadata();
-        resourceAccumulatorFactory = commonParams.getResourceAccumulatorFactory();
         configurationFactory = commonParams.getConfigurationFactory();
 
         this.abstractResourceExtension =
             prefixWithLeadingDotIfRequired(abstractResourceExtension);
         this.rootResourcesDir = rootResourcesDir;
+
+        this.resourceCache = resourceCache;
 
     }
 
@@ -74,30 +79,12 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    public List<Resource> resolve(final String requestedResourcePath, final Device device)
-    throws ResourceResolutionRuntimeException {
+    public final List<Resource> resolve(final String requestedResourcePath, final Device device)
+        throws ResourceResolutionRuntimeException {
 
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
 
-            final ResourceAccumulator accumulator = createResourceAccumulator();
-
-            final Iterator<Group> matchingGroupIterator =
-                getMatchingGroupIterator(device, requestedResourcePath);
-
-            while (matchingGroupIterator.hasNext()) {
-
-                final Group currGroup = matchingGroupIterator.next();
-
-                getLogger().debug("Group: " + currGroup.getName());
-
-                debugLogCheckingGroup(requestedResourcePath, currGroup);
-
-                accumulator.accumulate(
-                        resolveForGroup(requestedResourcePath, currGroup));
-
-            }
-
-            return accumulator.getResources();
+            return doResolve(requestedResourcePath, device);
 
         } else {
 
@@ -106,6 +93,20 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             return new ArrayList<Resource>();
         }
     }
+
+    /**
+     * Invoked by {@link #resolve(String, Device)} if
+     * {@link #isRecognisedAbstractResourceRequest(String)} resturns true.
+     *
+     * @param requestedResourcePath
+     *            Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
+     * @param device
+     *            {@link Device} to perform the path mapping for.
+     * @return List of {@link Resource}s containing the results. If no resources
+     *         can be resolved, an empty list is returned. May not be null.
+     */
+    protected abstract List<Resource> doResolve(final String requestedResourcePath,
+            final Device device);
 
     /**
      * Returns the {@link Resource}s that are resolved for the given {@link Group}.
@@ -126,11 +127,6 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
         return resolvedResources;
     }
-
-    /**
-     * @return Returns a new {@link ResourceAccumulator} for this {@link ResourceResolver}.
-     */
-    protected abstract ResourceAccumulator createResourceAccumulator();
 
     /**
      * Workhorse method that is only called if
@@ -163,7 +159,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
         if (exists(newResourcePath)) {
             return Arrays.asList(createResource(requestedResourcePath,
-                    newResourcePath));
+                    newResourcePath, group));
         } else {
             return new ArrayList<Resource>();
         }
@@ -189,13 +185,14 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            Requested path.
      * @param newPath
      *            New path that the requested path maps to.
+     * @param group {@link Group} that the new path was found in.
      * @return new {@link Resource} created from the requested path and the new
      *         path that it maps to.
      */
     protected final Resource createResource(final String requestedResourcePath,
-            final String newPath) {
+            final String newPath, final Group group) {
         return new ResourceBean(requestedResourcePath, newPath,
-                getRootResourcesDir());
+                getRootResourcesDir(), group);
     }
 
     /**
@@ -325,14 +322,6 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
-     * @return the {@link ResourceAccumulatorFactory} from which to obtain a
-     *         {@link ResourceAccumulator} implementation.
-     */
-    protected ResourceAccumulatorFactory getResourceAccumulatorFactory() {
-        return resourceAccumulatorFactory;
-    }
-
-    /**
      * @return the {@link ConfigurationFactory} from which to obtain the
      * {@link au.com.sensis.mobile.crf.config.UiConfiguration}.
      */
@@ -372,11 +361,16 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         }
     }
 
-    private Iterator<Group> getMatchingGroupIterator(final Device device,
+    /**
+     * @param device {@link Device} to get iterator for.
+     * @param requestedResourcePath Requested path.
+     * @return Iterator for groups that match the given device.
+     */
+    protected final Iterator<Group> getMatchingGroupIterator(final Device device,
             final String requestedResourcePath) {
 
         return getConfigurationFactory().getUiConfiguration(requestedResourcePath)
-        .matchingGroupIterator(device);
+                .matchingGroupIterator(device);
     }
 
     private void debugLogAttemptingResolution(final String requestedResourcePath) {
@@ -412,7 +406,12 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         }
     }
 
-    private void debugLogCheckingGroup(final String requestedResourcePath,
+    /**
+     * Log a debug message that a {@link Group} is being checked for a given requested path.
+     * @param requestedResourcePath Requested resource path.
+     * @param currGroup {@link Group} being checked.
+     */
+    protected final void debugLogCheckingGroup(final String requestedResourcePath,
             final Group currGroup) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Looking for '" + requestedResourcePath
@@ -420,9 +419,91 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         }
     }
 
+    /**
+     * Add the Resources to the {@link ResourceResolutionTree} for the current
+     * thread.
+     *
+     * @param resources
+     *            Resources to add to the {@link ResourceResolutionTree} for the
+     *            current thread.
+     */
+    protected void addResourcesToResourceResolutionTreeIfEnabled(
+            final List<Resource> resources) {
+        if (getResourceResolutionTree().isEnabled()) {
+            for (final Resource currResource : resources) {
+                addResourcesToResourceResolutionTreeIfEnabled(currResource);
+            }
+        }
+    }
+
+    /**
+     * Add the Resource to the {@link ResourceResolutionTree} for the current
+     * thread.
+     *
+     * @param resource
+     *            Resource to add to the {@link ResourceResolutionTree} for the
+     *            current thread.
+     */
+    protected final void addResourcesToResourceResolutionTreeIfEnabled(final Resource resource) {
+        getResourceResolutionTree().addChildToCurrentNode(new ResourceTreeNodeBean(resource));
+    }
+
+    private ResourceResolutionTree getResourceResolutionTree() {
+        return ResourceResolutionTreeHolder.getResourceResolutionTree();
+    }
+
     private DeploymentMetadata getDeploymentMetadata() {
         return deploymentMetadata;
     }
+
+    /**
+     * @return the resourceCache
+     */
+    protected ResourceCache getResourceCache() {
+        return resourceCache;
+    }
+
+    /**
+     * Like {@link #resolveForGroup(String, Group)} but checks/updates a cache
+     * as well.
+     *
+     * @param requestedResourcePath
+     *            Requested path.
+     * @param currGroup
+     *            Group to find the requested path in.
+     * @return Results from cache if found, otherwise output of
+     *         {@link #resolveForGroup(String, Group)}.
+     */
+    protected List<Resource> resolveForGroupPossiblyFromCache(final String requestedResourcePath,
+            final Group currGroup) {
+        final ResourceCacheKeyBean key = new ResourceCacheKeyBean(requestedResourcePath, currGroup);
+        if (getResourceCache().contains(key)) {
+            debugLogResourcesFoundInCache();
+
+            final Resource[] cachedResources = getResourceCache().get(key);
+            addResourcesToResourceResolutionTreeIfEnabled(Arrays.asList(cachedResources));
+            return Arrays.asList(cachedResources);
+        } else {
+            debugLogResourcesNotFoundInCache();
+
+            final List<Resource> resolvedResources =
+                    resolveForGroup(requestedResourcePath, currGroup);
+            getResourceCache().put(key, resolvedResources.toArray(new Resource[] {}));
+            return resolvedResources;
+        }
+    }
+
+    private void debugLogResourcesFoundInCache() {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Returning resources from cache.");
+        }
+    }
+    private void debugLogResourcesNotFoundInCache() {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Resources not found in cache. Will resolve them.");
+        }
+    }
+
 
 
 }

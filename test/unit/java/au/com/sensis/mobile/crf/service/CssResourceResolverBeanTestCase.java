@@ -33,7 +33,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         setObjectUnderTest(new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir()));
+                getResourcesRootDir(), getMockResourceCache()));
     }
 
     // Override Abstract test methods //
@@ -44,14 +44,15 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension,
-                getResourcesRootDir());
+                getResourcesRootDir(), getMockResourceCache());
     }
 
     @Override
     protected CssResourceResolverBean createWithRootResourcesDir(final File rootResourcesDir) {
 
         return new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
-                getResourcePathTestData().getCssExtensionWithoutLeadingDot(), rootResourcesDir);
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(), rootResourcesDir,
+                getMockResourceCache());
     }
 
     @Override
@@ -65,7 +66,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(commonParams,
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir());
+                getResourcesRootDir(), getMockResourceCache());
     }
 
     @Override
@@ -79,7 +80,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(commonParams,
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir());
+                getResourcesRootDir(), getMockResourceCache());
     }
 
     // Tests //
@@ -95,7 +96,13 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             recordGetMatchingGroupIterator();
 
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
             recordCheckIfNewPathExists(Boolean.TRUE);
+
+            recordPutResourceCache(resourceCacheKey, getResourcePathTestData()
+                    .getMappedIphoneGroupCssResourcePath());
 
             replay();
 
@@ -116,6 +123,13 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
     }
 
+    private ResourceCacheKey createResourceCacheKey() {
+        final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
+                getResourcePathTestData().getRequestedCssResourcePath(),
+                getGroupTestData().createIPhoneGroup());
+        return resourceCacheKey;
+    }
+
     @Test
     public void testResolveWhenMappingPerformedAndResourceDoesNotExist()
     throws Throwable {
@@ -128,7 +142,12 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             recordGetMatchingGroupIterator();
 
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
             recordCheckIfNewPathExists(Boolean.FALSE);
+
+            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
 
             replay();
 
@@ -164,6 +183,46 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
         Assert.assertTrue("actualResources should be empty",
                 actualResources.isEmpty());
 
+    }
+
+    @Test
+    public void testResolveWhenMappingPerformedAndResourceFromCache() throws Throwable {
+        final String[] testValues = {
+                getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                getResourcePathTestData().getCssExtensionWithLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetMatchingGroupIterator();
+
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
+
+            recordGetFromResourceCache(resourceCacheKey);
+
+            replay();
+
+            final List<Resource> actualResources =
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedCssResourcePath(),
+                        getMockDevice());
+
+            Assert.assertEquals("actualResources is wrong",
+                    Arrays.asList(getResourcePathTestData()
+                            .getMappedIphoneGroupCssResourcePath()),
+                            actualResources);
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+        }
+
+    }
+
+    private void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey) {
+        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
+                new Resource [] {getResourcePathTestData().getMappedIphoneGroupCssResourcePath()});
     }
 
     @Test

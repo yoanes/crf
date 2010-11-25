@@ -7,12 +7,16 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNode;
 
 /**
  * Unit test {@link JspResourceResolverBean}.
@@ -34,8 +38,20 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         setObjectUnderTest(new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
-                getResourcesRootDir(),
-                getResourcePathTestData().getJspResourcesRootServletPath()));
+                getResourcesRootDir(), getResourcePathTestData().getJspResourcesRootServletPath(),
+                getMockResourceCache()));
+
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
+    }
+
+    /**
+     * Tear down test data.
+     *
+     * @throws Exception Thrown if any error occurs.
+     */
+    @After
+    public void tearDown() throws Exception {
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
     }
 
     @Override
@@ -44,7 +60,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension, getResourcesRootDir(),
-                getResourcePathTestData().getJspResourcesRootServletPath());
+                getResourcePathTestData().getJspResourcesRootServletPath(), getMockResourceCache());
     }
 
     @Override
@@ -58,7 +74,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new JspResourceResolverBean(commonParams,
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getResourcePathTestData().getJspResourcesRootServletPath());
+                getResourcePathTestData().getJspResourcesRootServletPath(), getMockResourceCache());
     }
 
     @Override
@@ -66,7 +82,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
             final File rootResourcesDir) {
         return new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), rootResourcesDir,
-                getResourcePathTestData().getJspResourcesRootServletPath());
+                getResourcePathTestData().getJspResourcesRootServletPath(), getMockResourceCache());
     }
 
     @Override
@@ -80,7 +96,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new JspResourceResolverBean(commonParams,
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getResourcePathTestData().getJspResourcesRootServletPath());
+                getResourcePathTestData().getJspResourcesRootServletPath(), getMockResourceCache());
     }
 
     @Test
@@ -91,7 +107,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
             try {
                 new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                         getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
-                        getResourcesRootDir(), testValue);
+                        getResourcesRootDir(), testValue, getMockResourceCache());
 
                 Assert
                 .fail("IllegalArgumentException expected for testValue: '"
@@ -117,7 +133,13 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             recordGetMatchingGroupIterator();
 
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
             recordCheckIfNewPathExists(Boolean.TRUE);
+
+            recordPutResourceCache(resourceCacheKey,
+                    getResourcePathTestData().getMappedIphoneGroupResourcePath());
 
             replay();
 
@@ -130,11 +152,25 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
                     Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath()),
                     actualResources);
 
+            assertResourceResolutionTreeNotUpdated();
+
             // Explicit verify and reset since we are in a loop.
             verify();
             reset();
         }
 
+    }
+
+    private ResourceCacheKey createResourceCacheKey() {
+        final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
+                getResourcePathTestData().getRequestedJspResourcePath(),
+                getGroupTestData().createIPhoneGroup());
+        return resourceCacheKey;
+    }
+
+    private void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey) {
+        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
+                new Resource [] {getResourcePathTestData().getMappedIphoneGroupResourcePath()});
     }
 
     @Test
@@ -150,7 +186,12 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             recordGetMatchingGroupIterator();
 
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
             recordCheckIfNewPathExists(Boolean.FALSE);
+
+            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
 
             replay();
 
@@ -163,6 +204,45 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
                     actualResources);
             Assert.assertTrue("actualResources should be empty",
                     actualResources.isEmpty());
+
+            assertResourceResolutionTreeNotUpdated();
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+        }
+
+    }
+
+    @Test
+    public void testResolveWhenMappingPerformedAndResourceFromCache() throws Throwable {
+        final String[] testValues = {
+                getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
+                getResourcePathTestData().getCrfExtensionWithLeadingDot()
+        };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetMatchingGroupIterator();
+
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
+
+            recordGetFromResourceCache(resourceCacheKey);
+
+            replay();
+
+            final List<Resource> actualResources =
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedJspResourcePath(),
+                        getMockDevice());
+
+            Assert.assertEquals("actualResources is wrong",
+                    Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath()),
+                    actualResources);
+
+            assertResourceResolutionTreeNotUpdated();
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -220,6 +300,14 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
         .andReturn(matchingGroupsIterator);
 
+    }
+
+    private void assertResourceResolutionTreeNotUpdated() {
+        final Iterator<ResourceTreeNode> treePreOrderIterator =
+                ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
+
+        Assert.assertFalse("ResourceResolutionTree treePreOrderIterator should not have any items",
+                treePreOrderIterator.hasNext());
     }
 
     /**

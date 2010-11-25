@@ -16,6 +16,9 @@ public class ResourceResolverCommonParamHolder {
 
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
     private final DeploymentMetadata deploymentMetadata;
+
+    // TODO: refactor ResourceResolutionWarnLogger out of here since only
+    // AbstractMultipleResourceResolver uses it now.
     private final ResourceAccumulatorFactory resourceAccumulatorFactory;
     private final ConfigurationFactory configurationFactory;
 
