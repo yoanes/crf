@@ -26,13 +26,17 @@ public class PropertiesResourceResolverBean extends AbstractMultipleResourceReso
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
+     * @param resourceAccumulatorFactory
+     *            Provides a {@link ResourceAccumulator} for this
+     *            {@link ResourceResolver}.
      */
     public PropertiesResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
-            final File rootResourcesDir, final ResourceCache resourceCache) {
+            final File rootResourcesDir,
+            final ResourceAccumulatorFactory resourceAccumulatorFactory) {
 
-        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
+        super(commonParams, abstractResourceExtension, rootResourcesDir,
+               resourceAccumulatorFactory);
     }
 
     /**

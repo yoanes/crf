@@ -38,8 +38,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         setObjectUnderTest(new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getResourcePathTestData().getJspResourcesRootServletPath(),
-                getMockResourceCache()));
+                getResourcesRootDir(), getResourcePathTestData().getJspResourcesRootServletPath()));
 
         ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
     }
@@ -60,7 +59,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension, getResourcesRootDir(),
-                getResourcePathTestData().getJspResourcesRootServletPath(), getMockResourceCache());
+                getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
     @Override
@@ -70,11 +69,11 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     resourceResolutionWarnLogger, getDeploymentMetadata(),
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new JspResourceResolverBean(commonParams,
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getResourcePathTestData().getJspResourcesRootServletPath(), getMockResourceCache());
+                getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
     @Override
@@ -82,7 +81,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
             final File rootResourcesDir) {
         return new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), rootResourcesDir,
-                getResourcePathTestData().getJspResourcesRootServletPath(), getMockResourceCache());
+                getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
     @Override
@@ -92,11 +91,11 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     getMockResourceResolutionWarnLogger(), deploymentMetadata,
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new JspResourceResolverBean(commonParams,
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getResourcePathTestData().getJspResourcesRootServletPath(), getMockResourceCache());
+                getResourcePathTestData().getJspResourcesRootServletPath());
     }
 
     @Test
@@ -107,7 +106,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
             try {
                 new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                         getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
-                        getResourcesRootDir(), testValue, getMockResourceCache());
+                        getResourcesRootDir(), testValue);
 
                 Assert
                 .fail("IllegalArgumentException expected for testValue: '"

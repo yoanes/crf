@@ -35,20 +35,18 @@
                     <constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.jsp.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.jsp.root.dir}"/>
-                    <constructor-arg ref="crf.resourceCache"/>
                     <constructor-arg value="@{crf.resources.jsp.root.servlet.path}"/>
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.CssResourceResolverBean">
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.css.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.css.root.dir}"/>
-                    <constructor-arg ref="crf.resourceCache"/>
+                    <constructor-arg ref="crf.resourceAccumulatorFactory" />                    
                 </bean>
                 <bean class="au.com.sensis.mobile.crf.service.ImageResourceResolverBean">
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.image.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.images.root.dir}"/>
-                    <constructor-arg ref="crf.resourceCache"/>
                     <constructor-arg>
                         <list>
                             <value>*</value>
@@ -59,7 +57,7 @@
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.javascript.root.dir}"/>
-                    <constructor-arg ref="crf.resourceCache"/>
+                    <constructor-arg ref="crf.resourceAccumulatorFactory" />
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.package.keyword}" />
                     <constructor-arg>
                         <bean class="au.com.sensis.mobile.crf.service.JavaScriptFileFinderBean">
@@ -75,7 +73,7 @@
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.properties.abstract.path.extension}"/>
                     <constructor-arg value="@{crf.env.resources.properties.root.dir}"/>
-                    <constructor-arg ref="crf.resourceCache"/>
+                    <constructor-arg ref="crf.resourceAccumulatorFactory" />
                 </bean>
             </list>
         </constructor-arg>
@@ -126,8 +124,8 @@
         class="au.com.sensis.mobile.crf.service.ResourceResolverCommonParamHolder">
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />
         <constructor-arg ref="crf.deploymentMetadata" />
-        <constructor-arg ref="crf.resourceAccumulatorFactory" />
         <constructor-arg ref="crf.configurationFactory" />                        
+        <constructor-arg ref="crf.resourceCache"/>
     </bean>  
 
 	<bean id="crf.resourceResolutionWarnLogger" class="au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger" />
@@ -142,7 +140,7 @@
         <property name="cacheUiConfiguration" value="@{crf.env.cache.ui.configuration}" />
     </bean>
     
-          <bean id="crf.resourceAccumulatorFactory" 
+    <bean id="crf.resourceAccumulatorFactory" 
         class="au.com.sensis.mobile.crf.service.ResourceAccumulatorFactory">
         <constructor-arg value="@{crf.env.bundle.resources}"/>
     </bean>

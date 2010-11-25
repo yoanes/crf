@@ -19,6 +19,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 
@@ -45,7 +48,6 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      * @param fileExtensionWildcards
      *            Array of image file extensions to match. Wildcards supported
      *            are '*' as per standard Unix/Windows command line
@@ -54,10 +56,9 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
     public ImageResourceResolverBean(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
             final File rootResourcesDir,
-            final ResourceCache resourceCache,
             final String[] fileExtensionWildcards) {
 
-        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
+        super(commonParams, abstractResourceExtension, rootResourcesDir);
 
         validateFileExtensionWildcards(fileExtensionWildcards);
 
@@ -99,8 +100,6 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
 
         debugLogCheckingForImagesIn(newResourcesBasePath);
 
-        // TODO: possibly cache the result since we are accessing the file
-        // system?
         final File[] matchedFiles =
                 FileIoFacadeFactory.getFileIoFacadeSingleton().list(getRootResourcesDir(),
                         newResourcesBasePath, getFileExtensionWildcards());
@@ -236,5 +235,50 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Checking for images in: '" + newResourcesBasePath + "'");
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Resource[] getResourcesFromCache(final ResourceCacheKey key) {
+        final Resource[] resourcesFromCache = super.getResourcesFromCache(key);
+
+        // Override inherited method so that we can call the following.
+        addResourcesToResourceResolutionTreeIfEnabled(Arrays.asList(resourcesFromCache));
+        return resourcesFromCache;
+    }
+
+    /**
+     * Add the Resources to the {@link ResourceResolutionTree} for the current
+     * thread.
+     *
+     * @param resources
+     *            Resources to add to the {@link ResourceResolutionTree} for the
+     *            current thread.
+     */
+    protected void addResourcesToResourceResolutionTreeIfEnabled(
+            final List<Resource> resources) {
+        if (getResourceResolutionTree().isEnabled()) {
+            for (final Resource currResource : resources) {
+                addResourcesToResourceResolutionTreeIfEnabled(currResource);
+            }
+        }
+    }
+
+    /**
+     * Add the Resource to the {@link ResourceResolutionTree} for the current
+     * thread.
+     *
+     * @param resource
+     *            Resource to add to the {@link ResourceResolutionTree} for the
+     *            current thread.
+     */
+    protected final void addResourcesToResourceResolutionTreeIfEnabled(final Resource resource) {
+        getResourceResolutionTree().addChildToCurrentNode(new ResourceTreeNodeBean(resource));
+    }
+
+    private ResourceResolutionTree getResourceResolutionTree() {
+        return ResourceResolutionTreeHolder.getResourceResolutionTree();
     }
 }

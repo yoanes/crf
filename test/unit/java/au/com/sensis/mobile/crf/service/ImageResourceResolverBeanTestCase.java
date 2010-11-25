@@ -41,7 +41,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
         setObjectUnderTest(new ImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache(), FILE_EXTENSION_WILDCARDS));
+                getResourcesRootDir(), FILE_EXTENSION_WILDCARDS));
 
         ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
     }
@@ -62,7 +62,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
         return new ImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension,
-                getResourcesRootDir(), getMockResourceCache(), FILE_EXTENSION_WILDCARDS);
+                getResourcesRootDir(), FILE_EXTENSION_WILDCARDS);
     }
 
     @Override
@@ -72,11 +72,11 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     resourceResolutionWarnLogger, getDeploymentMetadata(),
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new ImageResourceResolverBean(commonParams,
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                getMockResourceCache(), FILE_EXTENSION_WILDCARDS);
+                FILE_EXTENSION_WILDCARDS);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
         return new ImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(), rootResourcesDir,
-                getMockResourceCache(), FILE_EXTENSION_WILDCARDS);
+                FILE_EXTENSION_WILDCARDS);
     }
 
     @Override
@@ -95,11 +95,11 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     getMockResourceResolutionWarnLogger(), deploymentMetadata,
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new ImageResourceResolverBean(commonParams,
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache(), FILE_EXTENSION_WILDCARDS);
+                getResourcesRootDir(), FILE_EXTENSION_WILDCARDS);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
             try {
                 new ImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                         getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        getResourcesRootDir(), getMockResourceCache(), testValue);
+                        getResourcesRootDir(), testValue);
 
                 Assert.fail("IllegalArgumentException expected for testValue: '"
                         + ArrayUtils.toString(testValue) + "'");

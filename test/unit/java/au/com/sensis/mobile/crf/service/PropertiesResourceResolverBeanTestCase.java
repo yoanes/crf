@@ -33,7 +33,8 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         setObjectUnderTest(new PropertiesResourceResolverBean(
                 getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache()));
+                getResourcesRootDir(),
+                getResourceAccumulatorFactory()));
     }
 
     @Override
@@ -42,7 +43,8 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
 
         return new PropertiesResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension,
-                getResourcesRootDir(), getMockResourceCache());
+                getResourcesRootDir(),
+                getResourceAccumulatorFactory());
     }
 
     @Override
@@ -52,11 +54,12 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     getMockResourceResolutionWarnLogger(), deploymentMetadata,
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new PropertiesResourceResolverBean(commonParams,
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache());
+                getResourcesRootDir(),
+                getResourceAccumulatorFactory());
     }
 
     @Override
@@ -66,11 +69,12 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     resourceResolutionWarnLogger, getDeploymentMetadata(),
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new PropertiesResourceResolverBean(commonParams,
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache());
+                getResourcesRootDir(),
+                getResourceAccumulatorFactory());
     }
 
     @Override
@@ -79,7 +83,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
 
         return new PropertiesResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                rootResourcesDir, getMockResourceCache());
+                rootResourcesDir, getResourceAccumulatorFactory());
     }
 
     @Test

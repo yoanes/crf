@@ -60,8 +60,8 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         setResourceResolverCommonParamHolder(new ResourceResolverCommonParamHolder(
                 getMockResourceResolutionWarnLogger(),
                 getDeploymentMetadata(),
-                getResourceAccumulatorFactory(),
-                getMockConfigurationFactory()));
+                getMockConfigurationFactory(),
+                getMockResourceCache()));
     }
 
     /**

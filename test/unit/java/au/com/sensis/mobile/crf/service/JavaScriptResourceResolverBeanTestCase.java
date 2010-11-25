@@ -49,7 +49,8 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         setObjectUnderTest(new JavaScriptResourceResolverBean(
                 getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                getResourcesRootDir(),
+                getResourceAccumulatorFactory(), ABSTRACT_PATH_PACKAGE_KEYWORD,
                 getMockJavaScriptFileFinder()));
     }
 
@@ -59,7 +60,8 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
             final String abstractResourceExtension) {
 
         return new JavaScriptResourceResolverBean(getResourceResolverCommonParamHolder(),
-                abstractResourceExtension, getResourcesRootDir(), getMockResourceCache(),
+                abstractResourceExtension, getResourcesRootDir(),
+                getResourceAccumulatorFactory(),
                 ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
     }
 
@@ -70,11 +72,11 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     resourceResolutionWarnLogger, getDeploymentMetadata(),
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new JavaScriptResourceResolverBean(commonParams,
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache(),
+                getResourcesRootDir(), getResourceAccumulatorFactory(),
                 ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
     }
 
@@ -84,7 +86,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
 
         return new JavaScriptResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(), rootResourcesDir,
-                getMockResourceCache(), ABSTRACT_PATH_PACKAGE_KEYWORD,
+                getResourceAccumulatorFactory(), ABSTRACT_PATH_PACKAGE_KEYWORD,
                 getMockJavaScriptFileFinder());
     }
 
@@ -96,12 +98,12 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     getMockResourceResolutionWarnLogger(), deploymentMetadata,
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new JavaScriptResourceResolverBean(commonParams,
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache(), ABSTRACT_PATH_PACKAGE_KEYWORD,
-                getMockJavaScriptFileFinder());
+                getResourcesRootDir(), getResourceAccumulatorFactory(),
+                ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
     }
 
     /**
@@ -123,7 +125,8 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
             try {
                 new JavaScriptResourceResolverBean(getResourceResolverCommonParamHolder(),
                         getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                        getResourcesRootDir(), getMockResourceCache(), testValue,
+                        getResourcesRootDir(),
+                        getResourceAccumulatorFactory(), testValue,
                         getMockJavaScriptFileFinder());
 
                 Assert.fail("IllegalArgumentException expected");
@@ -143,7 +146,7 @@ public class JavaScriptResourceResolverBeanTestCase extends AbstractResourceReso
         try {
             new JavaScriptResourceResolverBean(getResourceResolverCommonParamHolder(),
                     getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                    getResourcesRootDir(), getMockResourceCache(),
+                    getResourcesRootDir(), getResourceAccumulatorFactory(),
                     ABSTRACT_PATH_PACKAGE_KEYWORD, null);
 
             Assert.fail("IllegalArgumentException expected");

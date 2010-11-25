@@ -12,9 +12,6 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
-import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
-import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
-import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -52,11 +49,10 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      */
     public AbstractResourceResolver(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension,
-            final File rootResourcesDir, final ResourceCache resourceCache) {
+            final File rootResourcesDir) {
 
         validateAbstractResourceExtension(abstractResourceExtension);
         validateRootResourcesDir(rootResourcesDir);
@@ -69,7 +65,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             prefixWithLeadingDotIfRequired(abstractResourceExtension);
         this.rootResourcesDir = rootResourcesDir;
 
-        this.resourceCache = resourceCache;
+        resourceCache = commonParams.getResourceCache();
 
     }
 
@@ -115,7 +111,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @param group in which to look for the given requestedResourcePath
      * @return a list of {@link Resource}s resolved for the given {@link Group}
      */
-    protected List<Resource> resolveForGroup(final String requestedResourcePath,
+    protected final List<Resource> resolveForGroup(final String requestedResourcePath,
             final Group group) {
 
         debugLogAttemptingResolution(requestedResourcePath);
@@ -171,8 +167,6 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *         {@link #getRootResourceDir()}.
      */
     protected final boolean exists(final String newResourcePath) {
-        // TODO: possibly cache the result since we are accessing the file
-        // system?
         return FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(
                 getRootResourcesDir(), newResourcePath);
     }
@@ -419,39 +413,6 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         }
     }
 
-    /**
-     * Add the Resources to the {@link ResourceResolutionTree} for the current
-     * thread.
-     *
-     * @param resources
-     *            Resources to add to the {@link ResourceResolutionTree} for the
-     *            current thread.
-     */
-    protected void addResourcesToResourceResolutionTreeIfEnabled(
-            final List<Resource> resources) {
-        if (getResourceResolutionTree().isEnabled()) {
-            for (final Resource currResource : resources) {
-                addResourcesToResourceResolutionTreeIfEnabled(currResource);
-            }
-        }
-    }
-
-    /**
-     * Add the Resource to the {@link ResourceResolutionTree} for the current
-     * thread.
-     *
-     * @param resource
-     *            Resource to add to the {@link ResourceResolutionTree} for the
-     *            current thread.
-     */
-    protected final void addResourcesToResourceResolutionTreeIfEnabled(final Resource resource) {
-        getResourceResolutionTree().addChildToCurrentNode(new ResourceTreeNodeBean(resource));
-    }
-
-    private ResourceResolutionTree getResourceResolutionTree() {
-        return ResourceResolutionTreeHolder.getResourceResolutionTree();
-    }
-
     private DeploymentMetadata getDeploymentMetadata() {
         return deploymentMetadata;
     }
@@ -474,14 +435,13 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @return Results from cache if found, otherwise output of
      *         {@link #resolveForGroup(String, Group)}.
      */
-    protected List<Resource> resolveForGroupPossiblyFromCache(final String requestedResourcePath,
-            final Group currGroup) {
+    protected List<Resource> resolveForGroupPossiblyFromCache(
+            final String requestedResourcePath, final Group currGroup) {
         final ResourceCacheKeyBean key = new ResourceCacheKeyBean(requestedResourcePath, currGroup);
         if (getResourceCache().contains(key)) {
             debugLogResourcesFoundInCache();
 
-            final Resource[] cachedResources = getResourceCache().get(key);
-            addResourcesToResourceResolutionTreeIfEnabled(Arrays.asList(cachedResources));
+            final Resource[] cachedResources = getResourcesFromCache(key);
             return Arrays.asList(cachedResources);
         } else {
             debugLogResourcesNotFoundInCache();
@@ -491,6 +451,15 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             getResourceCache().put(key, resolvedResources.toArray(new Resource[] {}));
             return resolvedResources;
         }
+    }
+
+    /**
+     * @param key Key to look up in the cache.
+     * @return Resources from the cache.
+     */
+    protected Resource[] getResourcesFromCache(final ResourceCacheKey key) {
+        final Resource[] cachedResources = getResourceCache().get(key);
+        return cachedResources;
     }
 
     private void debugLogResourcesFoundInCache() {

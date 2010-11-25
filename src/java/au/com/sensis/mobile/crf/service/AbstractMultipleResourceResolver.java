@@ -20,28 +20,41 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
      * Constructor.
      *
      * @param commonParams
-     *            Holds the common parameters used in constructing all {@link ResourceResolver}s.
+     *            Holds the common parameters used in constructing all
+     *            {@link ResourceResolver}s.
      * @param abstractResourceExtension
      *            Extension of resources (eg. "css" or "crf") that this class
      *            knows how to resolve.
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
+     * @param resourceAccumulatorFactory
+     *            Provides a {@link ResourceAccumulator} for this
+     *            {@link ResourceResolver}.
      */
     public AbstractMultipleResourceResolver(final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension, final File rootResourcesDir,
-            final ResourceCache resourceCache) {
-        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
+            final ResourceAccumulatorFactory resourceAccumulatorFactory) {
+        super(commonParams, abstractResourceExtension, rootResourcesDir);
 
-        resourceAccumulatorFactory = commonParams.getResourceAccumulatorFactory();
+        validateResourceAccumulatorFactory(resourceAccumulatorFactory);
+
+        this.resourceAccumulatorFactory = resourceAccumulatorFactory;
+    }
+
+    private void validateResourceAccumulatorFactory(
+            final ResourceAccumulatorFactory resourceAccumulatorFactory) {
+
+        if (resourceAccumulatorFactory == null) {
+            throw new IllegalArgumentException("resourceAccumulatorFactory must not be null");
+        }
     }
 
     /**
      * @return the {@link ResourceAccumulatorFactory} from which to obtain a
      *         {@link ResourceAccumulator} implementation.
      */
-    protected ResourceAccumulatorFactory getResourceAccumulatorFactory() {
+    protected final ResourceAccumulatorFactory getResourceAccumulatorFactory() {
         return resourceAccumulatorFactory;
     }
 
@@ -75,6 +88,7 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
 
         }
 
+        // TODO: results of accumulate method need to be added to the cache.
         return accumulator.getResources();
     }
 
@@ -95,13 +109,4 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
      * @return Returns a new {@link ResourceAccumulator} for this {@link ResourceResolver}.
      */
     protected abstract ResourceAccumulator createResourceAccumulator();
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void addResourcesToResourceResolutionTreeIfEnabled(final List<Resource> resources) {
-        // This is done in the accumulator.
-        // TODO: refactor to eliminate this really ugly override.
-    }
 }

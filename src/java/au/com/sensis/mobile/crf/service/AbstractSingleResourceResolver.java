@@ -26,12 +26,10 @@ public abstract class AbstractSingleResourceResolver extends AbstractResourceRes
      * @param rootResourcesDir
      *            Root directory where the real resources that this resolver
      *            handles are stored.
-     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      */
     public AbstractSingleResourceResolver(final ResourceResolverCommonParamHolder commonParams,
-            final String abstractResourceExtension, final File rootResourcesDir,
-            final ResourceCache resourceCache) {
-        super(commonParams, abstractResourceExtension, rootResourcesDir, resourceCache);
+            final String abstractResourceExtension, final File rootResourcesDir) {
+        super(commonParams, abstractResourceExtension, rootResourcesDir);
     }
 
     /**
@@ -59,6 +57,7 @@ public abstract class AbstractSingleResourceResolver extends AbstractResourceRes
             final List<Resource> resolvedResources =
                     resolveForGroupPossiblyFromCache(requestedResourcePath, currGroup);
             if (!resolvedResources.isEmpty()) {
+                // Return immediately once a resource is found.
                 return resolvedResources;
             }
 

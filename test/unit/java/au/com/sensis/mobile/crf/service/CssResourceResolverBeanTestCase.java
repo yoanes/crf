@@ -33,7 +33,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         setObjectUnderTest(new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache()));
+                getResourcesRootDir(), getResourceAccumulatorFactory()));
     }
 
     // Override Abstract test methods //
@@ -44,7 +44,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension,
-                getResourcesRootDir(), getMockResourceCache());
+                getResourcesRootDir(), getResourceAccumulatorFactory());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(), rootResourcesDir,
-                getMockResourceCache());
+                getResourceAccumulatorFactory());
     }
 
     @Override
@@ -62,11 +62,11 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     resourceResolutionWarnLogger, getDeploymentMetadata(),
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new CssResourceResolverBean(commonParams,
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache());
+                getResourcesRootDir(), getResourceAccumulatorFactory());
     }
 
     @Override
@@ -76,11 +76,11 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
         final ResourceResolverCommonParamHolder commonParams =
             new ResourceResolverCommonParamHolder(
                     getMockResourceResolutionWarnLogger(), deploymentMetadata,
-                    getResourceAccumulatorFactory(), getMockConfigurationFactory());
+                    getMockConfigurationFactory(), getMockResourceCache());
 
         return new CssResourceResolverBean(commonParams,
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getMockResourceCache());
+                getResourcesRootDir(), getResourceAccumulatorFactory());
     }
 
     // Tests //

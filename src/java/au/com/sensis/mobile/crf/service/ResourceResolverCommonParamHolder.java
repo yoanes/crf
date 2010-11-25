@@ -16,11 +16,8 @@ public class ResourceResolverCommonParamHolder {
 
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
     private final DeploymentMetadata deploymentMetadata;
-
-    // TODO: refactor ResourceResolutionWarnLogger out of here since only
-    // AbstractMultipleResourceResolver uses it now.
-    private final ResourceAccumulatorFactory resourceAccumulatorFactory;
     private final ConfigurationFactory configurationFactory;
+    private final ResourceCache resourceCache;
 
     /**
      * Constructs a CommonResourceResolverParamHolder with the common parameters required
@@ -29,36 +26,33 @@ public class ResourceResolverCommonParamHolder {
      * @param resourceResolutionWarnLogger
      *            {@link ResourceResolutionWarnLogger} to use to log warnings.
      * @param deploymentMetadata {@link DeploymentMetadata} of the deployed app.
-     * @param resourceAccumulatorFactory
-     *            Provides a {@link ResourceAccumulator} for this {@link ResourceResolver}.
      * @param configurationFactory
      *            For accessing the {@link au.com.sensis.mobile.crf.config.UiConfiguration}.
+     * @param resourceCache {@link ResourceCache} for caching {@link Resource}s.
      */
     public ResourceResolverCommonParamHolder(
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
             final DeploymentMetadata deploymentMetadata,
-            final ResourceAccumulatorFactory resourceAccumulatorFactory,
-            final ConfigurationFactory configurationFactory) {
+            final ConfigurationFactory configurationFactory,
+            final ResourceCache resourceCache) {
 
         validateResourceResolutionWarnLogger(resourceResolutionWarnLogger);
         validateDeploymentMetadata(deploymentMetadata);
-        validateResourceAccumulatorFactory(resourceAccumulatorFactory);
         validateConfigurationFactory(configurationFactory);
+        validateResourceCache(resourceCache);
 
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
         this.deploymentMetadata = deploymentMetadata;
-        this.resourceAccumulatorFactory = resourceAccumulatorFactory;
         this.configurationFactory = configurationFactory;
+        this.resourceCache = resourceCache;
     }
 
-    private void validateResourceAccumulatorFactory(
-            final ResourceAccumulatorFactory resourceAccumulatorFactory) {
+    private void validateResourceCache(final ResourceCache resourceCache) {
 
-        if (resourceAccumulatorFactory == null) {
-            throw new IllegalArgumentException("resourceAccumulatorFactory must not be null");
+        if (resourceCache == null) {
+            throw new IllegalArgumentException("resourceCache must not be null");
         }
     }
-
     private void validateConfigurationFactory(final ConfigurationFactory configurationFactory) {
 
         if (configurationFactory == null) {
@@ -93,18 +87,17 @@ public class ResourceResolverCommonParamHolder {
     }
 
     /**
-     * @return the resourceAccumulatorFactory
-     */
-    public ResourceAccumulatorFactory getResourceAccumulatorFactory() {
-
-        return resourceAccumulatorFactory;
-    }
-
-    /**
      * @return the configurationFactory
      */
     public ConfigurationFactory getConfigurationFactory() {
 
         return configurationFactory;
+    }
+
+    /**
+     * @return the resourceCache
+     */
+    public ResourceCache getResourceCache() {
+        return resourceCache;
     }
 }
