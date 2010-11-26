@@ -12,11 +12,7 @@ CacheManager Configuration
     <cacheManagerEventListenerFactory class="" properties=""/>
 
     <!-- 
-      - Cache for ContentRenderingFramework to programatically create the cache of 
-      - ([abstract resource path, group], resources) pairs.
-      - This amounts to a size limited in memory map that will evict items if the limit is 
-      - reached. The limit is based on a wild estimate of around 300 unique abstract resource paths
-      - and an average of 15 groups per path. 
+      - No programatic caches used at the moment. So effectively unset the defaultCache. 
       -->
     <defaultCache
            maxElementsInMemory="0"
@@ -24,7 +20,13 @@ CacheManager Configuration
            overflowToDisk="false"
            memoryStoreEvictionPolicy="LRU">
     </defaultCache>
-    
+
+    <!-- 
+      - Cache for ([abstract resource path, group], resources) pairs.
+      - This amounts to a size limited in memory map that will evict items if the limit is 
+      - reached. The limit is based on a wild estimate of around 300 unique abstract resource paths
+      - and an average of 15 groups per path. 
+      -->
     <cache
            name="resourcesCache"
            maxElementsInMemory="5000"

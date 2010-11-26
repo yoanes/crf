@@ -13,10 +13,7 @@ CacheManager Configuration
     <cacheManagerEventListenerFactory class="" properties=""/>
 
     <!-- 
-      - Cache for ContentRenderingFramework to programatically create the cache of 
-      - ([userAgent, UIConfiguration configPath], groups) pairs.
-      - This amounts to a size limited in memory map that will evict items if the limit is 
-      - reached. The limit is based on a wild estimate of 10,000 user agents. 
+      - No programatic caches used at the moment. So effectively unset the defaultCache. 
       -->
     <defaultCache
            maxElementsInMemory="0"
@@ -25,6 +22,11 @@ CacheManager Configuration
            memoryStoreEvictionPolicy="LRU">
     </defaultCache>
     
+    <!-- 
+      - Cache for ([userAgent, UIConfiguration configPath], groups) pairs.
+      - This amounts to a size limited in memory map that will evict items if the limit is 
+      - reached. The limit is based on a wild estimate of 10,000 user agents. 
+      -->
     <cache
            name="groupsCache"
            maxElementsInMemory="10000"
