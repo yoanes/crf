@@ -8,7 +8,9 @@ package au.com.sensis.mobile.crf.config;
 public interface GroupsCacheFactory {
 
     /**
-     * @return new {@link GroupsCache} instance.
+     * @return {@link GroupsCache} instance. Whether this factory creates a
+     *         singleton cache or a new one per invocation is implementation
+     *         dependent.
      */
     GroupsCache createGroupsCache();
 }

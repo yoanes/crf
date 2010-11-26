@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+       
+<!--
+CacheManager Configuration
+==========================
+-->   
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false" monitoring="off"
+         dynamicConfig="true" >
+
+    <cacheManagerEventListenerFactory class="" properties=""/>
+
+    <!-- 
+      - Cache for ContentRenderingFramework to programatically create the cache of 
+      - ([abstract resource path, group], resources) pairs.
+      - This amounts to a size limited in memory map that will evict items if the limit is 
+      - reached. The limit is based on a wild estimate of around 300 unique abstract resource paths
+      - and an average of 15 groups per path. 
+      -->
+    <defaultCache
+           maxElementsInMemory="0"
+           eternal="false"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU">
+    </defaultCache>
+    
+    <cache
+           name="resourcesCache"
+           maxElementsInMemory="5000"
+           eternal="true"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+
+</ehcache>
+

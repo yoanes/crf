@@ -66,6 +66,9 @@
         <!-- not sure why - seems a weird place for it -->
         <dependency org="taglibs" name="standard" rev="1.1.2" conf="default"/>        
         
+        <!-- ehcache -->
+        <dependency org="org.ehcache" name="ehcache-core" rev="2.3.0" conf="default"/>        
+        
         <!-- MCS -->
         <dependency org="com.volantis" name="com.volantis.mcs.servlet" rev="5.1.2" conf="showcase->default"/>
         

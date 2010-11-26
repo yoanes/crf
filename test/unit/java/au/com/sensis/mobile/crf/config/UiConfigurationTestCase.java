@@ -21,6 +21,7 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
 
     private static final String USER_AGENT = "myUserAgent";
+    private static final String CONFIG_PATH = "component/map";
 
     private UiConfiguration objectUnderTest;
     private Groups mockGroups;
@@ -29,6 +30,7 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     private GroupsCache mockGroupsCache;
     private List<Group> groups;
     private final GroupTestData groupTestData = new GroupTestData();
+    private GroupsCacheKey groupsCacheKey;
 
     /**
      * Setup test data.
@@ -39,12 +41,14 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     @Before
     public void setUp() throws Exception {
         setObjectUnderTest(new UiConfiguration());
-        getObjectUnderTest().setConfigPath("component/map");
+        getObjectUnderTest().setConfigPath(CONFIG_PATH);
         getObjectUnderTest().setGroups(getMockGroups());
         getObjectUnderTest().setMatchingGroupsCache(getMockGroupsCache());
 
         setGroups(Arrays.asList(getGroupTestData().createAppleGroup(), getGroupTestData()
                 .createDefaultGroup()));
+
+        setGroupsCacheKey(new GroupsCacheKeyBean(USER_AGENT, CONFIG_PATH));
     }
 
     @Test
@@ -121,13 +125,13 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
 
         EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
 
-        EasyMock.expect(getMockGroupsCache().contains(USER_AGENT)).andReturn(Boolean.FALSE)
+        EasyMock.expect(getMockGroupsCache().contains(getGroupsCacheKey())).andReturn(Boolean.FALSE)
                 .atLeastOnce();
 
         EasyMock.expect(getMockGroups().matchingGroups(getMockDevice())).andReturn(
                 getGroups());
 
-        getMockGroupsCache().put(EasyMock.eq(USER_AGENT),
+        getMockGroupsCache().put(EasyMock.eq(getGroupsCacheKey()),
                 EasyMock.aryEq(getGroups().toArray(new Group[] {})));
 
         replay();
@@ -149,10 +153,10 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
 
         EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
 
-        EasyMock.expect(getMockGroupsCache().contains(USER_AGENT)).andReturn(Boolean.TRUE)
+        EasyMock.expect(getMockGroupsCache().contains(getGroupsCacheKey())).andReturn(Boolean.TRUE)
                 .atLeastOnce();
 
-        EasyMock.expect(getMockGroupsCache().get(USER_AGENT)).andReturn(
+        EasyMock.expect(getMockGroupsCache().get(getGroupsCacheKey())).andReturn(
                 getGroups().toArray(new Group[] {}));
 
         replay();
@@ -259,5 +263,19 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
      */
     private GroupTestData getGroupTestData() {
         return groupTestData;
+    }
+
+    /**
+     * @return the groupsCacheKey
+     */
+    private GroupsCacheKey getGroupsCacheKey() {
+        return groupsCacheKey;
+    }
+
+    /**
+     * @param groupsCacheKey the groupsCacheKey to set
+     */
+    private void setGroupsCacheKey(final GroupsCacheKey groupsCacheKey) {
+        this.groupsCacheKey = groupsCacheKey;
     }
 }

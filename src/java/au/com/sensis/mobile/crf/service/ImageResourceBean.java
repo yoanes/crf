@@ -15,6 +15,8 @@ import au.com.sensis.mobile.crf.config.Group;
  */
 public class ImageResourceBean extends ResourceBean {
 
+    private static final long serialVersionUID = 1L;
+
     private int imageWidth;
     private int imageHeight;
 

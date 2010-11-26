@@ -17,6 +17,8 @@ import au.com.sensis.mobile.crf.config.Group;
  */
 public class ResourceBean implements Resource {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Separator character expected to be used in {@link #getOriginalPath()}
      * and {@link #getNewFile()}.

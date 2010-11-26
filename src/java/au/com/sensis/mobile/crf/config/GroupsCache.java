@@ -8,6 +8,6 @@ import au.com.sensis.mobile.crf.util.Cache;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public interface GroupsCache extends Cache<String, Group> {
+public interface GroupsCache extends Cache<GroupsCacheKey, Group> {
 
 }

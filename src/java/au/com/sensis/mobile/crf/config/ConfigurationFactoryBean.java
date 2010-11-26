@@ -75,7 +75,8 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
      * @param resourceResolutionWarnLogger {@link ResourceResolutionWarnLogger}.
      * @param configurationPaths {@link ConfigurationPaths}.
      * @param groupsCacheFactory {@link GroupsCacheFactory} to use to create caches to be injected
-     *            into the loaded {@link UiConfiguration} objects.
+     *            into the loaded {@link UiConfiguration} objects. Whether this factory creates
+     *            a singleton cache or a new one per invocation is implementation dependent.
      */
     // TODO: validate args.
     public ConfigurationFactoryBean(final DeploymentMetadata deploymentMetadata,

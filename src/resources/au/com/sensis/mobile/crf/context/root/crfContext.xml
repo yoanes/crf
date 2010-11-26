@@ -171,15 +171,42 @@
             </bean>
         </constructor-arg>
         <constructor-arg>
-            <bean class="au.com.sensis.mobile.crf.config.SimpleGroupsCacheFactoryBean">
-                <constructor-arg value="@{crf.env.cache.resources}" />
+            <bean class="au.com.sensis.mobile.crf.config.SingletonEhcacheGroupsCacheFactoryBean">
+                <constructor-arg ref="crf.groupsCache" />
             </bean>
         </constructor-arg>
     </bean>
     
-    <bean id="crf.resourceCache" class="au.com.sensis.mobile.crf.service.SimpleResourceCacheBean">
+    <bean id="crf.groupsCache" class="au.com.sensis.mobile.crf.config.EhcacheGroupsCacheBean">
+        <constructor-arg ref="crf.groupsEhcache" />
         <constructor-arg value="@{crf.env.cache.resources}" />
     </bean>
+    
+    <bean id="crf.groupsEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager">
+            <bean id="crf.groupsEhcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+                <property name="configLocation" value="classpath:/au/com/sensis/mobile/crf/config/groups-ehcache.xml" />
+                <property name="cacheManagerName" value="crf.groupsEhcacheManager" />
+            </bean>
+        </property>
+        <property name="cacheName" value="groupsCache" />
+    </bean>
+    
+    <bean id="crf.resourceCache" class="au.com.sensis.mobile.crf.service.EhcacheResourceCacheBean">
+        <constructor-arg ref="crf.resourcesEhcache" />
+        <constructor-arg value="@{crf.env.cache.resources}" />
+    </bean>
+    
+    <bean id="crf.resourcesEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager">
+    
+            <bean id="crf.resourcesEhcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+                <property name="configLocation" value="classpath:/au/com/sensis/mobile/crf/config/resources-ehcache.xml" />
+                <property name="cacheManagerName" value="crf.resourcesEhcacheManager" />
+            </bean>
+        </property>
+        <property name="cacheName" value="resourcesCache" />
+    </bean> 
     
     <bean id="crf.resourceResolverDebugFilter" class="au.com.sensis.mobile.crf.debug.ResourceResolverDebugFilter">
         <property name="enabled" value="@{crf.env.debug.resource.graph}" />

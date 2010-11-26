@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.config;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
@@ -14,9 +15,21 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 public class SimpleGroupsCacheBeanTestCase extends AbstractJUnit4TestCase {
 
     private static final String USER_AGENT = "myUserAgent";
+    private static final String CONFIG_PATH = "component/map";
 
     private SimpleGroupsCacheBean objectUnderTest;
     private final GroupTestData groupTestData = new GroupTestData();
+    private GroupsCacheKey groupsCacheKey;
+
+    /**
+     * Setup test data.
+     *
+     * @throws Exception Thrown if any error occurs.
+     */
+    @Before
+    public void setUp() throws Exception {
+        setGroupsCacheKey(new GroupsCacheKeyBean(USER_AGENT, CONFIG_PATH));
+    }
 
     @Test
     public void testIsEnabledWhenTrue() throws Throwable {
@@ -35,10 +48,11 @@ public class SimpleGroupsCacheBeanTestCase extends AbstractJUnit4TestCase {
     public void testContainsWhenTrueAndCacheEnabled() throws Throwable {
         setObjectUnderTest(createEnabledSimpleGroupsCacheBean());
 
-        getObjectUnderTest().put(USER_AGENT, new Group [] {getGroupTestData().createAppleGroup()});
+        getObjectUnderTest().put(getGroupsCacheKey(),
+                new Group[] { getGroupTestData().createAppleGroup() });
 
-        Assert.assertTrue("contains should be true", getObjectUnderTest()
-                .contains(USER_AGENT));
+        Assert.assertTrue("contains should be true", getObjectUnderTest().contains(
+                getGroupsCacheKey()));
 
     }
 
@@ -47,10 +61,10 @@ public class SimpleGroupsCacheBeanTestCase extends AbstractJUnit4TestCase {
         setObjectUnderTest(createEnabledSimpleGroupsCacheBean());
 
         final Group[] expectedGroups = new Group [] {getGroupTestData().createAppleGroup()};
-        getObjectUnderTest().put(USER_AGENT, expectedGroups);
+        getObjectUnderTest().put(getGroupsCacheKey(), expectedGroups);
 
         Assert.assertArrayEquals("get returned wrong groups", expectedGroups,
-                getObjectUnderTest().get(USER_AGENT));
+                getObjectUnderTest().get(getGroupsCacheKey()));
 
     }
 
@@ -59,17 +73,17 @@ public class SimpleGroupsCacheBeanTestCase extends AbstractJUnit4TestCase {
         setObjectUnderTest(createDisabledSimpleGroupsCacheBean());
 
         final Group[] groups = new Group [] {getGroupTestData().createAppleGroup()};
-        getObjectUnderTest().put(USER_AGENT, groups);
+        getObjectUnderTest().put(getGroupsCacheKey(), groups);
 
         Assert.assertArrayEquals("get returned wrong groups", null,
-                getObjectUnderTest().get(USER_AGENT));
+                getObjectUnderTest().get(getGroupsCacheKey()));
 
     }
 
     @Test
     public void testContainsWhenFalseAndCacheEnabled() throws Throwable {
         Assert.assertFalse("contains should be false", createEnabledSimpleGroupsCacheBean()
-                .contains(USER_AGENT));
+                .contains(getGroupsCacheKey()));
 
     }
 
@@ -77,7 +91,7 @@ public class SimpleGroupsCacheBeanTestCase extends AbstractJUnit4TestCase {
     public void testContainsWhenCacheDisabled() throws Throwable {
 
         Assert.assertFalse("contains should be false", createDisabledSimpleGroupsCacheBean()
-                .contains(USER_AGENT));
+                .contains(getGroupsCacheKey()));
 
     }
 
@@ -108,5 +122,19 @@ public class SimpleGroupsCacheBeanTestCase extends AbstractJUnit4TestCase {
      */
     private GroupTestData getGroupTestData() {
         return groupTestData;
+    }
+
+    /**
+     * @return the groupsCacheKey
+     */
+    private GroupsCacheKey getGroupsCacheKey() {
+        return groupsCacheKey;
+    }
+
+    /**
+     * @param groupsCacheKey the groupsCacheKey to set
+     */
+    private void setGroupsCacheKey(final GroupsCacheKey groupsCacheKey) {
+        this.groupsCacheKey = groupsCacheKey;
     }
 }

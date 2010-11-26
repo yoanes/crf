@@ -8,7 +8,7 @@ import au.com.sensis.mobile.crf.util.ConcurrentMapCacheBean;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class SimpleGroupsCacheBean extends ConcurrentMapCacheBean<String, Group> implements
+public class SimpleGroupsCacheBean extends ConcurrentMapCacheBean<GroupsCacheKey, Group> implements
         GroupsCache {
 
     /**

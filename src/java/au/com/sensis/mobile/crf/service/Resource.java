@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.io.Serializable;
 
 import au.com.sensis.mobile.crf.config.Group;
 
@@ -10,7 +11,7 @@ import au.com.sensis.mobile.crf.config.Group;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public interface Resource {
+public interface Resource extends Serializable {
 
     /**
      * @return true if {@link #getNewPath()} ends with the special

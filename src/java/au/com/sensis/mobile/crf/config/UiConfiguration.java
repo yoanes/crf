@@ -139,18 +139,23 @@ public class UiConfiguration {
      */
     public Iterator<Group> matchingGroupIterator(final Device device) {
 
-        if (getMatchingGroupsCache().contains(device.getUserAgent())) {
+        final GroupsCacheKey groupsCacheKey = createGroupsCacheKey(device);
+        if (getMatchingGroupsCache().contains(groupsCacheKey)) {
             debugLogGroupsFoundInCache();
 
-            return Arrays.asList(getCachedGroups(device)).iterator();
+            return Arrays.asList(getCachedGroups(groupsCacheKey)).iterator();
         } else {
             debugLogGroupsNotFoundInCache();
 
             final List<Group> matchingGroups = getGroups().matchingGroups(device);
-            getMatchingGroupsCache().put(device.getUserAgent(),
+            getMatchingGroupsCache().put(groupsCacheKey,
                     matchingGroups.toArray(new Group[] {}));
             return matchingGroups.iterator();
         }
+    }
+
+    private GroupsCacheKey createGroupsCacheKey(final Device device) {
+        return new GroupsCacheKeyBean(device.getUserAgent(), getConfigPath());
     }
 
     private void debugLogGroupsFoundInCache() {
@@ -165,8 +170,8 @@ public class UiConfiguration {
         }
     }
 
-    private Group[] getCachedGroups(final Device device) {
-        return getMatchingGroupsCache().get(device.getUserAgent());
+    private Group[] getCachedGroups(final GroupsCacheKey groupsCacheKey) {
+        return getMatchingGroupsCache().get(groupsCacheKey);
     }
 
     /**

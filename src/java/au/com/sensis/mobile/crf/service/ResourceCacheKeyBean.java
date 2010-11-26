@@ -7,7 +7,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import au.com.sensis.mobile.crf.config.Group;
 
 /**
- * Default {@link Key} implementation.
+ * Default {@link ResourceCacheKey} implementation.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
