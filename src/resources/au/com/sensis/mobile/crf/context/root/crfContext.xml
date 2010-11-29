@@ -181,6 +181,7 @@
     <bean id="crf.groupsCache" class="au.com.sensis.mobile.crf.config.EhcacheGroupsCacheBean">
         <constructor-arg ref="crf.groupsEhcache" />
         <constructor-arg value="@{crf.env.cache.resources}" />
+        <property name="enableStatistics" value="true" />
     </bean>
     
     <bean id="crf.groupsEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
@@ -196,6 +197,7 @@
     <bean id="crf.resourceCache" class="au.com.sensis.mobile.crf.service.EhcacheResourceCacheBean">
         <constructor-arg ref="crf.resourcesEhcache" />
         <constructor-arg value="@{crf.env.cache.resources}" />
+        <property name="enableStatistics" value="true" />
     </bean>
     
     <bean id="crf.resourcesEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
@@ -209,23 +211,25 @@
     </bean>
 
     <bean id="crf.groupsEhcacheManagerMBeanRegister" 
-        class="au.com.sensis.mobile.crf.util.EhcacheManagementServiceInvokerBean">
-        <constructor-arg ref="crf.groupsEhcacheManager" />
-        <constructor-arg ref="crf.mbeanServer" />
-        <property name="registerCacheConfigurations" value="true"/>
-        <property name="registerCacheManager" value="true"/>
-        <property name="registerCaches" value="true"/>
-        <property name="registerCacheStatistics" value="true"/>
+        class="net.sf.ehcache.management.ManagementService" init-method="init">
+        <constructor-arg index="0" ref="crf.groupsEhcacheManager" />
+        <constructor-arg index="1" ref="crf.mbeanServer" />
+        <constructor-arg index="2" value="true"/>
+        <constructor-arg index="3" value="true"/>
+        <constructor-arg index="4" value="true"/>
+        <constructor-arg index="5" value="true"/>
+        <constructor-arg index="6" value="true"/>
     </bean>    
     
     <bean id="crf.resourcesEhcacheManagerMBeanRegister" 
-        class="au.com.sensis.mobile.crf.util.EhcacheManagementServiceInvokerBean">
-        <constructor-arg ref="crf.resourcesEhcacheManager" />
-        <constructor-arg ref="crf.mbeanServer" />
-        <property name="registerCacheConfigurations" value="true"/>
-        <property name="registerCacheManager" value="true"/>
-        <property name="registerCaches" value="true"/>
-        <property name="registerCacheStatistics" value="true"/>
+        class="net.sf.ehcache.management.ManagementService" init-method="init">
+        <constructor-arg index="0" ref="crf.resourcesEhcacheManager" />
+        <constructor-arg index="1" ref="crf.mbeanServer" />
+        <constructor-arg index="2" value="true"/>
+        <constructor-arg index="3" value="true"/>
+        <constructor-arg index="4" value="true"/>
+        <constructor-arg index="5" value="true"/>
+        <constructor-arg index="6" value="true"/>
     </bean>    
 
     <bean id="crf.mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean">

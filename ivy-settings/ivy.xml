@@ -148,5 +148,14 @@
 
         <!-- Testbed depedency. -->
         <dependency org="com.sensis" name="wl-webapp-testbed" rev="1.0.9" conf="showcase->default"/>        
+        
+        <!-- ================================================================================ -->
+        <!-- Exclusions. -->
+        
+        <!-- 
+          - Exclude old versions of ehcache which were from a different org and had a different 
+          - module name. 
+          -->
+        <exclude org="ehcache" module="ehcache" />
     </dependencies>
 </ivy-module>

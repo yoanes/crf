@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.Statistics;
 
 import org.apache.log4j.Logger;
 
@@ -24,6 +25,36 @@ public class EhcacheCacheBean<K extends Serializable, V extends Serializable> im
 
     private boolean cacheEnabled = true;
     private final Ehcache ehcache;
+
+    /**
+     * Wrapper around static final fields in {@link Statistics}.
+     */
+    public static enum StatisticsAccuracy {
+        /**
+         * @see Statistics#STATISTICS_ACCURACY_NONE
+         */
+        NONE (Statistics.STATISTICS_ACCURACY_NONE),
+
+        /**
+         * @see Statistics#STATISTICS_ACCURACY_BEST_EFFORT
+         */
+        BEST_EFFORT(Statistics.STATISTICS_ACCURACY_BEST_EFFORT),
+
+        /**
+         * @see Statistics#STATISTICS_ACCURACY_GUARANTEED
+         */
+        GUARANTEED(Statistics.STATISTICS_ACCURACY_GUARANTEED);
+
+        private int accuracy;
+
+        private StatisticsAccuracy(final int accuracy) {
+            this.accuracy = accuracy;
+        }
+
+        private int getAccuracy() {
+            return accuracy;
+        }
+    }
 
     /**
      * Constructor.
@@ -79,6 +110,25 @@ public class EhcacheCacheBean<K extends Serializable, V extends Serializable> im
         debugLogCacheEnabledState();
 
         return cacheEnabled;
+    }
+
+    /**
+     * @param enableStatistics
+     *            Set whether statistics should be enabled on the cache.
+     *            Defaults to false.
+     */
+    public void setEnableStatistics(final boolean enableStatistics) {
+        getEhcache().setStatisticsEnabled(enableStatistics);
+    }
+
+    /**
+     * @param accuracy
+     *            Sets the accuracy of statistics. Only has an effect if
+     *            {@link #setEnableStatistics(boolean)} was called with true.
+     *            Defaults to the underlying ehcache default.
+     */
+    public void setStatisticsAccuracy(final StatisticsAccuracy accuracy) {
+        getEhcache().setStatisticsAccuracy(accuracy.getAccuracy());
     }
 
     private void debugLogCacheEnabledState() {
