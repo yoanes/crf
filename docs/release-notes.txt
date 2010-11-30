@@ -16,9 +16,17 @@ Jiras:
     - UiConfiguration.matchingGroupIterator now uses a cache.
     
 - CRF-77: Caching - modify to use ehcache 
-    - Caching utilises Ehcache now.
-    - ehcache monitoring MBeans are now registerd with the platform's MBeanServer. 
-      If none is found, a MBeanServer will be created.
+    - Caching of of the following utilises Ehcache now:
+        - (String userAgent, String uiConfigurationPath) -> Group []
+        - (String requestedResourcePath, Group group) -> Resource []
+    - Caching of loaded groups still uses simple hold for memory caching upon loading of group
+      config files (there is no need to change this due to the small memory footprint).
+    - ehcache monitoring MBeans are now registered with the platform's MBeanServer. 
+      If none is found, an MBeanServer will be created.
+    - MBeans GroupsCacheFillerBean and ResourceCacheFillerBean are now registered with the platform 
+      MBeanServer but they are only enabled if the env.cache.resources.fillers.enabled property in 
+      crf-environment.properties.* is true. These MBeans allow you to fill the caches with 
+      arbitrary numbers of elements. Useful for analysing memory consumption during development.   
           
 Now depends on:
 - <dependency org="apache" name="commons-io" rev="1.3" conf="default"/>      
