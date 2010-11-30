@@ -130,6 +130,8 @@
         <!-- Castor. -->
         <dependency org="org.exolab" name="castor-xml" rev="1.1.2.1" conf="default"/>
         
+        <dependency org="com.yahoo" name="yuicompressor" rev="2.4.2" conf="default"/>
+        
         <!-- Testing -->
         <dependency org="junit" name="junit" rev="4.4" conf="test->default"/>
         <dependency org="javax.servlet" name="servlet-api" rev="2.4" conf="test->default"/>
