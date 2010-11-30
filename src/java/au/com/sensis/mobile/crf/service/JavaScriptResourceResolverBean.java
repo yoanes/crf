@@ -107,7 +107,7 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
             throws ResourceResolutionRuntimeException {
 
         if (isPackageRequested(requestedResourcePath)) {
-            return findBundleResources(requestedResourcePath, group);
+            return findPacakgeResources(requestedResourcePath, group);
         } else {
             return super.doResolveForGroup(requestedResourcePath, group);
         }
@@ -122,12 +122,12 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
                 .getPath(requestedGroupResourcePath));
     }
 
-    private List<Resource> findBundleResources(
+    private List<Resource> findPacakgeResources(
             final String requestedResourcePath, final Group group) {
 
         try {
             final File packageDir = getPackageDir(requestedResourcePath, group);
-            return doFindBundleResources(requestedResourcePath, group, packageDir);
+            return doFindPackageResources(requestedResourcePath, group, packageDir);
         } catch (final IOException e) {
             throw new ResourceResolutionRuntimeException(
                     "Unexpected error when resolving requested resource '"
@@ -135,11 +135,11 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
         }
     }
 
-    private List<Resource> doFindBundleResources(
-            final String requestedResourcePath,
-            final Group group, final File javascriptFilesBaseDir) throws IOException {
+    private List<Resource> doFindPackageResources(
+            final String requestedResourcePath, final Group group,
+            final File javascriptFilesBaseDir) throws IOException {
 
-        debugFindingBundleResourcesIn(javascriptFilesBaseDir);
+        debugFindingPackageResourcesIn(javascriptFilesBaseDir);
 
         final List<Resource> result = new ArrayList<Resource>();
 
@@ -217,9 +217,9 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
         return abstractPathPackageKeyword;
     }
 
-    private void debugFindingBundleResourcesIn(final File javascriptFilesBaseDir) {
+    private void debugFindingPackageResourcesIn(final File javascriptFilesBaseDir) {
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Finding bundle resources in: '" + javascriptFilesBaseDir + "'");
+            getLogger().debug("Finding package resources in: '" + javascriptFilesBaseDir + "'");
         }
     }
 }

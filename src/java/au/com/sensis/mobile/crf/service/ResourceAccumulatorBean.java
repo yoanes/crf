@@ -8,7 +8,8 @@ import java.util.List;
 
 
 /**
- * Accumulates resolved {@link Resource}s, performing any overriding required.
+ * Accumulates all resolved {@link Resource}s, ordering them so that the most-specific is
+ * output last (and thus overrides more generic versions of the same resources).
  *
  * @author Tony Filipe
  */
@@ -16,11 +17,10 @@ public class ResourceAccumulatorBean extends AbstractResourceAccumulatorBean {
 
     /**
      * An initial value for a <code>hashCode</code>, to which is added contributions
-     * from fields. Using a non-zero value decreases collisons of <code>hashCode</code>
+     * from fields. Using a non-zero value decreases collisions of <code>hashCode</code>
      * values.
      */
     private static final int SEED = 21;
-
 
     private final Deque<Resource> allResourcePaths;
 

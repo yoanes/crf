@@ -1,7 +1,7 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
-import au.com.sensis.mobile.crf.service.CssBundleFactory;
+import au.com.sensis.mobile.crf.service.BundleFactory;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
@@ -17,7 +17,7 @@ public class LinkTagDependencies extends TagDependencies {
      */
     public static final String BEAN_NAME = "crf.linkTagDependencies";
 
-    private final CssBundleFactory cssBundleFactory;
+    private final BundleFactory cssBundleFactory;
     /**
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to resolve
@@ -25,7 +25,7 @@ public class LinkTagDependencies extends TagDependencies {
      * @param deploymentMetadata
      *            {@link DeploymentMetadata} of the current deployment.
      * @param cssBundleFactory
-     *            {@link CssBundleFactory} to use to get CSS Bundles.
+     *            {@link BundleFactory} to use to get CSS Bundles.
      * @param clientPathPrefix
      *            Prefix to be used for the final paths that a client (web
      *            browser) will see.
@@ -36,7 +36,7 @@ public class LinkTagDependencies extends TagDependencies {
     public LinkTagDependencies(
             final ResourceResolverEngine resourceResolverEngine,
             final DeploymentMetadata deploymentMetadata,
-            final CssBundleFactory cssBundleFactory,
+            final BundleFactory cssBundleFactory,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         super(resourceResolverEngine, deploymentMetadata, clientPathPrefix,
@@ -46,9 +46,9 @@ public class LinkTagDependencies extends TagDependencies {
     }
 
     /**
-     * @return {@link CssBundleFactory}
+     * @return {@link BundleFactory}
      */
-    public CssBundleFactory getCssBundleFactory() {
+    public BundleFactory getBundleFactory() {
         return cssBundleFactory;
     }
 }

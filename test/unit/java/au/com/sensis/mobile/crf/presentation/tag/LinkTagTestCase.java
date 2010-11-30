@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
-import au.com.sensis.mobile.crf.service.CssBundleFactory;
+import au.com.sensis.mobile.crf.service.BundleFactory;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -44,14 +44,14 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private WebApplicationContext mockWebApplicationContext;
     private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
-    private CssBundleFactory mockCssBundleFactory;
+    private BundleFactory mockCssBundleFactory;
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private LinkTagDependencies linkTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private LinkTagWriter mockLinkTagWriter;
     private LinkTagWriterFactory
-        mockLinkTagWriterFactory;
+    mockLinkTagWriterFactory;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
     /**
@@ -63,8 +63,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     @Before
     public void setUp() throws Exception {
         LinkTagWriterFactory
-                .changeDefaultLinkTagWriterFactorySingleton(
-                        getMockLinkTagWriterFactory());
+        .changeDefaultLinkTagWriterFactorySingleton(
+                getMockLinkTagWriterFactory());
 
         setTagDepedencies(createTagDependencies());
         setObjectUnderTest(new LinkTag());
@@ -96,14 +96,14 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     @After
     public void tearDown() throws Exception {
         LinkTagWriterFactory
-            .restoreDefaultLinkTagWriterFactorySingleton();
+        .restoreDefaultLinkTagWriterFactorySingleton();
     }
 
     private LinkTagDependencies createTagDependencies() {
         return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
                 getDeploymentMetadataTestData()
-                    .createDevDeploymentMetadata(),
+                .createDevDeploymentMetadata(),
                 getMockCssBundleFactory(),
                 getResourcePathTestData().getCssClientPathPrefix(),
                 getMockResolutionWarnLogger());
@@ -127,8 +127,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testDoTagWithInvalidHref() throws Throwable {
         final String[] testHrefs =
-                { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
-                        "  " };
+        { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
+        "  " };
 
         for (final String testHref : testHrefs) {
             try {
@@ -141,7 +141,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testHref: '"
-                                + testHref + "'",
+                        + testHref + "'",
                         "path must not start with '..' or '/'. Was: '" + testHref + "'",
                         e.getMessage());
             }
@@ -174,9 +174,9 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                 .createLinkTagWriter(getMockDevice(),
                         Arrays.asList(createRelDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
-                        getRequestedCssResourcePath(),
-                        getTagDependencies()))
-                .andReturn(getMockLinkTagWriter());
+                                getRequestedCssResourcePath(),
+                                getTagDependencies()))
+                                .andReturn(getMockLinkTagWriter());
     }
 
     private void recordCheckIfLinkTagWriterSeenBefore() {
@@ -226,7 +226,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private void setupExistingSimpleLinkTagWriter() {
         getLinkTagWriterMap().put(getRequestedCssResourcePath(),
                 new LinkTagWriter(getMockDevice(),
-                    null, getRequestedCssResourcePath(), createTagDependencies()));
+                        null, getRequestedCssResourcePath(), createTagDependencies()));
     }
 
     /**
@@ -241,7 +241,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                 getMockPageContext().getAttribute(
                         LinkTag.LINK_WRITER_MAP_ATTRIBUTE_NAME,
                         PageContext.REQUEST_SCOPE)).andReturn(getLinkTagWriterMap())
-                .atLeastOnce();
+                        .atLeastOnce();
     }
 
     /**
@@ -333,7 +333,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
      * @return the mockResourceResolverEngine
      */
     public ResourceResolverEngine
-        getMockResourceResolverEngine() {
+    getMockResourceResolverEngine() {
         return mockResourceResolverEngine;
     }
 
@@ -408,14 +408,14 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the mockCssBundleFactory
      */
-    public CssBundleFactory getMockCssBundleFactory() {
+    public BundleFactory getMockCssBundleFactory() {
         return mockCssBundleFactory;
     }
 
     /**
      * @param mockCssBundleFactory the mockCssBundleFactory to set
      */
-    public void setMockCssBundleFactory(final CssBundleFactory mockCssBundleFactory) {
+    public void setMockCssBundleFactory(final BundleFactory mockCssBundleFactory) {
         this.mockCssBundleFactory = mockCssBundleFactory;
     }
 
@@ -423,7 +423,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
      * @return the mockLinkTagWriter
      */
     public LinkTagWriter
-        getMockLinkTagWriter() {
+    getMockLinkTagWriter() {
         return mockLinkTagWriter;
     }
 
@@ -434,7 +434,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     public void setMockLinkTagWriter(
             final LinkTagWriter mockLinkTagWriter) {
         this.mockLinkTagWriter =
-                mockLinkTagWriter;
+            mockLinkTagWriter;
     }
 
     /**
@@ -456,17 +456,17 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     public DynamicTagAttribute createRelDynamicAttribute() {
         return new DynamicTagAttribute("rel",
-                "stylesheet");
+        "stylesheet");
     }
 
     public DynamicTagAttribute createTypeDynamicAttribute() {
         return new DynamicTagAttribute("type",
-            "text/css");
+        "text/css");
     }
 
     public DynamicTagAttribute createArbitraryDynamicAttribute() {
         return new DynamicTagAttribute("arbitraryName",
-            "arbitraryValue");
+        "arbitraryValue");
     }
 
     /**

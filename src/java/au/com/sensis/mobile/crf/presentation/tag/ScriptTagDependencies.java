@@ -1,9 +1,9 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.service.JavaScriptBundleFactory;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 
 /**
  * Simple encapsulation of the singleton collaborators of a {@link ScriptTag}.
@@ -17,7 +17,7 @@ public class ScriptTagDependencies extends TagDependencies {
      */
     public static final String BEAN_NAME = "crf.scriptTagDependencies";
 
-    private final ScriptBundleFactory scriptBundleFactory;
+    private final JavaScriptBundleFactory scriptBundleFactory;
 
     /**
      * @param resourceResolverEngine
@@ -37,7 +37,7 @@ public class ScriptTagDependencies extends TagDependencies {
     public ScriptTagDependencies(
             final ResourceResolverEngine resourceResolverEngine,
             final DeploymentMetadata deploymentMetadata,
-            final ScriptBundleFactory scriptBundleFactory,
+            final JavaScriptBundleFactory scriptBundleFactory,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         super(resourceResolverEngine, deploymentMetadata, clientPathPrefix,
@@ -49,7 +49,7 @@ public class ScriptTagDependencies extends TagDependencies {
     /**
      * @return {@link ScriptBundleFactory}
      */
-    public ScriptBundleFactory getScriptBundleFactory() {
+    public JavaScriptBundleFactory getBundleFactory() {
         return scriptBundleFactory;
     }
 

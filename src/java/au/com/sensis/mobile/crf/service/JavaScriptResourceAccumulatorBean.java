@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +11,9 @@ import org.apache.log4j.Logger;
 
 
 /**
- * A {@link ResourceAccumulator} that accumulates Javascript {@link Resource}s.
+ * A {@link ResourceAccumulator} that accumulates Javascript {@link Resource}s into a list ordered
+ * from most-generic to most-specific. If bundling is enabled then a single bundle of the
+ * combined ordered {@link Resource}s is output.
  *
  * @author Tony Filipe
  */
@@ -19,10 +22,11 @@ public class JavaScriptResourceAccumulatorBean extends AbstractResourceAccumulat
     private static final Logger LOGGER = Logger.getLogger(JavaScriptResourceAccumulatorBean.class);
     private final String javascriptPackageKeyword;
     private final boolean bundlingEnabled;
+    private JavaScriptBundleFactory bundleFactory;
 
     /**
      * An initial value for a <code>hashCode</code>, to which is added contributions
-     * from fields. Using a non-zero value decreases collisons of <code>hashCode</code>
+     * from fields. Using a non-zero value decreases collisions of <code>hashCode</code>
      * values.
      */
     private static final int SEED = 23;
@@ -35,13 +39,19 @@ public class JavaScriptResourceAccumulatorBean extends AbstractResourceAccumulat
      * Constructs an initialised ResourceAccumulator.
      *
      * @param javascriptPackageKeyword special keyword used to represent a Javascript package.
+     * @param javascriptPackageFilename the name to use for a Javascript package bundle
      * @param bundlingEnabled whether or not Javascript bundling is enabled
      */
     public JavaScriptResourceAccumulatorBean(final String javascriptPackageKeyword,
-            final boolean bundlingEnabled) {
+            final String javascriptPackageFilename, final boolean bundlingEnabled) {
 
         this.javascriptPackageKeyword = javascriptPackageKeyword;
         this.bundlingEnabled = bundlingEnabled;
+
+        if (bundlingEnabled) {
+            bundleFactory = new JavaScriptBundleFactory(javascriptPackageKeyword,
+                    javascriptPackageFilename);
+        }
 
         allResourcePaths = new ArrayDeque<Resource>();
     }
@@ -96,9 +106,15 @@ public class JavaScriptResourceAccumulatorBean extends AbstractResourceAccumulat
     }
 
     /**
-     * @return the combined list of {@link Resource}s.
+     * If bundling is enabled then {@link Resource}s are combined and returned as a single
+     * {@link Resource}.
+     * If bundling is disabled then a list of ordered {@link Resource}s is returned.
+     *
+     * @return a list containing either a single {@link Resource} bundle or the complete set of
+     * ordered {@link Resource}s.
      */
     public List<Resource> getResources() {
+
         final List<Resource> result = doGetResources();
 
         // Note that we add resources to the resource resolution tree
@@ -110,7 +126,23 @@ public class JavaScriptResourceAccumulatorBean extends AbstractResourceAccumulat
     }
 
     private List<Resource> doGetResources() {
-        return new ArrayList<Resource>(allResourcePaths);
+        List<Resource> allResources = new ArrayList<Resource>(allResourcePaths);
+
+        if (isBundlingEnabled() && (allResources.size() > 1)) {
+
+            try {
+                final Resource bundle = getBundleFactory().getBundle(allResources);
+                LOGGER.debug("bundle: " + bundle);
+                allResources = Collections.singletonList(bundle);
+
+            } catch (final IOException e) {
+                // If we can't bundle we continue on and return the unbundled list of resources.
+                LOGGER.error("Couldn't read file to perform bundling, "
+                        + "returning unbundled resources. " + e);
+            }
+        }
+
+        return allResources;
     }
 
     /**
@@ -215,4 +247,13 @@ public class JavaScriptResourceAccumulatorBean extends AbstractResourceAccumulat
     public boolean isBundlingEnabled() {
         return bundlingEnabled;
     }
+
+    /**
+     * @return the bundleFactory
+     */
+    protected JavaScriptBundleFactory getBundleFactory() {
+
+        return bundleFactory;
+    }
+
 }

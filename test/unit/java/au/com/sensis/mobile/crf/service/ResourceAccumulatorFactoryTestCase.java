@@ -15,6 +15,8 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 public class ResourceAccumulatorFactoryTestCase
 extends AbstractJUnit4TestCase {
 
+    private static final String PACKAGE_KEYWORD = "package";
+    private static final String PACKAGE_FILENAME = "package.js";
     private ResourceAccumulatorFactory objectUnderTest;
 
 
@@ -43,7 +45,7 @@ extends AbstractJUnit4TestCase {
     public void testGetJavaScriptResourceAccumulator() throws Throwable {
 
         final ResourceAccumulator accumulator =
-            getObjectUnderTest().getJavaScriptResourceAccumulator("packageKeyword");
+            getObjectUnderTest().getJavaScriptResourceAccumulator(PACKAGE_KEYWORD);
 
         Assert.assertTrue(accumulator instanceof JavaScriptResourceAccumulatorBean);
         Assert.assertFalse(
@@ -56,7 +58,7 @@ extends AbstractJUnit4TestCase {
         setObjectUnderTest(createResourceAccumulatorFactory(true));
 
         final ResourceAccumulator accumulator =
-            getObjectUnderTest().getJavaScriptResourceAccumulator("packageKeyword");
+            getObjectUnderTest().getJavaScriptResourceAccumulator(PACKAGE_KEYWORD);
 
         Assert.assertTrue(accumulator instanceof JavaScriptResourceAccumulatorBean);
         Assert.assertTrue(
@@ -85,7 +87,7 @@ extends AbstractJUnit4TestCase {
 
     private ResourceAccumulatorFactory createResourceAccumulatorFactory(final boolean bundling) {
 
-        return new ResourceAccumulatorFactory(bundling);
+        return new ResourceAccumulatorFactory(bundling, PACKAGE_KEYWORD, PACKAGE_FILENAME);
     }
 
     /**

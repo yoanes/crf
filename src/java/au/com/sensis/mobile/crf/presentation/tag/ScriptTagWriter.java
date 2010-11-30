@@ -10,10 +10,10 @@ import javax.servlet.jsp.tagext.JspFragment;
 import org.apache.commons.lang.StringUtils;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
+import au.com.sensis.mobile.crf.service.BundleFactory;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -97,7 +97,7 @@ public class ScriptTagWriter implements TagWriter {
      */
     @Override
     public void writeTag(final JspWriter jspWriter, final JspFragment jspBody) throws IOException,
-            JspException {
+    JspException {
         if (StringUtils.isNotBlank(getHref())) {
             writeTagWithHref(jspWriter);
         } else {
@@ -144,13 +144,13 @@ public class ScriptTagWriter implements TagWriter {
 
     private void writeLinkTagForBundledResources(final JspWriter jspWriter,
             final List<Resource> allResources)
-            throws IOException {
+    throws IOException {
 
         if (allResources.isEmpty()) {
             logNoResourcesFoundWarning();
         } else {
             final Resource bundleResourcePath =
-                    getScriptBundleFactory().getBundle(allResources);
+                getBundleFactory().getBundle(allResources);
 
             writeSingleLinkTag(jspWriter, bundleResourcePath);
         }
@@ -166,7 +166,7 @@ public class ScriptTagWriter implements TagWriter {
     }
 
     private void writeSingleLinkTag(final JspWriter jspWriter, final Resource resource)
-            throws IOException {
+    throws IOException {
         writeSingleLinkTag(jspWriter, getTagDependencies().getClientPathPrefix()
                 + resource.getNewPath());
     }
@@ -206,8 +206,8 @@ public class ScriptTagWriter implements TagWriter {
 
     private List<Resource> getAllResourcePaths() throws IOException {
         final List<Resource> allResourcePaths =
-                getResourceResolverEngine().getAllResources(getDevice(),
-                        getHref());
+            getResourceResolverEngine().getAllResources(getDevice(),
+                    getHref());
 
         assertNotNull(allResourcePaths);
 
@@ -218,8 +218,8 @@ public class ScriptTagWriter implements TagWriter {
         if (allResourcePaths == null) {
             throw new IllegalStateException(
                     "getResourceResolverEngine.getAllResourcePaths "
-                            + "returned no results for '" + getHref() + ". "
-                            + "This should never happen !!!");
+                    + "returned no results for '" + getHref() + ". "
+                    + "This should never happen !!!");
         }
     }
 
@@ -238,10 +238,10 @@ public class ScriptTagWriter implements TagWriter {
     }
 
     /**
-     * @return the cssBundleFactory
+     * @return the bundleFactory
      */
-    private ScriptBundleFactory getScriptBundleFactory() {
-        return getTagDependencies().getScriptBundleFactory();
+    private BundleFactory getBundleFactory() {
+        return getTagDependencies().getBundleFactory();
     }
 
     private DeploymentMetadata getDeploymentMetadata() {

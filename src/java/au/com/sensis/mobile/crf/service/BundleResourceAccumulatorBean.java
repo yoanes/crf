@@ -1,26 +1,35 @@
 package au.com.sensis.mobile.crf.service;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 
 /**
+ * Resolves multiple matching {@link Resource}s, combining them into a single
+ * {@link Resource} bundle.
+ *
  * @author Tony Filipe
  */
 public class BundleResourceAccumulatorBean extends AbstractResourceAccumulatorBean {
 
+    private static final Logger LOGGER = Logger.getLogger(BundleResourceAccumulatorBean.class);
+
+    private final BundleFactory bundleFactory = new BundleFactory();
     /**
      * An initial value for a <code>hashCode</code>, to which is added contributions
-     * from fields. Using a non-zero value decreases collisons of <code>hashCode</code>
+     * from fields. Using a non-zero value decreases collisions of <code>hashCode</code>
      * values.
      */
     private static final int SEED = 24;
 
 
-    private Deque<Resource> allResourcePaths;
+    private final Deque<Resource> allResourcePaths;
 
 
     /**
@@ -93,19 +102,27 @@ public class BundleResourceAccumulatorBean extends AbstractResourceAccumulatorBe
         return result;
     }
 
+    /**
+     * @return a single {@link Resource} bundle of all the combined resources.
+     */
     private List<Resource> doGetResources() {
 
-        return new ArrayList<Resource>(allResourcePaths);
+        List<Resource> allResources = new ArrayList<Resource>(allResourcePaths);
+
+        if (allResources.size() > 1) {
+            try {
+                final Resource bundle = getBundleFactory().getBundle(allResources);
+
+                allResources = Collections.singletonList(bundle);
+
+            } catch (final IOException e) {
+                // If we can't bundle we continue on and return the unbundled list of resources.
+                LOGGER.error("Couldn't read file to perform bundling, "
+                        + "returning unbundled resources. " + e);
+            }
+        }
+        return allResources;
     }
-
-    /**
-     * @param allResourcePaths  the allResourcePaths to set
-     */
-    protected void setAllResourcePaths(final Deque<Resource> allResourcePaths) {
-
-        this.allResourcePaths = allResourcePaths;
-    }
-
 
     /**
      * {@inheritDoc}
@@ -122,5 +139,14 @@ public class BundleResourceAccumulatorBean extends AbstractResourceAccumulatorBe
             }
         }
     }
+
+    /**
+     * @return the bundleFactory
+     */
+    private BundleFactory getBundleFactory() {
+
+        return bundleFactory;
+    }
+
 
 }

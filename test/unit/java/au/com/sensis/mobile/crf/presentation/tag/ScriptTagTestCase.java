@@ -18,10 +18,10 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
+import au.com.sensis.mobile.crf.service.JavaScriptBundleFactory;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.mobile.crf.service.ScriptBundleFactory;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
@@ -43,14 +43,14 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     private WebApplicationContext mockWebApplicationContext;
     private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
-    private ScriptBundleFactory mockScriptBundleFactory;
+    private JavaScriptBundleFactory mockScriptBundleFactory;
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private ScriptTagDependencies scriptTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private ScriptTagWriter mockScriptTagWriter;
     private ScriptTagWriterFactory
-        mockScriptTagWriterFactory;
+    mockScriptTagWriterFactory;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
     /**
@@ -62,8 +62,8 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     @Before
     public void setUp() throws Exception {
         ScriptTagWriterFactory
-                .changeDefaultScriptTagWriterFactorySingleton(
-                        getMockScriptTagWriterFactory());
+        .changeDefaultScriptTagWriterFactorySingleton(
+                getMockScriptTagWriterFactory());
 
         setTagDependencies(createTagDependencies());
         setObjectUnderTest(new ScriptTag());
@@ -95,14 +95,14 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     @After
     public void tearDown() throws Exception {
         ScriptTagWriterFactory
-            .restoreDefaultScriptTagWriterFactorySingleton();
+        .restoreDefaultScriptTagWriterFactorySingleton();
     }
 
     private ScriptTagDependencies createTagDependencies() {
         return new ScriptTagDependencies(
                 getMockResourceResolverEngine(),
                 getDeploymentMetadataTestData()
-                    .createDevDeploymentMetadata(),
+                .createDevDeploymentMetadata(),
                 getMockScriptBundleFactory(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());
@@ -138,7 +138,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals("IllegalArgumentException has wrong message",
                         "You must set either the src or name attributes but not both. src='"
-                                + testValue + "'; name='" + testValue + "'", e.getMessage());
+                        + testValue + "'; name='" + testValue + "'", e.getMessage());
             }
         }
 
@@ -157,14 +157,14 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
             Assert.assertEquals("IllegalArgumentException has wrong message",
                     "You must set either the src or name attributes but not both. src='"
-                            + "common/main.js" + "'; name='" + "myName" + "'", e.getMessage());
+                    + "common/main.js" + "'; name='" + "myName" + "'", e.getMessage());
         }
     }
 
     @Test
     public void testDoTagWithInvalidSrc() throws Throwable {
         final String[] testSrcs =
-                { "../some/where", "/somewhere" };
+        { "../some/where", "/somewhere" };
 
         for (final String testSrc : testSrcs) {
             try {
@@ -177,7 +177,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testSrc: '"
-                                + testSrc + "'",
+                        + testSrc + "'",
                         "src must not start with '..' or '/'. Was: '" + testSrc + "'",
                         e.getMessage());
             }
@@ -210,10 +210,10 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                 .createScriptTagWriter(getMockDevice(),
                         Arrays.asList(createTitleDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
-                        getRequestedJavaScriptResourcePath(),
-                        null,
-                        getTagDependencies()))
-                .andReturn(getMockScriptTagWriter());
+                                getRequestedJavaScriptResourcePath(),
+                                null,
+                                getTagDependencies()))
+                                .andReturn(getMockScriptTagWriter());
     }
 
     private void recordCheckIfScriptTagWriterSeenBefore() {
@@ -280,7 +280,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                 getMockPageContext().getAttribute(
                         ScriptTag.SCRIPT_WRITER_MAP_ATTRIBUTE_NAME,
                         PageContext.REQUEST_SCOPE)).andReturn(getTagWriterMap())
-                .atLeastOnce();
+                        .atLeastOnce();
     }
 
     /**
@@ -448,22 +448,21 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the mockScriptBundleFactory
      */
-    public ScriptBundleFactory getMockScriptBundleFactory() {
+    public JavaScriptBundleFactory getMockScriptBundleFactory() {
         return mockScriptBundleFactory;
     }
 
     /**
      * @param mockScriptBundleFactory the mockScriptBundleFactory to set
      */
-    public void setMockScriptBundleFactory(final ScriptBundleFactory mockScriptBundleFactory) {
+    public void setMockScriptBundleFactory(final JavaScriptBundleFactory mockScriptBundleFactory) {
         this.mockScriptBundleFactory = mockScriptBundleFactory;
     }
 
     /**
      * @return the mockScriptTagWriter
      */
-    public ScriptTagWriter
-        getMockScriptTagWriter() {
+    public ScriptTagWriter getMockScriptTagWriter() {
         return mockScriptTagWriter;
     }
 
@@ -474,7 +473,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     public void setMockScriptTagWriter(
             final ScriptTagWriter mockScriptTagWriter) {
         this.mockScriptTagWriter =
-                mockScriptTagWriter;
+            mockScriptTagWriter;
     }
 
     /**
@@ -490,24 +489,24 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
      */
     public void setMockScriptTagWriterFactory(
             final ScriptTagWriterFactory
-                mockScriptTagWriterFactory) {
+            mockScriptTagWriterFactory) {
         this.mockScriptTagWriterFactory =
-                mockScriptTagWriterFactory;
+            mockScriptTagWriterFactory;
     }
 
     public DynamicTagAttribute createTitleDynamicAttribute() {
         return new DynamicTagAttribute("title",
-                "My Image");
+        "My Image");
     }
 
     public DynamicTagAttribute createTypeDynamicAttribute() {
         return new DynamicTagAttribute("type",
-            "text/css");
+        "text/css");
     }
 
     public DynamicTagAttribute createArbitraryDynamicAttribute() {
         return new DynamicTagAttribute("arbitraryName",
-            "arbitraryValue");
+        "arbitraryValue");
     }
 
     /**

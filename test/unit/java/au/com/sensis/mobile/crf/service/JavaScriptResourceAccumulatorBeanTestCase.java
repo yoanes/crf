@@ -25,6 +25,7 @@ public class JavaScriptResourceAccumulatorBeanTestCase
 extends AbstractJUnit4TestCase {
 
     private static final String PACKAGE_KEYWORD = "package";
+    private static final String PACKAGE_FILENAME = "package.js";
     private JavaScriptResourceAccumulatorBean objectUnderTest;
     private List<Resource> resolvedPaths;
     private ResourcePathTestData testData;
@@ -81,7 +82,7 @@ extends AbstractJUnit4TestCase {
 
     private void assertResourceResolutionTreeUpdated() {
         final Iterator<ResourceTreeNode> treePreOrderIterator =
-                ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
+            ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
 
         Assert.assertTrue("ResourceResolutionTree treePreOrderIterator should have a next item",
                 treePreOrderIterator.hasNext());
@@ -210,7 +211,7 @@ extends AbstractJUnit4TestCase {
 
         // Create an accumulator the same as the one under test
         final JavaScriptResourceAccumulatorBean accumulator =
-            new JavaScriptResourceAccumulatorBean(PACKAGE_KEYWORD, false);
+            new JavaScriptResourceAccumulatorBean(PACKAGE_KEYWORD, PACKAGE_FILENAME, false);
         accumulator.accumulate(sameResolvedPaths);
 
         getObjectUnderTest().accumulate(resolvedPaths);
@@ -248,7 +249,7 @@ extends AbstractJUnit4TestCase {
     private JavaScriptResourceAccumulatorBean createJavaScriptResourceAccumulatorBean(
             final boolean bundling) {
 
-        return new JavaScriptResourceAccumulatorBean(PACKAGE_KEYWORD, bundling);
+        return new JavaScriptResourceAccumulatorBean(PACKAGE_KEYWORD, PACKAGE_FILENAME, bundling);
     }
 
     /**

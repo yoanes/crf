@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -10,16 +11,26 @@ package au.com.sensis.mobile.crf.service;
 public class ResourceAccumulatorFactory {
 
     private final boolean bundlingEnabled;
+    private final String javascriptPackageKeyword;
+    private final String javascriptPackageFilename;
 
 
     /**
      * Constructs an initialised ResourceAccumulatorFactory.
      * @param bundlingEnabled determines whether or not the returned {@link ResourceAccumulator}
-     * should perform bundling.
+     *    should perform bundling.
+     * @param javascriptPackageKeyword keyword used for requesting a JavaScript package
+     * @param javascriptPackageFilename the filename to use for a bundled JavaScript package
      */
-    public ResourceAccumulatorFactory(final boolean bundlingEnabled) {
+    public ResourceAccumulatorFactory(final boolean bundlingEnabled,
+            final String javascriptPackageKeyword, final String javascriptPackageFilename) {
+
+        validateStringNotEmpty("javascriptPackageKeyword", javascriptPackageKeyword);
+        validateStringNotEmpty("javascriptPackageFilename", javascriptPackageFilename);
 
         this.bundlingEnabled = bundlingEnabled;
+        this.javascriptPackageKeyword = javascriptPackageKeyword;
+        this.javascriptPackageFilename = javascriptPackageFilename;
     }
 
     /**
@@ -70,7 +81,8 @@ public class ResourceAccumulatorFactory {
     protected JavaScriptResourceAccumulatorBean makeNewJavascriptResourceAccumulator(
             final String packageKeyword) {
 
-        return new JavaScriptResourceAccumulatorBean(packageKeyword, isBundlingEnabled());
+        return new JavaScriptResourceAccumulatorBean(javascriptPackageKeyword,
+                javascriptPackageFilename, isBundlingEnabled());
     }
 
     /**
@@ -87,6 +99,13 @@ public class ResourceAccumulatorFactory {
         return new ResourceAccumulatorBean();
     }
 
+    private void validateStringNotEmpty(final String paramName, final String param) {
+
+        if (StringUtils.isEmpty(param)) {
+            throw new IllegalArgumentException(paramName + " must not be empty");
+        }
+    }
+
     /**
      * @return true if the {@link ResourceAccumulator}s returned by the factory
      *         should support bundling. False otherwise.
@@ -94,4 +113,5 @@ public class ResourceAccumulatorFactory {
     public boolean isBundlingEnabled() {
         return bundlingEnabled;
     }
+
 }

@@ -8,7 +8,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.JspFragment;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
-import au.com.sensis.mobile.crf.service.CssBundleFactory;
+import au.com.sensis.mobile.crf.service.BundleFactory;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -75,7 +75,7 @@ public class LinkTagWriter implements TagWriter {
      * {@inheritDoc}
      */
     public void writeTag(final JspWriter jspWriter, final JspFragment jspBody) throws IOException,
-            JspException {
+    JspException {
 
         if (getDeploymentMetadata().isDevPlatform()) {
             writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
@@ -99,14 +99,14 @@ public class LinkTagWriter implements TagWriter {
 
     private void writeLinkTagForBundledResources(final JspWriter jspWriter,
             final List<Resource> allResources)
-            throws IOException {
+    throws IOException {
 
         if (allResources.isEmpty()) {
             logNoResourcesFoundWarning();
 
         } else {
             final Resource bundleResourcePath =
-                    getCssBundleFactory().getBundle(allResources);
+                getBundleFactory().getBundle(allResources);
 
             writeSingleLinkTag(jspWriter, bundleResourcePath);
 
@@ -145,8 +145,8 @@ public class LinkTagWriter implements TagWriter {
 
     private List<Resource> getAllResourcePaths() throws IOException {
         final List<Resource> allResourcePaths =
-                getResourceResolverEngine().getAllResources(getDevice(),
-                        getHref());
+            getResourceResolverEngine().getAllResources(getDevice(),
+                    getHref());
 
         assertNotNull(allResourcePaths);
 
@@ -157,8 +157,8 @@ public class LinkTagWriter implements TagWriter {
         if (allResourcePaths == null) {
             throw new IllegalStateException(
                     "getResourceResolverEngine.getAllResourcePaths "
-                            + "returned null for '" + getHref() + ". "
-                            + "This should never happen !!!");
+                    + "returned null for '" + getHref() + ". "
+                    + "This should never happen !!!");
         }
     }
 
@@ -179,8 +179,8 @@ public class LinkTagWriter implements TagWriter {
     /**
      * @return the cssBundleFactory
      */
-    private CssBundleFactory getCssBundleFactory() {
-        return getTagDependencies().getCssBundleFactory();
+    private BundleFactory getBundleFactory() {
+        return getTagDependencies().getBundleFactory();
     }
 
     private DeploymentMetadata getDeploymentMetadata() {

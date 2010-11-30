@@ -41,7 +41,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     = new DeploymentMetadataTestData();
     private DeploymentMetadata deploymentMetadata;
     private final ResourceAccumulatorFactory resourceAccumulatorFactory =
-        new ResourceAccumulatorFactory(true);
+        new ResourceAccumulatorFactory(true, "package", "package.js");
     private ResourceCache mockResourceCache;
 
     /**
@@ -370,7 +370,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     protected void recordPutEmptyResultsIntoResourceCache(final ResourceCacheKey resourceCacheKey) {
         getMockResourceCache()
-                .put(EasyMock.eq(resourceCacheKey), EasyMock.aryEq(new Resource[] {}));
+        .put(EasyMock.eq(resourceCacheKey), EasyMock.aryEq(new Resource[] {}));
     }
 
 }
