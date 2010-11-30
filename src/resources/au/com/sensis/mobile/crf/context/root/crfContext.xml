@@ -245,5 +245,40 @@
         <property name="enabled" value="@{crf.env.debug.resource.graph}" />
     </bean>
     
+    <bean id="crf.groupsCacheFiller" class="au.com.sensis.mobile.crf.debug.GroupsCacheFillerBean">
+        <constructor-arg ref="crf.groupsCache" />
+        <property name="enabled" value="@{crf.env.cache.resources.fillers.enabled}"/>
+    </bean>
     
+    <bean id="crf.resourceCacheFiller" class="au.com.sensis.mobile.crf.debug.ResourceCacheFillerBean">
+        <constructor-arg ref="crf.resourceCache" />
+        <property name="enabled" value="@{crf.env.cache.resources.fillers.enabled}"/>
+    </bean>
+    
+    <!-- this bean must not be lazily initialized if the exporting is to happen -->
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+        <property name="assembler" ref="crf.jmx.assembler"/>
+        <property name="namingStrategy" ref="crf.jmx.namingStrategy"/>
+        <property name="beans">
+            <map>
+                <entry key="crf.groupsCacheFiller" value-ref="crf.groupsCacheFiller"/>
+                <entry key="crf.resourceCacheFiller" value-ref="crf.resourceCacheFiller"/>
+            </map>
+        </property>
+    </bean>    
+    
+    <!-- will create management interface using annotation metadata -->
+    <bean id="crf.jmx.assembler"
+          class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
+        <property name="attributeSource" ref="crf.jmx.jmxAttributeSource"/>
+    </bean>
+
+    <!-- will pick up the ObjectName from the annotation -->
+    <bean id="crf.jmx.namingStrategy"
+          class="org.springframework.jmx.export.naming.MetadataNamingStrategy">
+        <property name="attributeSource" ref="crf.jmx.jmxAttributeSource"/>
+    </bean>
+    
+    <bean id="crf.jmx.jmxAttributeSource"
+      class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource"/>
 </beans>

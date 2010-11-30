@@ -122,6 +122,17 @@ public class EhcacheCacheBeanTestCase extends AbstractJUnit4TestCase {
 
     }
 
+    @Test
+    public void testRemoveAll() throws Throwable {
+        setObjectUnderTest(createEnabledEhcacheCacheBean());
+
+        getMockEhcache().removeAll();
+
+        replay();
+
+        getObjectUnderTest().removeAll();
+
+    }
 
     private EhcacheCacheBean<String, Group> createEnabledEhcacheCacheBean() {
         return new EhcacheCacheBean<String, Group>(getMockEhcache(), true);

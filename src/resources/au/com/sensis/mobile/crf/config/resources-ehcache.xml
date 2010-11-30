@@ -24,12 +24,13 @@ CacheManager Configuration
     <!-- 
       - Cache for ([abstract resource path, group], resources) pairs.
       - This amounts to a size limited in memory map that will evict items if the limit is 
-      - reached. The limit is based on a wild estimate of around 300 unique abstract resource paths
-      - and an average of 15 groups per path. 
+      - reached. The limit is based on the following: 600 abstract resource paths, 10 groups
+      - per path, 10 resources per (abstract resource path, group) pair. Imperial evidence has 
+      - indicated that this will consume no more than about 20MB of memory.
       -->
     <cache
            name="resourcesCache"
-           maxElementsInMemory="5000"
+           maxElementsInMemory="6000"
            eternal="true"
            overflowToDisk="false"
            memoryStoreEvictionPolicy="LRU">

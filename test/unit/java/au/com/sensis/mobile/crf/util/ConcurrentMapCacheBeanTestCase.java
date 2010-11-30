@@ -83,6 +83,20 @@ public class ConcurrentMapCacheBeanTestCase extends AbstractJUnit4TestCase {
 
     }
 
+    @Test
+    public void testRemoveAll() throws Throwable {
+
+        setObjectUnderTest(createEnabledConcurrentMapCacheBean());
+
+        getObjectUnderTest().put(USER_AGENT, new Group [] {getGroupTestData().createAppleGroup()});
+        getObjectUnderTest().removeAll();
+
+        Assert.assertFalse("contains should be false", getObjectUnderTest()
+                .contains(USER_AGENT));
+
+
+    }
+
     private ConcurrentMapCacheBean<String, Group> createEnabledConcurrentMapCacheBean() {
         return new ConcurrentMapCacheBean<String, Group>(true);
     }

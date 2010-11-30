@@ -115,6 +115,13 @@ public class Groups {
     }
 
     /**
+     * @return number of groups, including the default group.
+     */
+    public int getNumGroups() {
+        return getGroups().length + (getDefaultGroup() != null ? 1 : 0);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override

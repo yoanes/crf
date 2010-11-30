@@ -6,6 +6,12 @@
 # reloaded to reflect changes. 
 env.cache.ui.configuration=false
 env.cache.resources=false
+
+# True if you want MBeans registered for filling the caches with arbitrary numbers of elements.
+# Useful for analysing memory consumption.
+env.cache.resources.fillers.enabled=true
+
+# True if you want CSS and JavaScript resources to be bundled.
 env.bundle.resources=false
 
 # True if you want the resolved resource graph to be logged. 

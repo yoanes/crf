@@ -81,6 +81,13 @@
         <appender-ref ref="FILE"/>
     </logger>
     
+    <logger name="au.com.sensis.mobile.crf.util.EhcacheCacheBean" 
+        additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="RESOURCE_RESOLUTION_WARN_LOG"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    
     <logger name="SERVLET_CAPTURE" additivity="false">
         <level value="INFO" />
         <appender-ref ref="CAPTURE"/>

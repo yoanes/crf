@@ -113,6 +113,14 @@ public class EhcacheCacheBean<K extends Serializable, V extends Serializable> im
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeAll() {
+        getEhcache().removeAll();
+    }
+
+    /**
      * @param enableStatistics
      *            Set whether statistics should be enabled on the cache.
      *            Defaults to false.
@@ -147,5 +155,4 @@ public class EhcacheCacheBean<K extends Serializable, V extends Serializable> im
     private Ehcache getEhcache() {
         return ehcache;
     }
-
 }

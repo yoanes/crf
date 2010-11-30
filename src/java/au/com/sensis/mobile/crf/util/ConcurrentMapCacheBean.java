@@ -76,6 +76,14 @@ public class ConcurrentMapCacheBean<K, V> implements Cache<K, V> {
         return cacheEnabled;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removeAll() {
+        getCacheMap().clear();
+    }
+
     private void debugLogCacheEnabledState() {
         if (LOGGER.isDebugEnabled()) {
             if (cacheEnabled) {
@@ -99,5 +107,4 @@ public class ConcurrentMapCacheBean<K, V> implements Cache<K, V> {
     private void setCacheMap(final ConcurrentMap<K, V[]> cacheMap) {
         this.cacheMap = cacheMap;
     }
-
 }

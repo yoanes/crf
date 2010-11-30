@@ -168,6 +168,12 @@ public class GroupsTestCase extends AbstractJUnit4TestCase {
                 getMockDefaultGroup()), groups);
     }
 
+    @Test
+    public void testGetNumGroups() throws Throwable {
+
+        Assert.assertEquals("getNumGroups() is wrong", 2, getObjectUnderTest().getNumGroups());
+    }
+
     /**
      * @return the objectUnderTest
      */

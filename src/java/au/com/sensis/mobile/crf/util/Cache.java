@@ -36,4 +36,9 @@ public interface Cache<K, V> {
      */
     boolean isEnabled();
 
+    /**
+     * Remove all elements from the cache.
+     */
+    void removeAll();
+
 }
