@@ -1,4 +1,4 @@
-==== Version 0.1.2-105 (tag: contentRenderingFramework_v0_1_2-105) ==== 
+==== (Pending) Version 0.1.3-001 (tag: contentRenderingFramework_v0_1_3-001) ==== 
 
 Jiras:
 - CRF-3: ContentRenderingPlatformConfigurationFactory - validate config
