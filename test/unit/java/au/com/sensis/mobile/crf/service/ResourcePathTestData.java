@@ -329,6 +329,12 @@ public class ResourcePathTestData {
 
     }
 
+    public Resource getMappedAppleGroupCssResourcePath() {
+        return new ResourceBean(getRequestedCssResourcePath(),
+                getDeploymentVersion() + "/apple/common/main.css", getRootResourcesPath(),
+                getGroupTestData().createAppleGroup());
+    }
+
     public Resource getMappedMediumGroupResourcePath() {
         return new ResourceBean(getRequestedJspResourcePath(), getJspResourcesRootServletPath()
                 + "medium/detail/bdp.jsp", getRootResourcesPath(),

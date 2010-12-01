@@ -244,6 +244,7 @@ public class JavaScriptResourceAccumulatorBean extends AbstractResourceAccumulat
      * @return true if the {@link ResourceAccumulator}s returned by the factory
      *         should support bundling. False otherwise.
      */
+    @Override
     public boolean isBundlingEnabled() {
         return bundlingEnabled;
     }

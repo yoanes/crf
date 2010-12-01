@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -74,6 +75,44 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
 
         final ResourceAccumulator accumulator = createResourceAccumulator();
 
+        if (accumulator.isBundlingEnabled()) {
+            final ResourceCacheKey resourceCacheKey =
+                    createBundleResourceCacheKey(requestedResourcePath, device);
+            final List<Resource> cachedBundle = getCachedBundle(resourceCacheKey);
+            if (cachedBundle != null) {
+                addResourcesToResourceResolutionTreeIfEnabled(cachedBundle);
+                return cachedBundle;
+            }
+
+            accumulateResources(requestedResourcePath, device, accumulator);
+
+            final List<Resource> accumulatedResources = accumulator.getResources();
+            if (resourceCacheKey != null) {
+                getResourceCache().put(resourceCacheKey,
+                        accumulatedResources.toArray(new Resource[] {}));
+
+            }
+            return accumulatedResources;
+        } else {
+            accumulateResources(requestedResourcePath, device, accumulator);
+            return accumulator.getResources();
+        }
+
+    }
+
+    private List<Resource> getCachedBundle(final ResourceCacheKey resourceCacheKey) {
+        if ((resourceCacheKey != null) && getResourceCache().contains(resourceCacheKey)) {
+            debugLogResourcesFoundInCache();
+            return Arrays.asList(getResourceCache().get(resourceCacheKey));
+        } else {
+            debugLogResourcesNotFoundInCache();
+            return null;
+        }
+
+    }
+
+    private void accumulateResources(final String requestedResourcePath, final Device device,
+            final ResourceAccumulator accumulator) {
         final Iterator<Group> matchingGroupIterator =
                 getMatchingGroupIterator(device, requestedResourcePath);
 
@@ -83,26 +122,25 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
 
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
-            accumulator.accumulate(
-                    resolveForGroupPossiblyFromCache(requestedResourcePath, currGroup));
+            if (accumulator.isBundlingEnabled()) {
+                accumulator.accumulate(resolveForGroup(requestedResourcePath, currGroup));
+            } else {
+                accumulator.accumulate(resolveForGroupPossiblyFromCache(requestedResourcePath,
+                        currGroup));
+            }
 
         }
-
-        // TODO: results of accumulate method need to be added to the cache.
-        return accumulator.getResources();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected List<Resource> resolveForGroupPossiblyFromCache(
-            final String requestedResourcePath, final Group currGroup) {
-        // TODO: if bundling is enabled, this method should check the cache for a bundle.
-        // If found, the bundle should be returned from _doResolve_ immediately. Otherwise
-        // the resolve should occur but the results not added to the cache. Only when
-        // the bundle is created can the bundle be added to the cache.
-        return super.resolveForGroupPossiblyFromCache(requestedResourcePath, currGroup);
+    private ResourceCacheKey createBundleResourceCacheKey(final String requestedResourcePath,
+            final Device device) {
+        final Iterator<Group> matchingGroupIterator =
+                getMatchingGroupIterator(device, requestedResourcePath);
+        if (matchingGroupIterator.hasNext()) {
+            return new ResourceCacheKeyBean(requestedResourcePath, matchingGroupIterator.next());
+        } else {
+            return null;
+        }
     }
 
     /**

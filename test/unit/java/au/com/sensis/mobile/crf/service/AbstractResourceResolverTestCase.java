@@ -40,8 +40,8 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     private final DeploymentMetadataTestData deploymentMetadataTestData
     = new DeploymentMetadataTestData();
     private DeploymentMetadata deploymentMetadata;
-    private final ResourceAccumulatorFactory resourceAccumulatorFactory =
-        new ResourceAccumulatorFactory(true, "package", "package.js");
+    private ResourceAccumulatorFactory mockResourceAccumulatorFactory;
+    private ResourceAccumulator mockResourceAccumulator;
     private ResourceCache mockResourceCache;
 
     /**
@@ -255,8 +255,20 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         return resourcesRootDir;
     }
 
-    protected ResourceAccumulatorFactory getResourceAccumulatorFactory() {
-        return resourceAccumulatorFactory;
+    /**
+     * @return {@link ResourceAccumulatorFactory}
+     */
+    public ResourceAccumulatorFactory getMockResourceAccumulatorFactory() {
+        return mockResourceAccumulatorFactory;
+    }
+
+    /**
+     * @param mockResourceAccumulatorFactory
+     *            {@link ResourceAccumulatorFactory}
+     */
+    public void setMockResourceAccumulatorFactory(
+            final ResourceAccumulatorFactory resourceAccumulatorFactory) {
+        mockResourceAccumulatorFactory = resourceAccumulatorFactory;
     }
 
     /**
@@ -348,6 +360,20 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
      */
     public void setMockResourceCache(final ResourceCache mockResourceCache) {
         this.mockResourceCache = mockResourceCache;
+    }
+
+    /**
+     * @return the mockResourceAccumulator
+     */
+    public ResourceAccumulator getMockResourceAccumulator() {
+        return mockResourceAccumulator;
+    }
+
+    /**
+     * @param mockResourceAccumulator the mockResourceAccumulator to set
+     */
+    public void setMockResourceAccumulator(final ResourceAccumulator mockResourceAccumulator) {
+        this.mockResourceAccumulator = mockResourceAccumulator;
     }
 
     protected void recordCheckResourceCache(final ResourceCacheKey resourceCacheKey,

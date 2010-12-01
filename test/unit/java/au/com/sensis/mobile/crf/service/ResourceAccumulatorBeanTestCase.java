@@ -179,6 +179,13 @@ extends AbstractJUnit4TestCase {
         Assert.assertEquals(resolvedPaths.toString(), getObjectUnderTest().toString());
     }
 
+    @Test
+    public void testIsBundlingEnabledFalse() throws Throwable {
+
+        Assert.assertFalse("isBundlingEnabled() should be false", getObjectUnderTest()
+                .isBundlingEnabled());
+    }
+
     /**
      * @return the objectUnderTest
      */

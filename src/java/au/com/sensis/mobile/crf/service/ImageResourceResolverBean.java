@@ -19,9 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
-import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
-import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
-import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 
@@ -247,38 +244,5 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
         // Override inherited method so that we can call the following.
         addResourcesToResourceResolutionTreeIfEnabled(Arrays.asList(resourcesFromCache));
         return resourcesFromCache;
-    }
-
-    /**
-     * Add the Resources to the {@link ResourceResolutionTree} for the current
-     * thread.
-     *
-     * @param resources
-     *            Resources to add to the {@link ResourceResolutionTree} for the
-     *            current thread.
-     */
-    protected void addResourcesToResourceResolutionTreeIfEnabled(
-            final List<Resource> resources) {
-        if (getResourceResolutionTree().isEnabled()) {
-            for (final Resource currResource : resources) {
-                addResourcesToResourceResolutionTreeIfEnabled(currResource);
-            }
-        }
-    }
-
-    /**
-     * Add the Resource to the {@link ResourceResolutionTree} for the current
-     * thread.
-     *
-     * @param resource
-     *            Resource to add to the {@link ResourceResolutionTree} for the
-     *            current thread.
-     */
-    protected final void addResourcesToResourceResolutionTreeIfEnabled(final Resource resource) {
-        getResourceResolutionTree().addChildToCurrentNode(new ResourceTreeNodeBean(resource));
-    }
-
-    private ResourceResolutionTree getResourceResolutionTree() {
-        return ResourceResolutionTreeHolder.getResourceResolutionTree();
     }
 }

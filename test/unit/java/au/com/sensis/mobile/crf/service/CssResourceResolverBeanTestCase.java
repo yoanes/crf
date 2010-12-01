@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +19,7 @@ import au.com.sensis.mobile.crf.config.Group;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
+public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceResolverTestCase {
 
     private CssResourceResolverBean objectUnderTest;
 
@@ -33,7 +34,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         setObjectUnderTest(new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getResourceAccumulatorFactory()));
+                getResourcesRootDir(), getMockResourceAccumulatorFactory()));
     }
 
     // Override Abstract test methods //
@@ -44,7 +45,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension,
-                getResourcesRootDir(), getResourceAccumulatorFactory());
+                getResourcesRootDir(), getMockResourceAccumulatorFactory());
     }
 
     @Override
@@ -52,7 +53,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(), rootResourcesDir,
-                getResourceAccumulatorFactory());
+                getMockResourceAccumulatorFactory());
     }
 
     @Override
@@ -66,7 +67,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(commonParams,
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getResourceAccumulatorFactory());
+                getResourcesRootDir(), getMockResourceAccumulatorFactory());
     }
 
     @Override
@@ -80,13 +81,14 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
         return new CssResourceResolverBean(commonParams,
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                getResourcesRootDir(), getResourceAccumulatorFactory());
+                getResourcesRootDir(), getMockResourceAccumulatorFactory());
     }
 
     // Tests //
 
     @Test
-    public void testResolveWhenMappingPerformedAndResourceExists() throws Throwable {
+    public void testResolveWhenMappingPerformedAndResourceExistsAndBundlingDisabled()
+        throws Throwable {
         final String[] testValues = {
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getCssExtensionWithLeadingDot() };
@@ -94,15 +96,17 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetResourceAccumulator();
+            recordIsBundlingEnabled(Boolean.FALSE);
+
             recordGetMatchingGroupIterator();
+            recordAccumulateIphoneGroupResourceBundlingDisabled(Boolean.FALSE, Boolean.TRUE);
+            recordAccumulateAppleGroupResourceBundlingDisabled(Boolean.FALSE, Boolean.TRUE);
 
-            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
-            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
-
-            recordCheckIfNewPathExists(Boolean.TRUE);
-
-            recordPutResourceCache(resourceCacheKey, getResourcePathTestData()
-                    .getMappedIphoneGroupCssResourcePath());
+            final List<Resource> expectedResources = Arrays.asList(
+                    getMappedAppleGroupCssResourcePath(),
+                    getMappedIphoneGroupCssResourcePath());
+            recordGetResourcesFromAccumulator(expectedResources);
 
             replay();
 
@@ -112,9 +116,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
                         getMockDevice());
 
             Assert.assertEquals("actualResources is wrong",
-                    Arrays.asList(getResourcePathTestData()
-                            .getMappedIphoneGroupCssResourcePath()),
-                            actualResources);
+                    expectedResources, actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -123,10 +125,162 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
     }
 
-    private ResourceCacheKey createResourceCacheKey() {
+    @Test
+    public void testResolveWhenMappingPerformedAndResourceExistsAndBundlingEnabled()
+            throws Throwable {
+
+        final String[] testValues =
+                { getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                        getResourcePathTestData().getCssExtensionWithLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetResourceAccumulator();
+            recordIsBundlingEnabled(Boolean.TRUE);
+
+            // First group iterator used to determine first group so that we can build a
+            // ResourceCacheKey to check if the bundle exists in the cache.
+            recordGetMatchingGroupIterator();
+
+            recordCheckResourceCache(createIphoneGroupResourceCacheKey(), Boolean.FALSE);
+
+            // Second group iterator used to accumulate resources from all groups.
+            recordGetMatchingGroupIterator();
+            recordAccumulateIphoneGroupResourceBundlingEnabled(Boolean.TRUE);
+            recordAccumulateAppleGroupResourceBundlingEnabled(Boolean.TRUE);
+
+            final List<Resource> expectedResources = Arrays.asList(getMappedBundleResourcePath());
+            recordGetResourcesFromAccumulator(expectedResources);
+
+            recordPutBundleIntoResourceCache(createIphoneGroupResourceCacheKey());
+
+            replay();
+
+            final List<Resource> actualResources =
+                    getObjectUnderTest().resolve(
+                            getResourcePathTestData().getRequestedCssResourcePath(),
+                            getMockDevice());
+
+            Assert.assertEquals("actualResources is wrong", expectedResources, actualResources);
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+        }
+
+    }
+
+    private Resource getMappedBundleResourcePath() {
+        return getResourcePathTestData().getMappedIphoneGroupCssBundleResourcePath();
+    }
+
+    private void recordAccumulateAppleGroupResourceBundlingEnabled(final Boolean resourceExists) {
+        recordCheckIfNewAppleGroupPathExists(resourceExists);
+        if (resourceExists) {
+            getMockResourceAccumulator().accumulate(
+                    Arrays.asList(getMappedAppleGroupCssResourcePath()));
+        } else {
+            getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
+        }
+
+    }
+
+    private void recordAccumulateAppleGroupResourceBundlingDisabled(final Boolean foundInCache,
+            final Boolean resourceExists) {
+        final ResourceCacheKey resourceCacheKey = createAppleGroupResourceCacheKey();
+
+        recordCheckResourceCache(resourceCacheKey, foundInCache);
+        if (foundInCache) {
+            recordGetAppleGroupResourceFromCache(resourceCacheKey);
+
+            final List<Resource> expectedResources =
+                    Arrays.asList(getMappedAppleGroupCssResourcePath());
+            getMockResourceAccumulator().accumulate(expectedResources);
+
+            return;
+        }
+
+        recordCheckIfNewAppleGroupPathExists(resourceExists);
+        if (resourceExists) {
+            recordPutResourceCache(resourceCacheKey, getMappedAppleGroupCssResourcePath());
+            getMockResourceAccumulator().accumulate(
+                    Arrays.asList(getMappedAppleGroupCssResourcePath()));
+        } else {
+            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
+        }
+    }
+
+    protected void recordPutBundleIntoResourceCache(final ResourceCacheKey resourceCacheKey) {
+        getMockResourceCache().put(EasyMock.eq(resourceCacheKey),
+                EasyMock.aryEq(new Resource[] { getMappedBundleResourcePath() }));
+    }
+
+    private void recordAccumulateIphoneGroupResourceBundlingEnabled(final Boolean resourceExists) {
+        recordCheckIfNewIphoneGroupPathExists(resourceExists);
+        if (resourceExists) {
+            getMockResourceAccumulator().accumulate(
+                    Arrays.asList(getMappedIphoneGroupCssResourcePath()));
+        } else {
+            getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
+
+        }
+    }
+
+    private void recordAccumulateIphoneGroupResourceBundlingDisabled(final Boolean foundInCache,
+            final Boolean resourceExists) {
+        final ResourceCacheKey resourceCacheKey = createIphoneGroupResourceCacheKey();
+        recordCheckResourceCache(resourceCacheKey, foundInCache);
+
+        if (foundInCache) {
+            recordGetIphoneGroupResourceFromCache(resourceCacheKey);
+
+            final List<Resource> expectedResources =
+                    Arrays.asList(getMappedIphoneGroupCssResourcePath());
+            getMockResourceAccumulator().accumulate(expectedResources);
+
+            return;
+        }
+
+        recordCheckIfNewIphoneGroupPathExists(resourceExists);
+        if (resourceExists) {
+            recordPutResourceCache(resourceCacheKey, getMappedIphoneGroupCssResourcePath());
+            getMockResourceAccumulator().accumulate(
+                    Arrays.asList(getMappedIphoneGroupCssResourcePath()));
+        } else {
+            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
+
+        }
+
+    }
+
+    private Resource getMappedIphoneGroupCssResourcePath() {
+        return getResourcePathTestData()
+                .getMappedIphoneGroupCssResourcePath();
+    }
+
+    private Resource getMappedAppleGroupCssResourcePath() {
+        return getResourcePathTestData().getMappedAppleGroupCssResourcePath();
+    }
+
+    private void recordGetResourceAccumulator() {
+        EasyMock.expect(getMockResourceAccumulatorFactory().getCSSResourceAccumulator())
+            .andReturn(getMockResourceAccumulator());
+    }
+
+    private ResourceCacheKey createIphoneGroupResourceCacheKey() {
         final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
                 getResourcePathTestData().getRequestedCssResourcePath(),
                 getGroupTestData().createIPhoneGroup());
+        return resourceCacheKey;
+    }
+
+    private ResourceCacheKey createAppleGroupResourceCacheKey() {
+        final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
+                getResourcePathTestData().getRequestedCssResourcePath(),
+                getGroupTestData().createAppleGroup());
         return resourceCacheKey;
     }
 
@@ -142,12 +296,26 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             recordGetMatchingGroupIterator();
 
-            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
-            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+            recordGetResourceAccumulator();
 
-            recordCheckIfNewPathExists(Boolean.FALSE);
+            recordIsBundlingEnabled(Boolean.FALSE);
 
-            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+//            final ResourceCacheKey resourceCacheKey = createIphoneGroupResourceCacheKey();
+//            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+//
+//            recordCheckIfNewIphoneGroupPathExists(Boolean.FALSE);
+//
+//            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+//
+//            final ArrayList<Resource> expectedResources = new ArrayList<Resource>();
+//            getMockResourceAccumulator().accumulate(expectedResources);
+
+            recordAccumulateIphoneGroupResourceBundlingDisabled(Boolean.FALSE, Boolean.FALSE);
+
+            recordAccumulateAppleGroupResourceBundlingDisabled(Boolean.FALSE, Boolean.FALSE);
+
+
+            recordGetResourcesFromAccumulator(new ArrayList<Resource>());
 
             replay();
 
@@ -186,7 +354,9 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
     }
 
     @Test
-    public void testResolveWhenMappingPerformedAndResourceFromCache() throws Throwable {
+    public void testResolveWhenMappingPerformedAndResourceFromCacheAndBundlingDisabled()
+        throws Throwable {
+
         final String[] testValues = {
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
                 getResourcePathTestData().getCssExtensionWithLeadingDot() };
@@ -194,12 +364,17 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetResourceAccumulator();
+            recordIsBundlingEnabled(Boolean.FALSE);
+
             recordGetMatchingGroupIterator();
+            recordAccumulateIphoneGroupResourceBundlingDisabled(Boolean.TRUE, Boolean.TRUE);
+            recordAccumulateAppleGroupResourceBundlingDisabled(Boolean.TRUE, Boolean.TRUE);
 
-            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
-            recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
-
-            recordGetFromResourceCache(resourceCacheKey);
+            final List<Resource> expectedResources = Arrays.asList(
+                    getMappedAppleGroupCssResourcePath(),
+                    getMappedIphoneGroupCssResourcePath());
+            recordGetResourcesFromAccumulator(expectedResources);
 
             replay();
 
@@ -209,9 +384,7 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
                         getMockDevice());
 
             Assert.assertEquals("actualResources is wrong",
-                    Arrays.asList(getResourcePathTestData()
-                            .getMappedIphoneGroupCssResourcePath()),
-                            actualResources);
+                    expectedResources, actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -220,9 +393,55 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
     }
 
-    private void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey) {
+    @Test
+    public void testResolveWhenMappingPerformedAndResourceFromCacheAndBundlingEnabled()
+            throws Throwable {
+
+        final String[] testValues =
+                { getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
+                        getResourcePathTestData().getCssExtensionWithLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetResourceAccumulator();
+            recordIsBundlingEnabled(Boolean.TRUE);
+
+            recordGetMatchingGroupIterator();
+            recordCheckResourceCache(createIphoneGroupResourceCacheKey(), Boolean.TRUE);
+
+            recordGetBundleResourceFromCache(createIphoneGroupResourceCacheKey());
+
+            replay();
+
+            final List<Resource> actualResources =
+                    getObjectUnderTest().resolve(
+                            getResourcePathTestData().getRequestedCssResourcePath(),
+                            getMockDevice());
+
+            Assert.assertEquals("actualResources is wrong", Arrays
+                    .asList(getMappedBundleResourcePath()), actualResources);
+
+            // Explicit verify and reset since we are in a loop.
+            verify();
+            reset();
+        }
+
+    }
+
+    private void recordGetIphoneGroupResourceFromCache(final ResourceCacheKey resourceCacheKey) {
         EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
-                new Resource [] {getResourcePathTestData().getMappedIphoneGroupCssResourcePath()});
+                new Resource [] {getMappedIphoneGroupCssResourcePath()});
+    }
+
+    private void recordGetAppleGroupResourceFromCache(final ResourceCacheKey resourceCacheKey) {
+        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
+                new Resource [] {getMappedAppleGroupCssResourcePath()});
+    }
+
+    private void recordGetBundleResourceFromCache(final ResourceCacheKey resourceCacheKey) {
+        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
+                new Resource [] {getMappedBundleResourcePath()});
     }
 
     @Test
@@ -242,31 +461,45 @@ public class CssResourceResolverBeanTestCase extends AbstractResourceResolverTes
     @Test
     public void testGetResourceAccumulator() throws Throwable {
 
-        final ResourceAccumulator actualAccumulator =
-            getObjectUnderTest().createResourceAccumulator();
+        recordGetResourceAccumulator();
 
-        Assert.assertTrue(actualAccumulator instanceof BundleResourceAccumulatorBean);
+        replay();
+
+        final ResourceAccumulator actualAccumulator =
+                getObjectUnderTest().createResourceAccumulator();
+
+        Assert.assertEquals("ResourceAccumulator is wrong", getMockResourceAccumulator(),
+                actualAccumulator);
     }
 
 
     private void recordGetMatchingGroupIterator() {
 
-        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
-                getResourcePathTestData().getRequestedCssResourcePath())).andReturn(
-                        getMockUiConfiguration());
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedCssResourcePath())).andReturn(
+                getMockUiConfiguration());
 
         final Iterator<Group> matchingGroupsIterator =
-            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+                Arrays.asList(getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup()).iterator();
 
-        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
-        .andReturn(matchingGroupsIterator);
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice())).andReturn(
+                matchingGroupsIterator);
 
     }
 
-    private void recordCheckIfNewPathExists(final Boolean exists) {
+    private void recordCheckIfNewIphoneGroupPathExists(final Boolean exists) {
         EasyMock.expect(getMockFileIoFacade().fileExists(
                 getResourcePathTestData().getRootResourcesPath(),
-                getResourcePathTestData().getMappedIphoneGroupCssResourcePath().getNewPath()))
+                getMappedIphoneGroupCssResourcePath().getNewPath()))
+                .andReturn(exists);
+    }
+
+    private void recordCheckIfNewAppleGroupPathExists(final Boolean exists) {
+        EasyMock.expect(getMockFileIoFacade().fileExists(
+                getResourcePathTestData().getRootResourcesPath(),
+                getResourcePathTestData().getMappedAppleGroupCssResourcePath().getNewPath()))
                 .andReturn(exists);
     }
 

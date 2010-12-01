@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +19,8 @@ import au.com.sensis.mobile.crf.config.Group;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class PropertiesResourceResolverBeanTestCase extends AbstractResourceResolverTestCase {
+public class PropertiesResourceResolverBeanTestCase
+    extends AbstractMultipleResourceResolverTestCase {
 
     private PropertiesResourceResolverBean objectUnderTest;
 
@@ -34,7 +36,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
                 getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
                 getResourcesRootDir(),
-                getResourceAccumulatorFactory()));
+                getMockResourceAccumulatorFactory()));
     }
 
     @Override
@@ -44,7 +46,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         return new PropertiesResourceResolverBean(getResourceResolverCommonParamHolder(),
                 abstractResourceExtension,
                 getResourcesRootDir(),
-                getResourceAccumulatorFactory());
+                getMockResourceAccumulatorFactory());
     }
 
     @Override
@@ -59,7 +61,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         return new PropertiesResourceResolverBean(commonParams,
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
                 getResourcesRootDir(),
-                getResourceAccumulatorFactory());
+                getMockResourceAccumulatorFactory());
     }
 
     @Override
@@ -74,7 +76,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         return new PropertiesResourceResolverBean(commonParams,
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
                 getResourcesRootDir(),
-                getResourceAccumulatorFactory());
+                getMockResourceAccumulatorFactory());
     }
 
     @Override
@@ -83,7 +85,7 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
 
         return new PropertiesResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                rootResourcesDir, getResourceAccumulatorFactory());
+                rootResourcesDir, getMockResourceAccumulatorFactory());
     }
 
     @Test
@@ -95,6 +97,9 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetResourceAccumulator();
+            recordIsBundlingEnabled(Boolean.FALSE);
+
             recordGetMatchingGroupIterator();
 
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
@@ -105,6 +110,11 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
             recordPutResourceCache(resourceCacheKey, getResourcePathTestData()
                     .getMappedIphoneGroupPropertiesResourcePath());
 
+            final List<Resource> expectedResources = Arrays.asList(getResourcePathTestData()
+                    .getMappedIphoneGroupPropertiesResourcePath());
+            getMockResourceAccumulator().accumulate(expectedResources);
+            recordGetResourcesFromAccumulator(expectedResources);
+
             replay();
 
             final List<Resource> actualResources =
@@ -112,14 +122,18 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
                         getResourcePathTestData().getRequestedPropertiesResourcePath(),
                         getMockDevice());
 
-            Assert.assertEquals("actualResources is wrong", Arrays.asList(getResourcePathTestData()
-                    .getMappedIphoneGroupPropertiesResourcePath()), actualResources);
+            Assert.assertEquals("actualResources is wrong", expectedResources, actualResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
             reset();
         }
 
+    }
+
+    private void recordGetResourceAccumulator() {
+        EasyMock.expect(getMockResourceAccumulatorFactory().getPropertiesResourceAccumulator())
+            .andReturn(getMockResourceAccumulator());
     }
 
     private ResourceCacheKey createResourceCacheKey() {
@@ -138,6 +152,9 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetResourceAccumulator();
+            recordIsBundlingEnabled(Boolean.FALSE);
+
             recordGetMatchingGroupIterator();
 
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
@@ -146,6 +163,9 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
             recordCheckIfNewPathExists(Boolean.FALSE);
 
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+
+            getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
+            recordGetResourcesFromAccumulator(new ArrayList<Resource>());
 
             replay();
 
@@ -198,12 +218,20 @@ public class PropertiesResourceResolverBeanTestCase extends AbstractResourceReso
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
+            recordGetResourceAccumulator();
+            recordIsBundlingEnabled(Boolean.FALSE);
+
             recordGetMatchingGroupIterator();
 
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
 
             recordGetFromResourceCache(resourceCacheKey);
+
+            getMockResourceAccumulator().accumulate(Arrays.asList(getResourcePathTestData()
+                    .getMappedIphoneGroupPropertiesResourcePath()));
+            recordGetResourcesFromAccumulator(Arrays.asList(getResourcePathTestData()
+                    .getMappedIphoneGroupPropertiesResourcePath()));
 
             replay();
 

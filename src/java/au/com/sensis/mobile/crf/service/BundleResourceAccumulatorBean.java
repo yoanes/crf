@@ -148,5 +148,11 @@ public class BundleResourceAccumulatorBean extends AbstractResourceAccumulatorBe
         return bundleFactory;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isBundlingEnabled() {
+        return true;
+    }
 }

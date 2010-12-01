@@ -114,4 +114,12 @@ public class ResourceAccumulatorBean extends AbstractResourceAccumulatorBean {
     private List<Resource> doGetResources() {
         return new ArrayList<Resource>(allResourcePaths);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isBundlingEnabled() {
+        return false;
+    }
 }

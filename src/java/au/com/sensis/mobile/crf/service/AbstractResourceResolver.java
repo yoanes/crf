@@ -12,6 +12,9 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -442,6 +445,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
             debugLogResourcesFoundInCache();
 
             final Resource[] cachedResources = getResourcesFromCache(key);
+// TODO: need resolvers to handle resource resolution tree updates but JSP resolver must ignore
+// and let the ResourceResolverServlet do it.
+//            addResourcesToResourceResolutionTreeIfEnabled(Arrays.asList(cachedResources));
             return Arrays.asList(cachedResources);
         } else {
             debugLogResourcesNotFoundInCache();
@@ -462,15 +468,55 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         return cachedResources;
     }
 
-    private void debugLogResourcesFoundInCache() {
+    /**
+     * Log a debug message that resources were found in the cache.
+     */
+    protected final void debugLogResourcesFoundInCache() {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Returning resources from cache.");
         }
     }
-    private void debugLogResourcesNotFoundInCache() {
+
+    /**
+     * Log a debug message that resources were not found in the cache.
+     */
+    protected final void debugLogResourcesNotFoundInCache() {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Resources not found in cache. Will resolve them.");
         }
+    }
+
+    /**
+     * Add the Resources to the {@link ResourceResolutionTree} for the current
+     * thread.
+     *
+     * @param resources
+     *            Resources to add to the {@link ResourceResolutionTree} for the
+     *            current thread.
+     */
+    protected void addResourcesToResourceResolutionTreeIfEnabled(
+            final List<Resource> resources) {
+        if (getResourceResolutionTree().isEnabled()) {
+            for (final Resource currResource : resources) {
+                addResourcesToResourceResolutionTreeIfEnabled(currResource);
+            }
+        }
+    }
+
+    /**
+     * Add the Resource to the {@link ResourceResolutionTree} for the current
+     * thread.
+     *
+     * @param resource
+     *            Resource to add to the {@link ResourceResolutionTree} for the
+     *            current thread.
+     */
+    protected final void addResourcesToResourceResolutionTreeIfEnabled(final Resource resource) {
+        getResourceResolutionTree().addChildToCurrentNode(new ResourceTreeNodeBean(resource));
+    }
+
+    private ResourceResolutionTree getResourceResolutionTree() {
+        return ResourceResolutionTreeHolder.getResourceResolutionTree();
     }
 
 

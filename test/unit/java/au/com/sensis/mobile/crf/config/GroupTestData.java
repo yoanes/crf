@@ -29,7 +29,7 @@ public class GroupTestData {
 
     public Group createAppleGroup() {
         final Group group = new Group();
-        group.setName("iApple");
+        group.setName("apple");
         group.setExpr("device.name =~ '.*Apple.*'");
         return group;
     }
