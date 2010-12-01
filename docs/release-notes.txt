@@ -1,4 +1,4 @@
-==== (PENDING) Version 0.1.2-105 (tag: contentRenderingFramework_v0_1_2-105) ==== 
+==== Version 0.1.2-105 (tag: contentRenderingFramework_v0_1_2-105) ==== 
 
 Jiras:
 - CRF-3: ContentRenderingPlatformConfigurationFactory - validate config
@@ -27,10 +27,13 @@ Jiras:
       MBeanServer but they are only enabled if the env.cache.resources.fillers.enabled property in 
       crf-environment.properties.* is true. These MBeans allow you to fill the caches with 
       arbitrary numbers of elements. Useful for analysing memory consumption during development.   
+      
+- Bundling (not sure what the Jira number is because I'm not sure if the Jiras are up to date).      
           
 Now depends on:
 - <dependency org="apache" name="commons-io" rev="1.3" conf="default"/>      
 - <dependency org="org.ehcache" name="ehcache-core" rev="2.3.0" conf="default"/>        
+- <dependency org="com.yahoo" name="yuicompressor" rev="2.4.2" conf="default"/>
 
 ==== Version 0.1.2-104 (tag: contentRenderingFramework_v0_1_2-104) ==== 
 
