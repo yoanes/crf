@@ -118,6 +118,8 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
             Assert.assertEquals("actualResources is wrong",
                     expectedResources, actualResources);
 
+            assertResourceResolutionTreeUpdated(expectedResources);
+
             // Explicit verify and reset since we are in a loop.
             verify();
             reset();
@@ -163,6 +165,8 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
                             getMockDevice());
 
             Assert.assertEquals("actualResources is wrong", expectedResources, actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -300,16 +304,6 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
 
             recordIsBundlingEnabled(Boolean.FALSE);
 
-//            final ResourceCacheKey resourceCacheKey = createIphoneGroupResourceCacheKey();
-//            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
-//
-//            recordCheckIfNewIphoneGroupPathExists(Boolean.FALSE);
-//
-//            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
-//
-//            final ArrayList<Resource> expectedResources = new ArrayList<Resource>();
-//            getMockResourceAccumulator().accumulate(expectedResources);
-
             recordAccumulateIphoneGroupResourceBundlingDisabled(Boolean.FALSE, Boolean.FALSE);
 
             recordAccumulateAppleGroupResourceBundlingDisabled(Boolean.FALSE, Boolean.FALSE);
@@ -328,6 +322,8 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
                     actualResources);
             Assert.assertTrue("actualResources should be empty",
                     actualResources.isEmpty());
+
+            assertResourceResolutionTreeNotUpdated();
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -386,6 +382,8 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
             Assert.assertEquals("actualResources is wrong",
                     expectedResources, actualResources);
 
+            assertResourceResolutionTreeUpdated(expectedResources);
+
             // Explicit verify and reset since we are in a loop.
             verify();
             reset();
@@ -419,8 +417,11 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
                             getResourcePathTestData().getRequestedCssResourcePath(),
                             getMockDevice());
 
-            Assert.assertEquals("actualResources is wrong", Arrays
-                    .asList(getMappedBundleResourcePath()), actualResources);
+            final List<Resource> expectedResources = Arrays
+                    .asList(getMappedBundleResourcePath());
+            Assert.assertEquals("actualResources is wrong", expectedResources, actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();

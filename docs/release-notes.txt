@@ -28,6 +28,8 @@ Jiras:
       crf-environment.properties.* is true. These MBeans allow you to fill the caches with 
       arbitrary numbers of elements. Useful for analysing memory consumption during development.   
       
+- CRF-33: Cache for Resource resolution
+      
 - Bundling (not sure what the Jira number is because I'm not sure if the Jiras are up to date).      
           
 Now depends on:

@@ -123,6 +123,7 @@ public class PropertiesResourceResolverBeanTestCase
                         getMockDevice());
 
             Assert.assertEquals("actualResources is wrong", expectedResources, actualResources);
+            assertResourceResolutionTreeUpdated(expectedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -176,6 +177,7 @@ public class PropertiesResourceResolverBeanTestCase
 
             Assert.assertNotNull("actualResources should not be null", actualResources);
             Assert.assertTrue("actualResources should be empty", actualResources.isEmpty());
+            assertResourceResolutionTreeNotUpdated();
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -228,10 +230,10 @@ public class PropertiesResourceResolverBeanTestCase
 
             recordGetFromResourceCache(resourceCacheKey);
 
-            getMockResourceAccumulator().accumulate(Arrays.asList(getResourcePathTestData()
-                    .getMappedIphoneGroupPropertiesResourcePath()));
-            recordGetResourcesFromAccumulator(Arrays.asList(getResourcePathTestData()
-                    .getMappedIphoneGroupPropertiesResourcePath()));
+            final List<Resource> expectedResources = Arrays.asList(getResourcePathTestData()
+                    .getMappedIphoneGroupPropertiesResourcePath());
+            getMockResourceAccumulator().accumulate(expectedResources);
+            recordGetResourcesFromAccumulator(expectedResources);
 
             replay();
 
@@ -240,8 +242,9 @@ public class PropertiesResourceResolverBeanTestCase
                         getResourcePathTestData().getRequestedPropertiesResourcePath(),
                         getMockDevice());
 
-            Assert.assertEquals("actualResources is wrong", Arrays.asList(getResourcePathTestData()
-                    .getMappedIphoneGroupPropertiesResourcePath()), actualResources);
+            Assert.assertEquals("actualResources is wrong", expectedResources, actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();

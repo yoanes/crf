@@ -1,6 +1,8 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
@@ -14,6 +16,9 @@ import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.config.UiConfiguration;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
+import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNode;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -62,6 +67,8 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
                 getDeploymentMetadata(),
                 getMockConfigurationFactory(),
                 getMockResourceCache()));
+
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
     }
 
     /**
@@ -72,6 +79,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     @After
     public void tearDownAbstractBaseClass() throws Exception {
         FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
+        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
     }
 
     @Test
@@ -398,5 +406,33 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         getMockResourceCache()
         .put(EasyMock.eq(resourceCacheKey), EasyMock.aryEq(new Resource[] {}));
     }
+
+    protected void assertResourceResolutionTreeUpdated(final List<Resource> resources) {
+        final Iterator<ResourceTreeNode> treePreOrderIterator =
+                ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
+
+        int i = 0;
+        for (final Resource currResource : resources) {
+            Assert.assertTrue(
+                    "ResourceResolutionTree treePreOrderIterator should have a next item "
+                            + "for reource: " + currResource, treePreOrderIterator.hasNext());
+
+            final ResourceTreeNode resourceTreeNode = treePreOrderIterator.next();
+            Assert.assertNotNull("item from preOrderIterator should not be null for resource: "
+                    + currResource, resourceTreeNode);
+            Assert.assertEquals("item from preOrderIterator has wrong resource", currResource,
+                    resourceTreeNode.getResource());
+            i++;
+        }
+    }
+
+    protected void assertResourceResolutionTreeNotUpdated() {
+        final Iterator<ResourceTreeNode> treePreOrderIterator =
+                ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
+
+        Assert.assertFalse("ResourceResolutionTree treePreOrderIterator should not have any items",
+                treePreOrderIterator.hasNext());
+    }
+
 
 }

@@ -92,10 +92,14 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
                         accumulatedResources.toArray(new Resource[] {}));
 
             }
+            addResourcesToResourceResolutionTreeIfEnabled(accumulatedResources);
             return accumulatedResources;
         } else {
             accumulateResources(requestedResourcePath, device, accumulator);
-            return accumulator.getResources();
+
+            final List<Resource> accumulatedResources = accumulator.getResources();
+            addResourcesToResourceResolutionTreeIfEnabled(accumulatedResources);
+            return accumulatedResources;
         }
 
     }

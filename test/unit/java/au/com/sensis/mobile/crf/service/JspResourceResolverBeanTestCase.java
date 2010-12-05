@@ -16,7 +16,6 @@ import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
-import au.com.sensis.mobile.crf.debug.ResourceTreeNode;
 
 /**
  * Unit test {@link JspResourceResolverBean}.
@@ -299,14 +298,6 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
         .andReturn(matchingGroupsIterator);
 
-    }
-
-    private void assertResourceResolutionTreeNotUpdated() {
-        final Iterator<ResourceTreeNode> treePreOrderIterator =
-                ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
-
-        Assert.assertFalse("ResourceResolutionTree treePreOrderIterator should not have any items",
-                treePreOrderIterator.hasNext());
     }
 
     /**

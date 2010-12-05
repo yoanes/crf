@@ -17,7 +17,6 @@ import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
-import au.com.sensis.mobile.crf.debug.ResourceTreeNode;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -159,11 +158,13 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                         getResourcePathTestData().getRequestedImageResourcePath(),
                         getMockDevice());
 
+            final List<Resource> expectedResources
+                = Arrays.asList(getMappedIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong",
-                    Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
+                    expectedResources,
                     actualResources);
 
-            assertResourceResolutionTreeUpdated();
+            assertResourceResolutionTreeUpdated(expectedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -201,20 +202,6 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         .getMappedIphoneGroupGifImageResourcePath();
     }
 
-    private void assertResourceResolutionTreeUpdated() {
-        final Iterator<ResourceTreeNode> treePreOrderIterator =
-                ResourceResolutionTreeHolder.getResourceResolutionTree().preOrderIterator();
-
-        Assert.assertTrue("ResourceResolutionTree treePreOrderIterator should have a next item",
-                treePreOrderIterator.hasNext());
-        final ResourceTreeNode resourceTreeNode = treePreOrderIterator.next();
-        Assert.assertNotNull("first item from preOrderIterator should not be null",
-                resourceTreeNode);
-        Assert.assertEquals("first item from preOrderIterator has wrong resource",
-                getMappedIphoneGroupPngImageResourcePath(), resourceTreeNode.getResource());
-
-    }
-
     @Test
     public void testResolveWhenMappingPerformedAndMultipleResourcesFound() throws Throwable {
 
@@ -243,11 +230,13 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                         getResourcePathTestData().getRequestedImageResourcePath(),
                         getMockDevice());
 
+            final List<Resource> expectedResources
+                = Arrays.asList(getMappedIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong",
-                    Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
+                    expectedResources,
                     actualResources);
 
-            assertResourceResolutionTreeUpdated();
+            assertResourceResolutionTreeUpdated(expectedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -349,11 +338,13 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                         getResourcePathTestData().getRequestedImageResourcePath(),
                         getMockDevice());
 
+            final List<Resource> expectedResources
+                = Arrays.asList(getMappedIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong",
-                    Arrays.asList(getMappedIphoneGroupPngImageResourcePath()),
+                    expectedResources,
                     actualResources);
 
-            assertResourceResolutionTreeUpdated();
+            assertResourceResolutionTreeUpdated(expectedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();

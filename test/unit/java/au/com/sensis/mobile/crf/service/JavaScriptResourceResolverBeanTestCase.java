@@ -204,6 +204,8 @@ public class JavaScriptResourceResolverBeanTestCase
             assertComplexObjectsEqual("actualResources is wrong",
                     createExistsByFilterExpectedResources(),
                     actualResources);
+
+            assertResourceResolutionTreeUpdated(createExistsByFilterExpectedResources());
         }
 
     }
@@ -271,6 +273,8 @@ public class JavaScriptResourceResolverBeanTestCase
             assertComplexObjectsEqual("actualResources is wrong",
                     new ArrayList<Resource>(),
                     actualResources);
+
+            assertResourceResolutionTreeNotUpdated();
         }
 
     }
@@ -337,6 +341,8 @@ public class JavaScriptResourceResolverBeanTestCase
 
             assertComplexObjectsEqual("actualResources is wrong", expectedResources,
                     actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
         }
 
     }
@@ -382,6 +388,8 @@ public class JavaScriptResourceResolverBeanTestCase
             assertComplexObjectsEqual("actualResources is wrong",
                     new ArrayList<Resource>(),
                     actualResources);
+
+            assertResourceResolutionTreeNotUpdated();
         }
 
     }
@@ -425,6 +433,8 @@ public class JavaScriptResourceResolverBeanTestCase
             assertComplexObjectsEqual("actualResources is wrong",
                     createExistsByFilterExpectedResources(),
                     actualResources);
+
+            assertResourceResolutionTreeUpdated(createExistsByFilterExpectedResources());
         }
 
     }
@@ -469,8 +479,9 @@ public class JavaScriptResourceResolverBeanTestCase
             reset();
 
             assertComplexObjectsEqual("actualResources is wrong",
-                    Arrays.asList(getResourcePathTestData()
-                            .getMappedIphoneGroupNamedScriptResourcePath()), actualResources);
+                    expectedResources, actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
         }
 
     }
