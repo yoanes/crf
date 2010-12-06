@@ -37,6 +37,25 @@ Now depends on:
 - <dependency org="org.ehcache" name="ehcache-core" rev="2.3.0" conf="default"/>        
 - <dependency org="com.yahoo" name="yuicompressor" rev="2.4.2" conf="default"/>
 
+==== Version 0.1.2-106 (tag: contentRenderingFramework_v0_1_2-106) ==== 
+
+Jiras:
+- CRF-81: NEW - crf:empty tag
+    - Removed code as it is not actually needed.
+
+Upgrade notes:
+- Any uses of the crf:empty tag introduced in the previous version should be removed from your
+  code.
+
+==== Version 0.1.2-105 (tag: contentRenderingFramework_v0_1_2-105) ==== 
+
+Jiras:
+- CRF-80: NEW - crf:contentType JSP tag
+- CRF-81: NEW - crf:empty tag
+
+Upgrade notes:
+- Should be transparent.
+
 ==== Version 0.1.2-104 (tag: contentRenderingFramework_v0_1_2-104) ==== 
 
 Jiras:

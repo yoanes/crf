@@ -111,4 +111,30 @@
         </variable>
 -->        
     </tag>
+    <tag>
+        <name>contentType</name>
+        <description>Sets the response contentType and charEncoding using values from 
+            responseHeader.properties loaded by the CRF.</description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.ContentTypeTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>device</name>
+            <description>Device of current request.</description>
+            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>response</name>
+            <description></description>
+            <type>javax.servlet.http.HttpServletResponse</type>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <example>
+            <![CDATA[
+                <crf:contentType device="${device}" response="${pageContext.response}" />
+            ]]>
+        </example>
+    </tag>    
 </taglib>
