@@ -18,7 +18,6 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
-import au.com.sensis.mobile.crf.service.BundleFactory;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -44,7 +43,6 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private WebApplicationContext mockWebApplicationContext;
     private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
-    private BundleFactory mockCssBundleFactory;
     private final DeploymentMetadataTestData deploymentMetadataTestData
     = new DeploymentMetadataTestData();
     private LinkTagDependencies linkTagDependencies;
@@ -102,9 +100,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private LinkTagDependencies createTagDependencies() {
         return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
-                getDeploymentMetadataTestData()
-                .createDevDeploymentMetadata(),
-                getMockCssBundleFactory(),
+                getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getCssClientPathPrefix(),
                 getMockResolutionWarnLogger());
     }
@@ -403,20 +399,6 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
      */
     private ResourcePathTestData getResourcePathTestData() {
         return resourcePathTestData;
-    }
-
-    /**
-     * @return the mockCssBundleFactory
-     */
-    public BundleFactory getMockCssBundleFactory() {
-        return mockCssBundleFactory;
-    }
-
-    /**
-     * @param mockCssBundleFactory the mockCssBundleFactory to set
-     */
-    public void setMockCssBundleFactory(final BundleFactory mockCssBundleFactory) {
-        this.mockCssBundleFactory = mockCssBundleFactory;
     }
 
     /**

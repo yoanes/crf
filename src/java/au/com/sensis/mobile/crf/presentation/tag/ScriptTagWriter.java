@@ -10,7 +10,6 @@ import javax.servlet.jsp.tagext.JspFragment;
 import org.apache.commons.lang.StringUtils;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
-import au.com.sensis.mobile.crf.service.BundleFactory;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -122,11 +121,9 @@ public class ScriptTagWriter implements TagWriter {
 
 
     private void resolveResourceAndWriteTag(final JspWriter jspWriter) throws IOException {
-        if (getDeploymentMetadata().isDevPlatform()) {
-            writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
-        } else {
-            writeLinkTagForBundledResources(jspWriter, getAllResourcePaths());
-        }
+
+        writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
+
     }
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
@@ -139,20 +136,6 @@ public class ScriptTagWriter implements TagWriter {
             for (final Resource resource : allResources) {
                 writeSingleLinkTag(jspWriter, resource);
             }
-        }
-    }
-
-    private void writeLinkTagForBundledResources(final JspWriter jspWriter,
-            final List<Resource> allResources)
-    throws IOException {
-
-        if (allResources.isEmpty()) {
-            logNoResourcesFoundWarning();
-        } else {
-            final Resource bundleResourcePath =
-                getBundleFactory().getBundle(allResources);
-
-            writeSingleLinkTag(jspWriter, bundleResourcePath);
         }
     }
 
@@ -235,13 +218,6 @@ public class ScriptTagWriter implements TagWriter {
      */
     private Device getDevice() {
         return device;
-    }
-
-    /**
-     * @return the bundleFactory
-     */
-    private BundleFactory getBundleFactory() {
-        return getTagDependencies().getBundleFactory();
     }
 
     private DeploymentMetadata getDeploymentMetadata() {

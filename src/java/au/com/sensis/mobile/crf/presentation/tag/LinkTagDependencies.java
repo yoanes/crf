@@ -1,7 +1,6 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
-import au.com.sensis.mobile.crf.service.BundleFactory;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
@@ -17,15 +16,12 @@ public class LinkTagDependencies extends TagDependencies {
      */
     public static final String BEAN_NAME = "crf.linkTagDependencies";
 
-    private final BundleFactory cssBundleFactory;
     /**
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to resolve
      *            {@link #getHref()} to concrete resource(s).
      * @param deploymentMetadata
      *            {@link DeploymentMetadata} of the current deployment.
-     * @param cssBundleFactory
-     *            {@link BundleFactory} to use to get CSS Bundles.
      * @param clientPathPrefix
      *            Prefix to be used for the final paths that a client (web
      *            browser) will see.
@@ -36,19 +32,10 @@ public class LinkTagDependencies extends TagDependencies {
     public LinkTagDependencies(
             final ResourceResolverEngine resourceResolverEngine,
             final DeploymentMetadata deploymentMetadata,
-            final BundleFactory cssBundleFactory,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
         super(resourceResolverEngine, deploymentMetadata, clientPathPrefix,
                 resourceResolutionWarnLogger);
-
-        this.cssBundleFactory = cssBundleFactory;
     }
 
-    /**
-     * @return {@link BundleFactory}
-     */
-    public BundleFactory getBundleFactory() {
-        return cssBundleFactory;
-    }
 }

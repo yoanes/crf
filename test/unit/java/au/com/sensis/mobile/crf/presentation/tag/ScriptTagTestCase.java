@@ -18,7 +18,6 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
-import au.com.sensis.mobile.crf.service.JavaScriptBundleFactory;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -43,7 +42,6 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     private WebApplicationContext mockWebApplicationContext;
     private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
-    private JavaScriptBundleFactory mockScriptBundleFactory;
     private final DeploymentMetadataTestData deploymentMetadataTestData
     = new DeploymentMetadataTestData();
     private ScriptTagDependencies scriptTagDependencies;
@@ -101,9 +99,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     private ScriptTagDependencies createTagDependencies() {
         return new ScriptTagDependencies(
                 getMockResourceResolverEngine(),
-                getDeploymentMetadataTestData()
-                .createDevDeploymentMetadata(),
-                getMockScriptBundleFactory(),
+                getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());
     }
@@ -443,20 +439,6 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
      */
     private ResourcePathTestData getResourcePathTestData() {
         return resourcePathTestData;
-    }
-
-    /**
-     * @return the mockScriptBundleFactory
-     */
-    public JavaScriptBundleFactory getMockScriptBundleFactory() {
-        return mockScriptBundleFactory;
-    }
-
-    /**
-     * @param mockScriptBundleFactory the mockScriptBundleFactory to set
-     */
-    public void setMockScriptBundleFactory(final JavaScriptBundleFactory mockScriptBundleFactory) {
-        this.mockScriptBundleFactory = mockScriptBundleFactory;
     }
 
     /**

@@ -21,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
-import au.com.sensis.mobile.crf.service.BundleFactory;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
@@ -52,7 +51,6 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
     private WebApplicationContext mockWebApplicationContext;
     private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
-    private BundleFactory mockCssBundleFactory;
     private FileIoFacade mockFileIoFacade;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
@@ -112,10 +110,6 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 if (testDataArray[i].getDeploymentMetadata().isProdPlatform()) {
                     if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
                         recordLogResourceNotFoundWarning();
-                    } else {
-                        EasyMock.expect(getMockCssBundleFactory().getBundle(
-                                testDataArray[i].getResources())).andReturn(
-                                        testDataArray[i].getBundleResource()).atLeastOnce();
                     }
                 }
 
@@ -123,10 +117,9 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
                 getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
-                Assert.assertEquals("incorrect output for testData at index "
-                        + i + ": '" + testDataArray[i] + "'", testDataArray[i]
-                                                                            .getOutputString(), getStringWriter().getBuffer()
-                                                                            .toString());
+                Assert.assertEquals("incorrect output for testData at index " + i,
+                        testDataArray[i].getOutputString(),
+                        getStringWriter().getBuffer().toString());
 
                 // Explicit verify since we are in a loop.
                 verify();
@@ -152,7 +145,6 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         return new LinkTagDependencies(
                 getMockResourceResolverEngine(),
                 testData.getDeploymentMetadata(),
-                getMockCssBundleFactory(),
                 getResourcePathTestData().getCssClientPathPrefix(),
                 getMockResolutionWarnLogger());
     }
@@ -284,20 +276,6 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the mockCssBundleFactory
-     */
-    public BundleFactory getMockCssBundleFactory() {
-        return mockCssBundleFactory;
-    }
-
-    /**
-     * @param mockCssBundleFactory the mockCssBundleFactory to set
-     */
-    public void setMockCssBundleFactory(final BundleFactory mockCssBundleFactory) {
-        this.mockCssBundleFactory = mockCssBundleFactory;
-    }
-
-    /**
      * @return the resourcePathTestData
      */
     private ResourcePathTestData getResourcePathTestData() {
@@ -371,7 +349,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                         getMappediPhoneGroupCssResourcePath()),
                         getMappedIphoneGroupCssBundleResourcePath(),
                         "<link href=\""
-                        + getMappedIphoneGroupCssBundleResourceHref()
+                        + getMappedDefaultGroupCssResourceHref()
+                        + "\" rel=\"stylesheet\" type=\"text/css\" />"
+                        + "<link href=\""
+                        + getMappediPhoneGroupCssResourceHref()
                         + "\" rel=\"stylesheet\" type=\"text/css\" />",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -398,7 +379,10 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                         getMappediPhoneGroupCssResourcePath()),
                         getMappedIphoneGroupCssBundleResourcePath(),
                         "<link href=\""
-                        + getMappedIphoneGroupCssBundleResourceHref()
+                        + getMappedDefaultGroupCssResourceHref()
+                        + "\" rel=\"stylesheet\" />"
+                        + "<link href=\""
+                        + getMappediPhoneGroupCssResourceHref()
                         + "\" rel=\"stylesheet\" />",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -422,7 +406,9 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(getMappedDefaultGroupCssResourcePath(),
                         getMappediPhoneGroupCssResourcePath()),
                         getMappedIphoneGroupCssBundleResourcePath(),
-                        "<link href=\"" + getMappedIphoneGroupCssBundleResourceHref()
+                        "<link href=\"" + getMappedDefaultGroupCssResourceHref()
+                        + "\" " + "/>"
+                        + "<link href=\"" + getMappediPhoneGroupCssResourceHref()
                         + "\" " + "/>",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -442,9 +428,9 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         return new TestData(
                 Arrays.asList(createRelDynamicAttribute(), createTypeDynamicAttribute()),
                 Arrays.asList(getMappedDefaultGroupCssResourcePath()),
-                getMappedDefaultGroupCssBundleResourcePath(),
+                getMappedDefaultGroupCssResourcePath(),
                 "<link href=\""
-                + getMappedDefaultGroupCssBundleResourceHref()
+                + getMappedDefaultGroupCssResourceHref()
                 + "\" rel=\"stylesheet\" type=\"text/css\" />",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -453,9 +439,9 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         return new TestData(
                 Arrays.asList(createRelDynamicAttribute()),
                 Arrays.asList(getMappedDefaultGroupCssResourcePath()),
-                getMappedDefaultGroupCssBundleResourcePath(),
+                getMappedDefaultGroupCssResourcePath(),
                 "<link href=\""
-                + getMappedDefaultGroupCssBundleResourceHref()
+                + getMappedDefaultGroupCssResourceHref()
                 + "\" rel=\"stylesheet\" />",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -475,8 +461,8 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
                 Arrays.asList(getMappedDefaultGroupCssResourcePath()),
-                getMappedDefaultGroupCssBundleResourcePath(),
-                "<link href=\"" + getMappedDefaultGroupCssBundleResourceHref()
+                getMappedDefaultGroupCssResourcePath(),
+                "<link href=\"" + getMappedDefaultGroupCssResourceHref()
                 + "\" " + "/>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }

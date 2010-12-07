@@ -21,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
-import au.com.sensis.mobile.crf.service.JavaScriptBundleFactory;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
@@ -57,7 +56,6 @@ AbstractJUnit4TestCase {
     private WebApplicationContext mockWebApplicationContext;
     private ResourceResolverEngine mockResourceResolverEngine;
     private Device mockDevice;
-    private JavaScriptBundleFactory mockScriptBundleFactory;
     private FileIoFacade mockFileIoFacade;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
 
@@ -233,11 +231,6 @@ AbstractJUnit4TestCase {
                 if (testDataArray[i].getDeploymentMetadata().isProdPlatform()) {
                     if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
                         recordLogResourceNotFoundWarning();
-                    } else {
-                        EasyMock.expect(getMockScriptBundleFactory().getBundle(
-                                testDataArray[i].getResources())).andReturn(
-                                        testDataArray[i].getBundleResource())
-                                        .atLeastOnce();
                     }
                 }
 
@@ -245,10 +238,9 @@ AbstractJUnit4TestCase {
 
                 getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
-                Assert.assertEquals("incorrect output for testData at index "
-                        + i + ": '" + testDataArray[i] + "'", testDataArray[i]
-                                                                            .getOutputString(), getStringWriter().getBuffer()
-                                                                            .toString());
+                Assert.assertEquals("incorrect output for testData at index " + i,
+                        testDataArray[i].getOutputString(),
+                        getStringWriter().getBuffer().toString());
 
                 // Explicit verify since we are in a loop.
                 verify();
@@ -272,7 +264,7 @@ AbstractJUnit4TestCase {
     private ScriptTagDependencies createTagDependencies(
             final TestData testData) {
         return new ScriptTagDependencies(getMockResourceResolverEngine(),
-                testData.getDeploymentMetadata(), getMockScriptBundleFactory(),
+                testData.getDeploymentMetadata(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());
     }
@@ -280,7 +272,6 @@ AbstractJUnit4TestCase {
     private ScriptTagDependencies createTagDependencies() {
         return new ScriptTagDependencies(getMockResourceResolverEngine(),
                 getDeploymentMetadataTestData().createProdDeploymentMetadata(),
-                getMockScriptBundleFactory(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
                 getMockResolutionWarnLogger());
     }
@@ -413,20 +404,6 @@ AbstractJUnit4TestCase {
     }
 
     /**
-     * @return the mockScriptBundleFactory
-     */
-    public JavaScriptBundleFactory getMockScriptBundleFactory() {
-        return mockScriptBundleFactory;
-    }
-
-    /**
-     * @param mockScriptBundleFactory the mockScriptBundleFactory to set
-     */
-    public void setMockScriptBundleFactory(final JavaScriptBundleFactory mockScriptBundleFactory) {
-        this.mockScriptBundleFactory = mockScriptBundleFactory;
-    }
-
-    /**
      * @return the resourcePathTestData
      */
     private ResourcePathTestData getResourcePathTestData() {
@@ -500,7 +477,10 @@ AbstractJUnit4TestCase {
                         getMappediPhoneGroupScriptResourcePath()),
                         getMappedIphoneGroupScriptBundleResourcePath(),
                         "<script src=\""
-                        + getMappedIphoneGroupScriptBundleResourceHref()
+                        + getMappedDefaultGroupScriptResourceHref()
+                        + "\" title=\"My Image\" type=\"text/javascript\" ></script>"
+                        + "<script src=\""
+                        + getMappediPhoneGroupScriptResourceHref()
                         + "\" title=\"My Image\" type=\"text/javascript\" ></script>",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -526,8 +506,9 @@ AbstractJUnit4TestCase {
                 Arrays.asList(getMappedDefaultGroupScriptResourcePath(),
                         getMappediPhoneGroupScriptResourcePath()),
                         getMappedIphoneGroupScriptBundleResourcePath(),
-                        "<script src=\""
-                        + getMappedIphoneGroupScriptBundleResourceHref()
+                        "<script src=\"" + getMappedDefaultGroupScriptResourceHref()
+                        + "\" title=\"My Image\" ></script>"
+                        + "<script src=\"" + getMappediPhoneGroupScriptResourceHref()
                         + "\" title=\"My Image\" ></script>",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -551,7 +532,9 @@ AbstractJUnit4TestCase {
                 Arrays.asList(getMappedDefaultGroupScriptResourcePath(),
                         getMappediPhoneGroupScriptResourcePath()),
                         getMappedIphoneGroupScriptBundleResourcePath(),
-                        "<script src=\"" + getMappedIphoneGroupScriptBundleResourceHref()
+                        "<script src=\"" + getMappedDefaultGroupScriptResourceHref()
+                        + "\" " + "></script>"
+                        + "<script src=\"" + getMappediPhoneGroupScriptResourceHref()
                         + "\" " + "></script>",
                         getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -571,9 +554,9 @@ AbstractJUnit4TestCase {
         return new TestData(
                 Arrays.asList(createTitleDynamicAttribute(), createTypeDynamicAttribute()),
                 Arrays.asList(getMappedDefaultGroupScriptResourcePath()),
-                getMappedDefaultGroupScriptBundleResourcePath(),
+                getMappedDefaultGroupScriptResourcePath(),
                 "<script src=\""
-                + getMappedDefaultGroupScriptBundleResourceHref()
+                + getMappedDefaultGroupScriptResourceHref()
                 + "\" title=\"My Image\" type=\"text/javascript\" ></script>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -582,9 +565,9 @@ AbstractJUnit4TestCase {
         return new TestData(
                 Arrays.asList(createTitleDynamicAttribute()),
                 Arrays.asList(getMappedDefaultGroupScriptResourcePath()),
-                getMappedDefaultGroupScriptBundleResourcePath(),
+                getMappedDefaultGroupScriptResourcePath(),
                 "<script src=\""
-                + getMappedDefaultGroupScriptBundleResourceHref()
+                + getMappedDefaultGroupScriptResourceHref()
                 + "\" title=\"My Image\" ></script>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
@@ -604,8 +587,8 @@ AbstractJUnit4TestCase {
         return new TestData(
                 new ArrayList<DynamicTagAttribute>(),
                 Arrays.asList(getMappedDefaultGroupScriptResourcePath()),
-                getMappedDefaultGroupScriptBundleResourcePath(),
-                "<script src=\"" + getMappedDefaultGroupScriptBundleResourceHref()
+                getMappedDefaultGroupScriptResourcePath(),
+                "<script src=\"" + getMappedDefaultGroupScriptResourceHref()
                 + "\" " + "></script>",
                 getDeploymentMetadataTestData().createProdDeploymentMetadata());
     }
