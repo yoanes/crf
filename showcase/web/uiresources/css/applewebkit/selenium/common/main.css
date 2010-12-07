@@ -1,1 +1,5 @@
 /* [applewebkit] common/main.css */
+
+#applewebkit {
+	font-family:arial, sans-serif;
+}
