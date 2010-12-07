@@ -112,11 +112,12 @@
 -->        
     </tag>
     <tag>
-        <name>contentType</name>
-        <description>Sets the response contentType and charEncoding using values from 
-            responseHeader.properties loaded by the CRF.</description>
-        <tag-class>au.com.sensis.mobile.crf.presentation.tag.ContentTypeTag</tag-class>
-        <body-content>empty</body-content>
+        <name>html</name>
+        <description>Writes the doctype, start and end html tags and sets the response contentType 
+            and charEncoding using values loaded from the device repository. 
+        </description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.HtmlTag</tag-class>
+        <body-content>scriptless</body-content>
         <attribute>
             <name>device</name>
             <description>Device of current request.</description>
@@ -124,16 +125,17 @@
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <attribute>
-            <name>response</name>
-            <description></description>
-            <type>javax.servlet.http.HttpServletResponse</type>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
         <example>
             <![CDATA[
-                <crf:contentType device="${device}" response="${pageContext.response}" />
+                <crf:html device="${device}" response="${pageContext.response}">
+                    <head>
+                        ...
+                    </head>
+                    
+                    <body>
+                        ...
+                    </body>
+                </crf:html>
             ]]>
         </example>
     </tag>    

@@ -2,9 +2,9 @@
 
 <jsp:directive.include file="/WEB-INF/view/common/jsp/commonTagLibs.jsp"/>
 <jsp:directive.include file="/WEB-INF/view/common/jsp/projectTagLibs.jsp"/>
-<jsp:directive.include file="/WEB-INF/view/common/jsp/contentType.jsp"/>
     
-<html xmlns="http://www.w3.org/1999/xhtml">
+<crf:html device="${context.device}">
+
   <head>
     <%--
       - Acceptance criteria: test inclusion of relative JSPs via CRF (Jira CRF-16). 
@@ -28,4 +28,4 @@
       --%>
     <jsp:include page="../../../selenium/common/images.crf"/>
   </body>
-</html>
+</crf:html>

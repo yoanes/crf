@@ -18,17 +18,13 @@ import au.com.sensis.mobile.crf.service.PropertiesLoader;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
- * Facade to a script tag that uses the Content Rendering Framework to resolve
- * the resource path set into {@link #setSrc(String)}.
+ * Sets the content type of the page.
  *
- * <p>
- * This facade also prevents duplicate tags from being written in the current
- * HTTP request. The unique id of each tag is governed by the value of the href
- * attribute.
- * </p>
- *
+ * @deprecated May resurrect some of this code later if we change from using the
+ *             approach currently used by {@link HtmlTag}.
  * @author Adrian.Koh2@sensis.com.au
  */
+@Deprecated
 public class ContentTypeTag extends SimpleTagSupport {
 
     private static final String CHAR_ENCODING_PROPERTY_NAME = "charEncoding";
@@ -98,6 +94,7 @@ public class ContentTypeTag extends SimpleTagSupport {
     /**
      * @return the httpServletResponse
      */
+    // TODO: really should get the response via the JspContext/PageContext.
     private HttpServletResponse getResponse() {
         return httpServletResponse;
     }

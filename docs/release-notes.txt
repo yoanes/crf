@@ -14,6 +14,8 @@ Jiras:
       
 - CRF-69: Cache for Groups resolution
     - UiConfiguration.matchingGroupIterator now uses a cache.
+
+- CRF-33: Cache for Resource resolution
     
 - CRF-77: Caching - modify to use ehcache 
     - Caching of of the following utilises Ehcache now:
@@ -28,7 +30,7 @@ Jiras:
       crf-environment.properties.* is true. These MBeans allow you to fill the caches with 
       arbitrary numbers of elements. Useful for analysing memory consumption during development.   
       
-- CRF-33: Cache for Resource resolution
+- CRF-82 NEW: crf:contentType JSP tag - change to determine content type from device repository
       
 - Bundling (not sure what the Jira number is because I'm not sure if the Jiras are up to date).      
           
@@ -36,6 +38,19 @@ Now depends on:
 - <dependency org="apache" name="commons-io" rev="1.3" conf="default"/>      
 - <dependency org="org.ehcache" name="ehcache-core" rev="2.3.0" conf="default"/>        
 - <dependency org="com.yahoo" name="yuicompressor" rev="2.4.2" conf="default"/>
+
+Upgrade notes:
+- webapps should use the following tag instead of the <html /> tag:
+
+    <crf:html device="${context.device}">
+    ...
+    </crf:html>
+    
+  Furthermore, when using this tag, webapps should not specify either:
+  - the content type and character encoding of responses containing markup. 
+  - the doctype of the response. 
+- Your application must be using at least version 1.263 of the devices.mdpr Volantis Device 
+  Repository.
 
 ==== Version 0.1.2-106 (tag: contentRenderingFramework_v0_1_2-106) ==== 
 
