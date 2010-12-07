@@ -123,7 +123,7 @@ public class JavaScriptResourceAccumulatorBean implements ResourceAccumulator {
     private List<Resource> doGetResources() {
         List<Resource> allResources = new ArrayList<Resource>(allResourcePaths);
 
-        if (isBundlingEnabled() && (allResources.size() > 1)) {
+        if (isBundlingEnabled() && !allResources.isEmpty()) {
 
             try {
                 final Resource bundle = getBundleFactory().getBundle(allResources);
@@ -163,12 +163,12 @@ public class JavaScriptResourceAccumulatorBean implements ResourceAccumulator {
             // for each found resource decide if we want to add it to the final list
             for (final Resource newResource : resolvedPaths) {
 
-                LOGGER.debug("looking at: " + newResource.getNewPath());
+                LOGGER.debug("Checking if should accumulate " + newResource.getNewPath());
 
                 if (!hasAVariantAlreadyBeenStored(newResource, allResourcePaths)) {
 
-                    LOGGER.debug("Adding " + newResource.getNewPath() + " to the list.");
                     allResourcePaths.push(newResource);
+                    LOGGER.debug("Accumulated " + newResource.getNewPath() + " to the list.");
                 }
             }
         }
