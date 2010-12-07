@@ -127,7 +127,7 @@
         </attribute>
         <example>
             <![CDATA[
-                <crf:html device="${device}" response="${pageContext.response}">
+                <crf:html device="${device}">
                     <head>
                         ...
                     </head>
