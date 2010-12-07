@@ -88,7 +88,6 @@
         class="au.com.sensis.mobile.crf.presentation.tag.LinkTagDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentMetadata" />
-        <constructor-arg ref="crf.bundleFactory" />
         <constructor-arg value="@{crf.env.resources.css.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
     </bean>
@@ -105,16 +104,8 @@
         class="au.com.sensis.mobile.crf.presentation.tag.ScriptTagDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg ref="crf.deploymentMetadata" />
-        <constructor-arg ref="crf.jsBundleFactory" />
         <constructor-arg value="@{crf.env.resources.javascript.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
-    </bean>
-    
-    <bean id="crf.bundleFactory" class="au.com.sensis.mobile.crf.service.BundleFactory" />
-    
-    <bean id="crf.jsBundleFactory" class="au.com.sensis.mobile.crf.service.JavaScriptBundleFactory">
-        <constructor-arg value="@{crf.resources.javascript.abstract.path.package.keyword}" />
-        <constructor-arg value="@{crf.resources.javascript.bundle.package.filename}" />    
     </bean>
     
     <bean id="crf.imageServletDependencies" 
