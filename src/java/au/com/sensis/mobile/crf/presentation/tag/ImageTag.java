@@ -23,6 +23,7 @@ import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 public class ImageTag extends AbstractTag {
 
     private String src;
+    private static final String IPHONE4_USER_AGENT_NAME_PORTION = "iPhone OS 4";
 
     /**
      * {@inheritDoc}
@@ -93,16 +94,32 @@ public class ImageTag extends AbstractTag {
         jspWriter.print("src=\"" + getTagDependencies().getClientPathPrefix()
                 + imageSrc + "\" ");
 
-        if (imageWidth != 0) {
-            jspWriter.print("width=\"" + imageWidth + "\" ");
-        }
-        if (imageHeight != 0) {
-            jspWriter.print("height=\"" + imageHeight + "\" ");
-        }
+        writeImageWidth(jspWriter, imageWidth, imageHeight);
 
         writeDynamicTagAttributes(jspWriter);
 
         jspWriter.print("/>");
+    }
+
+    private void writeImageWidth(final JspWriter jspWriter, final int imageWidth,
+            final int imageHeight) throws IOException {
+
+        if ((imageWidth != 0) && (imageHeight != 0)) {
+
+            int width = imageWidth;
+            int height = imageHeight;
+
+            // iPhone 4 has a high-res screen, so we actually use images twice the size
+            // that they should be displayed - so we therefore need to halve the size that's output.
+            if (getDevice().getUserAgent().contains(IPHONE4_USER_AGENT_NAME_PORTION)) {
+
+                width /= 2;
+                height /= 2;
+            }
+
+            jspWriter.print("width=\"" + width + "\" ");
+            jspWriter.print("height=\"" + height + "\" ");
+        }
     }
 
     private void writeDynamicTagAttributes(final JspWriter jspWriter) throws IOException {

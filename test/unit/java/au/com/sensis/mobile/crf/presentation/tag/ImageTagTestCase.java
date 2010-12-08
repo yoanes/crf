@@ -158,8 +158,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 if (testDataArray[i].getResource() != null) {
                     recordResourceEndsWithDotNull(Boolean.FALSE);
                     recordGetResourceNewPath();
-                    recordGetResourceWidth();
-                    recordGetResourceHeight();
+                    recordGetUserAgent("notAnIPhone");
+                    recordGetImageSize();
                     recordGetJspWriter();
                 } else {
                     recordLogResourceNotFoundWarning();
@@ -254,6 +254,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         final String expectedOutputTag = "<img src=\"" + getMappedDefaultGroupPngImageResourceHref()
         + "\" " + "width=\"" + width + "\" " + "height=\"" + height + "\" " + "/>";
 
+        recordGetUserAgent("notAnIPhone4");
+
         recordGetImageTagDependencies();
 
         recordLookupRequestedResourceWhenFound(imageResource);
@@ -313,13 +315,13 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 .getNewPath()).atLeastOnce();
     }
 
-    private void recordGetResourceWidth() {
+    private void recordGetUserAgent(final String userAgent) {
 
-        EasyMock.expect(getMockResource().getImageWidth()).andReturn(IMG_WIDTH).atLeastOnce();
+        EasyMock.expect(getMockDevice().getUserAgent()).andReturn(userAgent).once();
     }
 
-    private void recordGetResourceHeight() {
-
+    private void recordGetImageSize() {
+        EasyMock.expect(getMockResource().getImageWidth()).andReturn(IMG_WIDTH).atLeastOnce();
         EasyMock.expect(getMockResource().getImageHeight()).andReturn(IMG_HEIGHT).atLeastOnce();
     }
 
