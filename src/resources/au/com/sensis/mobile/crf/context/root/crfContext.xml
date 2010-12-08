@@ -236,12 +236,51 @@
     <!-- ==================================================================================== -->
     <!--  Debug/logging support. -->
     
+    <!-- Loggers. -->
     <bean id="crf.resourceResolutionWarnLogger" class="au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger" />
     
     <bean id="crf.resourceResolverDebugFilter" class="au.com.sensis.mobile.crf.debug.ResourceResolverDebugFilter">
         <property name="enabled" value="@{crf.env.debug.resource.graph}" />
     </bean>
     
+    <bean id="crf.groupsEhcacheStatsLogger" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+        <property name="targetObject">
+            <bean class="au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger">
+                <constructor-arg ref="crf.groupsEhcache" />
+            </bean>
+        </property>
+        <property name="targetMethod" value="logStats" />
+    </bean>
+    
+    <bean id="crf.resourcesEhcacheStatsLogger" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+        <property name="targetObject">
+            <bean class="au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger">
+                <constructor-arg ref="crf.resourcesEhcache" />
+            </bean>
+        </property>
+        <property name="targetMethod" value="logStats" />
+    </bean>
+    
+    <bean id="crf.timerFactoryBean" class="org.springframework.scheduling.timer.TimerFactoryBean">
+        <property name="scheduledTimerTasks">
+            <list>
+                <bean id="crf.groupsEhcacheStatsLogger.scheduledTask" 
+                    class="org.springframework.scheduling.timer.ScheduledTimerTask">
+                    <!-- Run every M milliseconds. -->
+                    <property name="period" value="@{crf.env.cache.stats.logging.period.milliseconds}" />
+                    <property name="timerTask" ref="crf.groupsEhcacheStatsLogger" />
+                </bean>
+                <bean id="crf.resourcesEhcacheStatsLogger.scheduledTask" 
+                    class="org.springframework.scheduling.timer.ScheduledTimerTask">
+                    <!-- Run every M milliseconds. -->
+                    <property name="period" value="@{crf.env.cache.stats.logging.period.milliseconds}" />
+                    <property name="timerTask" ref="crf.resourcesEhcacheStatsLogger" />
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- Cache fillers. -->
     <bean id="crf.groupsCacheFiller" class="au.com.sensis.mobile.crf.debug.GroupsCacheFillerBean">
         <constructor-arg ref="crf.groupsCache" />
         <property name="enabled" value="@{crf.env.cache.resources.fillers.enabled}"/>
@@ -253,7 +292,7 @@
     </bean>
     
     <!-- this bean must not be lazily initialized if the exporting is to happen -->
-    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+    <bean id="crf.mbean.exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
         <property name="assembler" ref="crf.jmx.assembler"/>
         <property name="namingStrategy" ref="crf.jmx.namingStrategy"/>
         <property name="beans">
@@ -278,4 +317,5 @@
     
     <bean id="crf.jmx.jmxAttributeSource"
       class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource"/>
-</beans>
+      
+    </beans>

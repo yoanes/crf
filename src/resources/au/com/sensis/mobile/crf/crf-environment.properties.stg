@@ -11,6 +11,9 @@ env.cache.resources=true
 # Useful for analysing memory consumption.
 env.cache.resources.fillers.enabled=false
 
+# Period (in milliseconds) over which to log stats about the resource caches. 
+env.cache.stats.logging.period.milliseconds=3600000
+
 # True if you want CSS and JavaScript resources to be bundled.
 env.bundle.resources=true
 

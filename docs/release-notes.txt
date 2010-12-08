@@ -25,6 +25,11 @@ Jiras:
       config files (there is no need to change this due to the small memory footprint).
     - ehcache monitoring MBeans are now registered with the platform's MBeanServer. 
       If none is found, an MBeanServer will be created.
+    - ehcache statistics are also logged via log4j at regular intervals. The interval is
+      controlled by a new env.cache.stats.logging.period.milliseconds property 
+      configured in crf-environment.properties.*. The logging
+      is performed via a log4j logger with name of 
+      au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger.
     - MBeans GroupsCacheFillerBean and ResourceCacheFillerBean are now registered with the platform 
       MBeanServer but they are only enabled if the env.cache.resources.fillers.enabled property in 
       crf-environment.properties.* is true. These MBeans allow you to fill the caches with 
@@ -51,6 +56,9 @@ Upgrade notes:
   - the doctype of the response. 
 - Your application must be using at least version 1.263 of the devices.mdpr Volantis Device 
   Repository.
+- It is advised that you modify your log4j config to direct INFO level messages
+  from au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger to a dedicated cache statistics 
+  log file.
 
 ==== Version 0.1.2-106 (tag: contentRenderingFramework_v0_1_2-106) ==== 
 
