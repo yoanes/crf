@@ -9,7 +9,6 @@ import javax.servlet.jsp.tagext.JspFragment;
 
 import org.apache.commons.lang.StringUtils;
 
-import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
@@ -218,10 +217,6 @@ public class ScriptTagWriter implements TagWriter {
      */
     private Device getDevice() {
         return device;
-    }
-
-    private DeploymentMetadata getDeploymentMetadata() {
-        return getTagDependencies().getDeploymentMetadata();
     }
 
     /**
