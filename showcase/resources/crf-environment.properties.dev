@@ -12,7 +12,6 @@ env.resources.javascript.root.dir=/app/mb/dev/dev_a/sensismobile/uiresources/cur
 env.resources.images.root.dir=/app/mb/dev/dev_a/sensismobile/uiresources/current/images
 
 # Used in HTML
-# TODO: use these. Plus set up to be "/" for non-desk environments.
 env.resources.css.client.path.prefix=/uiresources/css/
 env.resources.javascript.client.path.prefix=/uiresources/javascript/
 env.resources.images.client.path.prefix=/uiresources/images/
