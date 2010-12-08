@@ -119,32 +119,7 @@ public class YUIMinifier implements Minifier {
 
         try {
             final JavaScriptCompressor compressor = new JavaScriptCompressor(in,
-                    new ErrorReporter() {
-                public void warning(final String message, final String sourceName,
-                        final int line, final String lineSource, final int lineOffset) {
-                    if (line < 0) {
-                        LOGGER.debug(message);
-                    } else {
-                        LOGGER.warn(line + ':' + lineOffset + ':' + message);
-                    }
-                }
-
-                public void error(final String message, final String sourceName,
-                        final int line, final String lineSource, final int lineOffset) {
-                    if (line < 0) {
-                        LOGGER.error(message);
-                    } else {
-                        LOGGER.error(line + ':' + lineOffset + ':' + message);
-                    }
-                }
-
-                public EvaluatorException runtimeError(final String message,
-                        final String sourceName,
-                        final int line, final String lineSource, final int lineOffset) {
-                    error(message, sourceName, line, lineSource, lineOffset);
-                    return new EvaluatorException(message);
-                }
-            });
+                    new YUIJavaScriptErrorReporter());
 
             return compressor;
 
@@ -264,4 +239,34 @@ public class YUIMinifier implements Minifier {
         return type.equalsIgnoreCase("css");
     }
 
+
+    private class YUIJavaScriptErrorReporter implements ErrorReporter {
+
+        public void warning(final String message, final String sourceName,
+                final int line, final String lineSource, final int lineOffset) {
+            if (line < 0) {
+                LOGGER.debug(message);
+            } else {
+                LOGGER.warn(line + ':' + lineOffset + ':' + message);
+            }
+        }
+
+        public void error(final String message, final String sourceName,
+                final int line, final String lineSource, final int lineOffset) {
+            if (line < 0) {
+                LOGGER.error(message);
+            } else {
+                LOGGER.error(line + ':' + lineOffset + ':' + message);
+            }
+        }
+
+        public EvaluatorException runtimeError(final String message,
+                final String sourceName,
+                final int line, final String lineSource, final int lineOffset) {
+            error(message, sourceName, line, lineSource, lineOffset);
+            return new EvaluatorException(message);
+        }
+    }
 }
+
+

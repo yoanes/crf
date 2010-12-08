@@ -42,6 +42,20 @@ public class BundleFactory {
             return null;
         }
 
+        final Resource lastResource = getLastResource(resourcePathsToInclude);
+
+        final String bundleFilename = determineBundleFilename(lastResource);
+
+        writeToFile(bundleFilename, readSourceFiles(resourcePathsToInclude));
+
+        doMinification(bundleFilename);
+
+        // make Resource for bundle
+        return createBundleResourceFrom(lastResource);
+    }
+
+    private String readSourceFiles(final List<Resource> resourcePathsToInclude) throws IOException {
+
         final StringBuilder combinedContent = new StringBuilder();
 
         for (final Resource resource : resourcePathsToInclude) {
@@ -51,28 +65,7 @@ public class BundleFactory {
             readFileInto(file, combinedContent);
         }
 
-        // determine bundle name from the last Resource
-        final Resource lastResource = resourcePathsToInclude.get(resourcePathsToInclude.size() - 1);
-        final String bundleFilename = createBundleFullFilepath(lastResource);
-
-        if (!StringUtils.isEmpty(bundleFilename)) {
-
-            writeToFile(bundleFilename, combinedContent.toString());
-        }
-
-        if (willDoMinification()) {
-            try {
-                minifier.minify(bundleFilename);
-            } catch (final MinificationException e) {
-                // The exception is logged and swallowed because we can still proceed with
-                // an un-minified bundle.
-                LOGGER.error("Failed to perform minification for bundle '"
-                        + bundleFilename + "'" + e);
-            }
-        }
-
-        // make Resource for bundle
-        return createBundleResourceFrom(lastResource);
+        return combinedContent.toString();
     }
 
     /**
@@ -106,46 +99,59 @@ public class BundleFactory {
      */
     private void writeToFile(final String filename, final String content) throws IOException {
 
-        BufferedWriter bufferedWriter = null;
+        if (!StringUtils.isEmpty(filename)) {
 
-        try {
-
-            final int lastSeparator = getIndexOfLastPathSeparator(filename);
-            // Create the bundle directory (if it doesn't exist)
-            new File(filename.substring(0, lastSeparator)).mkdirs();
-            // Create the empty bundle filename (if it doesn't exist)
-            new File(filename).createNewFile();
-
-            bufferedWriter = new BufferedWriter(new FileWriter(filename));
-            bufferedWriter.write(content);
-            LOGGER.debug("The bundle file has been written out to: " + filename);
-
-        } finally {
+            BufferedWriter bufferedWriter = null;
 
             try {
-                if (bufferedWriter != null) {
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
+
+                final int lastSeparator = getIndexOfLastPathSeparator(filename);
+                // Create the bundle directory (if it doesn't exist)
+                new File(filename.substring(0, lastSeparator)).mkdirs();
+                // Create the empty bundle filename (if it doesn't exist)
+                new File(filename).createNewFile();
+
+                bufferedWriter = new BufferedWriter(new FileWriter(filename));
+                bufferedWriter.write(content);
+                LOGGER.debug("The bundle file has been written out to: " + filename);
+
+            } finally {
+
+                try {
+                    if (bufferedWriter != null) {
+                        bufferedWriter.flush();
+                        bufferedWriter.close();
+                    }
+                } catch (final IOException e) {
+                    LOGGER.error("Unable to close the BufferedWriter. ", e);
                 }
-            } catch (final IOException e) {
-                LOGGER.error("Unable to close the BufferedWriter. ", e);
             }
         }
     }
 
+
     /**
-     * Creates a full file path to the bundle.
-     * @param resource from which to base the file path on
+     * Determines the filename to use for the bundle containing the given Resource.
+     * @param lastResource the Resource to base the bundle filename on
      * @return a full file path for the bundle
      */
-    private String createBundleFullFilepath(final Resource resource) {
+    private String determineBundleFilename(final Resource lastResource) {
 
         final StringBuilder bundleFilePath = new StringBuilder();
-        bundleFilePath.append(resource.getRootResourceDir());
+        bundleFilePath.append(lastResource.getRootResourceDir());
         bundleFilePath.append("/");
-        bundleFilePath.append(createBundleRelativeFilepath(resource));
+        bundleFilePath.append(createBundleRelativeFilepath(lastResource));
 
         return bundleFilePath.toString();
+    }
+
+    private Resource getLastResource(final List<Resource> resourcePathsToInclude) {
+
+        if (resourcePathsToInclude.isEmpty()) {
+            return null;
+        }
+
+        return resourcePathsToInclude.get(resourcePathsToInclude.size() - 1);
     }
 
     /**
@@ -202,10 +208,24 @@ public class BundleFactory {
         return lastSeparator;
     }
 
+    private void doMinification(final String bundleFilename) {
+
+        if (shouldDoMinification()) {
+            try {
+                minifier.minify(bundleFilename);
+            } catch (final MinificationException e) {
+                // The exception is logged and swallowed because we can still proceed with
+                // an un-minified bundle.
+                LOGGER.error("Failed to perform minification for bundle '"
+                        + bundleFilename + "'" + e);
+            }
+        }
+    }
+
     /**
      * @return the willDoMinification
      */
-    boolean willDoMinification() {
+    boolean shouldDoMinification() {
 
         return willDoMinification;
     }
