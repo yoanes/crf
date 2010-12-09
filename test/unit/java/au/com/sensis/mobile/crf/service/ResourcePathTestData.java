@@ -25,7 +25,7 @@ public class ResourcePathTestData {
         }
     }
 
-    private String getDeploymentVersion() {
+    public String getDeploymentVersion() {
         return new DeploymentMetadataTestData().createDevDeploymentMetadata().getVersion();
     }
 

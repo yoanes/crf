@@ -80,7 +80,9 @@ public class ImageTag extends AbstractTag {
     private void writeSingleBrokenImageTag(final JspWriter jspWriter) throws IOException {
         jspWriter.print("<img ");
 
-        jspWriter.print("src=\"" + getSrc() + "\" ");
+        jspWriter.print("src=\"" + getTagDependencies().getClientPathPrefix()
+                + getTagDependencies().getDeploymentMetadata().getVersion() + "/" + getSrc()
+                + "\" ");
 
         writeDynamicTagAttributes(jspWriter);
 

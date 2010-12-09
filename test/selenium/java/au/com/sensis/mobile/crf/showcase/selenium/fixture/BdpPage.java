@@ -32,7 +32,7 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertInlineScriptPresent();
 
         assertAbsolutelyReferencedScript("external, absolutely referenced script not found",
-	        "http://localhost:8080/something.js");
+                "http://localhost:8080/something.js");
 
         assertAppProperty1LoadedFromMainPropertiesFile();
 
@@ -217,7 +217,9 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "@id=\"" + expectedId + "\" "
                 + "and @title=\"" + expectedTitle + "\" "
                 + "and @alt=\"" + expectedAlt + "\" "
-                + "and @src=\"" + expectedSrc + "\""
+                + "and @src=\"/uidev/crfshowcase/uiresources/images/"
+                + getProjectVersion() + "/"
+                + expectedSrc + "\""
                 + "]"));
 
     }

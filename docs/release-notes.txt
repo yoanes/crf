@@ -36,6 +36,7 @@ Jiras:
       arbitrary numbers of elements. Useful for analysing memory consumption during development.   
       
 - CRF-82 NEW: crf:contentType JSP tag - change to determine content type from device repository
+- CRF-83: NEW - crf:img path for broken images should direct to *.image with correct prefix
       
 - Bundling (not sure what the Jira number is because I'm not sure if the Jiras are up to date).      
           

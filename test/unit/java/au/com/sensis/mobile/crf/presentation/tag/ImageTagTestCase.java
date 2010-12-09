@@ -563,6 +563,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private TestData createTestDataNoDynamicAttributesNoMappedResourceAndNoBodyContent() {
         return new TestData(new ArrayList<DynamicTagAttribute>(), null,
                 "<img src=\""
+                + getResourcePathTestData().getImageClientPathPrefix()
+                + getResourcePathTestData().getDeploymentVersion()
+                + "/"
                 + getResourcePathTestData().getRequestedImageResourcePath()
                 + "\" />", StringUtils.EMPTY);
     }
@@ -570,6 +573,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     private TestData createTestDataNoDynamicAttributesNoMappedResourceButWithBodyContent() {
         return new TestData(new ArrayList<DynamicTagAttribute>(), null,
                 "<img src=\""
+                + getResourcePathTestData().getImageClientPathPrefix()
+                + getResourcePathTestData().getDeploymentVersion()
+                + "/"
                 + getResourcePathTestData().getRequestedImageResourcePath()
                 + "\" />", BODY_CONTENT);
     }
