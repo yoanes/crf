@@ -1,3 +1,7 @@
+==== Version 1.0.0 (tag: contentRenderingFramework_v1_0_0) ==== 
+
+Incremented version to 1.0.0 to mark first official release. No changes since 0.1.4.
+
 ==== Version 0.1.4 (tag: contentRenderingFramework_v0_1_4) ==== 
 
 Jiras:
