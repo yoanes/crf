@@ -1,6 +1,12 @@
-==== (Pending) Version 0.1.3-001 (tag: contentRenderingFramework_v0_1_3-001) ==== 
+==== Version 0.1.4 (tag: contentRenderingFramework_v0_1_4) ==== 
 
 Jiras:
+- CRF-21, CRF-32: Added CSS and Javascript file bundling. This can be enabled/disabled via the 
+	  property env.bundle.resources
+
+- CRF-84: Added support for favicons. favicon.ico and apple-touch-icon.png images should be placed
+	  under uiresources/images so that they are included in the uiresources tar file.	  
+
 - CRF-3: ContentRenderingPlatformConfigurationFactory - validate config
     - if one or more groups do not exist as a directory(ies) in any of the resource directory roots,
       a warning is logged using ResourceResolutionWarnLogger.
