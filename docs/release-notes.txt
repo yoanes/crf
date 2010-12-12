@@ -68,6 +68,20 @@ Upgrade notes:
 - It is advised that you modify your log4j config to direct INFO level messages
   from au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger to a dedicated cache statistics 
   log file.
+- Your ivy.xml file will need an explicit line to ignore old versions of ehcache (which had a 
+  different org and module name:
+    
+    <dependencies>
+        ...        
+        
+        <!-- 
+          - Exclude old versions of ehcache which were from a different org and had a different 
+          - module name. 
+          -->
+        <exclude org="ehcache" module="ehcache" />
+        
+        ...
+    </dependencies>
 
 ==== Version 0.1.2-106 (tag: contentRenderingFramework_v0_1_2-106) ==== 
 
