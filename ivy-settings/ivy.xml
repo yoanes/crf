@@ -91,7 +91,7 @@
         <!-- SDP Common -->
         <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>        
         <dependency org="com.sensis" name="sdpCommon-web" rev="1.6-020" conf="default"/>
-        <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-012" conf="default"/>
+        <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-013" conf="default"/>
         
         <!-- Castor. -->
         <dependency org="org.exolab" name="castor-xml" rev="1.1.2.1" conf="default"/>
