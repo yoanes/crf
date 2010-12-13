@@ -52,6 +52,7 @@ Now depends on:
 - <dependency org="apache" name="commons-io" rev="1.3" conf="default"/>      
 - <dependency org="org.ehcache" name="ehcache-core" rev="2.3.0" conf="default"/>        
 - <dependency org="com.yahoo" name="yuicompressor" rev="2.4.2" conf="default"/>
+- <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-013" conf="default"/>
 
 Upgrade notes:
 - webapps should use the following tag instead of the <html /> tag:
