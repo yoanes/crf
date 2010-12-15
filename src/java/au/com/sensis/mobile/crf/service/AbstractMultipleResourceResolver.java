@@ -138,13 +138,8 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
 
     private ResourceCacheKey createBundleResourceCacheKey(final String requestedResourcePath,
             final Device device) {
-        final Iterator<Group> matchingGroupIterator =
-                getMatchingGroupIterator(device, requestedResourcePath);
-        if (matchingGroupIterator.hasNext()) {
-            return new ResourceCacheKeyBean(requestedResourcePath, matchingGroupIterator.next());
-        } else {
-            return null;
-        }
+        final Group[] matchingGroups = getMatchingGroups(device, requestedResourcePath);
+        return new ResourceCacheKeyBean(requestedResourcePath, matchingGroups);
     }
 
     /**

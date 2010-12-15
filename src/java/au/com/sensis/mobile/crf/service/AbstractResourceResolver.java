@@ -370,6 +370,20 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
                 .matchingGroupIterator(device);
     }
 
+    /**
+     * @param device
+     *            {@link Device} to get iterator for.
+     * @param requestedResourcePath
+     *            Requested path.
+     * @return groups that match the given device.
+     */
+    protected final Group[] getMatchingGroups(final Device device,
+            final String requestedResourcePath) {
+
+        return getConfigurationFactory().getUiConfiguration(requestedResourcePath).matchingGroups(
+                device);
+    }
+
     private void debugLogAttemptingResolution(final String requestedResourcePath) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug(

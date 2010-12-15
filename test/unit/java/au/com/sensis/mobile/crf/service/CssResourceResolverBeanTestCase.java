@@ -141,11 +141,11 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
             recordGetResourceAccumulator();
             recordIsBundlingEnabled(Boolean.TRUE);
 
-            // First group iterator used to determine first group so that we can build a
+            // First request for groups used to determine first group so that we can build a
             // ResourceCacheKey to check if the bundle exists in the cache.
-            recordGetMatchingGroupIterator();
+            recordGetMatchingGroups();
 
-            recordCheckResourceCache(createIphoneGroupResourceCacheKey(), Boolean.FALSE);
+            recordCheckResourceCache(createBundleResourceCacheKey(), Boolean.FALSE);
 
             // Second group iterator used to accumulate resources from all groups.
             recordGetMatchingGroupIterator();
@@ -155,7 +155,7 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
             final List<Resource> expectedResources = Arrays.asList(getMappedBundleResourcePath());
             recordGetResourcesFromAccumulator(expectedResources);
 
-            recordPutBundleIntoResourceCache(createIphoneGroupResourceCacheKey());
+            recordPutBundleIntoResourceCache(createBundleResourceCacheKey());
 
             replay();
 
@@ -288,6 +288,14 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
         return resourceCacheKey;
     }
 
+    private ResourceCacheKey createBundleResourceCacheKey() {
+        final ResourceCacheKey resourceCacheKey =
+                new ResourceCacheKeyBean(getResourcePathTestData().getRequestedCssResourcePath(),
+                        new Group[] { getGroupTestData().createIPhoneGroup(),
+                                getGroupTestData().createAppleGroup() });
+        return resourceCacheKey;
+    }
+
     @Test
     public void testResolveWhenMappingPerformedAndResourceDoesNotExist()
     throws Throwable {
@@ -405,10 +413,10 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
             recordGetResourceAccumulator();
             recordIsBundlingEnabled(Boolean.TRUE);
 
-            recordGetMatchingGroupIterator();
-            recordCheckResourceCache(createIphoneGroupResourceCacheKey(), Boolean.TRUE);
+            recordGetMatchingGroups();
+            recordCheckResourceCache(createBundleResourceCacheKey(), Boolean.TRUE);
 
-            recordGetBundleResourceFromCache(createIphoneGroupResourceCacheKey());
+            recordGetBundleResourceFromCache(createBundleResourceCacheKey());
 
             replay();
 
@@ -490,6 +498,22 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
 
     }
 
+    private void recordGetMatchingGroups() {
+
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedCssResourcePath())).andReturn(
+                getMockUiConfiguration());
+
+        final Group[] matchingGroups =
+                new Group[] { getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup() };
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroups(getMockDevice())).andReturn(
+                matchingGroups);
+
+    }
+
     private void recordCheckIfNewIphoneGroupPathExists(final Boolean exists) {
         EasyMock.expect(getMockFileIoFacade().fileExists(
                 getResourcePathTestData().getRootResourcesPath(),
@@ -516,5 +540,11 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
      */
     private void setObjectUnderTest(final CssResourceResolverBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
+    }
+
+
+    @Override
+    public void verify() {
+        // Override to prevent auto verify.
     }
 }

@@ -16,17 +16,30 @@ public class ResourceCacheKeyBean implements ResourceCacheKey {
     private static final long serialVersionUID = 1L;
 
     private final String requestedResourcePath;
-    private final Group group;
+    private final Group [] groups;
+
+    /**
+     * Constructor.
+     *
+     * @param requestedResourcePath
+     *            Path of requested resource.
+     * @param group
+     *            Group to look for the requested resource in.
+     */
+    public ResourceCacheKeyBean(final String requestedResourcePath, final Group group) {
+        this.requestedResourcePath = requestedResourcePath;
+        groups = new Group[] { group };
+    }
 
     /**
      * Constructor.
      *
      * @param requestedResourcePath Path of requested resource.
-     * @param group Group to look for the requested resource in.
+     * @param groups Groups to look for the requested resource in.
      */
-    public ResourceCacheKeyBean(final String requestedResourcePath, final Group group) {
+    public ResourceCacheKeyBean(final String requestedResourcePath, final Group [] groups) {
         this.requestedResourcePath = requestedResourcePath;
-        this.group = group;
+        this.groups = groups;
     }
 
     /**
@@ -37,10 +50,10 @@ public class ResourceCacheKeyBean implements ResourceCacheKey {
     }
 
     /**
-     * @return the group
+     * @return the groups
      */
-    public Group getGroup() {
-        return group;
+    public Group [] getGroups() {
+        return groups;
     }
 
     /**
@@ -60,7 +73,7 @@ public class ResourceCacheKeyBean implements ResourceCacheKey {
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
         equalsBuilder.append(requestedResourcePath, rhs.requestedResourcePath);
-        equalsBuilder.append(group, rhs.group);
+        equalsBuilder.append(groups, rhs.groups);
         return equalsBuilder.isEquals();
     }
 
@@ -71,7 +84,7 @@ public class ResourceCacheKeyBean implements ResourceCacheKey {
     public int hashCode() {
         final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
         hashCodeBuilder.append(requestedResourcePath);
-        hashCodeBuilder.append(group);
+        hashCodeBuilder.append(groups);
         return hashCodeBuilder.toHashCode();
     }
 
@@ -82,7 +95,7 @@ public class ResourceCacheKeyBean implements ResourceCacheKey {
     public String toString() {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
         toStringBuilder.append("requestedResourcePath", requestedResourcePath);
-        toStringBuilder.append("group", group);
+        toStringBuilder.append("groups", groups);
         return toStringBuilder.toString();
     }
 }

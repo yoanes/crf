@@ -97,7 +97,7 @@ public class Nokia7600BdpPage extends BdpPage {
     }
 
     private void assertDefaultGroupJsp() {
-        assertTrue(getBrowser().isTextPresent("[default] bdp.jsp"));
+        assertTrue("[default] bdp.jsp not found", getBrowser().isTextPresent("[default] bdp.jsp"));
     }
 
     private void assertNokia7600Img() {

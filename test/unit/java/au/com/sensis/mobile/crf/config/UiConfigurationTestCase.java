@@ -149,6 +149,28 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
+    public void testMatchingGroupsWhenNotCached() throws Throwable {
+
+        EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
+
+        EasyMock.expect(getMockGroupsCache().contains(getGroupsCacheKey())).andReturn(Boolean.FALSE)
+        .atLeastOnce();
+
+        EasyMock.expect(getMockGroups().matchingGroups(getMockDevice())).andReturn(
+                getGroups());
+
+        getMockGroupsCache().put(EasyMock.eq(getGroupsCacheKey()),
+                EasyMock.aryEq(getGroups().toArray(new Group[] {})));
+
+        replay();
+
+        final Group [] actualGroups =
+            getObjectUnderTest().matchingGroups(getMockDevice());
+
+        Assert.assertArrayEquals("groups are wrong", getGroups().toArray(), actualGroups);
+    }
+
+    @Test
     public void testMatchingGroupIteratorWhenCached() throws Throwable {
 
         EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
@@ -171,6 +193,25 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
         Assert.assertTrue("iterator should have a second item", actualIterator.hasNext());
         Assert.assertEquals("second item is wrong", getGroups().get(1), actualIterator.next());
         Assert.assertFalse("iterator should only have two items", actualIterator.hasNext());
+    }
+
+    @Test
+    public void testMatchingGroupsWhenCached() throws Throwable {
+
+        EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
+
+        EasyMock.expect(getMockGroupsCache().contains(getGroupsCacheKey())).andReturn(Boolean.TRUE)
+        .atLeastOnce();
+
+        EasyMock.expect(getMockGroupsCache().get(getGroupsCacheKey())).andReturn(
+                getGroups().toArray(new Group[] {}));
+
+        replay();
+
+        final Group [] actualGroups =
+            getObjectUnderTest().matchingGroups(getMockDevice());
+
+        Assert.assertArrayEquals("groups are wrong", getGroups().toArray(), actualGroups);
     }
 
     /**

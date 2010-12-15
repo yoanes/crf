@@ -1,3 +1,19 @@
+==== Version 1.0.1 (tag: contentRenderingFramework_v1_0_1) ==== 
+
+Jiras:
+- CRF-85: NEW - cache returns incorrect bundle results for map component when populated for 
+  HTC-Magic, then an Iphone OS 3.1.x
+    - The key into the resources cache for bundles now includes all matching groups for the 
+      current device instead of just the first matching group. This is because, in practice, 
+      the first matching group is not guaranteed to be the most specific group. eg. in the 
+      map component, all image category groups were placed first in the group config file, 
+      before the iphone groups.
+      
+Upgrade notes:
+- Mostly transparent but now depends on:
+
+        <dependency org="com.sensis" name="sdpCommon-web" rev="1.6-022" conf="default"/>      
+
 ==== Version 1.0.0 (tag: contentRenderingFramework_v1_0_0) ==== 
 
 Incremented version to 1.0.0 to mark first official release. No changes since 0.1.4.

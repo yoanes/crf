@@ -138,20 +138,29 @@ public class UiConfiguration {
      *         match the given {@link Device}.
      */
     public Iterator<Group> matchingGroupIterator(final Device device) {
+        return Arrays.asList(matchingGroups(device)).iterator();
+    }
 
+    /**
+     * @param device
+     *            {@link Device} to match against each group.
+     * @return {@link Group}s that match the given {@link Device}.
+     */
+    public Group[] matchingGroups(final Device device) {
         final GroupsCacheKey groupsCacheKey = createGroupsCacheKey(device);
         if (getMatchingGroupsCache().contains(groupsCacheKey)) {
             debugLogGroupsFoundInCache();
 
-            return Arrays.asList(getCachedGroups(groupsCacheKey)).iterator();
+            return getCachedGroups(groupsCacheKey);
         } else {
             debugLogGroupsNotFoundInCache();
 
             final List<Group> matchingGroups = getGroups().matchingGroups(device);
-            getMatchingGroupsCache().put(groupsCacheKey,
-                    matchingGroups.toArray(new Group[] {}));
-            return matchingGroups.iterator();
+            final Group[] matchingGroupsArray = matchingGroups.toArray(new Group[] {});
+            getMatchingGroupsCache().put(groupsCacheKey, matchingGroupsArray);
+            return matchingGroupsArray;
         }
+
     }
 
     private GroupsCacheKey createGroupsCacheKey(final Device device) {
