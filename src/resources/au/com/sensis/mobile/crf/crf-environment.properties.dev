@@ -4,10 +4,8 @@
 
 # True if the loaded ui configuration should be cached or not. False indicates that it will be dynamically
 # reloaded to reflect changes. 
-
-# caching turned on for Perf Testing in Dev
-env.cache.ui.configuration=true
-env.cache.resources=true
+env.cache.ui.configuration=false
+env.cache.resources=false
 
 # True if you want MBeans registered for filling the caches with arbitrary numbers of elements.
 # Useful for analysing memory consumption.

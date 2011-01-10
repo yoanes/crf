@@ -1,3 +1,7 @@
+==== Version 1.0.2 (tag: contentRenderingFramework_v1_0_2) ==== 
+
+Switched off caching of configuration and resoucres for dev environment.
+
 ==== Version 1.0.1 (tag: contentRenderingFramework_v1_0_1) ==== 
 
 Jiras:
