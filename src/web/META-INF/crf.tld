@@ -74,6 +74,26 @@
         <dynamic-attributes>true</dynamic-attributes>
     </tag>
     <tag>
+        <name>imgPath</name>
+        <description>Render the URI path to the resolved image.</description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.ImagePathTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>src</name>
+            <description>The src of the image resource.</description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>device</name>
+            <description>Device of current request.</description>
+            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <dynamic-attributes>false</dynamic-attributes>
+    </tag>    
+    <tag>
         <name>deviceProperty</name>
         <description>Retrieve a named property from the given .</description>
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.DevicePropertyTag</tag-class>
