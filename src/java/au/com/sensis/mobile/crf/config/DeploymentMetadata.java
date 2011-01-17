@@ -29,6 +29,8 @@ public class DeploymentMetadata {
 
     // TODO: get rid of this. Inject directly into what needs it.
     private boolean cacheUiConfiguration = true;
+    // Enable browser/proxy caching of UI resource files
+    private boolean downstreamCachingEnabled = true;
 
     /**
      * Constructor.
@@ -86,6 +88,23 @@ public class DeploymentMetadata {
      */
     public void setCacheUiConfiguration(final boolean cacheUiConfiguration) {
         this.cacheUiConfiguration = cacheUiConfiguration;
+    }
+
+    /**
+     * @return the downstreamCachingEnabled
+     *          defaults to true.
+     */
+    public boolean isDownstreamCachingEnabled() {
+
+        return downstreamCachingEnabled;
+    }
+
+    /**
+     * @param downstreamCachingEnabled  the downstreamCachingEnabled to set
+     */
+    public void setDownstreamCachingEnabled(final boolean downstreamCachingEnabled) {
+
+        this.downstreamCachingEnabled = downstreamCachingEnabled;
     }
 
     /**

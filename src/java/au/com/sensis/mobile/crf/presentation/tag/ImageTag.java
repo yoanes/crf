@@ -1,11 +1,13 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -16,7 +18,7 @@ import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
 /**
  * Facade to an image tag that uses the Content Rendering Framework to resolve
- * the resource path set into {@link #setHref(String)}.
+ * the resource path set into {@link #setSrc(String)}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
@@ -94,7 +96,7 @@ public class ImageTag extends AbstractTag {
         jspWriter.print("<img ");
 
         jspWriter.print("src=\"" + getTagDependencies().getClientPathPrefix()
-                + imageSrc + "\" ");
+                + imageSrc + getUniqueRequestParam() + "\" ");
 
         writeImageWidth(jspWriter, imageWidth, imageHeight);
 
@@ -145,6 +147,17 @@ public class ImageTag extends AbstractTag {
                     .getServletContext());
         return (ImageTagDependencies) webApplicationContext
         .getBean(ImageTagDependencies.BEAN_NAME);
+    }
+
+    private String getUniqueRequestParam() {
+
+        String uniqueRequestParam = StringUtils.EMPTY;
+
+        if (!getTagDependencies().getDeploymentMetadata().isDownstreamCachingEnabled()) {
+            uniqueRequestParam = "?" + new Date().getTime();
+        }
+
+        return uniqueRequestParam;
     }
 
     /**

@@ -1,11 +1,14 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.JspFragment;
+
+import org.apache.commons.lang.StringUtils;
 
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
@@ -105,7 +108,7 @@ public class LinkTagWriter implements TagWriter {
 
         jspWriter.print("href=\""
                 + getTagDependencies().getClientPathPrefix()
-                + resource.getNewPath() + "\" ");
+                + resource.getNewPath() + getUniqueRequestParam() + "\" ");
 
         for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
             jspWriter.print(attribute.getLocalName() + "=\""
@@ -113,6 +116,17 @@ public class LinkTagWriter implements TagWriter {
         }
 
         jspWriter.print("/>");
+    }
+
+    private String getUniqueRequestParam() {
+
+        String uniqueRequestParam = StringUtils.EMPTY;
+
+        if (!getTagDependencies().getDeploymentMetadata().isDownstreamCachingEnabled()) {
+            uniqueRequestParam = "?" + new Date().getTime();
+        }
+
+        return uniqueRequestParam;
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {

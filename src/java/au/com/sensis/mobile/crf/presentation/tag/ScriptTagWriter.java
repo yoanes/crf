@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.jsp.JspException;
@@ -150,7 +151,7 @@ public class ScriptTagWriter implements TagWriter {
     private void writeSingleLinkTag(final JspWriter jspWriter, final Resource resource)
     throws IOException {
         writeSingleLinkTag(jspWriter, getTagDependencies().getClientPathPrefix()
-                + resource.getNewPath());
+                + resource.getNewPath() + getUniqueRequestParam());
     }
 
     private void writeSingleLinkTag(final JspWriter jspWriter,
@@ -180,6 +181,17 @@ public class ScriptTagWriter implements TagWriter {
         jspWriter.print(">");
         jspBody.invoke(jspWriter);
         jspWriter.print("</script>");
+    }
+
+    private String getUniqueRequestParam() {
+
+        String uniqueRequestParam = StringUtils.EMPTY;
+
+        if (!getTagDependencies().getDeploymentMetadata().isDownstreamCachingEnabled()) {
+            uniqueRequestParam = "?" + new Date().getTime();
+        }
+
+        return uniqueRequestParam;
     }
 
     private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {

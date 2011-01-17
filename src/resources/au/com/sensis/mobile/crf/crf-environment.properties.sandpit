@@ -14,6 +14,9 @@ env.cache.resources.fillers.enabled=true
 # Period (in milliseconds) over which to log stats about the resource caches. 
 env.cache.stats.logging.period.milliseconds=60000
 
+# Allow browser/proxy caching of UI resource files
+env.downstream.caching.enabled=false
+
 # True if you want CSS and JavaScript resources to be bundled.
 env.bundle.resources=false
 

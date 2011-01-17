@@ -131,6 +131,7 @@
         </constructor-arg>
         <constructor-arg><value>@{global.version}.@{global.build}</value></constructor-arg>
         <property name="cacheUiConfiguration" value="@{crf.env.cache.ui.configuration}" />
+        <property name="downstreamCachingEnabled" value="@{crf.env.downstream.caching.enabled}" />
     </bean>
     
     <bean id="crf.resourceAccumulatorFactory" 
