@@ -1,3 +1,21 @@
+==== Version 1.0.3 (tag: contentRenderingFramework_v1_0_3) ==== 
+
+- CRF-89: Created a new tag for use in JSPs to only output a resolved image path without
+  any other markup; This is suitable for use within a form submit button tag.
+  
+  * Usage: <crf:imgPath device="${device}" src="header/logo.image" />
+
+- CRF-91: Added the option to 'disable' downstream caching of UI resource files.
+  By default normal downstream caching is disabled for DESK, DEV, SANDPIT and enabled for
+  all other platforms.
+  
+  * Usage: To override the defaults add the following property to your crf-environment.properties
+    file: env.downstream.caching.enabled=<false/true>. No change required to accept the defaults.
+    
+  * Note: When downstream caching is enabled (i.e. = true) there will be no change to existing
+    behaviour. When it is disabled (false) a timestamp value will be appended to the end of each
+    UI resource file URI.
+
 ==== Version 1.0.2 (tag: contentRenderingFramework_v1_0_2) ==== 
 
 Switched off caching of configuration and resources for dev environment.
