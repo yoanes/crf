@@ -5,7 +5,7 @@
   
   * Usage: <crf:imgPath device="${device}" src="header/logo.image" />
 
-- CRF-91: Added the option to 'disable' downstream caching of UI resource files.
+- CRF-90: Added the option to 'disable' downstream caching of UI resource files.
   By default normal downstream caching is disabled for DESK, DEV, SANDPIT and enabled for
   all other platforms.
   
