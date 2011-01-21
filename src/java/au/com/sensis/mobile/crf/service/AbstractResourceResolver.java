@@ -83,7 +83,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
 
-            return doResolve(requestedResourcePath, device);
+            return resolveRecognisedPath(requestedResourcePath, device);
 
         } else {
 
@@ -91,6 +91,37 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
             return new ArrayList<Resource>();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    private List<Resource> resolveRecognisedPath(final String requestedResourcePath,
+            final Device device) throws ResourceResolutionRuntimeException {
+
+        final ResourceCacheKey resourceCacheKey =
+                createResourceCacheKey(requestedResourcePath, device);
+        final List<Resource> cachedResources = getCachedResources(resourceCacheKey);
+        if (cachedResources != null) {
+            // TODO: if (cachedBundle != null) && cachedBundle.isEmpty()
+            // && cachedBundle checked enough times {
+            addResourcesToResourceResolutionTreeIfEnabled(cachedResources);
+            // TODO: if cached resources are an empty list, log warning.
+            return cachedResources;
+        }
+
+        final List<Resource> resolvedResources = doResolve(requestedResourcePath, device);
+        addResourcesToResourceResolutionTreeIfEnabled(resolvedResources);
+
+        if (resourceCacheKey != null) {
+            getResourceCache().put(resourceCacheKey,
+                    resolvedResources.toArray(new Resource[] {}));
+
+        }
+
+        // TODO: if (non)cached resources are an empty list, log warning.
+        return resolvedResources;
+
     }
 
     /**
@@ -314,7 +345,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @return the rootResourcesDir Root directory where the real resources that
      *         this resolver handles are stored.
      */
-    protected File getRootResourcesDir() {
+    protected final File getRootResourcesDir() {
         return rootResourcesDir;
     }
 
@@ -322,7 +353,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @return the {@link ConfigurationFactory} from which to obtain the
      * {@link au.com.sensis.mobile.crf.config.UiConfiguration}.
      */
-    protected ConfigurationFactory getConfigurationFactory() {
+    private ConfigurationFactory getConfigurationFactory() {
         return configurationFactory;
     }
 
@@ -437,49 +468,16 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     /**
      * @return the resourceCache
      */
-    protected ResourceCache getResourceCache() {
+    private ResourceCache getResourceCache() {
         return resourceCache;
-    }
-
-    /**
-     * Like {@link #resolveForGroup(String, Group)} but checks/updates a cache
-     * as well.
-     *
-     * @param requestedResourcePath
-     *            Requested path.
-     * @param currGroup
-     *            Group to find the requested path in.
-     * @return Results from cache if found, otherwise output of
-     *         {@link #resolveForGroup(String, Group)}.
-     */
-    protected List<Resource> resolveForGroupPossiblyFromCache(
-            final String requestedResourcePath, final Group currGroup) {
-        final ResourceCacheKeyBean key = new ResourceCacheKeyBean(requestedResourcePath, currGroup);
-        if (getResourceCache().contains(key)) {
-            debugLogResourcesFoundInCache();
-
-            final Resource[] cachedResources = getResourcesFromCache(key);
-// TODO: need resolvers to handle resource resolution tree updates but JSP resolver must ignore
-// and let the ResourceResolverServlet do it.
-//            addResourcesToResourceResolutionTreeIfEnabled(Arrays.asList(cachedResources));
-            return Arrays.asList(cachedResources);
-        } else {
-            debugLogResourcesNotFoundInCache();
-
-            final List<Resource> resolvedResources =
-                    resolveForGroup(requestedResourcePath, currGroup);
-            getResourceCache().put(key, resolvedResources.toArray(new Resource[] {}));
-            return resolvedResources;
-        }
     }
 
     /**
      * @param key Key to look up in the cache.
      * @return Resources from the cache.
      */
-    protected Resource[] getResourcesFromCache(final ResourceCacheKey key) {
-        final Resource[] cachedResources = getResourceCache().get(key);
-        return cachedResources;
+    protected final Resource[] getResourcesFromCache(final ResourceCacheKey key) {
+        return getResourceCache().get(key);
     }
 
     /**
@@ -508,11 +506,11 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            Resources to add to the {@link ResourceResolutionTree} for the
      *            current thread.
      */
-    protected void addResourcesToResourceResolutionTreeIfEnabled(
+    protected final void addResourcesToResourceResolutionTreeIfEnabled(
             final List<Resource> resources) {
         if (getResourceResolutionTree().isEnabled()) {
             for (final Resource currResource : resources) {
-                addResourcesToResourceResolutionTreeIfEnabled(currResource);
+                addResourceToResourceResolutionTreeIfEnabled(currResource);
             }
         }
     }
@@ -525,12 +523,44 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            Resource to add to the {@link ResourceResolutionTree} for the
      *            current thread.
      */
-    protected final void addResourcesToResourceResolutionTreeIfEnabled(final Resource resource) {
-        getResourceResolutionTree().addChildToCurrentNode(new ResourceTreeNodeBean(resource));
+    protected void addResourceToResourceResolutionTreeIfEnabled(final Resource resource) {
+        if (getResourceResolutionTree().isEnabled()) {
+            getResourceResolutionTree().addChildToCurrentNode(new ResourceTreeNodeBean(resource));
+        }
     }
 
     private ResourceResolutionTree getResourceResolutionTree() {
         return ResourceResolutionTreeHolder.getResourceResolutionTree();
+    }
+
+    /**
+     * Create a key to be used for the {@link #getResourceCache()}.
+     *
+     * @param requestedResourcePath Path being requested.
+     * @param device Device the request is for.
+     * @return a new key instance to be used for the {@link #getResourceCache()}.
+     */
+    protected final ResourceCacheKey createResourceCacheKey(final String requestedResourcePath,
+            final Device device) {
+        final Group[] matchingGroups = getMatchingGroups(device, requestedResourcePath);
+        return new ResourceCacheKeyBean(requestedResourcePath, matchingGroups);
+    }
+
+    /**
+     * Get cached resources for the given key.
+     *
+     * @param resourceCacheKey Key to look up.
+     * @return cached resources for the given key.
+     */
+    protected final List<Resource> getCachedResources(final ResourceCacheKey resourceCacheKey) {
+        if ((resourceCacheKey != null) && getResourceCache().contains(resourceCacheKey)) {
+            debugLogResourcesFoundInCache();
+            return Arrays.asList(getResourceCache().get(resourceCacheKey));
+        } else {
+            debugLogResourcesNotFoundInCache();
+            return null;
+        }
+
     }
 
 

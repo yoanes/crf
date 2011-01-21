@@ -91,39 +91,44 @@ public class PropertiesResourceResolverBeanTestCase
     @Test
     public void testResolveWhenMappingPerformedAndResourceExists() throws Throwable {
         final String[] testValues =
-        { getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
-                getResourcePathTestData().getPropertiesExtensionWithLeadingDot() };
+                { getResourcePathTestData().getPropertiesExtensionWithoutLeadingDot(),
+                        getResourcePathTestData().getPropertiesExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordCheckIfNewPathExists(Boolean.TRUE);
+            recordGetResourceAccumulator();
+            recordGetMatchingGroupIterator();
 
-            recordPutResourceCache(resourceCacheKey, getResourcePathTestData()
-                    .getMappedIphoneGroupPropertiesResourcePath());
+            recordCheckIfNewIphonePathExists(Boolean.TRUE);
+            getMockResourceAccumulator().accumulate(
+                    Arrays.asList(getMappedIphoneGroupPropertiesResourcePath()));
 
-            final List<Resource> expectedResources = Arrays.asList(getResourcePathTestData()
-                    .getMappedIphoneGroupPropertiesResourcePath());
-            getMockResourceAccumulator().accumulate(expectedResources);
-            recordGetResourcesFromAccumulator(expectedResources);
+            recordCheckIfNewApplePathExists(Boolean.TRUE);
+            getMockResourceAccumulator().accumulate(
+                    Arrays.asList(getMappedAppleGroupPropertiesResourcePath()));
+
+            final List<Resource> accumulatedResources =
+                    Arrays.asList(getMappedAppleGroupPropertiesResourcePath(),
+                            getMappedIphoneGroupPropertiesResourcePath());
+            recordGetResourcesFromAccumulator(accumulatedResources);
+
+            recordPutResourceCache(resourceCacheKey, accumulatedResources
+                    .toArray(new Resource[] {}));
 
             replay();
 
             final List<Resource> actualResources =
-                getObjectUnderTest().resolve(
-                        getResourcePathTestData().getRequestedPropertiesResourcePath(),
-                        getMockDevice());
+                    getObjectUnderTest().resolve(
+                            getResourcePathTestData().getRequestedPropertiesResourcePath(),
+                            getMockDevice());
 
-            Assert.assertEquals("actualResources is wrong", expectedResources, actualResources);
-            assertResourceResolutionTreeUpdated(expectedResources);
+            Assert.assertEquals("actualResources is wrong", accumulatedResources, actualResources);
+            assertResourceResolutionTreeUpdated(accumulatedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
@@ -138,9 +143,11 @@ public class PropertiesResourceResolverBeanTestCase
     }
 
     private ResourceCacheKey createResourceCacheKey() {
-        final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
-                getResourcePathTestData().getRequestedPropertiesResourcePath(),
-                getGroupTestData().createIPhoneGroup());
+        final ResourceCacheKey resourceCacheKey =
+                new ResourceCacheKeyBean(getResourcePathTestData()
+                        .getRequestedPropertiesResourcePath(), new Group[] {
+                        getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup() });
         return resourceCacheKey;
     }
 
@@ -153,20 +160,21 @@ public class PropertiesResourceResolverBeanTestCase
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordCheckIfNewPathExists(Boolean.FALSE);
+            recordGetResourceAccumulator();
+            recordGetMatchingGroupIterator();
 
-            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
-
+            recordCheckIfNewIphonePathExists(Boolean.FALSE);
             getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
+
+            recordCheckIfNewApplePathExists(Boolean.FALSE);
+            getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
+
             recordGetResourcesFromAccumulator(new ArrayList<Resource>());
+            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
 
             replay();
 
@@ -186,14 +194,29 @@ public class PropertiesResourceResolverBeanTestCase
 
     }
 
-    private void recordCheckIfNewPathExists(final Boolean exists) {
+    private void recordCheckIfNewIphonePathExists(final Boolean exists) {
         EasyMock.expect(
-                getMockFileIoFacade().fileExists(
-                        getResourcePathTestData().getRootResourcesPath(),
-                        getResourcePathTestData()
-                        .getMappedIphoneGroupPropertiesResourcePath()
-                        .getNewPath())).andReturn(exists);
+                getMockFileIoFacade().fileExists(getResourcePathTestData().getRootResourcesPath(),
+                        getMappedIphoneGroupPropertiesResourcePath().getNewPath())).andReturn(
+                exists);
 
+    }
+
+    private Resource getMappedIphoneGroupPropertiesResourcePath() {
+        return getResourcePathTestData()
+        .getMappedIphoneGroupPropertiesResourcePath();
+    }
+
+    private void recordCheckIfNewApplePathExists(final Boolean exists) {
+        EasyMock.expect(
+                getMockFileIoFacade().fileExists(getResourcePathTestData().getRootResourcesPath(),
+                        getMappedAppleGroupPropertiesResourcePath().getNewPath()))
+                .andReturn(exists);
+
+    }
+
+    private Resource getMappedAppleGroupPropertiesResourcePath() {
+        return getResourcePathTestData().getMappedAppleGroupPropertiesResourcePath();
     }
 
     @Test
@@ -220,20 +243,14 @@ public class PropertiesResourceResolverBeanTestCase
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
 
-            recordGetFromResourceCache(resourceCacheKey);
-
-            final List<Resource> expectedResources = Arrays.asList(getResourcePathTestData()
-                    .getMappedIphoneGroupPropertiesResourcePath());
-            getMockResourceAccumulator().accumulate(expectedResources);
-            recordGetResourcesFromAccumulator(expectedResources);
+            final List<Resource> accumulatedResources =
+                Arrays.asList(getMappedAppleGroupPropertiesResourcePath(),
+                        getMappedIphoneGroupPropertiesResourcePath());
+            recordGetFromResourceCache(resourceCacheKey, accumulatedResources);
 
             replay();
 
@@ -242,20 +259,14 @@ public class PropertiesResourceResolverBeanTestCase
                         getResourcePathTestData().getRequestedPropertiesResourcePath(),
                         getMockDevice());
 
-            Assert.assertEquals("actualResources is wrong", expectedResources, actualResources);
+            Assert.assertEquals("actualResources is wrong", accumulatedResources, actualResources);
 
-            assertResourceResolutionTreeUpdated(expectedResources);
+            assertResourceResolutionTreeUpdated(accumulatedResources);
 
             // Explicit verify and reset since we are in a loop.
             verify();
             reset();
         }
-    }
-
-    private void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey) {
-        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
-                new Resource[] { getResourcePathTestData()
-                        .getMappedIphoneGroupPropertiesResourcePath() });
     }
 
     @Test
@@ -275,15 +286,33 @@ public class PropertiesResourceResolverBeanTestCase
 
     private void recordGetMatchingGroupIterator() {
 
-        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
-                getResourcePathTestData().getRequestedPropertiesResourcePath())).andReturn(
-                        getMockUiConfiguration());
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedPropertiesResourcePath())).andReturn(
+                getMockUiConfiguration());
 
         final Iterator<Group> matchingGroupsIterator =
-            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+                Arrays.asList(getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup()).iterator();
 
-        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
-        .andReturn(matchingGroupsIterator);
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice())).andReturn(
+                matchingGroupsIterator);
+
+    }
+
+    private void recordGetMatchingGroups() {
+
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedPropertiesResourcePath()))
+                .andReturn(getMockUiConfiguration());
+
+        final Group[] matchingGroups =
+                new Group[] { getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup() };
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroups(getMockDevice())).andReturn(
+                matchingGroups);
 
     }
 

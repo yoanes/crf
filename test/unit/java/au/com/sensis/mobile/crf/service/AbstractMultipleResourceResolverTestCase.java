@@ -13,9 +13,17 @@ import org.easymock.EasyMock;
 public abstract class AbstractMultipleResourceResolverTestCase extends
         AbstractResourceResolverTestCase {
 
+    @Deprecated
     protected void recordIsBundlingEnabled(final Boolean bundlingEnabled) {
         EasyMock.expect(getMockResourceAccumulator().isBundlingEnabled())
                 .andReturn(bundlingEnabled).atLeastOnce();
+    }
+
+    protected void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey,
+            final List<Resource> accumulatedResources) {
+
+        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
+                accumulatedResources.toArray(new Resource [] {}));
     }
 
     protected void recordGetResourcesFromAccumulator(final List<Resource> expectedResources) {

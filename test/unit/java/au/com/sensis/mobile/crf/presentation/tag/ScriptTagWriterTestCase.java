@@ -303,7 +303,7 @@ AbstractJUnit4TestCase {
     }
 
     private Resource getMappediPhoneGroupScriptResourcePath() {
-        return getResourcePathTestData().getMappedIphoneGroupNamedScriptResourcePath();
+        return getResourcePathTestData().getMappedIphoneGroupNamedScriptResource();
     }
 
     private String getMappediPhoneGroupScriptResourceHref() {
@@ -621,22 +621,9 @@ AbstractJUnit4TestCase {
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
-    private Resource getMappedDefaultGroupScriptBundleResourcePath() {
-        return getResourcePathTestData().getMappedDefaultGroupNamedScriptBundleResourcePath();
-    }
-
-    private String getMappedDefaultGroupScriptBundleResourceHref() {
-        return getResourcePathTestData().getMappedDefaultGroupNamedScriptBundleResourceHref();
-    }
-
     private Resource getMappedIphoneGroupScriptBundleResourcePath() {
         return getResourcePathTestData().getMappedIphoneGroupNamedScriptBundleResourcePath();
     }
-
-    private String getMappedIphoneGroupScriptBundleResourceHref() {
-        return getResourcePathTestData().getMappedIphoneGroupNamedScriptBundleResourceHref();
-    }
-
 
     private static class TestData {
         private final List<DynamicTagAttribute> dynamicAttributes;

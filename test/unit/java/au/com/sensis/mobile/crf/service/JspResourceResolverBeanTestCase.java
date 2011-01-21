@@ -129,12 +129,12 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordCheckIfNewPathExists(Boolean.TRUE);
+            recordGetMatchingGroupIterator();
+            recordCheckIfNewIphonePathExists(Boolean.TRUE);
 
             recordPutResourceCache(resourceCacheKey,
                     getResourcePathTestData().getMappedIphoneGroupResourcePath());
@@ -146,23 +146,26 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
                         getResourcePathTestData().getRequestedJspResourcePath(),
                         getMockDevice());
 
+            // Explicit verify since we are in a loop.
+            verify();
+
             Assert.assertEquals("actualResources is wrong",
                     Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath()),
                     actualResources);
 
             assertResourceResolutionTreeNotUpdated();
 
-            // Explicit verify and reset since we are in a loop.
-            verify();
+            // Explicit reset since we are in a loop.
             reset();
         }
 
     }
 
     private ResourceCacheKey createResourceCacheKey() {
-        final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
-                getResourcePathTestData().getRequestedJspResourcePath(),
-                getGroupTestData().createIPhoneGroup());
+        final ResourceCacheKey resourceCacheKey =
+                new ResourceCacheKeyBean(getResourcePathTestData().getRequestedJspResourcePath(),
+                        new Group[] { getGroupTestData().createIPhoneGroup(),
+                                getGroupTestData().createAppleGroup() });
         return resourceCacheKey;
     }
 
@@ -182,12 +185,13 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordCheckIfNewPathExists(Boolean.FALSE);
+            recordGetMatchingGroupIterator();
+            recordCheckIfNewIphonePathExists(Boolean.FALSE);
+            recordCheckIfNewApplePathExists(Boolean.FALSE);
 
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
 
@@ -198,6 +202,9 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
                         getResourcePathTestData().getRequestedJspResourcePath(),
                         getMockDevice());
 
+            // Explicit verify since we are in a loop.
+            verify();
+
             Assert.assertNotNull("actualResources should not be null",
                     actualResources);
             Assert.assertTrue("actualResources should be empty",
@@ -205,8 +212,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
             assertResourceResolutionTreeNotUpdated();
 
-            // Explicit verify and reset since we are in a loop.
-            verify();
+            // Explicit reset since we are in a loop.
             reset();
         }
 
@@ -222,8 +228,7 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
 
@@ -236,26 +241,34 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
                         getResourcePathTestData().getRequestedJspResourcePath(),
                         getMockDevice());
 
+            // Explicit verify since we are in a loop.
+            verify();
+
             Assert.assertEquals("actualResources is wrong",
                     Arrays.asList(getResourcePathTestData().getMappedIphoneGroupResourcePath()),
                     actualResources);
 
             assertResourceResolutionTreeNotUpdated();
 
-            // Explicit verify and reset since we are in a loop.
-            verify();
+            // Explicit reset since we are in a loop.
             reset();
         }
 
     }
 
-    private void recordCheckIfNewPathExists(final Boolean exists) {
+    private void recordCheckIfNewIphonePathExists(final Boolean exists) {
         EasyMock.expect(
-                getMockFileIoFacade().fileExists(
-                        getResourcePathTestData().getRootResourcesPath(),
-                        getResourcePathTestData()
-                        .getMappedIphoneGroupResourcePath()
-                        .getNewPath())).andReturn(exists);
+                getMockFileIoFacade().fileExists(getResourcePathTestData().getRootResourcesPath(),
+                        getResourcePathTestData().getMappedIphoneGroupResourcePath().getNewPath()))
+                .andReturn(exists);
+
+    }
+
+    private void recordCheckIfNewApplePathExists(final Boolean exists) {
+        EasyMock.expect(
+                getMockFileIoFacade().fileExists(getResourcePathTestData().getRootResourcesPath(),
+                        getResourcePathTestData().getMappedAppleGroupResourcePath().getNewPath()))
+                .andReturn(exists);
 
     }
 
@@ -288,15 +301,33 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
 
     private void recordGetMatchingGroupIterator() {
 
-        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
-                getResourcePathTestData().getRequestedJspResourcePath())).andReturn(
-                        getMockUiConfiguration());
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedJspResourcePath())).andReturn(
+                getMockUiConfiguration());
 
         final Iterator<Group> matchingGroupsIterator =
-            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+                Arrays.asList(getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup()).iterator();
 
-        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
-        .andReturn(matchingGroupsIterator);
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice())).andReturn(
+                matchingGroupsIterator);
+
+    }
+
+    private void recordGetMatchingGroups() {
+
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedJspResourcePath()))
+                .andReturn(getMockUiConfiguration());
+
+        final Group[] matchingGroups =
+                new Group[] { getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup() };
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroups(getMockDevice())).andReturn(
+                matchingGroups);
 
     }
 

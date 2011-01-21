@@ -161,51 +161,63 @@ public class JavaScriptResourceResolverBeanTestCase
     }
 
     @Test
-    public void testResolveWhenPackageRequestedAndResourcesFoundAndBundlingDisabled()
-    throws Throwable {
+    public void testResolveWhenPackageRequestedAndResourcesFound()
+            throws Throwable {
 
-        final String[] testValues = {
-                getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
-                getResourcePathTestData().getScriptExtensionWithLeadingDot() };
+        final String[] testValues =
+                { getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
+                        getResourcePathTestData().getScriptExtensionWithLeadingDot() };
 
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIteratorForPackage();
-
+            recordGetMatchingGroupsForPackage();
             final ResourceCacheKey resourceCacheKey = createPackageScriptResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
-                    getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
-                    .getNewFile())).andReturn(createExistsByFilterExpectedFileFilterResults());
+            recordGetResourceAccumulator();
+            recordGetMatchingGroupIteratorForPackage();
+            EasyMock.expect(
+                    getMockJavaScriptFileFinder().findFiles(
+                            getResourcePathTestData()
+                                    .getMappedIphoneGroupPackagedScriptBaseDirResource()
+                                    .getNewFile())).andReturn(createIphonePackageFiles());
+            getMockResourceAccumulator().accumulate(createIphonePackageResources());
 
-            recordPutResourceCache(resourceCacheKey,
-                    createExistsByFilterExpectedResources().toArray(new Resource [] {}));
+            EasyMock.expect(
+                    getMockJavaScriptFileFinder().findFiles(
+                            getResourcePathTestData()
+                                    .getMappedAppleGroupPackagedScriptBaseDirResource()
+                                    .getNewFile())).andReturn(createApplePackageFiles());
+            getMockResourceAccumulator().accumulate(createApplePackageResources());
 
-            getMockResourceAccumulator().accumulate(createExistsByFilterExpectedResources());
+            final List<Resource> accumulatedResources = new ArrayList<Resource>();
+            accumulatedResources.addAll(createIphonePackageResources());
+            accumulatedResources.addAll(createApplePackageResources());
 
-            recordGetResourcesFromAccumulator(createExistsByFilterExpectedResources());
+            recordGetResourcesFromAccumulator(accumulatedResources);
+
+            recordPutResourceCache(resourceCacheKey, accumulatedResources
+                    .toArray(new Resource[] {}));
 
             replay();
 
             final List<Resource> actualResources =
-                getObjectUnderTest().resolve(
-                        getResourcePathTestData().getRequestedPackageScriptResourcePath(),
-                        getMockDevice());
+                    getObjectUnderTest().resolve(
+                            getResourcePathTestData().getRequestedPackageScriptResourcePath(),
+                            getMockDevice());
 
-            // Explicit verify and reset since we are in a loop.
+            // Explicit verify since we are in a loop.
             verify();
-            reset();
 
-            assertComplexObjectsEqual("actualResources is wrong",
-                    createExistsByFilterExpectedResources(),
+            assertComplexObjectsEqual("actualResources is wrong", accumulatedResources,
                     actualResources);
 
-            assertResourceResolutionTreeUpdated(createExistsByFilterExpectedResources());
+            assertResourceResolutionTreeUpdated(accumulatedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
+
         }
 
     }
@@ -217,21 +229,25 @@ public class JavaScriptResourceResolverBeanTestCase
     }
 
     private ResourceCacheKey createPackageScriptResourceCacheKey() {
-        final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
-                getResourcePathTestData().getRequestedPackageScriptResourcePath(),
-                getGroupTestData().createIPhoneGroup());
+        final ResourceCacheKey resourceCacheKey =
+                new ResourceCacheKeyBean(getResourcePathTestData()
+                        .getRequestedPackageScriptResourcePath(), new Group[] {
+                        getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup() });
         return resourceCacheKey;
     }
 
     private ResourceCacheKey createNamedScriptResourceCacheKey() {
-        final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
-                getResourcePathTestData().getRequestedNamedScriptResourcePath(),
-                getGroupTestData().createIPhoneGroup());
+        final ResourceCacheKey resourceCacheKey =
+            new ResourceCacheKeyBean(getResourcePathTestData()
+                    .getRequestedNamedScriptResourcePath(), new Group[] {
+                getGroupTestData().createIPhoneGroup(),
+                getGroupTestData().createAppleGroup() });
         return resourceCacheKey;
     }
 
     @Test
-    public void testResolveWhenPackageRequestedAndNoResourcesFoundAndBundlingDisabled()
+    public void testResolveWhenPackageRequestedAndNoResourcesFound()
         throws Throwable {
 
         final String[] testValues = {
@@ -241,23 +257,26 @@ public class JavaScriptResourceResolverBeanTestCase
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIteratorForPackage();
-
+            recordGetMatchingGroupsForPackage();
             final ResourceCacheKey resourceCacheKey = createPackageScriptResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
+            recordGetResourceAccumulator();
+            recordGetMatchingGroupIteratorForPackage();
+
             EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
-                    getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
+                    getResourcePathTestData().getMappedIphoneGroupPackagedScriptBaseDirResource()
                     .getNewFile())).andReturn(new ArrayList<File>());
+            getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
 
-            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
-
+            EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
+                    getResourcePathTestData().getMappedAppleGroupPackagedScriptBaseDirResource()
+                    .getNewFile())).andReturn(new ArrayList<File>());
             getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
 
             recordGetResourcesFromAccumulator(new ArrayList<Resource>());
+
+            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
 
             replay();
 
@@ -266,39 +285,55 @@ public class JavaScriptResourceResolverBeanTestCase
                         getResourcePathTestData().getRequestedPackageScriptResourcePath(),
                         getMockDevice());
 
-            // Explicit verify and reset since we are in a loop.
+            // Explicit verify since we are in a loop.
             verify();
-            reset();
 
             assertComplexObjectsEqual("actualResources is wrong",
                     new ArrayList<Resource>(),
                     actualResources);
 
             assertResourceResolutionTreeNotUpdated();
+
+            // Explicit reset since we are in a loop.
+            reset();
         }
 
     }
 
-    private List<File> createExistsByFilterExpectedFileFilterResults() {
+    private List<File> createIphonePackageFiles() {
 
         final File expectedFile1 =
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath1()
+                getResourcePathTestData().getMappedIphoneGroupPackagedScriptResource1()
                         .getNewFile();
         final File expectedFile2 =
-                getResourcePathTestData().getMappedIphoneGroupBundledScriptResourcePath2()
+                getResourcePathTestData().getMappedIphoneGroupPackagedScriptResource2()
                         .getNewFile();
         return Arrays.asList(expectedFile1, expectedFile2);
     }
 
-    private List<Resource> createExistsByFilterExpectedResources() {
+    private List<Resource> createIphonePackageResources() {
 
         return Arrays.asList(getResourcePathTestData()
-                .getMappedIphoneGroupBundledScriptResourcePath1(), getResourcePathTestData()
-                .getMappedIphoneGroupBundledScriptResourcePath2());
+                .getMappedIphoneGroupPackagedScriptResource1(), getResourcePathTestData()
+                .getMappedIphoneGroupPackagedScriptResource2());
+    }
+
+    private List<File> createApplePackageFiles() {
+
+        final File expectedFile1 =
+                getResourcePathTestData().getMappedAppleGroupPackagedScriptResource1()
+                        .getNewFile();
+        return Arrays.asList(expectedFile1);
+    }
+
+    private List<Resource> createApplePackageResources() {
+
+        return Arrays.asList(getResourcePathTestData()
+                .getMappedAppleGroupPackagedScriptResource1());
     }
 
     @Test
-    public void testResolveWhenPackageNotRequestedAndResourcesFoundAndBundlingDisabled()
+    public void testResolveWhenNamedScriptRequestedAndResourcesFound()
             throws Throwable {
 
         final String[] testValues =
@@ -308,25 +343,30 @@ public class JavaScriptResourceResolverBeanTestCase
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIteratorForSingleJS();
-
+            recordGetMatchingGroupsForNamedScript();
             final ResourceCacheKey resourceCacheKey = createNamedScriptResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordCheckIfNewPathExists(Boolean.TRUE);
+            recordGetResourceAccumulator();
+            recordGetMatchingGroupIteratorNamedScript();
 
-            recordPutResourceCache(resourceCacheKey, getResourcePathTestData()
-                    .getMappedIphoneGroupNamedScriptResourcePath());
-
-            final List<Resource> expectedResources =
+            recordCheckIfNewIphonePathExists(Boolean.TRUE);
+            getMockResourceAccumulator().accumulate(
                     Arrays.asList(getResourcePathTestData()
-                            .getMappedIphoneGroupNamedScriptResourcePath());
-            getMockResourceAccumulator().accumulate(expectedResources);
+                            .getMappedIphoneGroupNamedScriptResource()));
 
-            recordGetResourcesFromAccumulator(expectedResources);
+            recordCheckIfNewApplePathExists(Boolean.TRUE);
+            getMockResourceAccumulator().accumulate(
+                    Arrays.asList(getResourcePathTestData()
+                            .getMappedAppleGroupNamedScriptResource()));
+
+            final List<Resource> accumulatedResources =
+                    Arrays.asList(getResourcePathTestData()
+                            .getMappedIphoneGroupNamedScriptResource());
+            recordGetResourcesFromAccumulator(accumulatedResources);
+
+            recordPutResourceCache(resourceCacheKey, accumulatedResources
+                    .toArray(new Resource[] {}));
 
             replay();
 
@@ -335,20 +375,22 @@ public class JavaScriptResourceResolverBeanTestCase
                             getResourcePathTestData().getRequestedNamedScriptResourcePath(),
                             getMockDevice());
 
-            // Explicit verify and reset since we are in a loop.
+            // Explicit verify since we are in a loop.
             verify();
-            reset();
 
-            assertComplexObjectsEqual("actualResources is wrong", expectedResources,
+            assertComplexObjectsEqual("actualResources is wrong", accumulatedResources,
                     actualResources);
 
-            assertResourceResolutionTreeUpdated(expectedResources);
+            assertResourceResolutionTreeUpdated(accumulatedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
         }
 
     }
 
     @Test
-    public void testResolveWhenPackageNotRequestedAndNoResourcesFoundAndBundlingDisabled()
+    public void testResolveWhenNamedScriptRequestedAndNoResourcesFound()
         throws Throwable {
 
         final String[] testValues = {
@@ -358,21 +400,22 @@ public class JavaScriptResourceResolverBeanTestCase
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIteratorForSingleJS();
-
+            recordGetMatchingGroupsForNamedScript();
             final ResourceCacheKey resourceCacheKey = createNamedScriptResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordCheckIfNewPathExists(Boolean.FALSE);
+            recordGetResourceAccumulator();
+            recordGetMatchingGroupIteratorNamedScript();
 
-            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            recordCheckIfNewIphonePathExists(Boolean.FALSE);
+            getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
 
+            recordCheckIfNewApplePathExists(Boolean.FALSE);
             getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
 
             recordGetResourcesFromAccumulator(new ArrayList<Resource>());
+
+            recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
 
             replay();
 
@@ -381,21 +424,23 @@ public class JavaScriptResourceResolverBeanTestCase
                         getResourcePathTestData().getRequestedNamedScriptResourcePath(),
                         getMockDevice());
 
-            // Explicit verify and reset since we are in a loop.
+            // Explicit verify since we are in a loop.
             verify();
-            reset();
 
             assertComplexObjectsEqual("actualResources is wrong",
                     new ArrayList<Resource>(),
                     actualResources);
 
             assertResourceResolutionTreeNotUpdated();
+
+            // Explicit reset since we are in a loop.
+            reset();
         }
 
     }
 
     @Test
-    public void testResolveWhenPackageRequestedAndResourcesFromCacheAndBundlingDisabled()
+    public void testResolveWhenPackageRequestedAndResourcesFromCache()
     throws Throwable {
 
         final String[] testValues = {
@@ -405,19 +450,14 @@ public class JavaScriptResourceResolverBeanTestCase
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIteratorForPackage();
-
+            recordGetMatchingGroupsForPackage();
             final ResourceCacheKey resourceCacheKey = createPackageScriptResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
 
-            recordGetPackageScriptFromResourceCache(resourceCacheKey);
-
-            getMockResourceAccumulator().accumulate(createExistsByFilterExpectedResources());
-
-            recordGetResourcesFromAccumulator(createExistsByFilterExpectedResources());
+            final List<Resource> accumulatedResources = new ArrayList<Resource>();
+            accumulatedResources.addAll(createIphonePackageResources());
+            accumulatedResources.addAll(createApplePackageResources());
+            recordGetFromResourceCache(resourceCacheKey, accumulatedResources);
 
             replay();
 
@@ -426,21 +466,23 @@ public class JavaScriptResourceResolverBeanTestCase
                         getResourcePathTestData().getRequestedPackageScriptResourcePath(),
                         getMockDevice());
 
-            // Explicit verify and reset since we are in a loop.
+            // Explicit verify since we are in a loop.
             verify();
-            reset();
 
             assertComplexObjectsEqual("actualResources is wrong",
-                    createExistsByFilterExpectedResources(),
+                    accumulatedResources,
                     actualResources);
 
-            assertResourceResolutionTreeUpdated(createExistsByFilterExpectedResources());
+            assertResourceResolutionTreeUpdated(accumulatedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
         }
 
     }
 
     @Test
-    public void testResolveWhenPackageNotRequestedAndResourcesFromCacheAndBundlingDisabled()
+    public void testResolveWhenNamedScriptRequestedAndResourcesFromCache()
             throws Throwable {
 
         final String[] testValues =
@@ -450,22 +492,15 @@ public class JavaScriptResourceResolverBeanTestCase
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetResourceAccumulator();
-            recordIsBundlingEnabled(Boolean.FALSE);
-
-            recordGetMatchingGroupIteratorForSingleJS();
-
+            recordGetMatchingGroupsForNamedScript();
             final ResourceCacheKey resourceCacheKey = createNamedScriptResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
 
-            recordGetNamedScriptFromResourceCache(resourceCacheKey);
+            final List<Resource> accumulatedResources =
+                Arrays.asList(getResourcePathTestData()
+                        .getMappedIphoneGroupNamedScriptResource());
+            recordGetFromResourceCache(resourceCacheKey, accumulatedResources);
 
-            final List<Resource> expectedResources =
-                    Arrays.asList(getResourcePathTestData()
-                            .getMappedIphoneGroupNamedScriptResourcePath());
-            getMockResourceAccumulator().accumulate(expectedResources);
-
-            recordGetResourcesFromAccumulator(expectedResources);
 
             replay();
 
@@ -474,27 +509,18 @@ public class JavaScriptResourceResolverBeanTestCase
                             getResourcePathTestData().getRequestedNamedScriptResourcePath(),
                             getMockDevice());
 
-            // Explicit verify and reset since we are in a loop.
+            // Explicit verify since we are in a loop.
             verify();
-            reset();
 
             assertComplexObjectsEqual("actualResources is wrong",
-                    expectedResources, actualResources);
+                    accumulatedResources, actualResources);
 
-            assertResourceResolutionTreeUpdated(expectedResources);
+            assertResourceResolutionTreeUpdated(accumulatedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
         }
 
-    }
-
-    private void recordGetPackageScriptFromResourceCache(final ResourceCacheKey resourceCacheKey) {
-        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
-                createExistsByFilterExpectedResources().toArray(new Resource [] {}));
-    }
-
-    private void recordGetNamedScriptFromResourceCache(final ResourceCacheKey resourceCacheKey) {
-        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
-                new Resource[] { getResourcePathTestData()
-                        .getMappedIphoneGroupNamedScriptResourcePath() });
     }
 
     @Test
@@ -515,20 +541,18 @@ public class JavaScriptResourceResolverBeanTestCase
 
     @Test
     public void testResolveWhenPackageRequestedAndIOExceptionWhenFindingFiles()
-    throws Throwable {
-
+        throws Throwable {
 
         recordGetResourceAccumulator();
-        recordIsBundlingEnabled(Boolean.FALSE);
 
-        recordGetMatchingGroupIteratorForPackage();
-
+        recordGetMatchingGroupsForPackage();
         final ResourceCacheKey resourceCacheKey = createPackageScriptResourceCacheKey();
         recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
+        recordGetMatchingGroupIteratorForPackage();
         final IOException expectedWrappedException = new IOException("test");
         EasyMock.expect(getMockJavaScriptFileFinder().findFiles(
-                getResourcePathTestData().getMappedIphoneGroupPackagedScriptBundleResourcePath()
+                getResourcePathTestData().getMappedIphoneGroupPackagedScriptBaseDirResource()
                 .getNewFile())).andThrow(expectedWrappedException);
 
         replay();
@@ -572,38 +596,82 @@ public class JavaScriptResourceResolverBeanTestCase
 
     private void recordGetMatchingGroupIteratorForPackage() {
 
-        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
-                getResourcePathTestData().getRequestedPackageScriptResourcePath())).andReturn(
-                        getMockUiConfiguration());
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedPackageScriptResourcePath()))
+                .andReturn(getMockUiConfiguration());
 
         final Iterator<Group> matchingGroupsIterator =
-            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+                Arrays.asList(getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup()).iterator();
 
-        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
-        .andReturn(matchingGroupsIterator);
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice())).andReturn(
+                matchingGroupsIterator);
 
     }
 
-    private void recordGetMatchingGroupIteratorForSingleJS() {
+    private void recordGetMatchingGroupsForPackage() {
 
-        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
-                getResourcePathTestData().getRequestedNamedScriptResourcePath())).andReturn(
-                        getMockUiConfiguration());
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedPackageScriptResourcePath()))
+                .andReturn(getMockUiConfiguration());
 
-        final Iterator<Group> matchingGroupsIterator =
-            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+        final Group[] matchingGroups =
+                new Group[] { getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup() };
 
-        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
-        .andReturn(matchingGroupsIterator);
+        EasyMock.expect(getMockUiConfiguration().matchingGroups(getMockDevice())).andReturn(
+                matchingGroups);
 
     }
 
-    private void recordCheckIfNewPathExists(final Boolean exists) {
+    private void recordGetMatchingGroupsForNamedScript() {
+
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedNamedScriptResourcePath()))
+                        .andReturn(getMockUiConfiguration());
+
+        final Group[] matchingGroups =
+            new Group[] { getGroupTestData().createIPhoneGroup(),
+                getGroupTestData().createAppleGroup() };
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroups(getMockDevice())).andReturn(
+                matchingGroups);
+
+    }
+
+    private void recordGetMatchingGroupIteratorNamedScript() {
+
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedNamedScriptResourcePath()))
+                .andReturn(getMockUiConfiguration());
+
+        final Iterator<Group> matchingGroupsIterator =
+                Arrays.asList(getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup()).iterator();
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice())).andReturn(
+                matchingGroupsIterator);
+
+    }
+
+    private void recordCheckIfNewIphonePathExists(final Boolean exists) {
         EasyMock.expect(
                 getMockFileIoFacade().fileExists(
                         getResourcePathTestData().getRootResourcesPath(),
-                        getResourcePathTestData()
-                        .getMappedIphoneGroupNamedScriptResourcePath()
+                        getResourcePathTestData().getMappedIphoneGroupNamedScriptResource()
+                                .getNewPath())).andReturn(exists);
+
+    }
+
+    private void recordCheckIfNewApplePathExists(final Boolean exists) {
+        EasyMock.expect(
+                getMockFileIoFacade().fileExists(
+                        getResourcePathTestData().getRootResourcesPath(),
+                        getResourcePathTestData().getMappedAppleGroupNamedScriptResource()
                         .getNewPath())).andReturn(exists);
 
     }

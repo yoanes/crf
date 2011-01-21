@@ -152,7 +152,7 @@ public class ResourcePathTestData {
         + getMappedDefaultGroupNamedScriptBundleResourcePath().getNewPath();
     }
 
-    public Resource getMappedDefaultGroupBundledScriptBundleResourcePath() {
+    public Resource getMappedDefaultGroupPackagedScriptBundleResourcePath() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 getDeploymentVersion() + "/default/util/", getRootResourcesPath(),
                 getGroupTestData().createDefaultGroup());
@@ -192,7 +192,7 @@ public class ResourcePathTestData {
                 getGroupTestData().createIPhoneGroup());
     }
 
-    public Resource getMappedIphoneGroupNamedScriptResourcePath() {
+    public Resource getMappedIphoneGroupNamedScriptResource() {
         return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 getDeploymentVersion() + "/iPhone/common/main.js", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
@@ -206,7 +206,7 @@ public class ResourcePathTestData {
 
     public String getMappedIphoneGroupNamedScriptResourceHref() {
         return getScriptClientPathPrefix()
-        + getMappedIphoneGroupNamedScriptResourcePath().getNewPath();
+        + getMappedIphoneGroupNamedScriptResource().getNewPath();
     }
 
     public Resource getMappedIphoneGroupNamedScriptBundleResourcePath() {
@@ -221,19 +221,19 @@ public class ResourcePathTestData {
         .getNewPath();
     }
 
-    public Resource getMappedIphoneGroupPackagedScriptBundleResourcePath() {
+    public Resource getMappedIphoneGroupPackagedScriptBaseDirResource() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 getDeploymentVersion() + "/iPhone/util/", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
-    public Resource getMappedIphoneGroupBundledScriptResourcePath1() {
+    public Resource getMappedIphoneGroupPackagedScriptResource1() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 getDeploymentVersion() + "/iPhone/util/util1.js", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
-    public Resource getMappedIphoneGroupBundledScriptResourcePath2() {
+    public Resource getMappedIphoneGroupPackagedScriptResource2() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 getDeploymentVersion() + "/iPhone/util/util2.js", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
@@ -257,25 +257,31 @@ public class ResourcePathTestData {
                 getGroupTestData().createAndroidGroup());
     }
 
-    public Resource getMappedAppleGroupNamedScriptResourcePath() {
+    public Resource getMappedAppleGroupNamedScriptResource() {
         return new ResourceBean(getRequestedNamedScriptResourcePath(),
                 getDeploymentVersion() + "/apple/common/main.js", getRootResourcesPath(),
                 getGroupTestData().createAppleGroup());
     }
 
-    public Resource getMappedAppleGroupBundledScriptBundleResourcePath() {
-        return new ResourceBean(getRequestedPackageScriptResourcePath(), getDeploymentVersion()
-                + "/apple/util/bundle/bundle-all.js", getRootResourcesPath(),
+    public Resource getMappedAppleGroupPackagedScriptBaseDirResource() {
+        return new ResourceBean(getRequestedPackageScriptResourcePath(),
+                getDeploymentVersion() + "/apple/util/", getRootResourcesPath(),
                 getGroupTestData().createAppleGroup());
     }
 
-    public Resource getMappedAppleGroupBundledScriptResourcePath1() {
+    public Resource getMappedAppleGroupPackagedScriptBundleResource() {
+        return new ResourceBean(getRequestedPackageScriptResourcePath(), getDeploymentVersion()
+                + "/apple/util/bundle/package.js", getRootResourcesPath(),
+                getGroupTestData().createAppleGroup());
+    }
+
+    public Resource getMappedAppleGroupPackagedScriptResource1() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 getDeploymentVersion() + "/apple/util/util1.js", getRootResourcesPath(),
                 getGroupTestData().createAppleGroup());
     }
 
-    public Resource getMappedAppleGroupBundledScriptResourcePath2() {
+    public Resource getMappedAppleGroupPackagedScriptResource2() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
                 getDeploymentVersion() + "/apple/util/util2.js", getRootResourcesPath(),
                 getGroupTestData().createAppleGroup());
@@ -323,7 +329,7 @@ public class ResourcePathTestData {
 
     public Resource getMappedAppleGroupResourcePath() {
         return new ResourceBean(getRequestedJspResourcePath(),
-                getJspResourcesRootServletPath() + "Apple/detail/bdp.jsp",
+                getJspResourcesRootServletPath() + "apple/detail/bdp.jsp",
                 getRootResourcesPath(),
                 getGroupTestData().createAppleGroup());
 
@@ -390,6 +396,12 @@ public class ResourcePathTestData {
                 getGroupTestData().createIPhoneGroup());
     }
 
+    public Resource getMappedAppleGroupImageResourcePath() {
+        return new ResourceBean(getRequestedImageResourcePath(),
+                getDeploymentVersion() + "/apple/common/unmetered", getRootResourcesPath(),
+                getGroupTestData().createAppleGroup());
+    }
+
     public Resource getMappedDefaultGroupPngImageResourcePath() {
         return new ResourceBean(getRequestedImageResourcePath(),
                 getDeploymentVersion() + "/default/common/unmetered.png", getRootResourcesPath(),
@@ -433,6 +445,12 @@ public class ResourcePathTestData {
         return new ResourceBean(getRequestedPropertiesResourcePath(),
                 "iPhone/common/main.properties", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
+    }
+
+    public Resource getMappedAppleGroupPropertiesResourcePath() {
+        return new ResourceBean(getRequestedPropertiesResourcePath(),
+                "apple/common/main.properties", getRootResourcesPath(),
+                getGroupTestData().createAppleGroup());
     }
 
     /**

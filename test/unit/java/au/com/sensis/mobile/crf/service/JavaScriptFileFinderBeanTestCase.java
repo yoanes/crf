@@ -75,7 +75,7 @@ public class JavaScriptFileFinderBeanTestCase extends
 
             final Resource resource =
                     getResourcePathTestData()
-                            .getMappedDefaultGroupBundledScriptBundleResourcePath();
+                            .getMappedDefaultGroupPackagedScriptBundleResourcePath();
 
             EasyMock.expect(
                     getMockPropertiesLoader().loadPropertiesNotNull(
@@ -130,7 +130,7 @@ public class JavaScriptFileFinderBeanTestCase extends
 
             final Resource resource =
                     getResourcePathTestData()
-                            .getMappedDefaultGroupBundledScriptBundleResourcePath();
+                            .getMappedDefaultGroupPackagedScriptBundleResourcePath();
 
             final File bundlePropertiesFile =
                     new File(resource.getNewFile(),
@@ -175,7 +175,7 @@ public class JavaScriptFileFinderBeanTestCase extends
 
         final Resource resource =
                 getResourcePathTestData()
-                        .getMappedDefaultGroupBundledScriptBundleResourcePath();
+                        .getMappedDefaultGroupPackagedScriptBundleResourcePath();
 
         final IOException expectedException = new IOException("test");
         EasyMock.expect(

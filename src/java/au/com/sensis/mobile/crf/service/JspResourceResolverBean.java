@@ -111,4 +111,16 @@ public class JspResourceResolverBean extends AbstractSingleResourceResolver {
     private String getJspResourcesRootServletPath() {
         return jspResourcesRootServletPath;
     }
+
+    /**
+     * Override to disable the updates. The
+     * {@link au.com.sensis.mobile.crf.presentation.ResourceResolverServlet} handles the updates.
+     * This is because only the servlet is aware of JSPs including other JSPs.
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    protected void addResourceToResourceResolutionTreeIfEnabled(final Resource resource) {
+        // Do nothing.
+    }
 }

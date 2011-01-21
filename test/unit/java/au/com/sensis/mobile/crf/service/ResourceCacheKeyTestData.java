@@ -1,5 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
+import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.config.GroupTestData;
 
 /**
@@ -14,7 +15,7 @@ public class ResourceCacheKeyTestData {
 
     public ResourceCacheKey createResourceCacheKey() {
         return new ResourceCacheKeyBean(getResourcePathTestData().getRequestedJspResourcePath(),
-                getGroupTestData().createIPhoneGroup());
+                new Group[] { getGroupTestData().createIPhoneGroup() });
     }
 
     /**

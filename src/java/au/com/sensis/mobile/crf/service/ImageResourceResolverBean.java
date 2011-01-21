@@ -107,7 +107,6 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
             final Resource foundResource =
                     createFoundResource(requestedResourcePath, newResourcesBasePath, group,
                             matchedFiles[0]);
-            addResourcesToResourceResolutionTreeIfEnabled(foundResource);
             return Arrays.asList(foundResource);
         } else {
             return new ArrayList<Resource>();
@@ -232,17 +231,5 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Checking for images in: '" + newResourcesBasePath + "'");
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Resource[] getResourcesFromCache(final ResourceCacheKey key) {
-        final Resource[] resourcesFromCache = super.getResourcesFromCache(key);
-
-        // Override inherited method so that we can call the following.
-        addResourcesToResourceResolutionTreeIfEnabled(Arrays.asList(resourcesFromCache));
-        return resourcesFromCache;
     }
 }

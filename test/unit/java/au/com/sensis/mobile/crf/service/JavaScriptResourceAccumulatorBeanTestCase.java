@@ -83,11 +83,11 @@ extends AbstractJUnit4TestCase {
         // Matched 2 different versions of the same Javascript file
         final List<Resource> passedInResources = new ArrayList<Resource>();
         passedInResources.add(testData.getMappedDefaultGroupNamedScriptResourcePath());
-        passedInResources.add(testData.getMappedAppleGroupNamedScriptResourcePath());
+        passedInResources.add(testData.getMappedAppleGroupNamedScriptResource());
 
         // Expect to only return the most specific version of the Javascript file
         final List<Resource> expectedAccumulatedResources = new ArrayList<Resource>();
-        expectedAccumulatedResources.add(testData.getMappedAppleGroupNamedScriptResourcePath());
+        expectedAccumulatedResources.add(testData.getMappedAppleGroupNamedScriptResource());
 
         getObjectUnderTest().accumulate(passedInResources);
 
@@ -99,16 +99,16 @@ extends AbstractJUnit4TestCase {
 
         final List<Resource> mostSpecificResources = new ArrayList<Resource>();
         mostSpecificResources.add(
-                testData.getMappedIphoneGroupBundledScriptResourcePath1());
+                testData.getMappedIphoneGroupPackagedScriptResource1());
         mostSpecificResources.add(
-                testData.getMappedIphoneGroupBundledScriptResourcePath2());
+                testData.getMappedIphoneGroupPackagedScriptResource2());
 
         // More generic version of same resources
         final List<Resource> lessSpecificResources = new ArrayList<Resource>();
         lessSpecificResources.add(
-                testData.getMappedAppleGroupBundledScriptResourcePath1());
+                testData.getMappedAppleGroupPackagedScriptResource1());
         lessSpecificResources.add(
-                testData.getMappedAppleGroupBundledScriptResourcePath2());
+                testData.getMappedAppleGroupPackagedScriptResource2());
 
         getObjectUnderTest().accumulate(mostSpecificResources);
         getObjectUnderTest().accumulate(lessSpecificResources);
@@ -127,13 +127,13 @@ extends AbstractJUnit4TestCase {
         final List<Resource> passedInResources = new ArrayList<Resource>();
         passedInResources.add(testData.getMappedDefaultGroupNamedScriptResourcePath());
         passedInResources.add(testData.getMappedDefaultGroupNamedScriptResourcePath2());
-        passedInResources.add(testData.getMappedIphoneGroupNamedScriptResourcePath());
+        passedInResources.add(testData.getMappedIphoneGroupNamedScriptResource());
         passedInResources.add(testData.getMappedIphoneGroupNamedScriptResourcePath2());
 
         // Expect to only return the most specific version of the Javascript file
         final List<Resource> expectedAccumulatedResources = new ArrayList<Resource>();
         expectedAccumulatedResources.add(
-                testData.getMappedIphoneGroupNamedScriptResourcePath());
+                testData.getMappedIphoneGroupNamedScriptResource());
         expectedAccumulatedResources.add(
                 testData.getMappedIphoneGroupNamedScriptResourcePath2());
 
@@ -162,7 +162,7 @@ extends AbstractJUnit4TestCase {
     public void testEqualsWhenNotEqual() throws Throwable {
 
         final List<Resource> sameResolvedPaths = new ArrayList<Resource>(resolvedPaths);
-        sameResolvedPaths.add(testData.getMappedAppleGroupNamedScriptResourcePath());
+        sameResolvedPaths.add(testData.getMappedAppleGroupNamedScriptResource());
 
         final JavaScriptResourceAccumulatorBean accumulator =
             createJavaScriptResourceAccumulatorBean(false);
@@ -200,7 +200,7 @@ extends AbstractJUnit4TestCase {
 
         // Clone the resources (so not affected by the reversing)
         final List<Resource> sameResolvedPaths = new ArrayList<Resource>(resolvedPaths);
-        sameResolvedPaths.add(testData.getMappedAppleGroupNamedScriptResourcePath());
+        sameResolvedPaths.add(testData.getMappedAppleGroupNamedScriptResource());
 
         // Create an accumulator the same as the one under test
         final ResourceAccumulatorBean accumulator = new ResourceAccumulatorBean();

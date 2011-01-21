@@ -95,7 +95,7 @@ extends AbstractJUnit4TestCase {
 
         // Clone the resources (so not affected by the reversing)
         final List<Resource> sameResolvedPaths = new ArrayList<Resource>(resolvedPaths);
-        sameResolvedPaths.add(testData.getMappedAppleGroupNamedScriptResourcePath());
+        sameResolvedPaths.add(testData.getMappedAppleGroupNamedScriptResource());
 
         // Create an accumulator the same as the one under test
         final ResourceAccumulatorBean accumulator = new ResourceAccumulatorBean();
@@ -132,7 +132,7 @@ extends AbstractJUnit4TestCase {
 
         // Clone the resources (so not affected by the reversing)
         final List<Resource> sameResolvedPaths = new ArrayList<Resource>(resolvedPaths);
-        sameResolvedPaths.add(testData.getMappedAppleGroupNamedScriptResourcePath());
+        sameResolvedPaths.add(testData.getMappedAppleGroupNamedScriptResource());
 
         // Create an accumulator the same as the one under test
         final ResourceAccumulatorBean accumulator = new ResourceAccumulatorBean();

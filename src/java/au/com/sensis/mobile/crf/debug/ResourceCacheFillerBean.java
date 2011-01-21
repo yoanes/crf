@@ -132,7 +132,8 @@ public class ResourceCacheFillerBean {
             for (int j = 0; j < groups.length; j++) {
                 final Group currGroup = groups[j];
                 final ResourceCacheKeyBean groupsCacheKeyBean =
-                        new ResourceCacheKeyBean(abstractRequestedPath, currGroup);
+                        new ResourceCacheKeyBean(abstractRequestedPath,
+                                new Group [] { currGroup });
                 final Resource[] resources =
                         createResources(abstractRequestedPath, currGroup, numResourcesPerPath);
                 getResourceCache().put(groupsCacheKeyBean, resources);

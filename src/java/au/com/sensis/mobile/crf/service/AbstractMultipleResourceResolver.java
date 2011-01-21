@@ -1,7 +1,6 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -75,43 +74,9 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
 
         final ResourceAccumulator accumulator = createResourceAccumulator();
 
-        if (accumulator.isBundlingEnabled()) {
-            final ResourceCacheKey resourceCacheKey =
-                    createBundleResourceCacheKey(requestedResourcePath, device);
-            final List<Resource> cachedBundle = getCachedBundle(resourceCacheKey);
-            if (cachedBundle != null) {
-                addResourcesToResourceResolutionTreeIfEnabled(cachedBundle);
-                return cachedBundle;
-            }
+        accumulateResources(requestedResourcePath, device, accumulator);
 
-            accumulateResources(requestedResourcePath, device, accumulator);
-
-            final List<Resource> accumulatedResources = accumulator.getResources();
-            if (resourceCacheKey != null) {
-                getResourceCache().put(resourceCacheKey,
-                        accumulatedResources.toArray(new Resource[] {}));
-
-            }
-            addResourcesToResourceResolutionTreeIfEnabled(accumulatedResources);
-            return accumulatedResources;
-        } else {
-            accumulateResources(requestedResourcePath, device, accumulator);
-
-            final List<Resource> accumulatedResources = accumulator.getResources();
-            addResourcesToResourceResolutionTreeIfEnabled(accumulatedResources);
-            return accumulatedResources;
-        }
-
-    }
-
-    private List<Resource> getCachedBundle(final ResourceCacheKey resourceCacheKey) {
-        if ((resourceCacheKey != null) && getResourceCache().contains(resourceCacheKey)) {
-            debugLogResourcesFoundInCache();
-            return Arrays.asList(getResourceCache().get(resourceCacheKey));
-        } else {
-            debugLogResourcesNotFoundInCache();
-            return null;
-        }
+        return accumulator.getResources();
 
     }
 
@@ -126,20 +91,9 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
 
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
-            if (accumulator.isBundlingEnabled()) {
-                accumulator.accumulate(resolveForGroup(requestedResourcePath, currGroup));
-            } else {
-                accumulator.accumulate(resolveForGroupPossiblyFromCache(requestedResourcePath,
-                        currGroup));
-            }
+            accumulator.accumulate(resolveForGroup(requestedResourcePath, currGroup));
 
         }
-    }
-
-    private ResourceCacheKey createBundleResourceCacheKey(final String requestedResourcePath,
-            final Device device) {
-        final Group[] matchingGroups = getMatchingGroups(device, requestedResourcePath);
-        return new ResourceCacheKeyBean(requestedResourcePath, matchingGroups);
     }
 
     /**

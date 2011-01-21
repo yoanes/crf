@@ -45,6 +45,7 @@ public abstract class AbstractSingleResourceResolver extends AbstractResourceRes
      */
     @Override
     protected List<Resource> doResolve(final String requestedResourcePath, final Device device) {
+
         final Iterator<Group> matchingGroupIterator =
                 getMatchingGroupIterator(device, requestedResourcePath);
 
@@ -55,7 +56,7 @@ public abstract class AbstractSingleResourceResolver extends AbstractResourceRes
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
             final List<Resource> resolvedResources =
-                    resolveForGroupPossiblyFromCache(requestedResourcePath, currGroup);
+                    resolveForGroup(requestedResourcePath, currGroup);
             if (!resolvedResources.isEmpty()) {
                 // Return immediately once a resource is found.
                 return resolvedResources;
@@ -66,5 +67,4 @@ public abstract class AbstractSingleResourceResolver extends AbstractResourceRes
         // No resources found.
         return new ArrayList<Resource>();
     }
-
 }

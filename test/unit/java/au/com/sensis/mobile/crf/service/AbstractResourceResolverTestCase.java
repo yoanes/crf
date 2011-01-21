@@ -68,8 +68,26 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
                 getMockConfigurationFactory(),
                 getMockResourceCache()));
 
+        initResourceResolutionTree();
+    }
+
+    /**
+     * Initialise the resource resolution tree.
+     */
+    protected final void initResourceResolutionTree() {
         ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() {
+        super.reset();
+        initResourceResolutionTree();
+    }
+
+
 
     /**
      * Tear down test data.
@@ -81,6 +99,8 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
         ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
     }
+
+
 
     @Test
     public void testConstructorWithBlankAbstractResourceExtension()
@@ -404,7 +424,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     protected void recordPutEmptyResultsIntoResourceCache(final ResourceCacheKey resourceCacheKey) {
         getMockResourceCache()
-        .put(EasyMock.eq(resourceCacheKey), EasyMock.aryEq(new Resource[] {}));
+                .put(EasyMock.eq(resourceCacheKey), EasyMock.aryEq(new Resource[] {}));
     }
 
     protected void assertResourceResolutionTreeUpdated(final List<Resource> resources) {
@@ -424,6 +444,9 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
                     resourceTreeNode.getResource());
             i++;
         }
+
+        Assert.assertFalse("There shouldn't be anymore ResourceTreeNodes",
+                treePreOrderIterator.hasNext());
     }
 
     protected void assertResourceResolutionTreeNotUpdated() {
@@ -433,6 +456,4 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         Assert.assertFalse("ResourceResolutionTree treePreOrderIterator should not have any items",
                 treePreOrderIterator.hasNext());
     }
-
-
 }

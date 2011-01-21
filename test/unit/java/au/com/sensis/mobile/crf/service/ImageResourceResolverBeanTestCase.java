@@ -142,12 +142,13 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordListFilesByExtension(getSingleMatchedPngImageArray());
+            recordGetMatchingGroupIterator();
+
+            recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
 
             recordPutResourceCache(resourceCacheKey, getMappedIphoneGroupPngImageResourcePath());
 
@@ -158,6 +159,9 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                         getResourcePathTestData().getRequestedImageResourcePath(),
                         getMockDevice());
 
+            // Explicit verify since we are in a loop.
+            verify();
+
             final List<Resource> expectedResources
                 = Arrays.asList(getMappedIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong",
@@ -166,18 +170,33 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
             assertResourceResolutionTreeUpdated(expectedResources);
 
-            // Explicit verify and reset since we are in a loop.
-            verify();
+            // Explicit reset since we are in a loop.
             reset();
         }
 
     }
 
+    private void recordGetMatchingGroups() {
+
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedImageResourcePath()))
+                .andReturn(getMockUiConfiguration());
+
+        final Group[] matchingGroups =
+                new Group[] { getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup() };
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroups(getMockDevice())).andReturn(
+                matchingGroups);
+
+    }
 
     private ResourceCacheKey createResourceCacheKey() {
-        final ResourceCacheKey resourceCacheKey = new ResourceCacheKeyBean(
-                getResourcePathTestData().getRequestedImageResourcePath(),
-                getGroupTestData().createIPhoneGroup());
+        final ResourceCacheKey resourceCacheKey =
+                new ResourceCacheKeyBean(getResourcePathTestData().getRequestedImageResourcePath(),
+                        new Group[] { getGroupTestData().createIPhoneGroup(),
+                                getGroupTestData().createAppleGroup() });
         return resourceCacheKey;
     }
 
@@ -212,12 +231,13 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordListFilesByExtension(getMultipleMatchedPngImageArray());
+            recordGetMatchingGroupIterator();
+
+            recordListIphoneFilesByExtension(getMultipleMatchedPngImageArray());
 
             recordLogWarningResolveToSingleFoundMultipleResources();
 
@@ -230,6 +250,9 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                         getResourcePathTestData().getRequestedImageResourcePath(),
                         getMockDevice());
 
+            // Explicit verify since we are in a loop.
+            verify();
+
             final List<Resource> expectedResources
                 = Arrays.asList(getMappedIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong",
@@ -238,8 +261,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
             assertResourceResolutionTreeUpdated(expectedResources);
 
-            // Explicit verify and reset since we are in a loop.
-            verify();
+            // Explicit reset since we are in a loop.
             reset();
         }
 
@@ -247,15 +269,17 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
     private void recordGetMatchingGroupIterator() {
 
-        EasyMock.expect(getMockConfigurationFactory().getUiConfiguration(
-                getResourcePathTestData().getRequestedImageResourcePath())).andReturn(
-                        getMockUiConfiguration());
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedImageResourcePath())).andReturn(
+                getMockUiConfiguration());
 
         final Iterator<Group> matchingGroupsIterator =
-            Arrays.asList(getGroupTestData().createIPhoneGroup()).iterator();
+                Arrays.asList(getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup()).iterator();
 
-        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice()))
-        .andReturn(matchingGroupsIterator);
+        EasyMock.expect(getMockUiConfiguration().matchingGroupIterator(getMockDevice())).andReturn(
+                matchingGroupsIterator);
 
     }
 
@@ -286,12 +310,14 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
 
-            recordListFilesByExtension(new File[] {});
+            recordGetMatchingGroupIterator();
+
+            recordListIphoneFilesByExtension(new File[] {});
+            recordListAppleFilesByExtension(new File[] {});
 
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
 
@@ -302,13 +328,15 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                         getResourcePathTestData().getRequestedImageResourcePath(),
                         getMockDevice());
 
+            // Explicit verify since we are in a loop.
+            verify();
+
             Assert.assertNotNull("actualResources should not be null",
                     actualResources);
             Assert.assertTrue("actualResources should be empty",
                     actualResources.isEmpty());
 
-            // Explicit verify and reset since we are in a loop.
-            verify();
+            // Explicit reset since we are in a loop.
             reset();
         }
 
@@ -324,8 +352,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
         for (final String testValue : testValues) {
             setObjectUnderTest(createWithAbstractResourceExtension(testValue));
 
-            recordGetMatchingGroupIterator();
-
+            recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
             recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
 
@@ -338,6 +365,9 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                         getResourcePathTestData().getRequestedImageResourcePath(),
                         getMockDevice());
 
+            // Explicit verify since we are in a loop.
+            verify();
+
             final List<Resource> expectedResources
                 = Arrays.asList(getMappedIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong",
@@ -346,8 +376,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
             assertResourceResolutionTreeUpdated(expectedResources);
 
-            // Explicit verify and reset since we are in a loop.
-            verify();
+            // Explicit reset since we are in a loop.
             reset();
         }
 
@@ -358,7 +387,7 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                 new Resource [] {getMappedIphoneGroupPngImageResourcePath()});
     }
 
-    private void recordListFilesByExtension(final File[] files) {
+    private void recordListIphoneFilesByExtension(final File[] files) {
 
         EasyMock.expect(
                 getMockFileIoFacade().list(EasyMock.eq(getRootResourcesDir()),
@@ -367,10 +396,23 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
 
     }
 
+    private void recordListAppleFilesByExtension(final File[] files) {
+
+        EasyMock.expect(
+                getMockFileIoFacade().list(EasyMock.eq(getRootResourcesDir()),
+                        EasyMock.eq(getMappedAppleGroupImageResourcePath().getNewPath()),
+                        EasyMock.aryEq(FILE_EXTENSION_WILDCARDS))).andReturn(files);
+
+    }
+
     private Resource getMappedIphoneGroupImageResourcePath() {
 
-        return getResourcePathTestData()
-        .getMappedIphoneGroupImageResourcePath();
+        return getResourcePathTestData().getMappedIphoneGroupImageResourcePath();
+    }
+
+    private Resource getMappedAppleGroupImageResourcePath() {
+
+        return getResourcePathTestData().getMappedAppleGroupImageResourcePath();
     }
 
     private Resource getMappedIphoneGroupPngImageResourcePath() {

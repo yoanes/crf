@@ -21,19 +21,6 @@ public class ResourceCacheKeyBean implements ResourceCacheKey {
     /**
      * Constructor.
      *
-     * @param requestedResourcePath
-     *            Path of requested resource.
-     * @param group
-     *            Group to look for the requested resource in.
-     */
-    public ResourceCacheKeyBean(final String requestedResourcePath, final Group group) {
-        this.requestedResourcePath = requestedResourcePath;
-        groups = new Group[] { group };
-    }
-
-    /**
-     * Constructor.
-     *
      * @param requestedResourcePath Path of requested resource.
      * @param groups Groups to look for the requested resource in.
      */

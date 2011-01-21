@@ -101,22 +101,22 @@ public class ResourceCacheFillerBeanTestCase extends AbstractJUnit4TestCase {
 
     private ResourceCacheKeyBean createResourceCacheKeyBean1() {
         return new ResourceCacheKeyBean(ResourceCacheFillerBean.BASE_ABSTRACT_REQUESTED_PATH + "0",
-                createGroup(0));
+                new Group [] {createGroup(0)});
     }
 
     private ResourceCacheKeyBean createResourceCacheKeyBean2() {
         return new ResourceCacheKeyBean(ResourceCacheFillerBean.BASE_ABSTRACT_REQUESTED_PATH + "0",
-                createGroup(1));
+                new Group [] {createGroup(1)});
     }
 
     private ResourceCacheKeyBean createResourceCacheKeyBean3() {
         return new ResourceCacheKeyBean(ResourceCacheFillerBean.BASE_ABSTRACT_REQUESTED_PATH + "1",
-                createGroup(0));
+                new Group [] {createGroup(0)});
     }
 
     private ResourceCacheKeyBean createResourceCacheKeyBean4() {
         return new ResourceCacheKeyBean(ResourceCacheFillerBean.BASE_ABSTRACT_REQUESTED_PATH + "1",
-                createGroup(1));
+                new Group [] {createGroup(1)});
     }
 
     private Group createGroup(final int groupNumber) {
