@@ -18,7 +18,7 @@ import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 /**
  * Facade to a custom tag that uses the Content Rendering Framework to resolve
  * the image resource path set into {@link #setSrc(String)}.
- * 
+ *
  * It outputs the path to the resolved image to the calling JSP.
  *
  * @author Adrian.Koh2@sensis.com.au
