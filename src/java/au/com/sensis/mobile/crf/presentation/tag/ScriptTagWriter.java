@@ -11,7 +11,6 @@ import javax.servlet.jsp.tagext.JspFragment;
 import org.apache.commons.lang.StringUtils;
 
 import au.com.sensis.mobile.crf.service.Resource;
-import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
@@ -129,22 +128,10 @@ public class ScriptTagWriter implements TagWriter {
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
             final List<Resource> allResources) throws IOException {
 
-        if (allResources.isEmpty()) {
-            logNoResourcesFoundWarning();
-
-        } else {
+        if (!allResources.isEmpty()) {
             for (final Resource resource : allResources) {
                 writeSingleLinkTag(jspWriter, resource);
             }
-        }
-    }
-
-    private void logNoResourcesFoundWarning() {
-        if (getResourceResolutionWarnLogger().isWarnEnabled()) {
-            getResourceResolutionWarnLogger().warn(
-                    "No resource was found for requested resource '"
-                    + getHref()
-                    + "' and device " + getDevice());
         }
     }
 
@@ -192,10 +179,6 @@ public class ScriptTagWriter implements TagWriter {
         }
 
         return uniqueRequestParam;
-    }
-
-    private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
-        return getTagDependencies().getResourceResolutionWarnLogger();
     }
 
     private List<Resource> getAllResourcePaths() throws IOException {

@@ -174,7 +174,10 @@ public class PropertiesResourceResolverBeanTestCase
             getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
 
             recordGetResourcesFromAccumulator(new ArrayList<Resource>());
+
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            recordLogWarningIfEmptyResolvedResources(
+                    getResourcePathTestData().getRequestedPropertiesResourcePath());
 
             replay();
 

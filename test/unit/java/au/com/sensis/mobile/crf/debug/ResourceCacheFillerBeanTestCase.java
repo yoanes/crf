@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,10 @@ import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceBean;
 import au.com.sensis.mobile.crf.service.ResourceCache;
+import au.com.sensis.mobile.crf.service.ResourceCacheEntryBean;
 import au.com.sensis.mobile.crf.service.ResourceCacheKeyBean;
+import au.com.sensis.mobile.crf.util.TimeGeneratorFactory;
+import au.com.sensis.mobile.crf.util.TimerGeneratorStub;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -34,10 +37,21 @@ public class ResourceCacheFillerBeanTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
+        TimeGeneratorFactory.changeDefaultTimeGeneratorSingleton(new TimerGeneratorStub());
         setObjectUnderTest(new ResourceCacheFillerBean(getMockResourceCache()));
 
         setRootResourcesDir(new File(getClass().getResource("/").toURI()));
         getObjectUnderTest().setEnabled(true);
+    }
+
+    /**
+     * Tear down test data.
+     *
+     * @throws Exception Thrown if any error occurs.
+     */
+    @After
+    public void tearDown() throws Exception {
+        TimeGeneratorFactory.restoreDefaultTimeGeneratorSingleton();
     }
 
     @Test
@@ -70,20 +84,31 @@ public class ResourceCacheFillerBeanTestCase extends AbstractJUnit4TestCase {
     public void testFillCacheWhenEnabled() throws Throwable {
 
         Resource[] resources = createResources(createResourceCacheKeyBean1(), createGroup(0));
-        getMockResourceCache().put(EasyMock.eq(createResourceCacheKeyBean1()),
-                EasyMock.aryEq(resources));
+        getMockResourceCache().put(createResourceCacheKeyBean1(),
+                new ResourceCacheEntryBean(resources,
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
 
         resources = createResources(createResourceCacheKeyBean2(), createGroup(1));
-        getMockResourceCache().put(EasyMock.eq(createResourceCacheKeyBean2()),
-                EasyMock.aryEq(resources));
+        getMockResourceCache().put(createResourceCacheKeyBean2(),
+                new ResourceCacheEntryBean(resources,
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
+
 
         resources = createResources(createResourceCacheKeyBean3(), createGroup(0));
-        getMockResourceCache().put(EasyMock.eq(createResourceCacheKeyBean3()),
-                EasyMock.aryEq(resources));
+        getMockResourceCache().put(createResourceCacheKeyBean3(),
+                new ResourceCacheEntryBean(resources,
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
+
 
         resources = createResources(createResourceCacheKeyBean4(), createGroup(1));
-        getMockResourceCache().put(EasyMock.eq(createResourceCacheKeyBean4()),
-                EasyMock.aryEq(resources));
+        getMockResourceCache().put(createResourceCacheKeyBean4(),
+                new ResourceCacheEntryBean(resources,
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
+
 
         replay();
 

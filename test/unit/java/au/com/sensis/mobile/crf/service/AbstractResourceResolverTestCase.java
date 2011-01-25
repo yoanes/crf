@@ -1,10 +1,14 @@
 package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
@@ -14,6 +18,7 @@ import org.junit.Test;
 import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
+import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.config.UiConfiguration;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
@@ -21,6 +26,8 @@ import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
 import au.com.sensis.mobile.crf.debug.ResourceTreeNode;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
+import au.com.sensis.mobile.crf.util.TimeGeneratorFactory;
+import au.com.sensis.mobile.crf.util.TimerGeneratorStub;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
@@ -30,6 +37,9 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
  * @author Adrian.Koh2@sensis.com.au
  */
 public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4TestCase {
+
+    private static final int DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT = 1;
+    private static final int DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS = 60000;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
@@ -48,6 +58,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     private ResourceAccumulatorFactory mockResourceAccumulatorFactory;
     private ResourceAccumulator mockResourceAccumulator;
     private ResourceCache mockResourceCache;
+    private TimerGeneratorStub timeGenerator;
 
     /**
      * Setup test data.
@@ -57,6 +68,9 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     @Before
     public void setUpAbstractBaseClass() throws Exception {
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
+
+        setTimeGenerator(new TimerGeneratorStub());
+        TimeGeneratorFactory.changeDefaultTimeGeneratorSingleton(getTimeGenerator());
 
         setResourcesRootDir(new File(getClass().getResource("/").toURI()));
 
@@ -87,8 +101,6 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         initResourceResolutionTree();
     }
 
-
-
     /**
      * Tear down test data.
      *
@@ -97,10 +109,9 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     @After
     public void tearDownAbstractBaseClass() throws Exception {
         FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
+        TimeGeneratorFactory.restoreDefaultTimeGeneratorSingleton();
         ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
     }
-
-
 
     @Test
     public void testConstructorWithBlankAbstractResourceExtension()
@@ -219,6 +230,122 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
                     .getMessage());
         }
 
+    }
+
+    @Test
+    public void testResolveWhenCachedResourcesEmptyAndRefreshNeeded() throws Throwable {
+        final AbstractResourceResolver localObjectUnderTest = createAbstractResourceResolver();
+
+        recordGetMatchingGroups();
+
+        final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+        recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
+
+        final ResourceCacheEntryBean resourceCacheEntryBean =
+            new ResourceCacheEntryBean(new Resource[] { },
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
+        recordGetFromResourceCache(resourceCacheKey, resourceCacheEntryBean);
+
+        recordLogWarningIfEmptyCachedResourcesToBeRefreshed(
+                getResourcePathTestData().getRequestedJspResourcePath(),
+                resourceCacheEntryBean);
+
+        recordPutResourceCache(resourceCacheKey, resourceCacheEntryBean);
+
+        recordLogWarningIfEmptyResolvedResources(
+                getResourcePathTestData().getRequestedJspResourcePath());
+
+        replay();
+
+        final List<Resource> actualResources =
+            localObjectUnderTest.resolve(
+                    getResourcePathTestData().getRequestedJspResourcePath(),
+                    getMockDevice());
+
+        // Explicit verify since we are in a loop.
+        verify();
+
+        Assert.assertEquals("actualResources is wrong",
+                Arrays.asList(new Resource [] {}),
+                actualResources);
+
+        assertResourceResolutionTreeNotUpdated();
+
+        // Explicit reset since we are in a loop.
+        reset();
+    }
+
+    @Test
+    public void testResolveWhenCachedResourcesEmptyAndRefreshNotNeeded() throws Throwable {
+        final AbstractResourceResolver localObjectUnderTest = createAbstractResourceResolver();
+
+        recordGetMatchingGroups();
+
+        final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+        recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
+
+        final ResourceCacheEntryBean resourceCacheEntryBean =
+            new ResourceCacheEntryBean(new Resource[] { },
+                    DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
+        // TODo: fix this hardcoded timestamp update.
+        getTimeGenerator().setTimestamp(new Date(getTimeGenerator().getTimeInMillis() + 80000));
+        resourceCacheEntryBean.incrementRefreshCountRateLimited();
+        recordGetFromResourceCache(resourceCacheKey, resourceCacheEntryBean);
+
+        recordLogWarningIfEmptyCachedResources(
+                getResourcePathTestData().getRequestedJspResourcePath(),
+                getMockDevice(), resourceCacheEntryBean);
+
+        replay();
+
+        final List<Resource> actualResources =
+            localObjectUnderTest.resolve(
+                    getResourcePathTestData().getRequestedJspResourcePath(),
+                    getMockDevice());
+
+        // Explicit verify since we are in a loop.
+        verify();
+
+        Assert.assertEquals("actualResources is wrong",
+                Arrays.asList(new Resource [] {}),
+                actualResources);
+
+        assertResourceResolutionTreeNotUpdated();
+
+        // Explicit reset since we are in a loop.
+        reset();
+    }
+
+    private void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey,
+            final ResourceCacheEntry resourceCacheEntry) {
+        EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
+                resourceCacheEntry);
+    }
+
+    private void recordGetMatchingGroups() {
+
+        EasyMock.expect(
+                getMockConfigurationFactory().getUiConfiguration(
+                        getResourcePathTestData().getRequestedJspResourcePath()))
+                .andReturn(getMockUiConfiguration());
+
+        final Group[] matchingGroups =
+                new Group[] { getGroupTestData().createIPhoneGroup(),
+                        getGroupTestData().createAppleGroup() };
+
+        EasyMock.expect(getMockUiConfiguration().matchingGroups(getMockDevice())).andReturn(
+                matchingGroups);
+
+    }
+
+    private ResourceCacheKey createResourceCacheKey() {
+        final ResourceCacheKey resourceCacheKey =
+                new ResourceCacheKeyBean(getResourcePathTestData().getRequestedJspResourcePath(),
+                        new Group[] { getGroupTestData().createIPhoneGroup(),
+                                getGroupTestData().createAppleGroup() });
+        return resourceCacheKey;
     }
 
     /**
@@ -411,21 +538,75 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     }
 
     protected void recordPutResourceCache(final ResourceCacheKey resourceCacheKey,
+            final ResourceCacheEntry resourceCacheEntry) {
+        getMockResourceCache().put(resourceCacheKey, resourceCacheEntry);
+    }
+
+    protected void recordPutResourceCache(final ResourceCacheKey resourceCacheKey,
             final Resource resource) {
-        getMockResourceCache().put(EasyMock.eq(resourceCacheKey),
-                EasyMock.aryEq(new Resource[] { resource }));
+        recordResourceCacheResourecsNotFoundProperties();
+        getMockResourceCache().put(resourceCacheKey,
+                new ResourceCacheEntryBean(new Resource[] { resource },
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
     }
 
     protected void recordPutResourceCache(final ResourceCacheKey resourceCacheKey,
             final Resource [] resources) {
-        getMockResourceCache().put(EasyMock.eq(resourceCacheKey),
-                EasyMock.aryEq(resources));
+        recordResourceCacheResourecsNotFoundProperties();
+        getMockResourceCache().put(resourceCacheKey,
+                new ResourceCacheEntryBean(resources,
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
     }
 
     protected void recordPutEmptyResultsIntoResourceCache(final ResourceCacheKey resourceCacheKey) {
+        recordResourceCacheResourecsNotFoundProperties();
         getMockResourceCache()
-                .put(EasyMock.eq(resourceCacheKey), EasyMock.aryEq(new Resource[] {}));
+            .put(resourceCacheKey, new ResourceCacheEntryBean(new Resource[] {},
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
     }
+
+    private void recordResourceCacheResourecsNotFoundProperties() {
+
+        EasyMock.expect(getMockResourceCache().getResourcesNotFoundMaxRefreshCount()).andReturn(
+                DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT);
+        EasyMock
+            .expect(getMockResourceCache().getResourcesNotFoundRefreshCountUpdateMilliseconds())
+            .andReturn(DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
+    }
+
+    protected void recordLogWarningIfEmptyCachedResourcesToBeRefreshed(
+            final String requestedResourcePath,
+            final ResourceCacheEntryBean resourceCacheEntryBean) {
+        EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled()).andReturn(
+                Boolean.TRUE);
+        getMockResourceResolutionWarnLogger().warn(
+                "Empty cached resources found for requested resource '" + requestedResourcePath
+                        + "' and device " + getMockDevice() + " but refreshCount is "
+                        + resourceCacheEntryBean.getRefreshCount() + ". Will refresh the entry.");
+    }
+
+    protected void recordLogWarningIfEmptyResolvedResources(final String requestedResourcePath) {
+        EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled()).andReturn(
+                Boolean.TRUE);
+
+        getMockResourceResolutionWarnLogger().warn(
+                "No resource was found for requested resource '" + requestedResourcePath
+                        + "' and device " + getMockDevice());
+    }
+
+    protected void recordLogWarningIfEmptyCachedResources(final String requestedResourcePath,
+            final Device device, final ResourceCacheEntry resourceCacheEntry) {
+        EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled()).andReturn(
+                Boolean.TRUE);
+        getMockResourceResolutionWarnLogger().warn(
+                "Cached empty resources found and returned for requested resource '"
+                        + requestedResourcePath + "' and device " + device + ". refreshCount is "
+                        + resourceCacheEntry.getRefreshCount());
+    }
+
 
     protected void assertResourceResolutionTreeUpdated(final List<Resource> resources) {
         final Iterator<ResourceTreeNode> treePreOrderIterator =
@@ -455,5 +636,57 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
         Assert.assertFalse("ResourceResolutionTree treePreOrderIterator should not have any items",
                 treePreOrderIterator.hasNext());
+    }
+
+    private AbstractResourceResolver createAbstractResourceResolver() {
+
+        return new StubbedAbstractResourceResolver(getResourceResolverCommonParamHolder(),
+                "crf", getResourcesRootDir());
+    }
+
+
+    private void setTimeGenerator(final TimerGeneratorStub timeGenerator) {
+        this.timeGenerator = timeGenerator;
+    }
+
+    private TimerGeneratorStub getTimeGenerator() {
+        return timeGenerator;
+    }
+
+
+    /**
+     * Stubbed {@link AbstractResourceResolver}.
+     */
+    public static class StubbedAbstractResourceResolver extends AbstractResourceResolver {
+
+        public StubbedAbstractResourceResolver(
+                final ResourceResolverCommonParamHolder commonParams,
+                final String abstractResourceExtension, final File rootResourcesDir) {
+            super(commonParams, abstractResourceExtension, rootResourcesDir);
+        }
+
+        private static final Logger LOGGER
+            = Logger.getLogger(StubbedAbstractResourceResolver.class);
+
+        @Override
+        protected List<Resource> doResolve(final String requestedResourcePath,
+                final Device device) {
+            return new ArrayList<Resource>();
+        }
+
+        @Override
+        protected String getDebugResourceTypeName() {
+            return "jsp";
+        }
+
+        @Override
+        protected Logger getLogger() {
+            return LOGGER;
+        }
+
+        @Override
+        protected String getRealResourcePathExtension() {
+            return ".jsp";
+        }
     }
 }

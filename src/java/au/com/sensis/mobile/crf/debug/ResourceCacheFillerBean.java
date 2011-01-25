@@ -15,6 +15,7 @@ import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceBean;
 import au.com.sensis.mobile.crf.service.ResourceCache;
+import au.com.sensis.mobile.crf.service.ResourceCacheEntryBean;
 import au.com.sensis.mobile.crf.service.ResourceCacheKeyBean;
 
 /**
@@ -130,18 +131,25 @@ public class ResourceCacheFillerBean {
             final String abstractRequestedPath = BASE_ABSTRACT_REQUESTED_PATH + i;
 
             for (int j = 0; j < groups.length; j++) {
-                final Group currGroup = groups[j];
-                final ResourceCacheKeyBean groupsCacheKeyBean =
-                        new ResourceCacheKeyBean(abstractRequestedPath,
-                                new Group [] { currGroup });
-                final Resource[] resources =
-                        createResources(abstractRequestedPath, currGroup, numResourcesPerPath);
-                getResourceCache().put(groupsCacheKeyBean, resources);
+                doFillCache(numResourcesPerPath, abstractRequestedPath, groups[j]);
             }
 
             infoLogProgress(i);
 
         }
+    }
+
+    private void doFillCache(final int numResourcesPerPath, final String abstractRequestedPath,
+            final Group currGroup) {
+        final ResourceCacheKeyBean groupsCacheKeyBean =
+                new ResourceCacheKeyBean(abstractRequestedPath,
+                        new Group [] { currGroup });
+        final Resource[] resources =
+                createResources(abstractRequestedPath, currGroup, numResourcesPerPath);
+        getResourceCache().put(groupsCacheKeyBean,
+            new ResourceCacheEntryBean(resources,
+                ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
     }
 
     private void infoLogProgress(final int abstractPathIndex) {

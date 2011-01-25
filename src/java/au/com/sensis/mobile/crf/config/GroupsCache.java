@@ -1,6 +1,6 @@
 package au.com.sensis.mobile.crf.config;
 
-import au.com.sensis.mobile.crf.util.Cache;
+import au.com.sensis.mobile.crf.util.LegacyCache;
 
 
 /**
@@ -8,6 +8,6 @@ import au.com.sensis.mobile.crf.util.Cache;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public interface GroupsCache extends Cache<GroupsCacheKey, Group> {
+public interface GroupsCache extends LegacyCache<GroupsCacheKey, Group> {
 
 }

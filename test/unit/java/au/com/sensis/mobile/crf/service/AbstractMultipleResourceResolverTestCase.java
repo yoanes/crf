@@ -22,8 +22,12 @@ public abstract class AbstractMultipleResourceResolverTestCase extends
     protected void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey,
             final List<Resource> accumulatedResources) {
 
+        final ResourceCacheEntryBean resourceCacheEntryBean =
+                new ResourceCacheEntryBean(accumulatedResources.toArray(new Resource[] {}),
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
         EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
-                accumulatedResources.toArray(new Resource [] {}));
+                resourceCacheEntryBean);
     }
 
     protected void recordGetResourcesFromAccumulator(final List<Resource> expectedResources) {

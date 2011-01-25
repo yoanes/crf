@@ -223,17 +223,6 @@ AbstractJUnit4TestCase {
 
                 recordGetResource(testDataArray[i].getResources());
 
-                if (testDataArray[i].getDeploymentMetadata().isDevPlatform()
-                        && StringUtils.isEmpty(testDataArray[i].getOutputString())) {
-                    recordLogResourceNotFoundWarning();
-                }
-
-                if (testDataArray[i].getDeploymentMetadata().isProdPlatform()) {
-                    if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
-                        recordLogResourceNotFoundWarning();
-                    }
-                }
-
                 replay();
 
                 getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
@@ -283,15 +272,6 @@ AbstractJUnit4TestCase {
                 .getAllResources(getMockDevice(),
                         getRequestedScriptResourcePath()))
                         .andReturn(expectedResources).atLeastOnce();
-    }
-
-    private void recordLogResourceNotFoundWarning() {
-        EasyMock.expect(getMockResolutionWarnLogger().isWarnEnabled())
-        .andReturn(Boolean.TRUE);
-        getMockResolutionWarnLogger().warn(
-                "No resource was found for requested resource '"
-                + getResourcePathTestData().getRequestedNamedScriptResourcePath()
-                + "' and device " + getMockDevice());
     }
 
     private Resource getMappedDefaultGroupScriptResourcePath() {

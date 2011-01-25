@@ -8,15 +8,12 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
-import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
-import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -42,17 +39,6 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                 getResourcesRootDir(), FILE_EXTENSION_WILDCARDS));
 
-        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
-    }
-
-    /**
-     * Tear down test data.
-     *
-     * @throws Exception Thrown if any error occurs.
-     */
-    @After
-    public void tearDown() throws Exception {
-        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
     }
 
     @Override
@@ -320,6 +306,8 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
             recordListAppleFilesByExtension(new File[] {});
 
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            recordLogWarningIfEmptyResolvedResources(
+                    getResourcePathTestData().getRequestedImageResourcePath());
 
             replay();
 
@@ -383,8 +371,13 @@ public class ImageResourceResolverBeanTestCase extends AbstractResourceResolverT
     }
 
     private void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey) {
+        final ResourceCacheEntryBean resourceCacheEntryBean =
+            new ResourceCacheEntryBean(
+                new Resource[] { getMappedIphoneGroupPngImageResourcePath() },
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
         EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
-                new Resource [] {getMappedIphoneGroupPngImageResourcePath()});
+                resourceCacheEntryBean);
     }
 
     private void recordListIphoneFilesByExtension(final File[] files) {

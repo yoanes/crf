@@ -196,6 +196,10 @@
         <constructor-arg ref="crf.resourcesEhcache" />
         <constructor-arg value="@{crf.env.cache.resources}" />
         <property name="enableStatistics" value="true" />
+        <property name="resourcesNotFoundMaxRefreshCount" 
+            value="@{crf.env.cache.resources.not.found.max.refresh.count}"/>
+        <property name="resourcesNotFoundRefreshCountUpdateMilliseconds" 
+            value="@{crf.env.cache.resources.not.found.refresh.count.update.milliseconds}"/>
     </bean>
     
     <bean id="crf.resourcesEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">

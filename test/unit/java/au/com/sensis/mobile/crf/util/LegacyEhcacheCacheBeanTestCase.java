@@ -12,35 +12,35 @@ import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link EhcacheCacheBean}.
+ * Unit test {@link LegacyEhcacheCacheBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  *
  */
-public class EhcacheCacheBeanTestCase extends AbstractJUnit4TestCase {
+public class LegacyEhcacheCacheBeanTestCase extends AbstractJUnit4TestCase {
 
     private static final String USER_AGENT = "myUserAgent";
 
-    private EhcacheCacheBean<String, Group> objectUnderTest;
+    private LegacyEhcacheCacheBean<String, Group> objectUnderTest;
     private Ehcache mockEhcache;
     private final GroupTestData groupTestData = new GroupTestData();
 
     @Test
     public void testIsEnabledWhenTrue() throws Throwable {
-        Assert.assertTrue("isEnabled should be true", createEnabledEhcacheCacheBean()
+        Assert.assertTrue("isEnabled should be true", createEnabledLegacyEhcacheCacheBean()
                 .isEnabled());
     }
 
     @Test
     public void testIsEnabledWhenFalse() throws Throwable {
-        Assert.assertFalse("isEnabled should be false", createDisabledEhcacheCacheBean()
+        Assert.assertFalse("isEnabled should be false", createDisabledLegacyEhcacheCacheBean()
                 .isEnabled());
 
     }
 
     @Test
     public void testContainsWhenTrueAndCacheEnabled() throws Throwable {
-        setObjectUnderTest(createEnabledEhcacheCacheBean());
+        setObjectUnderTest(createEnabledLegacyEhcacheCacheBean());
 
         EasyMock.expect(getMockEhcache().isKeyInCache(USER_AGENT)).andReturn(Boolean.TRUE);
 
@@ -53,36 +53,37 @@ public class EhcacheCacheBeanTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testGetWhenCacheEnabled() throws Throwable {
-        setObjectUnderTest(createEnabledEhcacheCacheBean());
+        setObjectUnderTest(createEnabledLegacyEhcacheCacheBean());
 
         EasyMock.expect(getMockEhcache().isKeyInCache(USER_AGENT)).andReturn(Boolean.TRUE);
 
-        final Group expectedGroup = getGroupTestData().createAppleGroup();
-        final Element element = new Element(USER_AGENT, expectedGroup);
+        final Group[] expectedGroups = new Group[] { getGroupTestData().createAppleGroup() };
+        final Element element = new Element(USER_AGENT, expectedGroups);
 
         EasyMock.expect(getMockEhcache().get(USER_AGENT)).andReturn(element);
 
         replay();
 
-        Assert.assertEquals("get returned wrong groups", expectedGroup, getObjectUnderTest()
+        Assert.assertArrayEquals("get returned wrong groups", expectedGroups, getObjectUnderTest()
                 .get(USER_AGENT));
 
     }
 
     @Test
     public void testGetWhenCacheDisabled() throws Throwable {
-        setObjectUnderTest(createDisabledEhcacheCacheBean());
+        setObjectUnderTest(createDisabledLegacyEhcacheCacheBean());
 
-        final Group groups = getGroupTestData().createAppleGroup();
+        final Group[] groups = new Group [] {getGroupTestData().createAppleGroup()};
         getObjectUnderTest().put(USER_AGENT, groups);
 
-        Assert.assertNull("get returned wrong groups", getObjectUnderTest().get(USER_AGENT));
+        Assert.assertArrayEquals("get returned wrong groups", null,
+                getObjectUnderTest().get(USER_AGENT));
 
     }
 
     @Test
     public void testContainsWhenFalseAndCacheEnabled() throws Throwable {
-        Assert.assertFalse("contains should be false", createEnabledEhcacheCacheBean()
+        Assert.assertFalse("contains should be false", createEnabledLegacyEhcacheCacheBean()
                 .contains(USER_AGENT));
 
     }
@@ -90,39 +91,40 @@ public class EhcacheCacheBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testContainsWhenCacheDisabled() throws Throwable {
 
-        Assert.assertFalse("contains should be false", createDisabledEhcacheCacheBean()
+        Assert.assertFalse("contains should be false", createDisabledLegacyEhcacheCacheBean()
                 .contains(USER_AGENT));
 
     }
 
     @Test
     public void testPutWhenCacheEnabled() throws Throwable {
-        setObjectUnderTest(createEnabledEhcacheCacheBean());
+        setObjectUnderTest(createEnabledLegacyEhcacheCacheBean());
 
-        final Group expectedGroup = getGroupTestData().createAppleGroup();
-        final Element element = new Element(USER_AGENT, expectedGroup);
+        final Group[] expectedGroups = new Group[] { getGroupTestData().createAppleGroup() };
+        final Element element = new Element(USER_AGENT, expectedGroups);
 
         getMockEhcache().put(element);
 
         replay();
 
-        getObjectUnderTest().put(USER_AGENT, expectedGroup);
+        getObjectUnderTest().put(USER_AGENT, expectedGroups);
     }
 
     @Test
     public void testPutWhenCacheDisabled() throws Throwable {
-        setObjectUnderTest(createDisabledEhcacheCacheBean());
+        setObjectUnderTest(createDisabledLegacyEhcacheCacheBean());
 
-        final Group group = getGroupTestData().createAppleGroup();
-        getObjectUnderTest().put(USER_AGENT, group);
+        final Group[] groups = new Group [] {getGroupTestData().createAppleGroup()};
+        getObjectUnderTest().put(USER_AGENT, groups);
 
-        Assert.assertNull("get returned wrong groups", getObjectUnderTest().get(USER_AGENT));
+        Assert.assertArrayEquals("get returned wrong groups", null,
+                getObjectUnderTest().get(USER_AGENT));
 
     }
 
     @Test
     public void testRemoveAll() throws Throwable {
-        setObjectUnderTest(createEnabledEhcacheCacheBean());
+        setObjectUnderTest(createEnabledLegacyEhcacheCacheBean());
 
         getMockEhcache().removeAll();
 
@@ -132,25 +134,25 @@ public class EhcacheCacheBeanTestCase extends AbstractJUnit4TestCase {
 
     }
 
-    private EhcacheCacheBean<String, Group> createEnabledEhcacheCacheBean() {
-        return new EhcacheCacheBean<String, Group>(getMockEhcache(), true);
+    private LegacyEhcacheCacheBean<String, Group> createEnabledLegacyEhcacheCacheBean() {
+        return new LegacyEhcacheCacheBean<String, Group>(getMockEhcache(), true);
     }
 
-    private EhcacheCacheBean<String, Group> createDisabledEhcacheCacheBean() {
-        return new EhcacheCacheBean<String, Group>(getMockEhcache(), false);
+    private LegacyEhcacheCacheBean<String, Group> createDisabledLegacyEhcacheCacheBean() {
+        return new LegacyEhcacheCacheBean<String, Group>(getMockEhcache(), false);
     }
 
     /**
      * @return the objectUnderTest
      */
-    private EhcacheCacheBean<String, Group> getObjectUnderTest() {
+    private LegacyEhcacheCacheBean<String, Group> getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final EhcacheCacheBean<String, Group> objectUnderTest) {
+    private void setObjectUnderTest(final LegacyEhcacheCacheBean<String, Group> objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 

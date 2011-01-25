@@ -7,15 +7,12 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
-import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
-import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
 
 /**
  * Unit test {@link JspResourceResolverBean}.
@@ -38,18 +35,6 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
         setObjectUnderTest(new JspResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCrfExtensionWithoutLeadingDot(),
                 getResourcesRootDir(), getResourcePathTestData().getJspResourcesRootServletPath()));
-
-        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree(true));
-    }
-
-    /**
-     * Tear down test data.
-     *
-     * @throws Exception Thrown if any error occurs.
-     */
-    @After
-    public void tearDown() throws Exception {
-        ResourceResolutionTreeHolder.setResourceResolutionTree(new ResourceResolutionTree());
     }
 
     @Override
@@ -170,8 +155,14 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
     }
 
     private void recordGetFromResourceCache(final ResourceCacheKey resourceCacheKey) {
+        final Resource[] resources =
+                new Resource[] { getResourcePathTestData().getMappedIphoneGroupResourcePath() };
+        final ResourceCacheEntryBean resourceCacheEntryBean =
+                new ResourceCacheEntryBean(resources,
+                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
         EasyMock.expect(getMockResourceCache().get(resourceCacheKey)).andReturn(
-                new Resource [] {getResourcePathTestData().getMappedIphoneGroupResourcePath()});
+                resourceCacheEntryBean);
     }
 
     @Test
@@ -194,6 +185,8 @@ public class JspResourceResolverBeanTestCase extends AbstractResourceResolverTes
             recordCheckIfNewApplePathExists(Boolean.FALSE);
 
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            recordLogWarningIfEmptyResolvedResources(
+                    getResourcePathTestData().getRequestedJspResourcePath());
 
             replay();
 

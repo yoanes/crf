@@ -16,12 +16,15 @@ import org.apache.log4j.Logger;
  * @param <V>
  *            Value tyep.
  *
+ * @deprecated Use {@link EhcacheCacheBean} instead.
+ *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class EhcacheCacheBean<K extends Serializable, V extends Serializable> implements
-        Cache<K, V> {
+@Deprecated
+public class LegacyEhcacheCacheBean<K extends Serializable, V extends Serializable> implements
+        LegacyCache<K, V> {
 
-    private static final Logger LOGGER = Logger.getLogger(EhcacheCacheBean.class);
+    private static final Logger LOGGER = Logger.getLogger(LegacyEhcacheCacheBean.class);
 
     private boolean cacheEnabled = true;
     private final Ehcache ehcache;
@@ -63,7 +66,7 @@ public class EhcacheCacheBean<K extends Serializable, V extends Serializable> im
      * @param cacheEnabled
      *            True if the cache should be enabled.
      */
-    public EhcacheCacheBean(final Ehcache ehcache, final boolean cacheEnabled) {
+    public LegacyEhcacheCacheBean(final Ehcache ehcache, final boolean cacheEnabled) {
         this.ehcache = ehcache;
         this.cacheEnabled = cacheEnabled;
     }
@@ -83,11 +86,10 @@ public class EhcacheCacheBean<K extends Serializable, V extends Serializable> im
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     @Override
-    public V get(final K key) {
+    public V[] get(final K key) {
         if (contains(key)) {
-            return (V) getEhcache().get(key).getValue();
+            return (V[]) getEhcache().get(key).getValue();
         } else {
             return null;
         }
@@ -97,7 +99,7 @@ public class EhcacheCacheBean<K extends Serializable, V extends Serializable> im
      * {@inheritDoc}
      */
     @Override
-    public void put(final K key, final V value) {
+    public void put(final K key, final V[] value) {
         if (isEnabled()) {
             getEhcache().put(new Element(key, value));
         }

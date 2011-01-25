@@ -162,7 +162,6 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                     recordGetImageSize();
                     recordGetJspWriter();
                 } else {
-                    recordLogResourceNotFoundWarning();
                     recordGetJspWriter();
                 }
 
@@ -182,15 +181,6 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                         + ": '" + testDataArray[i] + "'", e);
             }
         }
-    }
-
-    private void recordLogResourceNotFoundWarning() {
-        EasyMock.expect(getMockResolutionWarnLogger().isWarnEnabled())
-        .andReturn(Boolean.TRUE);
-        getMockResolutionWarnLogger().warn(
-                "No resource was found for requested resource '"
-                + getResourcePathTestData().getRequestedImageResourcePath()
-                + "' and device " + getMockDevice() + "");
     }
 
     @Test

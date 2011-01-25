@@ -9,8 +9,12 @@ import au.com.sensis.mobile.crf.util.EhcacheCacheBean;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class EhcacheResourceCacheBean extends EhcacheCacheBean<ResourceCacheKey, Resource>
+public class EhcacheResourceCacheBean extends EhcacheCacheBean<ResourceCacheKey, ResourceCacheEntry>
     implements ResourceCache {
+
+    private int resourcesNotFoundMaxRefreshCount = DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT;
+    private int resourcesNotFoundRefreshCountUpdateMilliseconds
+        = DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS;
 
     /**
      * Constructor.
@@ -24,6 +28,38 @@ public class EhcacheResourceCacheBean extends EhcacheCacheBean<ResourceCacheKey,
         super(ehcache, cacheEnabled);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getResourcesNotFoundMaxRefreshCount() {
+        return resourcesNotFoundMaxRefreshCount;
+    }
 
+    /**
+     * @param resourcesNotFoundMaxRefreshCount
+     *            the resourcesNotFoundMaxRefreshCount to set
+     */
+    public void setResourcesNotFoundMaxRefreshCount(
+            final int resourcesNotFoundMaxRefreshCount) {
+        this.resourcesNotFoundMaxRefreshCount = resourcesNotFoundMaxRefreshCount;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getResourcesNotFoundRefreshCountUpdateMilliseconds() {
+        return resourcesNotFoundRefreshCountUpdateMilliseconds;
+    }
+
+    /**
+     * @param resourcesNotFoundRefreshCountUpdateMilliseconds
+     *            the resourcesNotFoundRefreshCountUpdateMilliseconds to set
+     */
+    public void setResourcesNotFoundRefreshCountUpdateMilliseconds(
+            final int resourcesNotFoundRefreshCountUpdateMilliseconds) {
+        this.resourcesNotFoundRefreshCountUpdateMilliseconds =
+                resourcesNotFoundRefreshCountUpdateMilliseconds;
+    }
 }

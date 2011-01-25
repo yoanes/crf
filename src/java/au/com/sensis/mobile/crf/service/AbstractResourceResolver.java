@@ -101,27 +101,89 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
         final ResourceCacheKey resourceCacheKey =
                 createResourceCacheKey(requestedResourcePath, device);
-        final List<Resource> cachedResources = getCachedResources(resourceCacheKey);
-        if (cachedResources != null) {
-            // TODO: if (cachedBundle != null) && cachedBundle.isEmpty()
-            // && cachedBundle checked enough times {
-            addResourcesToResourceResolutionTreeIfEnabled(cachedResources);
-            // TODO: if cached resources are an empty list, log warning.
-            return cachedResources;
+        final ResourceCacheEntry cachedResources = getCachedResources(resourceCacheKey);
+        if (cachedEntryIsValid(cachedResources)) {
+            addResourcesToResourceResolutionTreeIfEnabled(cachedResources.getResourcesAsList());
+            logWarningIfEmptyCachedResources(requestedResourcePath, device, cachedResources);
+            return cachedResources.getResourcesAsList();
+        } else if (cachedEntryHasEmptyResources(cachedResources)
+                && !cachedResources.maxRefreshCountReached()) {
+            logWarningIfEmptyCachedResourcesToBeRefreshed(requestedResourcePath, device,
+                    cachedResources);
         }
 
         final List<Resource> resolvedResources = doResolve(requestedResourcePath, device);
+
         addResourcesToResourceResolutionTreeIfEnabled(resolvedResources);
+        updateResourceCache(resourceCacheKey, cachedResources, resolvedResources);
+        logWarningIfEmptyResolvedResources(requestedResourcePath, device, resolvedResources);
 
-        if (resourceCacheKey != null) {
-            getResourceCache().put(resourceCacheKey,
-                    resolvedResources.toArray(new Resource[] {}));
-
-        }
-
-        // TODO: if (non)cached resources are an empty list, log warning.
         return resolvedResources;
 
+    }
+
+    private void logWarningIfEmptyCachedResourcesToBeRefreshed(final String requestedResourcePath,
+            final Device device, final ResourceCacheEntry resourceCacheEntry) {
+        if (getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "Empty cached resources found for requested resource '" + requestedResourcePath
+                            + "' and device " + device + " but refreshCount is "
+                            + resourceCacheEntry.getRefreshCount() + ". Will refresh the entry.");
+        }
+    }
+
+    private void logWarningIfEmptyResolvedResources(final String requestedResourcePath,
+            final Device device, final List<Resource> resolvedResources) {
+        if ((resolvedResources != null) && resolvedResources.isEmpty()
+                && getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "No resource was found for requested resource '" + requestedResourcePath
+                            + "' and device " + device);
+        }
+    }
+
+    private void logWarningIfEmptyCachedResources(final String requestedResourcePath,
+            final Device device, final ResourceCacheEntry cachedResources) {
+        if ((cachedResources != null) && cachedResources.isEmptyResources()
+                && getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "Cached empty resources found and returned for requested resource '"
+                            + requestedResourcePath + "' and device " + device
+                            + ". refreshCount is " + cachedResources.getRefreshCount());
+        }
+
+    }
+
+    private void updateResourceCache(final ResourceCacheKey resourceCacheKey,
+            final ResourceCacheEntry previousCacheEntry, final List<Resource> resolvedResources) {
+        if (resourceCacheKey != null) {
+            final Resource[] resolvedResourcesArray = resolvedResources.toArray(new Resource[] {});
+            if (previousCacheEntry != null) {
+                previousCacheEntry.incrementRefreshCountRateLimited();
+                previousCacheEntry.setResources(resolvedResourcesArray);
+                getResourceCache().put(resourceCacheKey, previousCacheEntry);
+            } else {
+                getResourceCache().put(
+                        resourceCacheKey,
+                        new ResourceCacheEntryBean(resolvedResourcesArray, getResourceCache()
+                                .getResourcesNotFoundMaxRefreshCount(), getResourceCache()
+                                .getResourcesNotFoundRefreshCountUpdateMilliseconds()));
+            }
+        }
+    }
+
+    private boolean cachedEntryIsValid(final ResourceCacheEntry cachedResources) {
+        return (cachedEntryHasNonEmptyResources(cachedResources))
+                || (cachedEntryHasEmptyResources(cachedResources) && cachedResources
+                        .maxRefreshCountReached());
+    }
+
+    private boolean cachedEntryHasNonEmptyResources(final ResourceCacheEntry cachedResources) {
+        return (cachedResources != null) && !cachedResources.isEmptyResources();
+    }
+
+    private boolean cachedEntryHasEmptyResources(final ResourceCacheEntry cachedResources) {
+        return (cachedResources != null) && cachedResources.isEmptyResources();
     }
 
     /**
@@ -473,14 +535,6 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
-     * @param key Key to look up in the cache.
-     * @return Resources from the cache.
-     */
-    protected final Resource[] getResourcesFromCache(final ResourceCacheKey key) {
-        return getResourceCache().get(key);
-    }
-
-    /**
      * Log a debug message that resources were found in the cache.
      */
     protected final void debugLogResourcesFoundInCache() {
@@ -552,17 +606,14 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @param resourceCacheKey Key to look up.
      * @return cached resources for the given key.
      */
-    protected final List<Resource> getCachedResources(final ResourceCacheKey resourceCacheKey) {
+    protected final ResourceCacheEntry getCachedResources(final ResourceCacheKey resourceCacheKey) {
         if ((resourceCacheKey != null) && getResourceCache().contains(resourceCacheKey)) {
             debugLogResourcesFoundInCache();
-            return Arrays.asList(getResourceCache().get(resourceCacheKey));
+            return getResourceCache().get(resourceCacheKey);
         } else {
             debugLogResourcesNotFoundInCache();
             return null;
         }
 
     }
-
-
-
 }

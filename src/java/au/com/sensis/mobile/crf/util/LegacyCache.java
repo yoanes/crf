@@ -6,24 +6,27 @@ package au.com.sensis.mobile.crf.util;
  * @param <K> Key type.
  * @param <V> Value tyep.
  *
+ * @deprecated Use {@link Cache} instead.
+ *
  * @author Adrian.Koh2@sensis.com.au
  */
-public interface Cache<K, V> {
+@Deprecated
+public interface LegacyCache<K, V> {
 
     /**
      * Put element into this cache.
      *
      * @param key Key of the item to add.
-     * @param value Value  to be put into this cache.
+     * @param values Values  to be put into this cache.
      */
-    void put(K key, V value);
+    void put(K key, V [] values);
 
     /**
      *
      * @param key Key to lookup in this cache.
-     * @return Value corresponding to the key.
+     * @return Values corresponding to the key.
      */
-    V get(K key);
+    V [] get(K key);
 
     /**
      * @param key Key to lookup in this cache.

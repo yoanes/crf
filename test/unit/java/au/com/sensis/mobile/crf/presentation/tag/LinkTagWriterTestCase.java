@@ -102,17 +102,6 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
                 recordGetResource(testDataArray[i].getResources());
 
-                if (testDataArray[i].getDeploymentMetadata().isDevPlatform()
-                        && StringUtils.isEmpty(testDataArray[i].getOutputString())) {
-                    recordLogResourceNotFoundWarning();
-                }
-
-                if (testDataArray[i].getDeploymentMetadata().isProdPlatform()) {
-                    if (StringUtils.isEmpty(testDataArray[i].getOutputString())) {
-                        recordLogResourceNotFoundWarning();
-                    }
-                }
-
                 replay();
 
                 getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
@@ -155,15 +144,6 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMockResourceResolverEngine()
                 .getAllResources(getMockDevice(), getRequestedCssResourcePath()))
                 .andReturn(expectedResources).atLeastOnce();
-    }
-
-    private void recordLogResourceNotFoundWarning() {
-        EasyMock.expect(getMockResolutionWarnLogger().isWarnEnabled())
-        .andReturn(Boolean.TRUE);
-        getMockResolutionWarnLogger().warn(
-                "No resource was found for requested resource '"
-                + getResourcePathTestData().getRequestedCssResourcePath()
-                + "' and device " + getMockDevice());
     }
 
     private Resource getMappedDefaultGroupCssResourcePath() {
@@ -495,22 +475,9 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
-    private Resource getMappedDefaultGroupCssBundleResourcePath() {
-        return getResourcePathTestData().getMappedDefaultGroupCssBundleResourcePath();
-    }
-
-    private String getMappedDefaultGroupCssBundleResourceHref() {
-        return getResourcePathTestData().getMappedDefaultGroupCssBundleResourceHref();
-    }
-
     private Resource getMappedIphoneGroupCssBundleResourcePath() {
         return getResourcePathTestData().getMappedIphoneGroupCssBundleResourcePath();
     }
-
-    private String getMappedIphoneGroupCssBundleResourceHref() {
-        return getResourcePathTestData().getMappedIphoneGroupCssBundleResourceHref();
-    }
-
 
     private static class TestData {
         private final List<DynamicTagAttribute> dynamicAttributes;

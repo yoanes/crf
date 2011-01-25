@@ -185,7 +185,10 @@ public class CssResourceResolverBeanTestCase extends AbstractMultipleResourceRes
             getMockResourceAccumulator().accumulate(new ArrayList<Resource>());
 
             recordGetResourcesFromAccumulator(new ArrayList<Resource>());
+
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            recordLogWarningIfEmptyResolvedResources(
+                    getResourcePathTestData().getRequestedCssResourcePath());
 
             replay();
 

@@ -1,15 +1,15 @@
 package au.com.sensis.mobile.crf.config;
 
 import net.sf.ehcache.Ehcache;
-import au.com.sensis.mobile.crf.util.EhcacheCacheBean;
+import au.com.sensis.mobile.crf.util.LegacyEhcacheCacheBean;
 
 /**
  * {@link GroupsCache} that uses ehcache.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class EhcacheGroupsCacheBean extends EhcacheCacheBean<GroupsCacheKey, Group> implements
-        GroupsCache {
+public class EhcacheGroupsCacheBean extends LegacyEhcacheCacheBean<GroupsCacheKey, Group>
+    implements GroupsCache {
 
     /**
      * Constructor.

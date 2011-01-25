@@ -19,7 +19,7 @@ public class ConcurrentMapCacheBean<K, V> implements Cache<K, V> {
     private static final Logger LOGGER = Logger.getLogger(ConcurrentMapCacheBean.class);
 
     private boolean cacheEnabled = true;
-    private ConcurrentMap<K, V []> cacheMap;
+    private ConcurrentMap<K, V> cacheMap;
 
     /**
      * Constructor.
@@ -29,7 +29,7 @@ public class ConcurrentMapCacheBean<K, V> implements Cache<K, V> {
      */
     public ConcurrentMapCacheBean(final boolean cacheEnabled) {
         this.cacheEnabled = cacheEnabled;
-        setCacheMap(new ConcurrentHashMap<K, V[]>());
+        setCacheMap(new ConcurrentHashMap<K, V>());
     }
 
     /**
@@ -48,7 +48,7 @@ public class ConcurrentMapCacheBean<K, V> implements Cache<K, V> {
      * {@inheritDoc}
      */
     @Override
-    public V [] get(final K key) {
+    public V get(final K key) {
         if (isEnabled()) {
             return getCacheMap().get(key);
         } else {
@@ -60,7 +60,7 @@ public class ConcurrentMapCacheBean<K, V> implements Cache<K, V> {
      * {@inheritDoc}
      */
     @Override
-    public void put(final K key, final V[] value) {
+    public void put(final K key, final V value) {
         if (isEnabled()) {
             getCacheMap().put(key, value);
         }
@@ -97,14 +97,14 @@ public class ConcurrentMapCacheBean<K, V> implements Cache<K, V> {
     /**
      * @return the cacheMap
      */
-    private ConcurrentMap<K, V[]> getCacheMap() {
+    private ConcurrentMap<K, V> getCacheMap() {
         return cacheMap;
     }
 
     /**
      * @param cacheMap the cacheMap to set
      */
-    private void setCacheMap(final ConcurrentMap<K, V[]> cacheMap) {
+    private void setCacheMap(final ConcurrentMap<K, V> cacheMap) {
         this.cacheMap = cacheMap;
     }
 }

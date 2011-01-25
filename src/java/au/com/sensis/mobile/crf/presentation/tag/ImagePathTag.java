@@ -12,7 +12,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import au.com.sensis.mobile.crf.service.Resource;
-import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 
 /**
@@ -58,12 +57,6 @@ public class ImagePathTag extends AbstractTag {
 
     private void doTagWhenResourceNotFound() throws IOException {
 
-        if (getResourceResolutionWarnLogger().isWarnEnabled()) {
-            getResourceResolutionWarnLogger().warn(
-                    "No resource was found for requested resource '"
-                    + getSrc() + "' and device " + getDevice());
-        }
-
         writeBrokenImagePath(getJspContext().getOut());
     }
 
@@ -78,11 +71,6 @@ public class ImagePathTag extends AbstractTag {
 
         jspWriter.print(getTagDependencies().getClientPathPrefix()
                 + getTagDependencies().getDeploymentMetadata().getVersion() + "/" + getSrc());
-    }
-
-
-    private ResourceResolutionWarnLogger getResourceResolutionWarnLogger() {
-        return getTagDependencies().getResourceResolutionWarnLogger();
     }
 
     private ImageTagDependencies getTagDependencies() {

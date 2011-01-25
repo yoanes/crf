@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMock;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +16,6 @@ import org.junit.Test;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
@@ -44,8 +42,6 @@ public class JavaScriptResourceResolverBeanTestCase
      */
     @Before
     public void setUp() throws Exception {
-
-        FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
         setObjectUnderTest(new JavaScriptResourceResolverBean(
                 getResourceResolverCommonParamHolder(),
@@ -105,16 +101,6 @@ public class JavaScriptResourceResolverBeanTestCase
                 getResourcePathTestData().getScriptExtensionWithoutLeadingDot(),
                 getResourcesRootDir(), getMockResourceAccumulatorFactory(),
                 ABSTRACT_PATH_PACKAGE_KEYWORD, getMockJavaScriptFileFinder());
-    }
-
-    /**
-     * Tear down test data.
-     *
-     * @throws Exception Thrown if any error occurs.
-     */
-    @After
-    public void tearDown() throws Exception {
-        FileIoFacadeFactory.restoreDefaultFileIoFacadeSingleton();
     }
 
     @Test
@@ -277,6 +263,8 @@ public class JavaScriptResourceResolverBeanTestCase
             recordGetResourcesFromAccumulator(new ArrayList<Resource>());
 
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            recordLogWarningIfEmptyResolvedResources(
+                    getResourcePathTestData().getRequestedPackageScriptResourcePath());
 
             replay();
 
@@ -416,6 +404,8 @@ public class JavaScriptResourceResolverBeanTestCase
             recordGetResourcesFromAccumulator(new ArrayList<Resource>());
 
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
+            recordLogWarningIfEmptyResolvedResources(
+                    getResourcePathTestData().getRequestedNamedScriptResourcePath());
 
             replay();
 

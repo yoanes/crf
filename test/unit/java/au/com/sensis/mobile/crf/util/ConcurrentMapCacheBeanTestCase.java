@@ -37,7 +37,7 @@ public class ConcurrentMapCacheBeanTestCase extends AbstractJUnit4TestCase {
     public void testContainsWhenTrueAndCacheEnabled() throws Throwable {
         setObjectUnderTest(createEnabledConcurrentMapCacheBean());
 
-        getObjectUnderTest().put(USER_AGENT, new Group [] {getGroupTestData().createAppleGroup()});
+        getObjectUnderTest().put(USER_AGENT, getGroupTestData().createAppleGroup());
 
         Assert.assertTrue("contains should be true", getObjectUnderTest()
                 .contains(USER_AGENT));
@@ -48,10 +48,10 @@ public class ConcurrentMapCacheBeanTestCase extends AbstractJUnit4TestCase {
     public void testGetWhenCacheEnabled() throws Throwable {
         setObjectUnderTest(createEnabledConcurrentMapCacheBean());
 
-        final Group[] expectedGroups = new Group [] {getGroupTestData().createAppleGroup()};
-        getObjectUnderTest().put(USER_AGENT, expectedGroups);
+        final Group expectedGroup = getGroupTestData().createAppleGroup();
+        getObjectUnderTest().put(USER_AGENT, expectedGroup);
 
-        Assert.assertArrayEquals("get returned wrong groups", expectedGroups,
+        Assert.assertEquals("get returned wrong groups", expectedGroup,
                 getObjectUnderTest().get(USER_AGENT));
 
     }
@@ -60,10 +60,10 @@ public class ConcurrentMapCacheBeanTestCase extends AbstractJUnit4TestCase {
     public void testGetWhenCacheDisabled() throws Throwable {
         setObjectUnderTest(createDisabledConcurrentMapCacheBean());
 
-        final Group[] groups = new Group [] {getGroupTestData().createAppleGroup()};
-        getObjectUnderTest().put(USER_AGENT, groups);
+        final Group expectedGroup = getGroupTestData().createAppleGroup();
+        getObjectUnderTest().put(USER_AGENT, expectedGroup);
 
-        Assert.assertArrayEquals("get returned wrong groups", null,
+        Assert.assertEquals("get returned wrong groups", null,
                 getObjectUnderTest().get(USER_AGENT));
 
     }
@@ -88,7 +88,7 @@ public class ConcurrentMapCacheBeanTestCase extends AbstractJUnit4TestCase {
 
         setObjectUnderTest(createEnabledConcurrentMapCacheBean());
 
-        getObjectUnderTest().put(USER_AGENT, new Group [] {getGroupTestData().createAppleGroup()});
+        getObjectUnderTest().put(USER_AGENT, getGroupTestData().createAppleGroup());
         getObjectUnderTest().removeAll();
 
         Assert.assertFalse("contains should be false", getObjectUnderTest()
