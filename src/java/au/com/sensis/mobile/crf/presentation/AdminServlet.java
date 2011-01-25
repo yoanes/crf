@@ -67,7 +67,7 @@ public class AdminServlet extends HttpServletBean {
 
         if (getRestfulAction(req).equals(getEmptyResourceCacheAction())) {
 
-            LOGGER.debug("Performing CRF Admin task: " + getRestfulAction(req));
+            LOGGER.info("Performing CRF Admin task: " + getRestfulAction(req));
 
             emptyResourceCache();
             LOGGER.info("Emptied the resource cache.");
