@@ -1,3 +1,91 @@
+==== Version 1.0.4 (tag: contentRenderingFramework_v1_0_4) ==== 
+
+- CRF-95 Create Admin servlet for emptying the resource cache
+
+    * Usage: 
+        * Add the following servlet to your app:
+    
+            <!-- CRF Admin Servlet. -->
+            <servlet>
+                <servlet-name>crfAdminServlet</servlet-name>
+                <servlet-class>au.com.sensis.mobile.crf.presentation.AdminServlet</servlet-class>
+                <init-param>
+                    <param-name>resourceCacheBeanName</param-name>
+                    <param-value>crf.resourceCache</param-value>
+                </init-param>
+                <init-param>
+                    <param-name>emptyResourceCacheAction</param-name>
+                    <param-value>/resourcecache/empty</param-value>
+                </init-param>
+            </servlet>
+        
+            <servlet-mapping>
+                <servlet-name>crfAdminServlet</servlet-name>
+                <url-pattern>/healthcheck/crf/*</url-pattern>
+            </servlet-mapping>
+            
+        * Then hit the URL /healthcheck/crf/resourcecache/empty to clear the resource cache.
+        * (optional) check the output of the log4j 
+          au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger logger to verify that the cache 
+          was cleared. The frequency of these log entries is configured by 
+          env.cache.stats.logging.period.milliseconds, which has default values defined by CRF. 
+    
+- CRF-97 NEW - retry resolution if request resulted in empty resources
+    * CRF ships with new environment properties that have defaults set. You shouldn't have to 
+      modify them:
+    
+        # If a resource cache entry corresponds to no resources found, this is the maximum number of times
+        # that attempts will be made to refresh the entry (and thus conclude that the resources really, 
+        # really cannot be found). This allows for some level of recovery if the original request could not
+        # be resolved due to a transient file system error.
+        # env.cache.resources.not.found.refresh.count.update.milliseconds will limit the rate at which
+        # the refresh count is updated.
+        env.cache.resources.not.found.max.refresh.count=5
+        
+        # Used in conjunction with env.cache.resources.not.found.max.refresh.count, this value is
+        # the minimum time delay to wait before updating the refresh count. For example, if this is 
+        # set to 60000 milliseconds, we effectively allow a maximum of one refresh to be counted every 
+        # 60 seconds, regardless of how many attempts were truly made. This ensures that the recovery 
+        # attempts will span a non-trivial amount of time.
+        env.cache.resources.not.found.refresh.count.update.milliseconds=120000
+    
+    * Log entries like the following indicate that an attempt to resolve the resource was really 
+      made but no results found.  
+    
+        216093 [2011-01-24 16:41:08,718] [http-8080-1] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {} 
+        - No resource was found for requested resource 'selenium/common/columns.css' and device 
+        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6] 
+        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true] 
+        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false] 
+        [navigatorBrowser - false] [navigatorBrowserName - NONE] [navigatorDownload - false] [navigatorLaunchConvention - NONE] 
+        [custom.web2.0 - false]
+
+    * Log entries like the following indicate that we previously cached empty resources but the 
+      refreshCount has not reached the max yet so we will attempt to refresh the cache entry.
+            
+        233031 [2011-01-24 16:41:25,656] [http-8080-1] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {} 
+        - Empty cached resources found for requested resource 'selenium/common/columns.css' and device 
+        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6] 
+        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true] 
+        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false] 
+        [navigatorBrowser - false] [navigatorBrowserName - NONE] [navigatorDownload - false] [navigatorLaunchConvention - NONE] 
+        [custom.web2.0 - false] but refreshCount is 1. Will refresh the entry.
+
+    * Log entries like the following indicate that the refreshCount has reached its max so the 
+      empty resources will be returned from the cache. 
+    
+        433859 [2011-01-24 16:44:46,484] [http-8080-6] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {} 
+        - Cached empty resources found and returned for requested resource 'selenium/common/columns.css' and device 
+        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6] 
+        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true] 
+        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false] 
+        [navigatorBrowser - false] [navigatorBrowserName - NONE] [navigatorDownload - false] [navigatorLaunchConvention - NONE]
+         [custom.web2.0 - false]. refreshCount is 3
+    
+    
+- Upgrade steps:
+    - Configure the crfAdminServlet as described above.     
+
 ==== Version 1.0.3 (tag: contentRenderingFramework_v1_0_3) ==== 
 
 - CRF-89: Created a new tag for use in JSPs to only output a resolved image path without
