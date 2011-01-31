@@ -10,6 +10,8 @@
       - Acceptance criteria: test inclusion of relative JSPs via CRF (Jira CRF-16). 
       --%>
     <jsp:include page="../../../selenium/common/header.crf"/>
+    
+    <jsp:include page="../../../selenium/component/map/mapSetup.crf"/>    
   </head>
   <body>
     <%--
@@ -19,6 +21,8 @@
     
     <div><strong>[HD800] bdp.jsp </strong> </div>
     
+    <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/clickToCall.crf"/>
+    
     <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/deviceProperties.crf"/>
     
     <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/mainProperties.crf"/>    
@@ -27,5 +31,7 @@
       - Acceptance criteria: test inclusion of relative JSPs via CRF (Jira CRF-16). 
       --%>
     <jsp:include page="../../../selenium/common/images.crf"/>
+    
+    <jsp:include page="../../../selenium/component/map/map.crf"/>    
   </body>
 </crf:html>

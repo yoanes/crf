@@ -61,18 +61,25 @@ public abstract class IphoneBdpPage extends BdpPage {
         return 2;
     }
 
+    /**
+     * @return Number to divide image dimensions by. Subclasses should override as necessary.
+     */
+    protected int getImageDimensionsDivisor() {
+        return 1;
+    }
+
     private void assertBodyContentIgnoredWhenImgFound() {
-        assertImg("wm img not found",
-                "wherisMobileImg", "Whereis Mobile", "Whereis Mobile",
-                "iphone-ipod/selenium/common/wm.gif", 60, 90);
-        assertFalse("WM text should not be present resulting from img body content",
-                getBrowser().isTextPresent("WM"));
+        assertImg("wm img not found", "wherisMobileImg", "Whereis Mobile", "Whereis Mobile",
+                "iphone-ipod/selenium/common/wm.gif", 60 / getImageDimensionsDivisor(),
+                90 / getImageDimensionsDivisor());
+        assertFalse("WM text should not be present resulting from img body content", getBrowser()
+                .isTextPresent("WM"));
     }
 
     private void assertMapComponentImgFoundPngFormat() {
-        assertImg("in.img not found",
-                "mapZoomIn", "Map Zoom In", "Map Zoom In",
-		        "mapComponent-iphone-ipod/selenium/component/map/in.png", 45, 32);
+        assertImg("in.img not found", "mapZoomIn", "Map Zoom In", "Map Zoom In",
+                "mapComponent-advanced/selenium/component/map/in.png",
+                45 / getImageDimensionsDivisor(), 32 / getImageDimensionsDivisor());
     }
 
     /**
@@ -133,8 +140,8 @@ public abstract class IphoneBdpPage extends BdpPage {
     }
 
     private void assertCssLinkFoundFromMapComponent() {
-        assertCssLink("mapComponent-iphone-ipod/selenium/component/map/map.css link not found",
-                "mapComponent-iphone-ipod/selenium/component/map/map.css");
+        assertCssLink("mapComponent-advanced/selenium/component/map/map.css link not found",
+                "mapComponent-advanced/selenium/component/map/map.css");
     }
 
     private void assertIphoneScripts() {
@@ -239,10 +246,10 @@ public abstract class IphoneBdpPage extends BdpPage {
     }
 
     private void assertMapComponentScriptsResolvedByPackageNoBundlingWithCompleteOrder() {
-        assertScript("mapComponent-iphone-ipod/selenium/component/map/map2.js script not found",
-                "mapComponent-iphone-ipod/selenium/component/map/map2.js");
-        assertScript("mapComponent-iphone-ipod/selenium/component/map/map1.js script not found",
-                "mapComponent-iphone-ipod/selenium/component/map/map1.js");
+        assertScript("mapComponent-advanced/selenium/component/map/map2.js script not found",
+                "mapComponent-advanced/selenium/component/map/map2.js");
+        assertScript("mapComponent-advanced/selenium/component/map/map1.js script not found",
+                "mapComponent-advanced/selenium/component/map/map1.js");
     }
 
     private void assertOnlyIntermediateGroupScriptsResolvedByPackageNoBundling() {

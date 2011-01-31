@@ -21,6 +21,8 @@
     
     <div><strong>[iphone-ipod] bdp.jsp </strong> </div>
     
+    <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/clickToCall.crf"/>    
+    
     <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/deviceProperties.crf"/>
     
     <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/mainProperties.crf"/>

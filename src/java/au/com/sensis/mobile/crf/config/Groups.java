@@ -5,8 +5,10 @@ package au.com.sensis.mobile.crf.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -23,6 +25,12 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 public class Groups {
 
     private Group[] groups = new Group[] {};
+
+    /**
+     * Map view of the groups array. Note that like the groups array, this <b>excludes</b>
+     * the {@link #getDefaultGroup()}.
+     */
+    private final Map<String, Group> groupsMap = new HashMap<String, Group>();
 
     private DefaultGroup defaultGroup;
 
@@ -87,11 +95,63 @@ public class Groups {
     }
 
     /**
+     * Same as {@link #getGroups()}. Needed for default introspection based
+     * Castor XML binding.
+     *
+     * @see #getGroups().
+     * @return encapsulated sequence of {@link Group}s.
+     */
+    public Group[] getGroup() {
+        return getGroups();
+    }
+
+    /**
+     * @param groupName Name of the group to get.
+     * @return {@link Group} with the given name.
+     */
+    public Group getGroupByName(final String groupName) {
+        if (getGroupsMap().containsKey(groupName)) {
+            return getGroupsMap().get(groupName);
+        } else if (getDefaultGroup().getName().equals(groupName)) {
+            return defaultGroup;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * @param groups encapsulated sequence of {@link Group}s.
      */
     public void setGroups(final Group[] groups) {
         Validate.notNull(groups, "groups must not be null");
         this.groups = groups;
+
+        // Also build a Map view of the groups and update each Group
+        // with its index and parent.
+        getGroupsMap().clear();
+        for (int i = 0; i < groups.length; i++) {
+            getGroupsMap().put(groups[i].getName(), groups[i]);
+            groups[i].setIndex(i);
+            groups[i].setParentGroups(this);
+        }
+    }
+
+    /**
+     * Same as {@link #setGroups(Group[])}. Needed for default introspection based
+     * Castor XML binding.
+     *
+     * @param groups encapsulated sequence of {@link Group}s.
+     * @see #setGroups(Group[]).
+     */
+    public void setGroup(final Group[] groups) {
+        setGroups(groups);
+    }
+
+    /**
+     * @return the groupsMap
+     */
+    private Map<String, Group> getGroupsMap() {
+        return groupsMap;
     }
 
     /**
@@ -112,6 +172,8 @@ public class Groups {
      */
     public void setDefaultGroup(final DefaultGroup defaultGroup) {
         this.defaultGroup = defaultGroup;
+        defaultGroup.setIndex(Integer.MAX_VALUE);
+        defaultGroup.setParentGroups(this);
     }
 
     /**

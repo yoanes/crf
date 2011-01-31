@@ -4,6 +4,10 @@
 package au.com.sensis.mobile.crf.config;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
@@ -40,6 +44,24 @@ public class Group implements Serializable {
     private String expr;
 
     /**
+     * Index of this {@link Group} in the {@link Groups} that it belongs to (similar to an array
+     * index).
+     */
+    private int index;
+
+    /**
+     * {@link Groups} that this {@link Group} belongs to.
+     *
+     * <p>
+     * Note that this field is <b>transient</b>. This field is only
+     * used privately during {@link #match(Device)} evaluation. It is anticipated
+     * that any caching of {@link Group} instances will only occur to cache the result
+     * of {@link #match(Device)} evaluation.
+     * </p>
+     */
+    private transient Groups parentGroups;
+
+    /**
      * Returns true if this group matches the given {@link Device}.
      *
      * @param device
@@ -53,6 +75,7 @@ public class Group implements Serializable {
             final JexlEngine jexl = new JexlEngine();
             jexl.setLenient(false);
             jexl.setSilent(false);
+            jexl.setFunctions(createJexlFunctionsMap());
 
             final Expression e = jexl.createExpression(getExpr());
 
@@ -73,6 +96,88 @@ public class Group implements Serializable {
                             + "' for group '" + getName() + "' and device "
                             + device, e);
         }
+    }
+
+    private Map<String, Object> createJexlFunctionsMap() {
+        final Map<String, Object> functionsMap = new HashMap<String, Object>();
+        functionsMap.put(null, this);
+        return functionsMap;
+    }
+
+    /**
+     * @param device
+     *            {@link Device} of the current request.
+     * @param groupNames
+     *            Names of groups to be checked against the device.
+     * @return true if the given device belongs to all of the passed in groups.
+     */
+    public boolean inAllGroups(final Device device, final String ... groupNames) {
+        validateReferencedGroups(groupNames);
+
+        for (final String groupName : groupNames) {
+            if (!getParentGroups().getGroupByName(groupName).match(device)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void validateReferencedGroups(final String[] groupNames) {
+        validateReferencedGroupNames(groupNames);
+        validateReferencesEarlierGroupsOnly(groupNames);
+    }
+
+    private void validateReferencedGroupNames(final String[] groupNames) {
+        // TODO: also validate no references to the current or later groups.
+        final List<String> invalidGroupNames = new ArrayList<String>();
+        for (final String groupName : groupNames) {
+            if (getParentGroups().getGroupByName(groupName) == null) {
+                invalidGroupNames.add(groupName);
+            }
+        }
+
+        if (!invalidGroupNames.isEmpty()) {
+            throw new GroupEvaluationRuntimeException("Expression references unrecognised groups: "
+                    + invalidGroupNames + ".");
+        }
+
+    }
+
+    private void validateReferencesEarlierGroupsOnly(final String[] groupNames) {
+        final List<String> illegalGroupNames = new ArrayList<String>();
+
+        for (final String groupName : groupNames) {
+            if (getParentGroups().getGroupByName(groupName).getIndex() >= getIndex()) {
+                illegalGroupNames.add(groupName);
+            }
+        }
+
+        if (!illegalGroupNames.isEmpty()) {
+            throw new GroupEvaluationRuntimeException(
+                    "Illegal for expression to reference the current group or later groups "
+                            + "since this may lead to a cyclic dependency: " + illegalGroupNames
+                            + ".");
+        }
+    }
+
+    /**
+     * @param device
+     *            {@link Device} of the current request.
+     * @param groupNames
+     *            Names of groups to be checked against the device.
+     * @return true if the given device belongs to any of the passed in groups.
+     */
+    public boolean inAnyGroup(final Device device, final String ... groupNames) {
+        validateReferencedGroups(groupNames);
+
+        for (final String groupName : groupNames) {
+            if (getParentGroups().getGroupByName(groupName).match(device)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -110,6 +215,35 @@ public class Group implements Serializable {
     }
 
     /**
+     * @return the index
+     */
+    public int getIndex() {
+        return index;
+    }
+
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(final int index) {
+        this.index = index;
+    }
+
+
+    /**
+     * @return the parentGroups
+     */
+    public Groups getParentGroups() {
+        return parentGroups;
+    }
+
+    /**
+     * @param parentGroups the parentGroups to set
+     */
+    public void setParentGroups(final Groups parentGroups) {
+        this.parentGroups = parentGroups;
+    }
+
+    /**
      * @return true if this group is a default group. The default implementation
      *         always returns false.
      */
@@ -135,6 +269,9 @@ public class Group implements Serializable {
 
         equalsBuilder.append(getName(), rhs.getName());
         equalsBuilder.append(getExpr(), rhs.getExpr());
+
+        // Ignore getParentGroups() due to cyclic dependency.
+
         return equalsBuilder.isEquals();
     }
 
@@ -146,6 +283,9 @@ public class Group implements Serializable {
         final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
         hashCodeBuilder.append(getName());
         hashCodeBuilder.append(getExpr());
+
+        // Ignore getParentGroups() due to cyclic dependency.
+
         return hashCodeBuilder.toHashCode();
     }
 
@@ -157,6 +297,9 @@ public class Group implements Serializable {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
         toStringBuilder.append("name", getName());
         toStringBuilder.append("expr", getExpr());
+
+        // Ignore getParentGroups() due to cyclic dependency.
+
         return toStringBuilder.toString();
     }
 

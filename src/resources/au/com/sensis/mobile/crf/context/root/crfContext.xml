@@ -146,7 +146,9 @@
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg ref="crf.resourcePatternResolver"/>
         <constructor-arg>
-            <bean class="au.com.sensis.mobile.crf.util.CastorXmlBinderBean"/>
+            <bean class="au.com.sensis.mobile.crf.util.CastorXmlBinderBean">
+                <constructor-arg index="0" value="au.com.sensis.mobile.crf.config.UiConfiguration"/>
+            </bean>
         </constructor-arg>
         <constructor-arg>
             <bean class="au.com.sensis.mobile.crf.util.XsdXmlValidatorBean"/>

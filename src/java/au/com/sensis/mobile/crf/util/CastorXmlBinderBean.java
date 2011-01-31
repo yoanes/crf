@@ -1,20 +1,18 @@
 package au.com.sensis.mobile.crf.util;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.HierarchicalConfigurationXMLReader;
-import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.UnmarshalHandler;
+import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
+import org.exolab.castor.xml.ValidationException;
+import org.exolab.castor.xml.XMLContext;
+import org.springframework.core.io.UrlResource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderAdapter;
 
-import au.com.sensis.mobile.crf.config.UiConfiguration;
 import au.com.sensis.mobile.crf.exception.XmlBinderRuntimeException;
 
 /**
@@ -25,6 +23,17 @@ import au.com.sensis.mobile.crf.exception.XmlBinderRuntimeException;
 public class CastorXmlBinderBean implements XmlBinder {
 
     private static final Logger LOGGER = Logger.getLogger(CastorXmlBinderBean.class);
+
+    private final Class<?> targetClass;
+
+    /**
+     * Default constructor.
+     *
+     * @param targetClass Target class that the XML should unmarshal to.
+     */
+    public CastorXmlBinderBean(final Class<?> targetClass) {
+        this.targetClass = targetClass;
+    }
 
     /**
      * {@inheritDoc}
@@ -39,31 +48,33 @@ public class CastorXmlBinderBean implements XmlBinder {
     }
 
     private Object doUnmarshall(final URL xml) throws ConfigurationException, IOException,
-            SAXException {
-        final XMLConfiguration config = new XMLConfiguration();
-        config.load(xml);
+            SAXException, MarshalException, ValidationException {
+
+        final UrlResource urlResource = new UrlResource(xml);
+        final InputStreamReader reader = new InputStreamReader(urlResource.getInputStream());
+
+        final XMLContext xmlContext = new XMLContext();
+        final Unmarshaller unmarsh = xmlContext.createUnmarshaller();
+        unmarsh.setClass(getTargetClass());
+
+        final Object unmarshalledXml = unmarsh.unmarshal(reader);
 
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Loaded xml from '" + xml + "'.");
         }
-
-        final XMLReader reader = new HierarchicalConfigurationXMLReader(config);
-
-        final XMLReaderAdapter adapter = new XMLReaderAdapter(reader);
-
-        final Unmarshaller unmarsh = new Unmarshaller(UiConfiguration.class);
-        final UnmarshalHandler handler = unmarsh.createHandler();
-
-        adapter.setDocumentHandler(handler);
-        adapter.parse(new InputSource());
-
-        final Object unmarshalledXml = handler.getObject();
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Loaded xml into Java object: " + unmarshalledXml);
         }
 
         return unmarshalledXml;
+    }
+
+    /**
+     * @return the targetClass
+     */
+    private Class<?> getTargetClass() {
+        return targetClass;
     }
 
 

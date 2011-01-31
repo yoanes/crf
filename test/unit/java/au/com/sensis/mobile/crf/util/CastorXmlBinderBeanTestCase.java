@@ -37,7 +37,8 @@ public class CastorXmlBinderBeanTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        setObjectUnderTest(new CastorXmlBinderBean());
+        // TODO: should make this test independent of UiConfiguration but i was lazy :o
+        setObjectUnderTest(new CastorXmlBinderBean(UiConfiguration.class));
         setConfigUrl(getClass().getResource(CRF_CONFIG_CLASSPATH));
         setInvalidConfigUrl(getClass().getResource(INVALID_CRF_CONFIG_CLASSPATH));
     }

@@ -79,7 +79,7 @@ public class ConfigurationFactoryBeanTestCase extends
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
         = new DeploymentMetadataTestData();
-    private final XmlBinder xmlBinder = new CastorXmlBinderBean();
+    private final XmlBinder xmlBinder = new CastorXmlBinderBean(UiConfiguration.class);
     private final XmlValidator xmlValidator = new XsdXmlValidatorBean();
     private final ResourcePatternResolver resourcePatternResolver
         = new PathMatchingResourcePatternResolver();

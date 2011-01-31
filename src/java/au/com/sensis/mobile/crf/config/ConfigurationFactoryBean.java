@@ -216,7 +216,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void validateLoadedConfigurationData() {
 
-        validateGroupExpressions();
+        validateGroupsByDelegation();
 
         validateGroupDirsExist();
 
@@ -224,7 +224,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     }
 
-    private void validateGroupExpressions() {
+    private void validateGroupsByDelegation() {
         for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
             final Iterator<Group> groupIterator = uiConfiguration.groupIterator();
             while (groupIterator.hasNext()) {

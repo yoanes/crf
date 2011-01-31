@@ -51,6 +51,17 @@
         </layout>
     </appender>
     
+    <appender name="CRF_CACHE_STATS_LOG" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="${catalina.base}/logs/crf-showcase-crfCacheStats.log"/>
+        <param name="Append" value="true"/>
+        <param name="Threshold" value="INFO"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%t] %m%n"/>
+        </layout>
+    </appender>
+    
     <appender name="CAPTURE" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="File" value="${catalina.base}/logs/capture.log"/>
         <param name="Append" value="true"/>
@@ -86,6 +97,11 @@
         <level value="WARN" />
         <appender-ref ref="RESOURCE_RESOLUTION_WARN_LOG"/>
         <appender-ref ref="FILE"/>
+    </logger>
+    
+    <logger name="au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger" additivity="false">
+        <level value="info" />
+        <appender-ref ref="CRF_CACHE_STATS_LOG"/>
     </logger>
     
     <logger name="SERVLET_CAPTURE" additivity="false">

@@ -410,6 +410,16 @@
 	        <taglib-location>/WEB-INF/taglibs/taglibs-string.tld</taglib-location>
 	    </taglib>
 
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <!--
+              - Ensure that template text containing only whitespaces is removed from the 
+              - response output. Note that this keeps whitespace from JSP tags from being
+              - present in the response but whitespace before and after template text 
+              - (eg. XHTML tags) will still be preserved.
+              -->
+            <trim-directive-whitespaces>true</trim-directive-whitespaces>
+        </jsp-property-group>
                 
     </jsp-config>
     

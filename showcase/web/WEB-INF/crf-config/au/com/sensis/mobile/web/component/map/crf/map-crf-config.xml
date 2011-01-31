@@ -7,16 +7,20 @@
     <config-path>selenium/component/map/</config-path>
     <groups>
         <!-- Device specific groups. -->
+        <group name="android-os" expr="device.isA('Android-OS') or device.isA('Android-Emulator')" />
+        <group name="iphone-ipod" expr="device.name =~ '.*iPhone.*'" />
+        
         <!-- 
           - NOTE: completely fabricated group name to ensure that resources picked up from this group
           - were not resolved by the default crf-config.xml. 
           -->
-        <group name="mapComponent-iphone-ipod" expr="device.name =~ '.*iPhone.*'" />
+        <!-- Test usage of the custom CRF inAnyGroup function. -->
+        <group name="mapComponent-advanced" expr="inAnyGroup(device, 'android-os', 'iphone-ipod')" />
         
         <!-- Browser family groups. -->        
         <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
         <group name="webkit" expr="device.userAgent =~ '.*WebKit.*'" />
-
+        
         <default-group name="default" />
     </groups>
 

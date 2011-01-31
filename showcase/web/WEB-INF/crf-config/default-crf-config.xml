@@ -38,6 +38,11 @@
         <group name="S" expr="device.imageCategory eq 'S'" />
         <group name="XS" expr="device.imageCategory eq 'XS'" />
         
+        <group name="clickToCallSupported" expr="device.clickToCallSupported" />
+        
+        <!-- Test usage of the custom CRF inAllGroups function. -->
+        <group name="clickToCallSupported-hd640" expr="inAllGroups(device, 'clickToCallSupported', 'HD640')" />
+        
         <default-group name="default" />
     </groups>
 
