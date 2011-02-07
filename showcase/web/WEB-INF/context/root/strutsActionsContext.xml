@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
                 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
-    <bean id="bdpAction" class="au.com.sensis.mobile.web.testbed.presentation.common.BdpAction"
+    <bean id="bdpAction" class="au.com.sensis.mobile.web.showcase.presentation.common.BdpAction"
             scope="prototype">
         <constructor-arg ref="crf.propertiesLoader" />        
     </bean>

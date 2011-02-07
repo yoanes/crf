@@ -21,6 +21,11 @@ public class UiConfiguration {
     private static final Logger LOGGER = Logger.getLogger(UiConfiguration.class);
 
     /**
+     * Prefix that all global namespaces should have.
+     */
+    public static final String GLOBAL_CONFIG_PATH_PREFIX = "global/";
+
+    /**
      * URL of the source that this {@link UiConfiguration} was loaded from.
      */
     private URL sourceUrl;
@@ -35,7 +40,9 @@ public class UiConfiguration {
      */
     private String configPath;
 
-    private Groups groups;
+    private Groups groups = new Groups();
+
+    private GroupsAndImports groupsAndImports;
 
     private GroupsCache matchingGroupsCache;
 
@@ -105,6 +112,14 @@ public class UiConfiguration {
     }
 
     /**
+     * @return true if {@link #getConfigPath()} is a global path. ie. starts
+     *         with {@link #GLOBAL_CONFIG_PATH_PREFIX}.
+     */
+    public boolean hasGlobalConfigPath() {
+        return getConfigPath().startsWith(GLOBAL_CONFIG_PATH_PREFIX);
+    }
+
+    /**
      * Only public due to XML->Java requirements (using Castor at the time of
      * writing). Clients are strongly encouraged to use the
      * {@link #groupIterator()} and {@link #matchingGroupIterator(Device)}
@@ -114,6 +129,20 @@ public class UiConfiguration {
      */
     public Groups getGroups() {
         return groups;
+    }
+
+    /**
+     * @return the groupsAndImports
+     */
+    public GroupsAndImports getGroupsAndImports() {
+        return groupsAndImports;
+    }
+
+    /**
+     * @param groupsAndImports the groupsAndImports to set
+     */
+    public void setGroupsAndImports(final GroupsAndImports groupsAndImports) {
+        this.groupsAndImports = groupsAndImports;
     }
 
     /**
@@ -217,6 +246,7 @@ public class UiConfiguration {
         equalsBuilder.append(getSourceTimestamp(), rhs.getSourceTimestamp());
         equalsBuilder.append(getConfigPath(), rhs.getConfigPath());
         equalsBuilder.append(getGroups(), rhs.getGroups());
+        equalsBuilder.append(getGroupsAndImports(), rhs.getGroupsAndImports());
 
         // Ignore getMatchingGroupsCache();
 
@@ -233,6 +263,7 @@ public class UiConfiguration {
         hashCodeBuilder.append(getSourceTimestamp());
         hashCodeBuilder.append(getConfigPath());
         hashCodeBuilder.append(getGroups());
+        hashCodeBuilder.append(getGroupsAndImports());
 
         // Ignore getMatchingGroupsCache();
 
@@ -249,6 +280,7 @@ public class UiConfiguration {
         toStringBuilder.append("sourceTimestamp", getSourceTimestamp());
         toStringBuilder.append("configPath", getConfigPath());
         toStringBuilder.append("groups", getGroups());
+        toStringBuilder.append("groupsAndImports", getGroupsAndImports());
 
         // Ignore getMatchingGroupsCache();
 

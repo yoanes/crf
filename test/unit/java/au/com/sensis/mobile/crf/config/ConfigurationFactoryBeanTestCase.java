@@ -17,13 +17,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import au.com.sensis.mobile.crf.config.jaxb.generated.ObjectFactory;
 import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
 import au.com.sensis.mobile.crf.exception.XmlValidationRuntimeException;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
-import au.com.sensis.mobile.crf.util.CastorXmlBinderBean;
 import au.com.sensis.mobile.crf.util.XmlBinder;
 import au.com.sensis.mobile.crf.util.XmlValidator;
 import au.com.sensis.mobile.crf.util.XsdXmlValidatorBean;
+import au.com.sensis.wireless.common.utils.jaxb.JaxbXMLBinderImpl;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -64,6 +65,14 @@ public class ConfigurationFactoryBeanTestCase extends
     private static final String CRF_CONFIG_MULTIPLE_INVALID_EXPR
         = "/au/com/sensis/mobile/crf/config/crf-config-multiple-invalid-expr.xml";
 
+    private static final String CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH_PATTERN
+        = "au/com/sensis/mobile/crf/config/crf-config-import-global-groups.xml"
+          + ",au/com/sensis/mobile/crf/config/crf-config-global-devices.xml"
+          + ",au/com/sensis/mobile/crf/config/crf-config-global-extra-devices.xml"
+          + ",au/com/sensis/mobile/crf/config/crf-config-global-image-categories.xml";
+    private static final String CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH
+        = "/au/com/sensis/mobile/crf/config/crf-config-import-global-groups.xml";
+
     private static final String VALID_CSS_ROOT_DIR_CLASSPATH =
         "/au/com/sensis/mobile/crf/config/validUiResources/css";
     private static final String VALID_IMAGES_ROOT_DIR_CLASSPATH =
@@ -79,7 +88,7 @@ public class ConfigurationFactoryBeanTestCase extends
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
         = new DeploymentMetadataTestData();
-    private final XmlBinder xmlBinder = new CastorXmlBinderBean(UiConfiguration.class);
+    private XmlBinder xmlBinder;
     private final XmlValidator xmlValidator = new XsdXmlValidatorBean();
     private final ResourcePatternResolver resourcePatternResolver
         = new PathMatchingResourcePatternResolver();
@@ -91,6 +100,8 @@ public class ConfigurationFactoryBeanTestCase extends
     private List<File> uiResourceRootDirectories;
     private GroupsCacheFactory mockGroupsCacheFactory;
     private GroupsCache mockGroupsCache;
+    private GroupTestData groupTestData;
+    private GroupImportTestData groupImportTestData;
 
     /**
      * Setup test data.
@@ -104,6 +115,10 @@ public class ConfigurationFactoryBeanTestCase extends
 
         setUiResourceRootDirectories(Arrays.asList(getValidUiResourcesCssRootDir(),
                 getValidUiResourcesImagesRootDir()));
+        setGroupTestData(new GroupTestData());
+        setGroupImportTestData(new GroupImportTestData());
+        setXmlBinder(new UiConfigurationJaxbXmlBinder(
+                new JaxbXMLBinderImpl(ObjectFactory.class.getPackage().getName())));
     }
 
     private ConfigurationPaths createConfigurationPaths(
@@ -504,7 +519,7 @@ public class ConfigurationFactoryBeanTestCase extends
     public void testMultipleConfigurationsLoadedWhenTwoConfigPathsEmpty() throws Throwable {
         try {
             EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled())
-                    .andReturn(Boolean.FALSE).atLeastOnce();
+                    .andReturn(Boolean.FALSE).anyTimes();
 
             recordCreateGroupsCache();
 
@@ -557,7 +572,7 @@ public class ConfigurationFactoryBeanTestCase extends
         EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled()).andReturn(
                 Boolean.TRUE);
         getMockResourceResolutionWarnLogger().warn(
-                "No group directories found for groups: [iphone, applewebkit] "
+                "No group directories found for groups: [iphone, android-os, applewebkit, L, M] "
                         + "for UiConfiguration loaded from: "
                         + (new ClassPathResource(CRF_CONFIG_MULTIPLE_VALID_GROUPS)).getURL()
                         + ". Searched directories: " + getUiResourceRootDirectories());
@@ -612,6 +627,136 @@ public class ConfigurationFactoryBeanTestCase extends
                 .getUiConfiguration("common/main.css"));
     }
 
+    @Test
+    public void testImportGlobalGroups() throws Throwable {
+        recordLoggerIsInfoEnabled(Boolean.TRUE);
+
+        final ClassPathResource sourceClassPathResource =
+                new ClassPathResource(CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH);
+
+        recordLoggerInfo("Resolving import for " + sourceClassPathResource.getURL() + ": "
+                + getGroupImportTestData().createAndroidOsImportFromDefaultNamespace(), 1);
+        recordLoggerInfo("Resolving import for " + sourceClassPathResource.getURL() + ": "
+                + getGroupImportTestData().createiPadImportFromNonDefaultNamespace(), 1);
+        recordLoggerInfo("Resolving import for " + sourceClassPathResource.getURL() + ": "
+                + getGroupImportTestData().createImageCategoriesGroupImport(), 1);
+
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForGlobalDevices(), 1);
+        recordLoggerInfo("Loaded configuration: " + createUiConfigurationForGlobalExtraDevices(),
+                1);
+        recordLoggerInfo(
+                "Loaded configuration: " + createUiConfigurationForGlobalImageCategories(), 1);
+        recordLoggerInfo(
+                "Loaded configuration: " + createUiConfigurationWhenGlobalGroupsImported(), 1);
+
+        recordCreateGroupsCache();
+
+        replay();
+
+        final ConfigurationFactory configurationFactory =
+                new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                        getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                        getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                                CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH_PATTERN,
+                                getUiResourceRootDirectories()), getMockGroupsCacheFactory());
+
+        assertComplexObjectsEqual("uiConfiguration for pattern match 1 is wrong",
+                createUiConfigurationWhenGlobalGroupsImported(), configurationFactory
+                        .getUiConfiguration("main.js"));
+    }
+
+    @Test
+    public void testImportGlobalGroupsFromInvalidConfigPath() throws Throwable {
+        recordLoggerIsInfoEnabled(Boolean.FALSE);
+
+        recordCreateGroupsCache();
+
+        replay();
+
+        try {
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                    getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                            "/au/com/sensis/mobile/crf/config/"
+                                    + "crf-config-import-from-unknown-config-path.xml",
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
+
+            Assert.fail("ConfigurationRuntimeException expected");
+        } catch (final ConfigurationRuntimeException e) {
+
+            Assert.assertEquals("ConfigurationRuntimeException has wrong message",
+                    "No global UiConfiguration found with a configPath "
+                            + "matching requested import path: 'global/i-don't-exist'", e
+                            .getMessage());
+        }
+
+    }
+
+    @Test
+    public void testImportGlobalGroupsFromAnotherGlobalGroupsConfigPath() throws Throwable {
+        recordCreateGroupsCache();
+
+        replay();
+
+        final String configFileClasspathPattern = "/au/com/sensis/mobile/crf/config/"
+                + "crf-config-global-imports-another-global.xml,"
+                + CRF_CONFIG_MULTIPLE_VALID_GROUPS;
+        try {
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                    getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                            configFileClasspathPattern,
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
+
+            Assert.fail("ConfigurationRuntimeException expected");
+        } catch (final ConfigurationRuntimeException e) {
+
+            final ClassPathResource sourceClassPathResource =
+                new ClassPathResource("/au/com/sensis/mobile/crf/config/"
+                        + "crf-config-global-imports-another-global.xml");
+
+            Assert.assertEquals("ConfigurationRuntimeException has wrong message",
+                    "Illegal for global UiConfiguration at '" + sourceClassPathResource.getURL()
+                    + "' to import from another global config path of 'global/you should not "
+                    + "import another global'. Note that global configs have a config path "
+                    + "starting with " + UiConfiguration.GLOBAL_CONFIG_PATH_PREFIX, e.getMessage());
+        }
+
+    }
+
+    @Test
+    public void testImportNonGlobalGroupsFromAnotherNonGlobalGroupsConfigPath() throws Throwable {
+        recordCreateGroupsCache();
+
+        replay();
+
+        final String configFileClasspathPattern = "/au/com/sensis/mobile/crf/config/"
+            + "crf-config-non-global-imports-another-non-global.xml,"
+            + CRF_CONFIG_MULTIPLE_VALID_GROUPS;
+        try {
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                    getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                            configFileClasspathPattern,
+                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
+
+            Assert.fail("ConfigurationRuntimeException expected");
+        } catch (final ConfigurationRuntimeException e) {
+
+            final ClassPathResource sourceClassPathResource =
+                new ClassPathResource("/au/com/sensis/mobile/crf/config/"
+                        + "crf-config-non-global-imports-another-non-global.xml");
+
+            Assert.assertEquals("ConfigurationRuntimeException has wrong message",
+                    "Illegal for non-global UiConfiguration at '" + sourceClassPathResource.getURL()
+                    + "' to import from another non-global config path of "
+                    + "'you should not import a non-global config'"
+                    + ". Note that global configs have a config path "
+                    + "starting with " + UiConfiguration.GLOBAL_CONFIG_PATH_PREFIX, e.getMessage());
+        }
+
+    }
+
     private UiConfiguration createUiConfigurationWithMultipleValidGroups() throws IOException {
         final UiConfiguration uiConfiguration = new UiConfiguration();
 
@@ -621,40 +766,22 @@ public class ConfigurationFactoryBeanTestCase extends
         uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
 
         uiConfiguration.setConfigPath(StringUtils.EMPTY);
-        final Group group1 = createIphoneGroup();
-        final Group group2 = createIpadGroup();
-        final Group group3 = createAppleWebkitGroup();
+        final Group group1 = getGroupTestData().createIPhoneGroup();
+        final Group group2 = getGroupTestData().createAndroidGroup();
+        final Group group3 = getGroupTestData().createIpadGroup();
+        final Group group4 = getGroupTestData().createAppleWebkitGroup();
+        final Group group5 = getGroupTestData().createLargeImageCategoryGroup();
+        final Group group6 = getGroupTestData().createMediumGroup();
 
         final Groups groups = new Groups();
-        groups.setGroups(new Group[] { group1, group2, group3 });
-        groups.setDefaultGroup(createDefaultGroup());
+        groups.setGroups(new Group[] { group1, group2, group3, group4, group5, group6 });
+        groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
 
         uiConfiguration.setMatchingGroupsCache(getMockGroupsCache());
 
         return uiConfiguration;
-    }
-
-    private Group createIphoneGroup() {
-        final Group group = new Group();
-        group.setName("iphone");
-        group.setExpr("device.name =~ '.*iPhone.*'");
-        return group;
-    }
-
-    private Group createIpadGroup() {
-        final Group group = new Group();
-        group.setName("iPad");
-        group.setExpr("device.name =~ '.*iPad.*'");
-        return group;
-    }
-
-    private Group createAppleWebkitGroup() {
-        final Group group = new Group();
-        group.setName("applewebkit");
-        group.setExpr("device.userAgent =~ '.*AppleWebKit.*'");
-        return group;
     }
 
     private UiConfiguration createUiConfigurationForPatternMatch1() throws IOException {
@@ -667,13 +794,17 @@ public class ConfigurationFactoryBeanTestCase extends
 
         uiConfiguration.setConfigPath("component/component1");
 
-        final Group group1 = createIphoneGroup();
-        final Group group2 = createIpadGroup();
-        final Group group3 = createAppleWebkitGroup();
+        final Group group1 = getGroupTestData().createIPhoneGroup();
+        final Group group2 = getGroupTestData().createIpadGroup();
+        final Group group3 = getGroupTestData().createAppleWebkitGroup();
+        final Group group4 = getGroupTestData().createAndroidGroup();
+        final Group group5 = getGroupTestData().createLargeImageCategoryGroup();
+        final Group group6 = getGroupTestData().createMediumGroup();
+
 
         final Groups groups = new Groups();
-        groups.setGroups(new Group[] { group1, group2, group3 });
-        groups.setDefaultGroup(createDefaultGroup());
+        groups.setGroups(new Group[] { group1, group2, group3, group4, group5, group6 });
+        groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
 
@@ -690,13 +821,16 @@ public class ConfigurationFactoryBeanTestCase extends
 
         uiConfiguration.setConfigPath("component/component2");
 
-        final Group group1 = createIphoneGroup();
-        final Group group2 = createIpadGroup();
-        final Group group3 = createAppleWebkitGroup();
+        final Group group1 = getGroupTestData().createIPhoneGroup();
+        final Group group2 = getGroupTestData().createIpadGroup();
+        final Group group3 = getGroupTestData().createAppleWebkitGroup();
+        final Group group4 = getGroupTestData().createAndroidGroup();
+        final Group group5 = getGroupTestData().createLargeImageCategoryGroup();
+        final Group group6 = getGroupTestData().createMediumGroup();
 
         final Groups groups = new Groups();
-        groups.setGroups(new Group[] { group1, group2, group3 });
-        groups.setDefaultGroup(createDefaultGroup());
+        groups.setGroups(new Group[] { group1, group2, group3, group4, group5, group6 });
+        groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
 
@@ -714,17 +848,104 @@ public class ConfigurationFactoryBeanTestCase extends
         uiConfiguration.setConfigPath(StringUtils.EMPTY);
 
         final Groups groups = new Groups();
-        groups.setDefaultGroup(createDefaultGroup());
+        groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
 
         return uiConfiguration;
     }
 
-    private DefaultGroup createDefaultGroup() {
-        final DefaultGroup defaultGroup = new DefaultGroup();
-        defaultGroup.setName("default");
-        return defaultGroup;
+    private UiConfiguration createUiConfigurationWhenGlobalGroupsImported() throws IOException {
+        final UiConfiguration uiConfiguration = new UiConfiguration();
+
+        final ClassPathResource sourceClassPathResource =
+                new ClassPathResource(CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH);
+        uiConfiguration.setSourceUrl(sourceClassPathResource.getURL());
+        uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
+
+        uiConfiguration.setConfigPath(StringUtils.EMPTY);
+
+        final Group group1 = getGroupTestData().createIPhoneGroup();
+        final Group group2 = getGroupTestData().createAndroidGroup();
+        final Group group3 = getGroupTestData().createIpadGroup();
+        final Group group4 = getGroupTestData().createAppleWebkitGroup();
+        final Group group5 = getGroupTestData().createLargeImageCategoryGroup();
+        final Group group6 = getGroupTestData().createMediumGroup();
+
+        final Groups groups = new Groups();
+        groups.setGroups(new Group[] { group1, group2, group3, group4, group5, group6 });
+        groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
+
+        uiConfiguration.setGroups(groups);
+
+        return uiConfiguration;
+    }
+
+    private UiConfiguration createUiConfigurationForGlobalDevices() throws IOException {
+        final UiConfiguration uiConfiguration = new UiConfiguration();
+
+        final ClassPathResource sourceClassPathResource =
+            new ClassPathResource("/au/com/sensis/mobile/crf/config/crf-config-global-devices.xml");
+        uiConfiguration.setSourceUrl(sourceClassPathResource.getURL());
+        uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
+
+        uiConfiguration.setConfigPath("global/devices");
+
+        final Group group1 = getGroupTestData().createAndroidGroup();
+        final Group group2 = getGroupTestData().createIpadGroup();
+
+        final Groups groups = new Groups();
+        groups.setGroups(new Group[] { group1, group2});
+        groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
+
+        uiConfiguration.setGroups(groups);
+
+        return uiConfiguration;
+    }
+
+    private UiConfiguration createUiConfigurationForGlobalExtraDevices() throws IOException {
+        final UiConfiguration uiConfiguration = new UiConfiguration();
+
+        final ClassPathResource sourceClassPathResource =
+                new ClassPathResource("/au/com/sensis/mobile/crf/config/"
+                        + "crf-config-global-extra-devices.xml");
+        uiConfiguration.setSourceUrl(sourceClassPathResource.getURL());
+        uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
+
+        uiConfiguration.setConfigPath("global/extraDevices");
+
+        final Group group1 = getGroupTestData().createIpadGroup();
+
+        final Groups groups = new Groups();
+        groups.setGroups(new Group[] { group1 });
+        groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
+
+        uiConfiguration.setGroups(groups);
+
+        return uiConfiguration;
+    }
+
+    private UiConfiguration createUiConfigurationForGlobalImageCategories() throws IOException {
+        final UiConfiguration uiConfiguration = new UiConfiguration();
+
+        final ClassPathResource sourceClassPathResource =
+            new ClassPathResource("/au/com/sensis/mobile/crf/config/"
+                    + "crf-config-global-image-categories.xml");
+        uiConfiguration.setSourceUrl(sourceClassPathResource.getURL());
+        uiConfiguration.setSourceTimestamp(sourceClassPathResource.lastModified());
+
+        uiConfiguration.setConfigPath("global/imageCategories");
+
+        final Group group1 = getGroupTestData().createLargeImageCategoryGroup();
+        final Group group2 = getGroupTestData().createMediumGroup();
+
+        final Groups groups = new Groups();
+        groups.setGroups(new Group[] { group1, group2 });
+        groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
+
+        uiConfiguration.setGroups(groups);
+
+        return uiConfiguration;
     }
 
     private static final class TestData {
@@ -803,6 +1024,13 @@ public class ConfigurationFactoryBeanTestCase extends
 
     private XmlBinder getXmlBinder() {
         return xmlBinder;
+    }
+
+    /**
+     * @param xmlBinder the xmlBinder to set
+     */
+    private void setXmlBinder(final XmlBinder xmlBinder) {
+        this.xmlBinder = xmlBinder;
     }
 
     private ResourcePatternResolver getResourcePatternResolver() {
@@ -898,7 +1126,7 @@ public class ConfigurationFactoryBeanTestCase extends
     }
 
     private File getExtraCssGroupDir() throws Exception {
-        return new File(getExtraGroupsUiResourcesCssRootDir(), "android-os");
+        return new File(getExtraGroupsUiResourcesCssRootDir(), "thub");
     }
 
     private File getExtraGroupsUiResourcesImagesRootDir() throws Exception {
@@ -906,7 +1134,7 @@ public class ConfigurationFactoryBeanTestCase extends
     }
 
     private File getExtraImagesGroupDir() throws Exception {
-        return new File(getExtraGroupsUiResourcesImagesRootDir(), "android-os");
+        return new File(getExtraGroupsUiResourcesImagesRootDir(), "thub");
     }
 
     /**
@@ -935,5 +1163,33 @@ public class ConfigurationFactoryBeanTestCase extends
      */
     public void setMockGroupsCache(final GroupsCache mockGroupsCache) {
         this.mockGroupsCache = mockGroupsCache;
+    }
+
+    /**
+     * @return the groupTestData
+     */
+    private GroupTestData getGroupTestData() {
+        return groupTestData;
+    }
+
+    /**
+     * @param groupTestData the groupTestData to set
+     */
+    private void setGroupTestData(final GroupTestData groupTestData) {
+        this.groupTestData = groupTestData;
+    }
+
+    /**
+     * @return the groupImportTestData
+     */
+    private GroupImportTestData getGroupImportTestData() {
+        return groupImportTestData;
+    }
+
+    /**
+     * @param groupImportTestData the groupImportTestData to set
+     */
+    private void setGroupImportTestData(final GroupImportTestData groupImportTestData) {
+        this.groupImportTestData = groupImportTestData;
     }
 }

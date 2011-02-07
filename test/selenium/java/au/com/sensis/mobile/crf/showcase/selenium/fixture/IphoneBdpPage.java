@@ -277,6 +277,11 @@ public abstract class IphoneBdpPage extends BdpPage {
 
     private void assertDeviceProperties() {
         assertTrue(getBrowser().isTextPresent("'brwsrname': Safari"));
-        assertTrue(getBrowser().isTextPresent("'custom.imageCategory': L"));
+        assertImageCategoryText();
+    }
+
+    protected void assertImageCategoryText() {
+        assertTrue("imageCategory is wrong",
+                getBrowser().isTextPresent("'custom.imageCategory': L"));
     }
 }

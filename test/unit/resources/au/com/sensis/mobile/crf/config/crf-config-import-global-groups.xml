@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<crf:ui-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
+         xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
+
+    <config-path></config-path>
+    <groups>
+        <group name="iphone" expr="device.name =~ '.*iPhone.*'" />
+
+        <!-- Import group from default global config file. -->        
+        <import name="android-os"/>
+
+        <!-- Import group from global config file explicitly. -->        
+        <import name="ipad"  from="global/extraDevices"/>
+        
+        <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
+        
+        <!-- Import an entire config file. -->
+        <import from="global/imageCategories" />
+        
+        <default-group name="default" />
+    </groups>
+
+</crf:ui-configuration>

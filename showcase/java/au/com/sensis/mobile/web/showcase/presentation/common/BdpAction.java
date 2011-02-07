@@ -1,4 +1,4 @@
-package au.com.sensis.mobile.web.testbed.presentation.common;
+package au.com.sensis.mobile.web.showcase.presentation.common;
 
 import java.util.Properties;
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<crf:ui-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
+         xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
+
+    <config-path>global/imageCategories</config-path>
+    <groups>
+        <!--  Image category groups -->
+        <group name="HD800" expr="device.imageCategory eq 'HD800' or 
+                                  device.imageCategory eq 'HD1024'"/>
+                                  
+        <group name="HD640" expr="device.imageCategory eq 'HD640'" />
+        
+        <group name="L" expr="device.imageCategory eq 'L' or
+                              device.imageCategory eq 'HD480'" />
+                              
+        <group name="M" expr="device.imageCategory eq 'M'" />
+        <group name="S" expr="device.imageCategory eq 'S'" />
+        <group name="XS" expr="device.imageCategory eq 'XS'" />
+        
+        <default-group name="default" />        
+    </groups>
+
+</crf:ui-configuration>

@@ -146,8 +146,12 @@
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg ref="crf.resourcePatternResolver"/>
         <constructor-arg>
-            <bean class="au.com.sensis.mobile.crf.util.CastorXmlBinderBean">
-                <constructor-arg index="0" value="au.com.sensis.mobile.crf.config.UiConfiguration"/>
+            <bean class="au.com.sensis.mobile.crf.config.UiConfigurationJaxbXmlBinder">
+                <constructor-arg>
+                    <bean class="au.com.sensis.wireless.common.utils.jaxb.JaxbXMLBinderImpl">
+                        <constructor-arg index="0" value="au.com.sensis.mobile.crf.config.jaxb.generated"/>
+                    </bean>
+                </constructor-arg>
             </bean>
         </constructor-arg>
         <constructor-arg>

@@ -92,6 +92,7 @@
         <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>        
         <dependency org="com.sensis" name="sdpCommon-web" rev="1.6-022" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-013" conf="default"/>
+        <dependency org="com.sensis" name="sdpCommon-utils" rev="1.0-008" conf="default"/>
         
         <!-- Castor. -->
         <dependency org="org.exolab" name="castor-xml" rev="1.1.2.1" conf="default"/>
@@ -105,7 +106,7 @@
         <dependency org="org.springframework" name="spring-test" rev="2.5.5" conf="test->default"/>
         
         <dependency org="com.thoughtworks" name="selenium-java-client-driver" rev="1.0.1" conf="test->default"/>
-        <dependency org="com.thoughtworks" name="selenium-server" rev="1.0.1" conf="test->default"/>
+        <dependency org="com.thoughtworks" name="selenium-server-standalone" rev="2.0a5" conf="test->default"/>
         
         <dependency org="com.vladium" name="emma" rev="2.0" conf="test->default"/>
 

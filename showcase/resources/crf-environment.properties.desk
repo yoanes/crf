@@ -11,3 +11,7 @@ env.resources.images.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf
 env.resources.css.client.path.prefix=/uidev/crfshowcase/uiresources/css/
 env.resources.javascript.client.path.prefix=/uidev/crfshowcase/uiresources/javascript/
 env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/images/
+
+# Allow downstream caching for the showcase so that selenium tests will pass, 
+# otherwise we would have to change the tests to ignore the timestamp that is appended to URLs.
+env.downstream.caching.enabled=true

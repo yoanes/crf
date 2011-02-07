@@ -30,7 +30,7 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
     }
 
     private void assertInAllGroupsJspSelection() {
-        assertTrue(getBrowser().isTextPresent("[clickToCallSupported-HD640] clickToCall.jsp"));
+        assertTrue(getBrowser().isTextPresent("[clickToCallSupported-hd640] clickToCall.jsp"));
     }
 
     /**
@@ -42,6 +42,12 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
         return 2;
     }
 
-
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void assertImageCategoryText() {
+        assertTrue("imageCategory is wrong",
+                getBrowser().isTextPresent("'custom.imageCategory': HD640"));
+    }
 }

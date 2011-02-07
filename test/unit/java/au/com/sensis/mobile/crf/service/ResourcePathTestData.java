@@ -55,7 +55,7 @@ public class ResourcePathTestData {
 
     public Resource getMappedIphoneGroupResourcePath() {
         return new ResourceBean(getRequestedJspResourcePath(), getJspResourcesRootServletPath()
-                + "iPhone/detail/bdp.jsp", getRootResourcesPath(), getGroupTestData()
+                + "iphone/detail/bdp.jsp", getRootResourcesPath(), getGroupTestData()
                 .createIPhoneGroup());
     }
 
@@ -182,25 +182,25 @@ public class ResourcePathTestData {
 
     public Resource getMappedIphoneGroupCssResourcePath() {
         return new ResourceBean(getRequestedCssResourcePath(),
-                getDeploymentVersion() + "/iPhone/common/main.css", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/common/main.css", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
     public Resource getMappedIphoneGroupCssBundleResourcePath() {
         return new ResourceBean(getRequestedCssResourcePath(),
-                getDeploymentVersion() + "/iPhone/common/bundle/main.css", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/common/bundle/main.css", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
     public Resource getMappedIphoneGroupNamedScriptResource() {
         return new ResourceBean(getRequestedNamedScriptResourcePath(),
-                getDeploymentVersion() + "/iPhone/common/main.js", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/common/main.js", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
     public Resource getMappedIphoneGroupNamedScriptResourcePath2() {
         return new ResourceBean(getRequestedNamedScriptResourcePath2(),
-                getDeploymentVersion() + "/iPhone/common/ajax.js", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/common/ajax.js", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
@@ -211,7 +211,7 @@ public class ResourcePathTestData {
 
     public Resource getMappedIphoneGroupNamedScriptBundleResourcePath() {
         return new ResourceBean(getRequestedNamedScriptResourcePath(),
-                getDeploymentVersion() + "/iPhone/common/bundle/main.js", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/common/bundle/main.js", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
@@ -223,19 +223,19 @@ public class ResourcePathTestData {
 
     public Resource getMappedIphoneGroupPackagedScriptBaseDirResource() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
-                getDeploymentVersion() + "/iPhone/util/", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/util/", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
     public Resource getMappedIphoneGroupPackagedScriptResource1() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
-                getDeploymentVersion() + "/iPhone/util/util1.js", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/util/util1.js", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
     public Resource getMappedIphoneGroupPackagedScriptResource2() {
         return new ResourceBean(getRequestedPackageScriptResourcePath(),
-                getDeploymentVersion() + "/iPhone/util/util2.js", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/util/util2.js", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
@@ -324,7 +324,7 @@ public class ResourcePathTestData {
     }
 
     public String getMappedIphoneGroupCssBundleDirPath() {
-        return getDeploymentVersion() + "/iPhone/common/bundle/";
+        return getDeploymentVersion() + "/iphone/common/bundle/";
     }
 
     public Resource getMappedAppleGroupResourcePath() {
@@ -392,7 +392,7 @@ public class ResourcePathTestData {
 
     public Resource getMappedIphoneGroupImageResourcePath() {
         return new ResourceBean(getRequestedImageResourcePath(),
-                getDeploymentVersion() + "/iPhone/common/unmetered", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/common/unmetered", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
@@ -410,13 +410,13 @@ public class ResourcePathTestData {
 
     public Resource getMappedIphoneGroupPngImageResourcePath() {
         return new ImageResourceBean(getRequestedImageResourcePath(),
-                getDeploymentVersion() + "/iPhone/common/unmetered.png", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/common/unmetered.png", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
     public Resource getMappedIphoneGroupGifImageResourcePath() {
         return new ResourceBean(getRequestedImageResourcePath(),
-                getDeploymentVersion() + "/iPhone/common/unmetered.gif", getRootResourcesPath(),
+                getDeploymentVersion() + "/iphone/common/unmetered.gif", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 
@@ -443,7 +443,7 @@ public class ResourcePathTestData {
 
     public Resource getMappedIphoneGroupPropertiesResourcePath() {
         return new ResourceBean(getRequestedPropertiesResourcePath(),
-                "iPhone/common/main.properties", getRootResourcesPath(),
+                "iphone/common/main.properties", getRootResourcesPath(),
                 getGroupTestData().createIPhoneGroup());
     }
 

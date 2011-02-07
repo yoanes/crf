@@ -7,8 +7,11 @@
     <config-path>component/component2</config-path>
     <groups>
         <group name="iphone" expr="device.name =~ '.*iPhone.*'" />
-        <group name="iPad" expr = "device.name =~ '.*iPad.*'" />
+        <group name="ipad" expr = "device.isA('Apple-iPad')" />
         <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
+        <group name="android-os" expr="device.isA('Android-OS') or device.isA('Android-Emulator')" />
+        <group name="L" expr="device.imageCategory eq 'L'" />
+        <group name="M" expr="device.imageCategory eq 'M'" />
         
         <default-group name="default" />
     </groups>

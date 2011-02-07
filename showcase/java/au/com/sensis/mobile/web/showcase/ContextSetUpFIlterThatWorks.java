@@ -1,7 +1,7 @@
 /**
  *
  */
-package au.com.sensis.mobile.web.testbed;
+package au.com.sensis.mobile.web.showcase;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;

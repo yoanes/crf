@@ -44,10 +44,17 @@ public class Group implements Serializable {
     private String expr;
 
     /**
-     * Index of this {@link Group} in the {@link Groups} that it belongs to (similar to an array
-     * index).
+     * Index of this {@link Group} in the {@link Groups} that it belongs to. This is not the same
+     * as an array index because it doesn't have to be sequential.
+     *
+     * <p>
+     * Note that this field is <b>transient</b>. This field is only
+     * used privately during {@link #match(Device)} evaluation. It is anticipated
+     * that any caching of {@link Group} instances will only occur to cache the result
+     * of {@link #match(Device)} evaluation.
+     * </p>
      */
-    private int index;
+    private transient int index;
 
     /**
      * {@link Groups} that this {@link Group} belongs to.
@@ -272,6 +279,11 @@ public class Group implements Serializable {
 
         // Ignore getParentGroups() due to cyclic dependency.
 
+        // Don't include index. The index is really just associated with the container
+        // just that we're lazy and stash it in this group rather than create another
+        // wrapper. Not including the index allows us to detect if a group is a duplicate,
+        // even if it has a different index.
+
         return equalsBuilder.isEquals();
     }
 
@@ -286,6 +298,12 @@ public class Group implements Serializable {
 
         // Ignore getParentGroups() due to cyclic dependency.
 
+        // Don't include index. The index is really just associated with the container
+        // just that we're lazy and stash it in this group rather than create another
+        // wrapper. Not including the index allows us to detect if a group is a duplicate,
+        // even if it has a different index.
+
+
         return hashCodeBuilder.toHashCode();
     }
 
@@ -297,6 +315,7 @@ public class Group implements Serializable {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this);
         toStringBuilder.append("name", getName());
         toStringBuilder.append("expr", getExpr());
+        toStringBuilder.append("index", getIndex());
 
         // Ignore getParentGroups() due to cyclic dependency.
 

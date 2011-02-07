@@ -91,7 +91,7 @@
     
     <!-- Create the context setup filter bean that is referenced in web.xml  -->
     <bean id="contextSetUpFilter" name="contextSetUpFilter"
-            class="au.com.sensis.mobile.web.testbed.ContextSetUpFIlterThatWorks">
+            class="au.com.sensis.mobile.web.showcase.ContextSetUpFIlterThatWorks">
 
         <property name="headerInterpreter" ref="defaultHeaderInterpreter"/>
         

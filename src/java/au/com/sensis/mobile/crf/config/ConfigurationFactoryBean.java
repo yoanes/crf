@@ -16,6 +16,7 @@ import org.apache.commons.io.filefilter.AndFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
@@ -54,7 +55,18 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     private final XmlBinder xmlBinder;
     private final XmlValidator xmlValidator;
     private final ResourcePatternResolver resourcePatternResolver;
+
+    /**
+     * {@link UiConfiguration}s that are candidates to be returned by
+     * {@link #getUiConfiguration(String).
+     */
     private List<UiConfiguration> uiConfigurations;
+
+    /**
+     * {@link UiConfiguration}s that are only used to resolve imports from
+     * the {@link UiConfiguration}s returned by {@link #getUiConfiguration(String)}.
+     */
+    private List<UiConfiguration> globalConfigPathUiConfigurations;
 
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
     private final GroupsCacheFactory groupsCacheFactory;
@@ -98,8 +110,25 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void initUiConfigurations() {
         setUiConfigurations(new ArrayList<UiConfiguration>());
+        setGlobalConfigPathUiConfigurations(new ArrayList<UiConfiguration>());
         loadConfigurationFilesWithSchemaValidation();
+        finaliseGroupsAndImports();
         validateLoadedConfigurationData();
+        infoLogLoadingDone();
+    }
+
+    private void infoLogLoadingDone() {
+        if (logger.isInfoEnabled()) {
+
+            for (final UiConfiguration uiConfiguration : getGlobalConfigPathUiConfigurations()) {
+                logger.info("Loaded configuration: " + uiConfiguration);
+            }
+
+            for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
+                logger.info("Loaded configuration: " + uiConfiguration);
+            }
+
+        }
     }
 
     private void loadConfigurationFilesWithSchemaValidation() {
@@ -127,12 +156,148 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
             final UiConfiguration uiConfiguration = unmarshallToUiConfiguration(resource);
 
-            addToCorrectList(uiConfiguration, defaultUiConfigurations, getUiConfigurations());
+            addToCorrectList(uiConfiguration, defaultUiConfigurations, getUiConfigurations(),
+                    getGlobalConfigPathUiConfigurations());
         }
 
         validateOneAndOnlyOneDefaultUiConfiguration(defaultUiConfigurations);
 
         getUiConfigurations().addAll(defaultUiConfigurations);
+    }
+
+    private void finaliseGroupsAndImports() {
+        for (final UiConfiguration uiConfiguration : getGlobalConfigPathUiConfigurations()) {
+            finaliseGroupsAndImports(uiConfiguration);
+        }
+
+        for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
+            finaliseGroupsAndImports(uiConfiguration);
+        }
+    }
+
+    private void finaliseGroupsAndImports(final UiConfiguration uiConfiguration) {
+        final List<Group> finalisedGroups = new ArrayList<Group>();
+
+        for (final GroupOrImport groupOrImport : uiConfiguration.getGroupsAndImports()
+                .getGroupOrImport()) {
+
+            finaliseGroupOrImport(uiConfiguration, groupOrImport, finalisedGroups);
+        }
+
+        final Groups groups = new Groups();
+        groups.setGroups(finalisedGroups.toArray(new Group[] {}));
+        groups.setDefaultGroup(uiConfiguration.getGroupsAndImports().getDefaultGroup());
+        uiConfiguration.setGroups(groups);
+
+        // Throw away the intermediate groupsAndImports because we don't need them anymore.
+        uiConfiguration.setGroupsAndImports(null);
+    }
+
+    private void finaliseGroupOrImport(final UiConfiguration parentUiConfiguration,
+            final GroupOrImport groupOrImport, final List<Group> finalisedGroups) {
+
+        if (groupOrImport.isGroup()) {
+            finalisedGroups.add(groupOrImport.getGroup());
+
+        } else if (groupOrImport.isGroupImport()) {
+
+            validateLegalImportScope(parentUiConfiguration, groupOrImport.getGroupImport());
+
+            final List<Group> importedGroups = importGroups(parentUiConfiguration,
+                    groupOrImport.getGroupImport());
+            finalisedGroups.addAll(importedGroups);
+        } else {
+            throw new IllegalStateException("GroupOrImport has neither a Group or a GroupImport: "
+                    + groupOrImport + "This should never happen.");
+        }
+    }
+
+    private void validateLegalImportScope(final UiConfiguration parentUiConfiguration,
+            final GroupImport groupImport) {
+
+        if (globalImportsGlobal(parentUiConfiguration, groupImport)) {
+
+            throw new ConfigurationRuntimeException("Illegal for global UiConfiguration at '"
+                    + parentUiConfiguration.getSourceUrl()
+                    + "' to import from another global config path of '"
+                    + groupImport.getFromConfigPath()
+                    + "'. Note that global configs have a config path " + "starting with "
+                    + UiConfiguration.GLOBAL_CONFIG_PATH_PREFIX);
+
+        }
+
+        if (nonGlobalImportsNonGlobal(parentUiConfiguration, groupImport)) {
+
+            throw new ConfigurationRuntimeException("Illegal for non-global UiConfiguration at '"
+                    + parentUiConfiguration.getSourceUrl()
+                    + "' to import from another non-global config path of '"
+                    + groupImport.getFromConfigPath()
+                    + "'. Note that global configs have a config path " + "starting with "
+                    + UiConfiguration.GLOBAL_CONFIG_PATH_PREFIX);
+        }
+    }
+
+    private boolean nonGlobalImportsNonGlobal(final UiConfiguration parentUiConfiguration,
+            final GroupImport groupImport) {
+        return !parentUiConfiguration.hasGlobalConfigPath()
+                && !groupImport.hasGlobalConfigPath();
+    }
+
+    private boolean globalImportsGlobal(final UiConfiguration parentUiConfiguration,
+            final GroupImport groupImport) {
+        return parentUiConfiguration.hasGlobalConfigPath() && groupImport.hasGlobalConfigPath();
+    }
+
+    private List<Group> importGroups(final UiConfiguration parentUiConfiguration,
+            final GroupImport groupImport) {
+
+        if (logger.isInfoEnabled()) {
+            logger.info("Resolving import for " + parentUiConfiguration.getSourceUrl() + ": "
+                    + groupImport);
+        }
+
+        final List<Group> importedGroups = new ArrayList<Group>();
+
+        final UiConfiguration importedUiConfiguration =
+                getGlobalUiConfigurationByExactConfigPath(groupImport.getFromConfigPath());
+
+        if (StringUtils.isNotBlank(groupImport.getGroupName())) {
+            final Group groupToImport =
+                    importedUiConfiguration.getGroups().getGroupByName(groupImport.getGroupName());
+            importedGroups.add(creatNewGroup(groupToImport));
+        } else {
+            importedGroups.addAll(createNewGroups(importedUiConfiguration.getGroups().getGroups()));
+        }
+
+        return importedGroups;
+    }
+
+    private List<Group> createNewGroups(final Group[] groups) {
+        final List<Group> newGroups = new ArrayList<Group>();
+
+        for (final Group currGroup : groups) {
+            newGroups.add(creatNewGroup(currGroup));
+        }
+
+        return newGroups;
+    }
+
+    private Group creatNewGroup(final Group groupToImport) {
+        final Group newGroup = new Group();
+        newGroup.setName(groupToImport.getName());
+        newGroup.setExpr(groupToImport.getExpr());
+        return newGroup;
+    }
+
+    private UiConfiguration getGlobalUiConfigurationByExactConfigPath(final String fromConfigPath) {
+        for (final UiConfiguration uiConfiguration : getGlobalConfigPathUiConfigurations()) {
+            if (uiConfiguration.getConfigPath().equals(fromConfigPath)) {
+                return uiConfiguration;
+            }
+        }
+        throw new ConfigurationRuntimeException(
+                "No global UiConfiguration found with a configPath "
+                        + "matching requested import path: '" + fromConfigPath + "'");
     }
 
     private Device createDefaultDevice() {
@@ -166,10 +331,13 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void addToCorrectList(final UiConfiguration uiConfiguration,
             final List<UiConfiguration> defaultUiConfigurations,
-            final List<UiConfiguration> uiConfigurations) {
+            final List<UiConfiguration> uiConfigurations,
+            final List<UiConfiguration> globalConfigPathUiConfigurations) {
 
         if (uiConfiguration.hasDefaultConfigPath()) {
             defaultUiConfigurations.add(uiConfiguration);
+        } else if (uiConfiguration.hasGlobalConfigPath()) {
+            globalConfigPathUiConfigurations.add(uiConfiguration);
         } else {
             uiConfigurations.add(uiConfiguration);
         }
@@ -183,10 +351,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         uiConfiguration.setSourceUrl(resource.getURL());
         uiConfiguration.setSourceTimestamp(resource.lastModified());
         uiConfiguration.setMatchingGroupsCache(getGroupsCacheFactory().createGroupsCache());
-
-        if (logger.isInfoEnabled()) {
-            logger.info("Loaded configuration: " + uiConfiguration);
-        }
 
         return uiConfiguration;
     }
@@ -221,6 +385,9 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         validateGroupDirsExist();
 
         validateUiResourceDirsExistAsGroups();
+
+        // TODO: validate no duplicate uiconfiguration config-paths and no duplicate group names
+        // within a ui configuration.
 
     }
 
@@ -476,6 +643,21 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void setUiConfigurations(final List<UiConfiguration> uiConfigurations) {
         this.uiConfigurations = uiConfigurations;
+    }
+
+    /**
+     * @return the globalConfigPathUiConfigurations
+     */
+    private List<UiConfiguration> getGlobalConfigPathUiConfigurations() {
+        return globalConfigPathUiConfigurations;
+    }
+
+    /**
+     * @param globalConfigPathUiConfigurations the globalConfigPathUiConfigurations to set
+     */
+    private void setGlobalConfigPathUiConfigurations(
+            final List<UiConfiguration> globalConfigPathUiConfigurations) {
+        this.globalConfigPathUiConfigurations = globalConfigPathUiConfigurations;
     }
 
     /**

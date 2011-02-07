@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<crf:ui-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
+         xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
+
+    <config-path>global/i-am-a-global-config</config-path>
+    <groups>
+        <import name="dummy"  from="global/you should not import another global"/>
+        
+        <default-group name="default" />
+    </groups>
+
+</crf:ui-configuration>

@@ -30,8 +30,10 @@
         </xs:annotation>
         
         <xs:sequence>
-            <xs:element name="group" type="Group" 
-                minOccurs="0" maxOccurs="unbounded" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="group" type="Group" /> 
+                <xs:element name="import" type="Import" /> 
+            </xs:choice>
             <xs:element name="default-group" type="DefaultGroup" 
                 minOccurs="1" maxOccurs="1" />
         </xs:sequence>
@@ -44,8 +46,8 @@
             </xs:documentation>
         </xs:annotation>
 
-        <xs:attribute name="name" type="xs:string" />        
-        <xs:attribute name="expr" type="xs:string" />        
+        <xs:attribute name="name" type="xs:string" use="required"/>        
+        <xs:attribute name="expr" type="xs:string" use="required" />        
     </xs:complexType>
     
     <xs:complexType name="DefaultGroup">
@@ -55,7 +57,22 @@
             </xs:documentation>
         </xs:annotation>
 
-        <xs:attribute name="name" type="xs:string" />        
+        <xs:attribute name="name" type="xs:string" use="required" />        
+    </xs:complexType>
+    
+    <xs:complexType name="Import">
+        <xs:annotation>
+            <xs:documentation>
+                Imports a group(s) from other files. At least one of "name" and "from"
+                must be set. If name is set, only that named group is imported, otherwise
+                all groups (except the default group) are imported. If from is provided,
+                groups will be imported from the config file matching that namespace, otherwise
+                a default namespace will be consulted ("global/devices"). 
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:attribute name="name" type="xs:string" use="optional"/>        
+        <xs:attribute name="from" type="xs:string" use="optional" />        
     </xs:complexType>
     
 </xs:schema>

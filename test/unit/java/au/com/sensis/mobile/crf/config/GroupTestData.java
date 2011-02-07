@@ -9,15 +9,22 @@ public class GroupTestData {
 
     public Group createIPhoneGroup() {
         final Group group = new Group();
-        group.setName("iPhone");
+        group.setName("iphone");
         group.setExpr("device.name =~ '.*iPhone.*'");
+        return group;
+    }
+
+    public Group createIpadGroup() {
+        final Group group = new Group();
+        group.setName("ipad");
+        group.setExpr("device.isA('Apple-iPad')");
         return group;
     }
 
     public Group createAndroidGroup() {
         final Group group = new Group();
-        group.setName("android");
-        group.setExpr("device.name =~ '.*Android.*'");
+        group.setName("android-os");
+        group.setExpr("device.isA('Android-OS') or device.isA('Android-Emulator')");
         return group;
     }
 
@@ -34,6 +41,13 @@ public class GroupTestData {
         return group;
     }
 
+    public Group createAppleWebkitGroup() {
+        final Group group = new Group();
+        group.setName("applewebkit");
+        group.setExpr("device.userAgent =~ '.*AppleWebKit.*'");
+        return group;
+    }
+
     public Group createHD800Group() {
         final Group group = new Group();
         group.setName("HD800");
@@ -41,9 +55,16 @@ public class GroupTestData {
         return group;
     }
 
+    public Group createLargeImageCategoryGroup() {
+        final Group group = new Group();
+        group.setName("L");
+        group.setExpr("device.imageCategory eq 'L'");
+        return group;
+    }
+
     public Group createMediumGroup() {
         final Group group = new Group();
-        group.setName("medium");
+        group.setName("M");
         group.setExpr("device.imageCategory eq 'M'");
         return group;
     }
