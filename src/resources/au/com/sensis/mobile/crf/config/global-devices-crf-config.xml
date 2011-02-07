@@ -6,11 +6,44 @@
 
     <config-path>global/devices</config-path>
     <groups>
-    
+
+        <!-- Apple devices. -->
+        <group name="iphone4" expr="device.userAgent =~ '.*iPhone OS 4.*'" />    
         <group name="iphone-ipod-os2" expr="device.name =~ '.*iPhone.*' and device.userAgent =~ '.*OS 2_.*'" />
         <group name="iphone-ipod" expr="device.name =~ '.*iPhone.*'" />
-        <group name="android-os" expr="device.isA('Android-OS') or device.isA('Android-Emulator')" />
         <group name="ipad" expr="device.isA('Apple-iPad')" />
+        <group name="apple" expr="device.isA('Apple')" />
+        
+        <!-- Android devices. -->
+        <group name="sex10" expr="device.isA('SonyEricsson-X10')" />
+        <group name="sex10mini" expr="device.isA('SE-X10-mini')" />
+        <group name="htc-desire" expr="device.isA('HTC-Desire') or device.isA('HTC-A8183')" />
+        <group name="android-os" expr="device.isA('Android-OS')" />
+        
+        <!-- Windows 7. -->
+        <group name="windows7" expr="device.isA('SP-WindowsMobile-7')" />
+        
+        <!-- Blackberry -->
+        <group name="blackberry" expr="device.isA('RIM-Blackberry')" />
+        
+        <!-- thub. -->
+        <group name="thub" expr="device.isA('SAGEM-HomeManager')" />
+        
+        <!-- Nokia devices. -->
+        <group name="nokiaS60DP3" expr="device.isA('Nokia-Series60-DP3_0')" />
+        <group name="nokiaS60DP5" expr="device.isA('Nokia-Series60-DP5_0')" />
+        
+        <!-- Samsung devices. -->
+        <group name="samsungC5220" expr="device.isA('Samsung-GT-C5220') " />        
+        
+        <!-- PC. -->
+        <group name="mozilla" expr="device.isA('PC-Win32-Mozilla') or
+                                    device.isA('PC-MacOS-Mozilla') or
+                                    device.isA('PC-UNIX-Mozilla')"/>
+                                    
+        <group name="opera" expr="device.isA('PC-Win32-Opera') or
+                                  device.isA('PC-MacOS-Opera') or
+                                  device.isA('PC-UNIX-Opera')"/>
         
         <default-group name="default" />
     </groups>
