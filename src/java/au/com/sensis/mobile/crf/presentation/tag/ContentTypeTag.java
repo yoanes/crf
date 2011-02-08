@@ -16,6 +16,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import au.com.sensis.mobile.crf.service.PropertiesLoader;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.wireless.web.mobile.DeviceDetection;
 
 /**
  * Sets the content type of the page.
@@ -32,7 +33,7 @@ public class ContentTypeTag extends SimpleTagSupport {
     private static final String CONTENT_TYPE_PROPERTY_NAME = "contentType";
 
     private static final String RESPONSE_HEADER_PROPERTIES_ABSTRACT_FILEPATH =
-            "responseHeader.properties";
+        "responseHeader.properties";
 
     private static final Logger LOGGER = Logger.getLogger(ContentTypeTag.class);
 
@@ -45,8 +46,8 @@ public class ContentTypeTag extends SimpleTagSupport {
     @Override
     public void doTag() throws JspException, IOException {
         final Properties properties =
-                getPropertiesLoader().loadProperties(getDevice(),
-                        RESPONSE_HEADER_PROPERTIES_ABSTRACT_FILEPATH);
+            getPropertiesLoader().loadProperties(getDevice(),
+                    RESPONSE_HEADER_PROPERTIES_ABSTRACT_FILEPATH);
 
         setResponseContentTypeIfNecessary(properties);
         setResponseCharEncodingIfNecessary(properties);
@@ -87,7 +88,7 @@ public class ContentTypeTag extends SimpleTagSupport {
         final PageContext pc = (PageContext) getJspContext();
 
         final WebApplicationContext webApplicationContext =
-                WebApplicationContextUtils.getRequiredWebApplicationContext(pc.getServletContext());
+            WebApplicationContextUtils.getRequiredWebApplicationContext(pc.getServletContext());
         return (PropertiesLoader) webApplicationContext.getBean("crf.propertiesLoader");
     }
 
@@ -108,9 +109,13 @@ public class ContentTypeTag extends SimpleTagSupport {
     }
 
     /**
-     * @return the device
+     * @return the device passed into the tag (if any), or the Device from ThreadLocal.
      */
     public Device getDevice() {
+
+        if (device == null) {
+            return DeviceDetection.getDevice();
+        }
         return device;
     }
 

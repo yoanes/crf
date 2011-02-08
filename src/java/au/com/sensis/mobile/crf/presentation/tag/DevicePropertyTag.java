@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.wireless.web.mobile.DeviceDetection;
 
 /**
  * JSP tag handler for retrieving a named property from a {@link Device}.
@@ -105,6 +106,10 @@ public class DevicePropertyTag extends SimpleTagSupport {
      * @return {@link Device} for the current request.
      */
     public Device getDevice() {
+
+        if (device == null) {
+            return DeviceDetection.getDevice();
+        }
         return device;
     }
 

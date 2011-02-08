@@ -10,6 +10,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.apache.commons.lang.StringUtils;
 
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.wireless.web.mobile.DeviceDetection;
 
 /**
  * Abstract base class for all custom JSP tags that use the Content Rendering Framework to
@@ -18,20 +19,20 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
  * @author Adrian.Koh2@sensis.com.au
  */
 public abstract class AbstractTag extends
-        SimpleTagSupport implements DynamicAttributes {
+SimpleTagSupport implements DynamicAttributes {
 
     private Device device;
     private final List<DynamicTagAttribute> dynamicAttributes
-        = new ArrayList<DynamicTagAttribute>();
+    = new ArrayList<DynamicTagAttribute>();
 
     /**
      * {@inheritDoc}
      */
     public final void setDynamicAttribute(final String uri, final String localName,
             final Object value) throws JspException {
-                getDynamicAttributes().add(
-                        new DynamicTagAttribute(localName, value));
-            }
+        getDynamicAttributes().add(
+                new DynamicTagAttribute(localName, value));
+    }
 
     /**
      * @return the dynamicAttributes
@@ -41,9 +42,13 @@ public abstract class AbstractTag extends
     }
 
     /**
-     * @return the device
+     * @return the device passed into the tag (if any), or the Device from ThreadLocal.
      */
     public Device getDevice() {
+
+        if (device == null) {
+            return DeviceDetection.getDevice();
+        }
         return device;
     }
 
@@ -62,7 +67,7 @@ public abstract class AbstractTag extends
      *             Thrown if path is invalid.
      */
     protected final void validatePathAttribute(final String path)
-            throws IllegalArgumentException {
+    throws IllegalArgumentException {
         // NOTE: we prefer this simple approach to validation over using the JEE
         // TagExtraInfo approach since we do not see a need for translation time
         // validation.

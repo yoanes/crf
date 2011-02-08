@@ -11,6 +11,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.wireless.web.mobile.DeviceDetection;
 
 /**
  * Tag to be used instead of the standard html tag. Performs the following:
@@ -103,9 +104,13 @@ public class HtmlTag extends SimpleTagSupport {
     }
 
     /**
-     * @return the device
+     * @return the device passed into the tag (if any), or the Device from ThreadLocal.
      */
     public Device getDevice() {
+
+        if (device == null) {
+            return DeviceDetection.getDevice();
+        }
         return device;
     }
 
