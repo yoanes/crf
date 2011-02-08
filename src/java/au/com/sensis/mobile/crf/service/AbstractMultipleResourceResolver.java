@@ -91,7 +91,7 @@ public abstract class AbstractMultipleResourceResolver extends AbstractResourceR
 
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
-            accumulator.accumulate(resolveForGroup(requestedResourcePath, currGroup));
+            accumulator.accumulate(resolveForGroup(requestedResourcePath, device, currGroup));
 
         }
     }

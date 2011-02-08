@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * {@link ResourceResolver} that maps abstract Script paths to real Script paths.
@@ -103,13 +104,13 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
      */
     @Override
     protected List<Resource> doResolveForGroup(final String requestedResourcePath,
-            final Group group)
+            final Device device, final Group group)
             throws ResourceResolutionRuntimeException {
 
         if (isPackageRequested(requestedResourcePath)) {
             return findPacakgeResources(requestedResourcePath, group);
         } else {
-            return super.doResolveForGroup(requestedResourcePath, group);
+            return super.doResolveForGroup(requestedResourcePath, device, group);
         }
     }
 

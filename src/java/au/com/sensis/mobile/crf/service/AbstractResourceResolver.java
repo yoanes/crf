@@ -204,16 +204,18 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * Returns the {@link Resource}s that are resolved for the given {@link Group}.
      *
      * @param requestedResourcePath for the resource to be resolved
+     * @param device
+     *            {@link Device} to perform the path mapping for.
      * @param group in which to look for the given requestedResourcePath
      * @return a list of {@link Resource}s resolved for the given {@link Group}
      */
     protected final List<Resource> resolveForGroup(final String requestedResourcePath,
-            final Group group) {
+            final Device device, final Group group) {
 
         debugLogAttemptingResolution(requestedResourcePath);
 
         final List<Resource> resolvedResources =
-            doResolveForGroup(requestedResourcePath, group);
+            doResolveForGroup(requestedResourcePath, device, group);
 
         debugLogResolutionResults(requestedResourcePath, resolvedResources);
 
@@ -231,6 +233,8 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *
      * @param requestedResourcePath
      *            The original resource that was requested.
+     * @param device
+     *            {@link Device} to perform the path mapping for.
      * @param group
      *            {@link Group} that the
      *            {@link au.com.sensis.wireless.common.volantis.devicerepository.api.Device}
@@ -241,7 +245,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *             Thrown if any error occurs.
      */
     protected List<Resource> doResolveForGroup(final String requestedResourcePath,
-            final Group group)
+            final Device device, final Group group)
             throws ResourceResolutionRuntimeException {
 
         final String newResourcePath =

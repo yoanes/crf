@@ -48,6 +48,7 @@ public interface Resource extends Serializable {
     /**
      * @return {@link Group} that this {@link Resource} was found in.
      */
+    // TODO: it seems that nothing uses this anymore. We can probably remove it.
     Group getGroup();
 
 }

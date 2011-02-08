@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * {@link ResourceResolver} that resolves abstract image paths to real image paths.
@@ -91,22 +92,23 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
      */
     @Override
     protected List<Resource> doResolveForGroup(final String requestedResourcePath,
-            final Group group) throws ResourceResolutionRuntimeException {
+            final Device device, final Group group) throws ResourceResolutionRuntimeException {
 
-        final String newResourcesBasePath = createNewResourcePath(requestedResourcePath, group);
+        final String newResourcesPathMinusExtension = createNewResourcePath(
+                requestedResourcePath, group);
 
-        debugLogCheckingForImagesIn(newResourcesBasePath);
+        debugLogCheckingForImagesIn(newResourcesPathMinusExtension);
 
         final File[] matchedFiles =
                 FileIoFacadeFactory.getFileIoFacadeSingleton().list(getRootResourcesDir(),
-                        newResourcesBasePath, getFileExtensionWildcards());
+                        newResourcesPathMinusExtension, getFileExtensionWildcards());
 
         warnIfMultipleResourcesWithExtensionsFound(requestedResourcePath, matchedFiles);
 
         if (matchedFiles.length > 0) {
             final Resource foundResource =
-                    createFoundResource(requestedResourcePath, newResourcesBasePath, group,
-                            matchedFiles[0]);
+                    createFoundResource(requestedResourcePath, newResourcesPathMinusExtension,
+                            group, matchedFiles[0]);
             return Arrays.asList(foundResource);
         } else {
             return new ArrayList<Resource>();
@@ -114,10 +116,10 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
     }
 
     private Resource createFoundResource(final String requestedResourcePath,
-            final String newResourcePath, final Group group, final File foundFile) {
+            final String newResourcePathMinusExtension, final Group group, final File foundFile) {
 
         final ImageResourceBean resource =  new ImageResourceBean(requestedResourcePath,
-                getNewResourcePathPlusFileExtension(foundFile, newResourcePath),
+                getNewResourcePathPlusFileExtension(foundFile, newResourcePathMinusExtension),
                 getRootResourcesDir(), group);
 
         final Dimension dimensions = getImageDimensions(foundFile);

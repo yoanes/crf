@@ -56,7 +56,7 @@ public abstract class AbstractSingleResourceResolver extends AbstractResourceRes
             debugLogCheckingGroup(requestedResourcePath, currGroup);
 
             final List<Resource> resolvedResources =
-                    resolveForGroup(requestedResourcePath, currGroup);
+                    resolveForGroup(requestedResourcePath, device, currGroup);
             if (!resolvedResources.isEmpty()) {
                 // Return immediately once a resource is found.
                 return resolvedResources;
