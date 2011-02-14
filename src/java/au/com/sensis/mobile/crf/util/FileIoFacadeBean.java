@@ -126,4 +126,15 @@ public class FileIoFacadeBean implements FileIoFacade {
             outputStream.close();
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void mkdirs(final File dir) throws IOException {
+        if ((!dir.exists() || !dir.isDirectory()) && !dir.mkdirs()) {
+            throw new IOException("Failed to create directory or one of its parent directories: "
+                    + dir);
+        }
+    }
 }

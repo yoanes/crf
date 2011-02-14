@@ -3,11 +3,11 @@ package au.com.sensis.mobile.crf.util;
 import java.io.File;
 
 /**
- * Encapsulates an image file and its details.
+ * Encapsulates attributes of an image file.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public interface Image {
+public interface ImageAttributes {
 
     /**
      * @return File of the image.
@@ -23,4 +23,14 @@ public interface Image {
      * @return pixel height of the image.
      */
     int getPixelHeight();
+
+    /**
+     * @return the aspect ratio of the image.
+     */
+    double getAspectRatio();
+
+    /**
+     * @return the inverse of {@link #getAspectRatio()}.
+     */
+    double getInverseAspectRatio();
 }

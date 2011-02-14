@@ -35,21 +35,21 @@ public class DeviceLocalExtension {
      * @return true if the device's preferred image type is png.
      */
     public boolean isPreferredImageTypePng() {
-        return "image/png".equalsIgnoreCase(getDevice().getPropertyAsString(PREFERRED_IMAGE_TYPE));
+        return "png".equalsIgnoreCase(getDevice().getPropertyAsString(PREFERRED_IMAGE_TYPE));
     }
 
     /**
      * @return true if the device's preferred image type is jpeg.
      */
     public boolean isPreferredImageTypeJpeg() {
-        return "image/jpeg".equalsIgnoreCase(getDevice().getPropertyAsString(PREFERRED_IMAGE_TYPE));
+        return "jpeg".equalsIgnoreCase(getDevice().getPropertyAsString(PREFERRED_IMAGE_TYPE));
     }
 
     /**
      * @return true if the device supports the gif image type.
      */
     public boolean isGifImageTypeSupported() {
-        return "image/gif".equalsIgnoreCase(getDevice().getPropertyAsString(GIF_IN_PAGE));
+        return "gif".equalsIgnoreCase(getDevice().getPropertyAsString(GIF_IN_PAGE));
     }
 
     /**

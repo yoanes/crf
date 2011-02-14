@@ -27,7 +27,7 @@ public abstract class BdpPage extends AbstractPageFixture {
      */
     @Override
     public void assertPageStructure() {
-        assertTrue(getBrowser().isTextPresent("[default] logo.jsp"));
+        assertTrue("logo.jsp not found", getBrowser().isTextPresent("[default] logo.jsp"));
 
         assertInlineScriptPresent();
 

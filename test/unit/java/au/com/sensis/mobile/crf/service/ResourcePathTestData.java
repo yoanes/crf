@@ -41,7 +41,7 @@ public class ResourcePathTestData {
         return getJspResourcesRootServletPath() + "detail/bdp.crf";
     }
 
-    public Resource getDotNullMappedImageResourcePath() {
+    public Resource getMappedDotNullImageResourcePath() {
         return new ResourceBean(getRequestedImageResourcePathWithoutExtension(),
                 "extrasmall/common/unmetered.null", getRootResourcesPath(),
                 getGroupTestData().createExtraSmallGroup());
@@ -418,10 +418,16 @@ public class ResourcePathTestData {
                 getGroupTestData().createIPhoneGroup());
     }
 
-    public Resource getMappedScaledIphoneGroupPngImageResourcePath() {
+    public Resource getMappedIphoneGroupDotNullImageResourcePath() {
+        return new ImageResourceBean(getRequestedImageResourcePath(),
+                getDeploymentVersion() + "/iphone/common/unmetered.null", getRootResourcesPath(),
+                getGroupTestData().createIPhoneGroup());
+    }
+
+    public Resource getMappedScaledIphoneGroupGifImageResourcePath() {
         final ImageResourceBean resourceBean =
                 new ImageResourceBean(getRequestedImageResourcePath(), getDeploymentVersion()
-                        + "/iphone/common/scaled/w90/h60/unmetered.png", getRootResourcesPath(),
+                        + "/iphone/common/scaled/w90/h60/unmetered.gif", getRootResourcesPath(),
                         getGroupTestData().createIPhoneGroup());
 
         resourceBean.setImageWidth(90);

@@ -14,8 +14,13 @@ import au.com.sensis.mobile.crf.config.Group;
 public interface Resource extends Serializable {
 
     /**
+     * @see #newPathEndsWithDotNull().
+     */
+    String DOT_NULL_EXTENSION = ".null";
+
+    /**
      * @return true if {@link #getNewPath()} ends with the special
-     *         extension ".null".
+     *         extension {@link #DOT_NULL_EXTENSION}.
      */
     boolean newPathEndsWithDotNull();
 

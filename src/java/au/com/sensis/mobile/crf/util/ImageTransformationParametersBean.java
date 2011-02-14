@@ -4,25 +4,26 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import au.com.sensis.mobile.crf.util.ScaledImageFactory.ImageFormat;
-import au.com.sensis.mobile.crf.util.ScaledImageFactory.ImageScalingParameters;
+import au.com.sensis.mobile.crf.util.ImageTransformationFactory.ImageFormat;
+import au.com.sensis.mobile.crf.util.ImageTransformationFactory.ImageTransformationParameters;
 
 /**
- * Default {@link ImageScalingParameters}.
+ * Default {@link ImageTransformationParameters}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ImageScalingParametersBean implements ImageScalingParameters {
+public class ImageTransformationParametersBean implements ImageTransformationParameters {
 
-    private int deviceImagePercentWidth;
+    private Integer deviceImagePercentWidth;
+    private Integer absolutePixelWidth;
     private int devicePixelWidth;
-    private ImageFormat outputImageFormat;
+    private ImageFormat outputImageFormat = ImageFormat.GIF;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public int getDeviceImagePercentWidth() {
+    public Integer getDeviceImagePercentWidth() {
         return deviceImagePercentWidth;
     }
 
@@ -45,7 +46,7 @@ public class ImageScalingParametersBean implements ImageScalingParameters {
     /**
      * @param deviceImagePercentWidth the deviceImagePercentWidth to set
      */
-    public void setDeviceImagePercentWidth(final int deviceImagePercentWidth) {
+    public void setDeviceImagePercentWidth(final Integer deviceImagePercentWidth) {
         this.deviceImagePercentWidth = deviceImagePercentWidth;
     }
 
@@ -67,6 +68,45 @@ public class ImageScalingParametersBean implements ImageScalingParameters {
      * {@inheritDoc}
      */
     @Override
+    public Integer getAbsolutePixelWidth() {
+        return absolutePixelWidth;
+    }
+
+    /**
+     * @param absolutePixelWidth the absolutePixelWidth to set
+     */
+    public void setAbsolutePixelWidth(final Integer absolutePixelWidth) {
+        this.absolutePixelWidth = absolutePixelWidth;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean preserveOriginalDimensions() {
+        return !scaleToAbsolutePixelWidth() && !scaleToPercentDeviceWidth();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean scaleToAbsolutePixelWidth() {
+        return getAbsolutePixelWidth() != null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean scaleToPercentDeviceWidth() {
+        return !scaleToAbsolutePixelWidth() && (getDeviceImagePercentWidth() != null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
@@ -76,11 +116,12 @@ public class ImageScalingParametersBean implements ImageScalingParameters {
             return false;
         }
 
-        final ImageScalingParametersBean rhs = (ImageScalingParametersBean) obj;
+        final ImageTransformationParametersBean rhs = (ImageTransformationParametersBean) obj;
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
         equalsBuilder.append(getDevicePixelWidth(), rhs.getDevicePixelWidth());
         equalsBuilder.append(getDeviceImagePercentWidth(), rhs.getDeviceImagePercentWidth());
+        equalsBuilder.append(getAbsolutePixelWidth(), rhs.getAbsolutePixelWidth());
         equalsBuilder.append(getOutputImageFormat(), rhs.getOutputImageFormat());
         return equalsBuilder.isEquals();
     }
@@ -93,6 +134,7 @@ public class ImageScalingParametersBean implements ImageScalingParameters {
         final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
         hashCodeBuilder.append(getDevicePixelWidth());
         hashCodeBuilder.append(getDeviceImagePercentWidth());
+        hashCodeBuilder.append(getAbsolutePixelWidth());
         hashCodeBuilder.append(getOutputImageFormat());
         return hashCodeBuilder.toHashCode();
     }
@@ -106,10 +148,10 @@ public class ImageScalingParametersBean implements ImageScalingParameters {
 
         toStringBuilder.append("devicePixelWidth", getDevicePixelWidth());
         toStringBuilder.append("deviceImagePercentWidth", getDeviceImagePercentWidth());
+        toStringBuilder.append("absolutePixelWidth", getAbsolutePixelWidth());
         toStringBuilder.append("outputImageFormat", getOutputImageFormat());
 
         return toStringBuilder.toString();
     }
-
 
 }

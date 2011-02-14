@@ -7,12 +7,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * Default {@link Image} implementation.
+ * Default {@link ImageAttributes}.
  *
  * @author Adrian.Koh2@sensis.com.au
- *
  */
-public class ImageBean implements Image {
+public class ImageAttributesBean implements ImageAttributes {
 
     private File imageFile;
     private int pixelWidth;
@@ -67,6 +66,22 @@ public class ImageBean implements Image {
      * {@inheritDoc}
      */
     @Override
+    public double getAspectRatio() {
+        return (double) getPixelWidth() / (double) getPixelHeight();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public double getInverseAspectRatio() {
+        return (double) getPixelHeight() / (double) getPixelWidth();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
@@ -76,7 +91,7 @@ public class ImageBean implements Image {
             return false;
         }
 
-        final ImageBean rhs = (ImageBean) obj;
+        final ImageAttributesBean rhs = (ImageAttributesBean) obj;
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
         equalsBuilder.append(getFile(), rhs.getFile());
@@ -110,4 +125,5 @@ public class ImageBean implements Image {
 
         return toStringBuilder.toString();
     }
+
 }

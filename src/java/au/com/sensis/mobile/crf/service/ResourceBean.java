@@ -67,7 +67,7 @@ public class ResourceBean implements Resource {
      */
     @Override
     public boolean newPathEndsWithDotNull() {
-        return getNewPath().endsWith(".null");
+        return getNewPath().endsWith(DOT_NULL_EXTENSION);
     }
 
     /**

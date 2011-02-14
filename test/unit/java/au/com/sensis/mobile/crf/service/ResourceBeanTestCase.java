@@ -88,7 +88,7 @@ public class ResourceBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testEndsWithDotNullWhenTrue() throws Throwable {
         final Resource resource =
-                getResourcePathTestData().getDotNullMappedImageResourcePath();
+                getResourcePathTestData().getMappedDotNullImageResourcePath();
         setObjectUnderTest(resource);
 
         replay();

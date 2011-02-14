@@ -91,4 +91,11 @@ public interface FileIoFacade {
      */
     void writeFileAndCloseStream(File inputFile, OutputStream outputStream)
         throws IOException;
+
+    /**
+     * Invokes {@link File#mkdirs()} on the given argument.
+     * @param dir Directory to invoke {@link File#mkdirs()} on.
+     * @throws IOException Thrown if {@link File#mkdirs()} returns false.
+     */
+    void mkdirs(File dir) throws IOException;
 }

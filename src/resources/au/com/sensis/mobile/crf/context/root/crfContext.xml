@@ -43,6 +43,12 @@
                     <constructor-arg value="@{crf.env.resources.css.root.dir}"/>
                     <constructor-arg ref="crf.resourceAccumulatorFactory" />                    
                 </bean>
+
+<!--
+  - Use this instead of TransformedImageResourceResolverBean if you don't want/need image 
+  - transformation. 
+  -->
+<!--                 
                 <bean class="au.com.sensis.mobile.crf.service.ImageResourceResolverBean">
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.image.abstract.path.extension}"/>
@@ -53,6 +59,24 @@
                         </list>
                     </constructor-arg>
                 </bean>
+-->                
+
+                <bean class="au.com.sensis.mobile.crf.service.TransformedImageResourceResolverBean">
+                    <constructor-arg ref="crf.commonResourceResolverParams" />
+                    <constructor-arg value="@{crf.resources.image.abstract.path.extension}"/>
+                    <constructor-arg value="@{crf.env.resources.images.root.dir}"/>
+                    <constructor-arg>
+                        <list>
+                            <value>*</value>
+                        </list>
+                    </constructor-arg>
+                    <property name="propertiesLoader">
+                        <bean class="au.com.sensis.mobile.crf.util.PropertiesLoaderBean"/>                    
+                    </property>
+                    <property name="imageTransformationFactory"
+                        ref="crf.imageTransformationFactory"  />
+                </bean>
+                
                 <bean class="au.com.sensis.mobile.crf.service.JavaScriptResourceResolverBean">
                 	<constructor-arg ref="crf.commonResourceResolverParams" />
                     <constructor-arg value="@{crf.resources.javascript.abstract.path.extension}"/>
@@ -122,6 +146,15 @@
         <constructor-arg ref="crf.configurationFactory" />                        
         <constructor-arg ref="crf.resourceCache"/>
     </bean>  
+    
+    <bean id="crf.imageTransformationFactory" class="au.com.sensis.mobile.crf.util.CommandLineImageTransformationFactoryBean">
+        <constructor-arg>
+            <bean class="au.com.sensis.mobile.crf.util.ProcessBuilderStarterBean" />
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="au.com.sensis.mobile.crf.util.ImageReaderBean" />
+        </constructor-arg>
+    </bean>
 
     <!-- TODO: extract this global deploymentMetadata bean (and its class) into somewhere more common? -->
     <bean id="crf.deploymentMetadata" class="au.com.sensis.mobile.crf.config.DeploymentMetadata">
