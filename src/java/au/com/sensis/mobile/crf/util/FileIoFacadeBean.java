@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.AndFileFilter;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 
@@ -40,24 +43,50 @@ public class FileIoFacadeBean implements FileIoFacade {
      * {@inheritDoc}
      */
     @Override
-    public File[] list(final File parentDirectory, final String path,
-            final String[] extensions) {
+    public File[] list(final File parentDirectory, final String path, final String[] extensions) {
         // The path may contain more than just a file name. eg.
         // default/common/unmetered. So get just the last part.
         final String pathFileName = new File(path).getName();
 
+        return doListByExtensions(parentDirectory, path, createWildcardFilter(pathFileName,
+                extensions));
+    }
+
+    private File[] doListByExtensions(final File parentDirectory, final String path,
+            final FileFilter fileFilter) {
+
         // Similarly, strip the last part of the parentDirectory + path
         // to get the directory to look in.
-        final File baseDirForListings =
-                new File(parentDirectory, path).getParentFile();
+        final File baseDirForListings = new File(parentDirectory, path).getParentFile();
 
-        final File[] foundFiles = baseDirForListings.listFiles(createWildcardFilter(pathFileName,
-                extensions));
+        final File[] foundFiles = baseDirForListings.listFiles(fileFilter);
         if (foundFiles != null) {
             return foundFiles;
         } else {
-            return new File [] {};
+            return new File[] {};
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public File[] list(final File parentDirectory, final String path,
+            final String[] matchedExtensions, final String[] excludedExtensions) {
+        // The path may contain more than just a file name. eg.
+        // default/common/unmetered. So get just the last part.
+        final String pathFileName = new File(path).getName();
+
+        final IOFileFilter matchedExtensionsWildcardFilter =
+                createWildcardFilter(pathFileName, matchedExtensions);
+        final IOFileFilter excludedExtensionsWildcardFilter =
+                new NotFileFilter(createWildcardFilter(pathFileName, excludedExtensions));
+
+        final FileFilter fileFilter =
+                new AndFileFilter(matchedExtensionsWildcardFilter,
+                        excludedExtensionsWildcardFilter);
+
+        return doListByExtensions(parentDirectory, path, fileFilter);
     }
 
     /**
@@ -81,7 +110,7 @@ public class FileIoFacadeBean implements FileIoFacade {
         }
     }
 
-    private FileFilter createWildcardFilter(final String fileName,
+    private IOFileFilter createWildcardFilter(final String fileName,
             final String[] extensions) {
         return new WildcardFileFilter(createWildcards(fileName,
                 extensions));

@@ -24,6 +24,42 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
      * {@inheritDoc}
      */
     @Override
+    protected void doAssertImg() {
+        assertImgFoundInDefaultGroupPngFormat();
+        assertImgFoundInIntermediateGroupPngFormat();
+
+        // TODO: put back once DR is updated with crf.image.ratio property.
+//        assertScaledYellowPagesImage(640, 256);
+        assertScaledYellowPagesImage(320, 128);
+
+        assertScaledSearchImage(114, 135, "png", "default");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void assertScaledYellowPagesImage(final int width, final int height) {
+        assertImg("Yellow Pages img not found", "yellowPagesLogoImg", "Yellow Pages",
+                "Yellow Pages", "default/selenium/common/w" + width + "/h" + height
+                        + "/yellow-pages.png", width / 2, height / 2);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void assertScaledSearchImage(final int width, final int height,
+            final String extension, final String group) {
+        assertImg("Search img not found", "searchImg", "Search", "Search", group
+                + "/selenium/common/w" + width + "/h" + height + "/search." + extension, width / 2,
+                height / 2);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     protected void doAssertPageStructure() {
         super.doAssertPageStructure();
         assertInAllGroupsJspSelection();

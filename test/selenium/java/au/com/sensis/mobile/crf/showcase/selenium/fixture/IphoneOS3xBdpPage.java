@@ -24,20 +24,24 @@ public class IphoneOS3xBdpPage extends IphoneBdpPage {
     @Override
     protected void doAssertImg() {
         assertIphoneOS3xImg();
+
     }
 
-    private void assertIphoneOS3xImg() {
+    protected void assertIphoneOS3xImg() {
         assertImgFoundInDefaultGroupPngFormat();
         assertImgFoundInIntermediateGroupPngFormat();
+
+        assertScaledYellowPagesImage(320, 128);
+        assertScaledSearchImage(57, 67, "png", "default");
     }
 
-    private void assertImgFoundInDefaultGroupPngFormat() {
+    protected void assertImgFoundInDefaultGroupPngFormat() {
         assertImg("unmetered img not found", "unmeteredImg", "Unmetered", "Unmetered",
                 "default/selenium/common/unmetered.png", 310 / getImageDimensionsDivisor(),
                 42 / getImageDimensionsDivisor());
     }
 
-    private void assertImgFoundInIntermediateGroupPngFormat() {
+    protected void assertImgFoundInIntermediateGroupPngFormat() {
         assertImg("appStore img not found", "appStoreImg", "App Store", "App Store",
                 "applewebkit/selenium/common/app_store.png", 244 / getImageDimensionsDivisor(),
                 80 / getImageDimensionsDivisor());
@@ -48,6 +52,6 @@ public class IphoneOS3xBdpPage extends IphoneBdpPage {
      */
     @Override
     protected int getExpectedNumImgElements() {
-        return super.getExpectedNumImgElements() + 2;
+        return super.getExpectedNumImgElements() + 4;
     }
 }

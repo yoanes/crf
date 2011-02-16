@@ -53,6 +53,28 @@ public interface FileIoFacade {
     File[] list(File parentDirectory, String path, String[] extensions);
 
     /**
+     * Similar to {@link #list(File, String, String[])} but also supports an
+     * array of extension patterns to be excluded.
+     *
+     * @param parentDirectory
+     *            Directory in which to check for path.
+     * @param path
+     *            File path to test.
+     * @param matchedExtensions
+     *            Set of allowed extensions for path to have. Assumed not to
+     *            start with a ".".
+     * @param excludedExtensions
+     *            Set of disallowed extensions for path to have. Assumed not to
+     *            start with a ".".
+     * @return a list of files in the given parentDirectory that match the given
+     *         path and given set of matchedExtensions and do not match the
+     *         excludedExtensions. Extensions may contain the "*" wildcard
+     *         character. May not be null.
+     */
+    File[] list(File parentDirectory, String path, String[] matchedExtensions,
+            String[] excludedExtensions);
+
+    /**
      *
      * Returns a list of files in the given directory that match the given
      * wildcard patterns.

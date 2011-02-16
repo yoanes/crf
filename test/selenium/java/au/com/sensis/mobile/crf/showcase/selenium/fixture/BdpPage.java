@@ -223,4 +223,33 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "]"));
 
     }
+
+    /**
+     * Assert presence of scaled yellow pages image.
+     *
+     * @param width Width of image.
+     * @param height Height of image.
+     */
+    protected void assertScaledYellowPagesImage(final int width, final int height) {
+        assertImg("Yellow Pages img not found", "yellowPagesLogoImg", "Yellow Pages",
+                "Yellow Pages", "default/selenium/common/w" + width + "/h" + height
+                        + "/yellow-pages.png", width, height);
+    }
+
+    /**
+     * Assert presence of scaled search image.
+     *
+     * @param width
+     *            Width of image.
+     * @param height
+     *            Height of image.
+     * @param extension
+     *            Extension that the scaled image should have.
+     */
+    protected void assertScaledSearchImage(final int width, final int height,
+            final String extension, final String group) {
+        assertImg("Search img not found", "searchImg", "Search", "Search", group
+                + "/selenium/common/w" + width + "/h" + height + "/search." + extension, width,
+                height);
+    }
 }

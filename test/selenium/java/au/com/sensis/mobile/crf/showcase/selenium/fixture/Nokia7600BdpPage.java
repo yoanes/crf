@@ -101,10 +101,13 @@ public class Nokia7600BdpPage extends BdpPage {
     }
 
     private void assertNokia7600Img() {
-        assertNumImgElements(2);
+        assertNumImgElements(4);
         assertImgWhenLeafGroupNodeImageFoundGifFormat();
         assertBrokenImgWhenNoImageFound();
         assertBodyContentOutputWhenDotNullImgFound();
+
+        assertScaledYellowPagesImage(121, 48);
+        assertScaledSearchImage(50, 20, "gif", "S");
     }
 
     private void assertImgWhenLeafGroupNodeImageFoundGifFormat() {

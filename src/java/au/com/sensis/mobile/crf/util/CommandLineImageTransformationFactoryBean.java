@@ -51,7 +51,6 @@ public class CommandLineImageTransformationFactoryBean implements ImageTransform
 
         validateSourceImageFile(sourceImageFile);
         validateBaseOutputImageDir(baseOutputImageDir);
-        validateImageTransformationParameters(imageTransformationParameters);
 
         try {
             return doTransformImage(sourceImageFile, baseOutputImageDir,
@@ -65,12 +64,6 @@ public class CommandLineImageTransformationFactoryBean implements ImageTransform
                     + "' to base target directory of '" + baseOutputImageDir
                     + "' using parameters: '" + imageTransformationParameters + "'", e);
         }
-
-    }
-
-    private void validateImageTransformationParameters(
-            final ImageTransformationParameters imageTransformationParameters) {
-        // TODO: what should I do here?
 
     }
 

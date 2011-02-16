@@ -24,6 +24,9 @@ public class IphoneOS2xBdpPage extends IphoneBdpPage {
     @Override
     protected void doAssertImg() {
         assertImgFoundInNonDefaultGroupPngFormat();
+
+        assertScaledYellowPagesImage(320, 128);
+        assertScaledSearchImage(57, 67, "png", "default");
     }
 
     private void assertImgFoundInNonDefaultGroupPngFormat() {
@@ -37,7 +40,7 @@ public class IphoneOS2xBdpPage extends IphoneBdpPage {
      */
     @Override
     protected int getExpectedNumImgElements() {
-        return super.getExpectedNumImgElements() + 1;
+        return super.getExpectedNumImgElements() + 3;
     }
 
 }

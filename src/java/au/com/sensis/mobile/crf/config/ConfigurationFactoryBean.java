@@ -577,12 +577,18 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     private boolean loadedUiConfigurationOutOfDate() {
         try {
             final Resource[] resources = getConfigurationResources();
-            if (resources.length != getUiConfigurations().size()) {
+            if (resources.length != getUiConfigurations().size()
+                    + getGlobalConfigPathUiConfigurations().size()) {
                 return true;
             }
 
+
+            final List<UiConfiguration> allUiConfigurations = new ArrayList<UiConfiguration>();
+            allUiConfigurations.addAll(getUiConfigurations());
+            allUiConfigurations.addAll(getGlobalConfigPathUiConfigurations());
+
             final List<UrlAndTimestamp> previousUrlAndTimestampsLoaded =
-                    createUrlAndTimestamps(getUiConfigurations());
+                    createUrlAndTimestamps(allUiConfigurations);
             final List<UrlAndTimestamp> newUrlAndTimestamps = createUrlAndTimestamps(resources);
 
             if (!previousUrlAndTimestampsLoaded.equals(newUrlAndTimestamps)) {

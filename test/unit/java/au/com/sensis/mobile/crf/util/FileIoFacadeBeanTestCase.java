@@ -207,6 +207,18 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
+    public void testListByMatchedAndExcludedExtensions() throws Throwable {
+        final File[] listings =
+                getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+                        "level1/level2/anotherFindMe", new String[] { "*" },
+                        new String[] { "gif" });
+
+        Assert.assertNotNull("listings should not be null", listings);
+        Assert.assertEquals("incorrect number of listings", 1, listings.length);
+        Assert.assertEquals("listings[0] is wrong", getExpectedAnotherFindMePngFile(), listings[0]);
+    }
+
+    @Test
     public void testListByWildcardsWhenFilesFoundByMultipleMatchWildcard() throws Throwable {
         final File[] listings =
             getObjectUnderTest().list(getListByWildcardsTestDataDirectory(),
