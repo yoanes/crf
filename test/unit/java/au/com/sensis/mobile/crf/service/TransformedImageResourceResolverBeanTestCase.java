@@ -40,6 +40,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
     private static final int SOURCE_IMAGE_PIXEL_WIDTH = 800;
     private static final int SOURCE_IMAGE_PIXEL_HEIGHT = 600;
+    private static final String BACKGROUND_COLOR = "#FFF";
 
     private Device mockDevice;
     private TransformedImageResourceResolverBean objectUnderTest;
@@ -174,10 +175,11 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             recordGetImageRatioDeviceProperty(null);
             recordTransformImage(createPercentWidthImageTransformationParameters(
                     1), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
-                    OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT);
+                    OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT,
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             recordPutResourceCache(resourceCacheKey,
-                    getMappedScaledIphoneGroupGifImageResourcePath());
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             replay();
 
@@ -190,7 +192,63 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             verify();
 
             final List<Resource> expectedResources =
-                    Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+                    Arrays.asList(getMappedScaledIphoneGroupPngImageResourcePath());
+            assertComplexObjectsEqual("actualResources is wrong", expectedResources,
+                    actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
+        }
+
+    }
+
+    @Test
+    public void testResolveWhenMappingPerformedAndSingleResourceFoundAndGifOutputSpecified()
+        throws Throwable {
+
+        final String[] testValues =
+        { getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
+                getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetMatchingGroups();
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
+            recordGetMatchingGroupIterator(2);
+
+            recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
+
+            recordLoadIphoneGroupImageProperties(createIphoneGroupGifPercentWidthImageProperties());
+            recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetDeviceAttributesForImageScaling();
+
+            recordGetImageRatioDeviceProperty(null);
+            recordTransformImage(createPercentWidthGifImageTransformationParameters(
+                    1), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
+                    OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT,
+                    getMappedScaledIphoneGroupGifImageResourcePath());
+
+            recordPutResourceCache(resourceCacheKey,
+                    getMappedScaledIphoneGroupGifImageResourcePath());
+
+            replay();
+
+            final List<Resource> actualResources =
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedImageResourcePath(),
+                        getMockDevice());
+
+            // Explicit verify since we are in a loop.
+            verify();
+
+            final List<Resource> expectedResources =
+                Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong", expectedResources,
                     actualResources);
 
@@ -229,12 +287,13 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             recordGetImageRatioDeviceProperty(null);
             recordTransformImage(createPercentWidthImageTransformationParameters(
                     1), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
-                    SOURCE_IMAGE_PIXEL_WIDTH * 2, SOURCE_IMAGE_PIXEL_HEIGHT * 2);
+                    SOURCE_IMAGE_PIXEL_WIDTH * 2, SOURCE_IMAGE_PIXEL_HEIGHT * 2,
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             recordWarnScaledImageUp(SOURCE_IMAGE_PIXEL_WIDTH * 2, SOURCE_IMAGE_PIXEL_HEIGHT * 2);
 
             recordPutResourceCache(resourceCacheKey,
-                    getMappedScaledIphoneGroupGifImageResourcePath());
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             replay();
 
@@ -247,7 +306,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             verify();
 
             final List<Resource> expectedResources =
-                Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+                Arrays.asList(getMappedScaledIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong", expectedResources,
                     actualResources);
 
@@ -268,7 +327,8 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         final TransformedImageAttributes transformedImageAttributes =
                 createTransformedImageAttributes(SOURCE_IMAGE_PIXEL_WIDTH,
                         SOURCE_IMAGE_PIXEL_HEIGHT, outputPixelWidthGreaterThanSourceWidth,
-                        outputPixelWidthGreaterThanSourceHeight);
+                        outputPixelWidthGreaterThanSourceHeight,
+                        getMappedScaledIphoneGroupPngImageResourcePath());
 
         getMockResourceResolutionWarnLogger().warn(
                 "Scaled image up for device " + getMockDevice() + ". This may produce "
@@ -309,11 +369,12 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             recordTransformImage(createAbsoluteWidthImageTransformationParameters(
                     scaledImagePixelWidth, 1),
                     SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
-                    scaledImagePixelWidth, OUTPUT_IMAGE_PIXEL_HEIGHT);
+                    scaledImagePixelWidth, OUTPUT_IMAGE_PIXEL_HEIGHT,
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
 
             recordPutResourceCache(resourceCacheKey,
-                    getMappedScaledIphoneGroupGifImageResourcePath());
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             replay();
 
@@ -326,7 +387,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             verify();
 
             final List<Resource> expectedResources =
-                    Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+                    Arrays.asList(getMappedScaledIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong", expectedResources,
                     actualResources);
 
@@ -365,11 +426,12 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             recordGetImageRatioDeviceProperty(2);
             recordTransformImage(createPercentWidthImageTransformationParameters(
                     2), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
-                    OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT);
+                    OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT,
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
 
             recordPutResourceCache(resourceCacheKey,
-                    getMappedScaledIphoneGroupGifImageResourcePath());
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             replay();
 
@@ -382,7 +444,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             verify();
 
             final List<Resource> expectedResources =
-                Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+                Arrays.asList(getMappedScaledIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong", expectedResources,
                     actualResources);
 
@@ -521,10 +583,11 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordTransformImage(createImageTransformationParametersPreserveDimensions(),
                     SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
-                    SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT);
+                    SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             recordPutResourceCache(resourceCacheKey,
-                    getMappedScaledIphoneGroupGifImageResourcePath());
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             replay();
 
@@ -537,7 +600,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             verify();
 
             final List<Resource> expectedResources =
-                    Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+                    Arrays.asList(getMappedScaledIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong", expectedResources,
                     actualResources);
 
@@ -552,15 +615,16 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     private void recordTransformImage(
             final ImageTransformationParameters imageTransformationParameters,
             final int sourcePixelWidth, final int sourcePixelHeight,
-            final int outputPixelWidth, final int outputPixelHeight) {
+            final int outputPixelWidth, final int outputPixelHeight,
+            final Resource mappedResource) {
 
         EasyMock.expect(
                 getMockImageTransformationFactory().transformImage(
-                        getMappedIPhonePngImageResourcePath().getNewFile(),
-                        getMappedIPhonePngImageResourcePath().getNewFile().getParentFile(),
+                        getMappedIphoneGroupPngImageResourcePath().getNewFile(),
+                        getMappedIphoneGroupPngImageResourcePath().getNewFile().getParentFile(),
                         imageTransformationParameters)).andReturn(
                 createTransformedImageAttributes(sourcePixelWidth, sourcePixelHeight,
-                        outputPixelWidth, outputPixelHeight));
+                        outputPixelWidth, outputPixelHeight, mappedResource));
     }
 
     private void recordGetDeviceAttributesForImageScaling() {
@@ -587,13 +651,17 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
                 properties);
     }
 
+    private Resource getMappedScaledIphoneGroupPngImageResourcePath() {
+        return getResourcePathTestData().getMappedScaledIphoneGroupPngImageResourcePath();
+    }
+
     private Resource getMappedScaledIphoneGroupGifImageResourcePath() {
         return getResourcePathTestData().getMappedScaledIphoneGroupGifImageResourcePath();
     }
 
     private TransformedImageAttributes createTransformedImageAttributes(final int sourcePixelWidth,
             final int sourcePixelHeight, final int outputPixelWidth,
-            final int outputPixelHeight) {
+            final int outputPixelHeight, final Resource mappedResource) {
 
         final TransformedImageAttributesBean transformedImageAttributesBean =
                 new TransformedImageAttributesBean();
@@ -607,7 +675,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         transformedImageAttributesBean.setSourceImageAttributes(sourceImageAttributesBean);
 
         final ImageAttributesBean outputImageAttributesBean = new ImageAttributesBean();
-        outputImageAttributesBean.setImageFile(getMappedScaledIphoneGroupGifImageResourcePath()
+        outputImageAttributesBean.setImageFile(mappedResource
                 .getNewFile());
         outputImageAttributesBean.setPixelWidth(outputPixelWidth);
         outputImageAttributesBean.setPixelHeight(outputPixelHeight);
@@ -626,6 +694,20 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         parametersBean.setDevicePixelWidth(450);
 
         parametersBean.setOutputImageFormat(ImageTransformationFactory.ImageFormat.PNG);
+        return parametersBean;
+
+    }
+
+    private ImageTransformationParameters createPercentWidthGifImageTransformationParameters(
+            final int imageRatio) {
+
+        final ImageTransformationParametersBean parametersBean =
+            new ImageTransformationParametersBean();
+        parametersBean.setDeviceImagePercentWidth(20 * imageRatio);
+        parametersBean.setDevicePixelWidth(450);
+        parametersBean.setBackgroundColor(BACKGROUND_COLOR);
+
+        parametersBean.setOutputImageFormat(ImageTransformationFactory.ImageFormat.GIF);
         return parametersBean;
 
     }
@@ -657,6 +739,14 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     private Properties createIphoneGroupPercentWidthImageProperties() {
         final Properties properties = new Properties();
         properties.setProperty("width", "20%");
+        return properties;
+    }
+
+    private Properties createIphoneGroupGifPercentWidthImageProperties() {
+        final Properties properties = new Properties();
+        properties.setProperty("width", "20%");
+        properties.setProperty("format", "gif");
+        properties.setProperty("background.color", BACKGROUND_COLOR);
         return properties;
     }
 
@@ -712,7 +802,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
                 getMappedIPhoneDotNullImageResourcePath().getNewFile() };
     }
 
-    private File[] getMultipleMatchedPngImageArray() {
+    private File[] getMultipleMatchedImageArray() {
         return new File[] {
                 getMappedIPhonePngImageResourcePath().getNewFile(),
                 getMappedIPhoneGroupGifImageResourcePath().getNewFile() };
@@ -727,8 +817,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     }
 
     private Resource getMappedIPhoneGroupGifImageResourcePath() {
-        return getResourcePathTestData()
-        .getMappedIphoneGroupGifImageResourcePath();
+        return getResourcePathTestData().getMappedIphoneGroupGifImageResourcePath();
     }
 
     @Test
@@ -747,7 +836,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordGetMatchingGroupIterator(2);
 
-            recordListIphoneFilesByExtension(getMultipleMatchedPngImageArray());
+            recordListIphoneFilesByExtension(getMultipleMatchedImageArray());
 
             recordLogWarningResolveToSingleFoundMultipleResources();
 
@@ -760,10 +849,11 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordTransformImage(createPercentWidthImageTransformationParameters(
                     1), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
-                    OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT);
+                    OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT,
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             recordPutResourceCache(resourceCacheKey,
-                    getMappedScaledIphoneGroupGifImageResourcePath());
+                    getMappedScaledIphoneGroupPngImageResourcePath());
 
             replay();
 
@@ -776,7 +866,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             verify();
 
             final List<Resource> expectedResources
-                = Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+                = Arrays.asList(getMappedScaledIphoneGroupPngImageResourcePath());
             assertComplexObjectsEqual("actualResources is wrong",
                     expectedResources,
                     actualResources);

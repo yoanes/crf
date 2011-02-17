@@ -43,6 +43,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     private static final String PROPERTIES_FILE_EXTENSION = ".properties";
 
     private static final String WIDTH_PROPERTY_NAME = "width";
+    private static final String OUTPUT_FORMAT_PROPERTY_NAME = "format";
+    private static final String BACKGROUND_COLOR_PROPERTY_NAME = "background.color";
 
     private final String [] fileExtensionWildcards;
     private final String [] excludedFileExtensionWildcards;
@@ -239,7 +241,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         // is the width property.
         result.setDevicePixelWidth(device.getPixelsX());
 
-        result.setOutputImageFormat(getOutputImageFormatParameter(foundFile));
+        result.setOutputImageFormat(getOutputImageFormatParameter(foundFile, imageProperties));
+        result.setBackgroundColor(getBackgroundColorParameter(imageProperties));
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("ImageTransformationParametersBean: " + result);
@@ -248,19 +251,36 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         return result;
     }
 
-    private ImageTransformationFactory.ImageFormat getOutputImageFormatParameter(
-            final File foundFile) {
+    private String getBackgroundColorParameter(final Properties imageProperties) {
+        if (imageProperties.getProperty(BACKGROUND_COLOR_PROPERTY_NAME) != null) {
+            return imageProperties.getProperty(BACKGROUND_COLOR_PROPERTY_NAME).trim();
+        } else {
+            return null;
+        }
+    }
 
-        // TODO: add ability for image properties to specify specific output format.
-        final ImageTransformationFactory.ImageFormat format =
-            ImageTransformationFactory.ImageFormat.fromString(
-                    FilenameUtils.getExtension(foundFile.getPath()));
+    private ImageTransformationFactory.ImageFormat getOutputImageFormatParameter(
+            final File foundFile, final Properties imageProperties) {
+
+        ImageTransformationFactory.ImageFormat format;
+
+        if (imageProperties.getProperty(OUTPUT_FORMAT_PROPERTY_NAME) != null) {
+            format =
+                    ImageTransformationFactory.ImageFormat.fromString(imageProperties
+                            .getProperty(OUTPUT_FORMAT_PROPERTY_NAME));
+        } else {
+            format =
+                    ImageTransformationFactory.ImageFormat.fromString(FilenameUtils
+                            .getExtension(foundFile.getPath()));
+        }
+
         if (format != null) {
             return format;
         } else {
             throw new ResourceResolutionRuntimeException("Image format not supported for file: "
-                    + foundFile);
+                    + foundFile + " and image properties " + imageProperties);
         }
+
     }
 
     private void setDeviceImagePercentWidthIfRequired(

@@ -119,6 +119,12 @@ public interface ImageTransformationFactory {
          */
         ImageFormat getOutputImageFormat();
 
+        /**
+         * @return Background color as a String. The interpretation of this
+         *         String is up to the concrete
+         *         {@link ImageTransformationFactory}.
+         */
+        String getBackgroundColor();
     }
 
     /**

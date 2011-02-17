@@ -272,15 +272,39 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
 
         if (imageTransformationParameters.scaleToPercentDeviceWidth()
                 || imageTransformationParameters.scaleToAbsolutePixelWidth()) {
-            commandLine.add("-resize");
-            commandLine.add(scaledImageWidth + "x");
-            commandLine.add("-unsharp");
-            commandLine.add("0x1");
+
+            addResizeCommandLineOptions(scaledImageWidth, commandLine);
+        }
+
+        if (ImageFormat.GIF.equals(imageTransformationParameters.getOutputImageFormat())) {
+            addGifConversionCommandLineOptions(imageTransformationParameters, commandLine);
         }
 
         commandLine.add(sourceImageFile.getPath());
         commandLine.add(outputImageFile.getPath());
         return commandLine;
+    }
+
+    private void addGifConversionCommandLineOptions(
+            final ImageTransformationParameters imageTransformationParameters,
+            final List<String> commandLine) {
+        if (imageTransformationParameters.getBackgroundColor() != null) {
+            commandLine.add("-background");
+            commandLine.add(imageTransformationParameters.getBackgroundColor());
+        }
+        commandLine.add("-extent");
+        commandLine.add("0x0");
+
+        // Probably don't need this option but use it just in case.
+        commandLine.add("+matte");
+    }
+
+    private void addResizeCommandLineOptions(final int scaledImageWidth,
+            final List<String> commandLine) {
+        commandLine.add("-resize");
+        commandLine.add(scaledImageWidth + "x");
+        commandLine.add("-unsharp");
+        commandLine.add("0x1");
     }
 
     private double getPercentAsDecimal(final int percent) {

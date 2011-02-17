@@ -82,7 +82,7 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
                 + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT);
 
         setDevicePercentWidthScalingOutputImage(new File(getOutputImageBaseDir(),
-                getDevicePercentWidthScalingOutputImageSubDir() + "/myInputImage.gif"));
+                getDevicePercentWidthScalingOutputImageSubDir() + "/myInputImage.png"));
 
         setDevicePercentWidthScalingCommandLine(Arrays.asList(new String[] { "gm", "convert",
                 "-resize", "100x", "-unsharp", "0x1", getSourceImage().getPath(),
@@ -93,7 +93,7 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
                 + ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_HEIGHT);
 
         setAbsolutePixelWidthScalingOutputImage(new File(getOutputImageBaseDir(),
-                getAbsolutePixelWidthScalingOutputImageSubDir() + "/myInputImage.gif"));
+                getAbsolutePixelWidthScalingOutputImageSubDir() + "/myInputImage.png"));
 
         setAbsolutePixelWidthScalingCommandLine(Arrays.asList(new String[] { "gm", "convert",
                 "-resize", "200x", "-unsharp", "0x1", getSourceImage().getPath(),
@@ -106,6 +106,7 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
                 + "/myInputImage.gif"));
 
         setNoScalingCommandLine(Arrays.asList(new String[] { "gm", "convert",
+                "-background", "#FFF", "-extent", "0x0", "+matte",
                 getSourceImage().getPath(), getNoScalingOutputImage().getPath() }));
     }
 
@@ -186,7 +187,7 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
     }
 
     @Test
-    public void testTransformImageWhenDImensionsPreservingTransformRequested() throws Throwable {
+    public void testTransformImageWhenDimensionsPreservingTransformRequested() throws Throwable {
 
         recordReadSourceImageAttributes();
 
@@ -252,7 +253,7 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
 
         parametersBean.setDeviceImagePercentWidth(20);
         parametersBean.setDevicePixelWidth(DEVICE_PIXEL_WIDTH);
-        parametersBean.setOutputImageFormat(ImageFormat.GIF);
+        parametersBean.setOutputImageFormat(ImageFormat.PNG);
         return parametersBean;
     }
 
@@ -263,7 +264,7 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
 
         parametersBean.setAbsolutePixelWidth(pixelWidth);
         parametersBean.setDevicePixelWidth(DEVICE_PIXEL_WIDTH);
-        parametersBean.setOutputImageFormat(ImageFormat.GIF);
+        parametersBean.setOutputImageFormat(ImageFormat.PNG);
         return parametersBean;
     }
 
@@ -273,6 +274,7 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
 
         parametersBean.setDevicePixelWidth(DEVICE_PIXEL_WIDTH);
         parametersBean.setOutputImageFormat(ImageFormat.GIF);
+        parametersBean.setBackgroundColor("#FFF");
         return parametersBean;
     }
 

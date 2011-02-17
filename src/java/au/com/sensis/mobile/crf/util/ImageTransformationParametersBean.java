@@ -18,6 +18,7 @@ public class ImageTransformationParametersBean implements ImageTransformationPar
     private Integer absolutePixelWidth;
     private int devicePixelWidth;
     private ImageFormat outputImageFormat = ImageFormat.GIF;
+    private String backgroundColor;
 
     /**
      * {@inheritDoc}
@@ -103,6 +104,21 @@ public class ImageTransformationParametersBean implements ImageTransformationPar
         return !scaleToAbsolutePixelWidth() && (getDeviceImagePercentWidth() != null);
     }
 
+
+    /**
+     * @return the backgroundColor
+     */
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    /**
+     * @param backgroundColor the backgroundColor to set
+     */
+    public void setBackgroundColor(final String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -123,6 +139,7 @@ public class ImageTransformationParametersBean implements ImageTransformationPar
         equalsBuilder.append(getDeviceImagePercentWidth(), rhs.getDeviceImagePercentWidth());
         equalsBuilder.append(getAbsolutePixelWidth(), rhs.getAbsolutePixelWidth());
         equalsBuilder.append(getOutputImageFormat(), rhs.getOutputImageFormat());
+        equalsBuilder.append(getBackgroundColor(), rhs.getBackgroundColor());
         return equalsBuilder.isEquals();
     }
 
@@ -136,6 +153,7 @@ public class ImageTransformationParametersBean implements ImageTransformationPar
         hashCodeBuilder.append(getDeviceImagePercentWidth());
         hashCodeBuilder.append(getAbsolutePixelWidth());
         hashCodeBuilder.append(getOutputImageFormat());
+        hashCodeBuilder.append(getBackgroundColor());
         return hashCodeBuilder.toHashCode();
     }
 
@@ -150,6 +168,7 @@ public class ImageTransformationParametersBean implements ImageTransformationPar
         toStringBuilder.append("deviceImagePercentWidth", getDeviceImagePercentWidth());
         toStringBuilder.append("absolutePixelWidth", getAbsolutePixelWidth());
         toStringBuilder.append("outputImageFormat", getOutputImageFormat());
+        toStringBuilder.append("backgroundColor", getBackgroundColor());
 
         return toStringBuilder.toString();
     }

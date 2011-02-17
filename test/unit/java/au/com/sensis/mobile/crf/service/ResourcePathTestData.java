@@ -436,6 +436,18 @@ public class ResourcePathTestData {
         return resourceBean;
     }
 
+    public Resource getMappedScaledIphoneGroupPngImageResourcePath() {
+        final ImageResourceBean resourceBean =
+            new ImageResourceBean(getRequestedImageResourcePath(), getDeploymentVersion()
+                    + "/iphone/common/scaled/w90/h60/unmetered.png", getRootResourcesPath(),
+                    getGroupTestData().createIPhoneGroup());
+
+        resourceBean.setImageWidth(90);
+        resourceBean.setImageHeight(60);
+
+        return resourceBean;
+    }
+
     public Resource getMappedIphoneGroupGifImageResourcePath() {
         return new ResourceBean(getRequestedImageResourcePath(),
                 getDeploymentVersion() + "/iphone/common/unmetered.gif", getRootResourcesPath(),
