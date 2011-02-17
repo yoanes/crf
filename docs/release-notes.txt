@@ -7,6 +7,8 @@ Upgrade Notes
   is just set to "gm" since none of the environments have it installed. Having "gm" on your path
   is advisable for desktop development to aid portability but for other environments, it would
   be better to have an absolute path.     
+- Now depends on devices.mdpr version 1.283 or later, as this sets the custom.crf.image.ratio 
+  property for iphone 4.
 
 ==== Version 1.0.4 (tag: contentRenderingFramework_v1_0_4) ==== 
 

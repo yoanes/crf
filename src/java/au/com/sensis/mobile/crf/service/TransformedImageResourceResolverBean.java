@@ -38,7 +38,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
      * repository pixel width of the screen is 320, we actually have to apply an extra ratio
      * for the (real) 640 pixel wide retina display.
      */
-    public static final String IMAGE_RATIO_DEVICE_PROPERTY_NAME = "crf.image.ratio";
+    public static final String IMAGE_RATIO_DEVICE_PROPERTY_NAME = "custom.crf.image.ratio";
 
     private static final String PROPERTIES_FILE_EXTENSION = ".properties";
 

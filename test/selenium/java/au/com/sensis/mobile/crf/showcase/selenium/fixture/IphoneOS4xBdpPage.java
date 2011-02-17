@@ -28,11 +28,9 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
         assertImgFoundInDefaultGroupPngFormat();
         assertImgFoundInIntermediateGroupPngFormat();
 
-        // TODO: put back once DR is updated with crf.image.ratio property.
-//        assertScaledYellowPagesImage(640, 256);
-        assertScaledYellowPagesImage(320, 128);
+        assertScaledYellowPagesImage(640, 256);
 
-        assertScaledSearchImage(114, 135, "png", "default");
+        assertScaledSearchImage(228, 271, "png", "default");
     }
 
     /**
