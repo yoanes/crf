@@ -60,42 +60,6 @@ public class ImageTransformationParametersBeanTestCase extends AbstractJUnit4Tes
 
     }
 
-// TODO: not sure if there should be an explicit validate or whether we should have fail-fast
-// validation in setters.
-//    @Test
-//    public void testValidateWhenDeviceImagePercentWidthInvalid() throws Throwable {
-//        getObjectUnderTest().setDeviceImagePercentWidth(-1);
-//
-//        try {
-//            getObjectUnderTest().validate();
-//
-//            Assert.fail("IllegalStateException expected");
-//
-//        } catch (final IllegalStateException e) {
-//
-//            Assert.assertEquals("IllegalStateException has wrong message",
-//                    "deviceImagePercentWidth must be >= 0: -1", e.getMessage());
-//        }
-//
-//    }
-//
-//    @Test
-//    public void testValidateWhenDevicePixelWidthInvalid() throws Throwable {
-//        getObjectUnderTest().setDevicePixelWidth(0);
-//
-//        try {
-//            getObjectUnderTest().validate();
-//
-//            Assert.fail("IllegalStateException expected");
-//
-//        } catch (final IllegalStateException e) {
-//
-//            Assert.assertEquals("IllegalStateException has wrong message",
-//                    "devicePixelWidth must be > 0: 0", e.getMessage());
-//        }
-//
-//    }
-
     /**
      * @return the objectUnderTest
      */

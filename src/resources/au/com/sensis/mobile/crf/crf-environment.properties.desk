@@ -37,3 +37,6 @@ env.bundle.resources=false
 
 # True if you want the resolved resource graph to be logged. 
 env.debug.resource.graph=true
+
+# Path to the Graphics Magick executable.
+env.image.transformation.graphics.magick.path=gm

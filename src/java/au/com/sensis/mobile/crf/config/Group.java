@@ -136,7 +136,6 @@ public class Group implements Serializable {
     }
 
     private void validateReferencedGroupNames(final String[] groupNames) {
-        // TODO: also validate no references to the current or later groups.
         final List<String> invalidGroupNames = new ArrayList<String>();
         for (final String groupName : groupNames) {
             if (getParentGroups().getGroupByName(groupName) == null) {

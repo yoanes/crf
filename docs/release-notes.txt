@@ -1,3 +1,13 @@
+==== (PENDING) Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ==== 
+
+Upgrade Notes
+- Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ ) installed. The path
+  to this is configured via the env.image.transformation.graphics.magick.path property in the 
+  crf-environment.properties.* files that are shipped with CRF. However, at the moment, the property
+  is just set to "gm" since none of the environments have it installed. Having "gm" on your path
+  is advisable for desktop development to aid portability but for other environments, it would
+  be better to have an absolute path.     
+
 ==== Version 1.0.4 (tag: contentRenderingFramework_v1_0_4) ==== 
 
 - CRF-95 Create Admin servlet for emptying the resource cache

@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
+import au.com.sensis.mobile.crf.util.ImageAttributes;
 import au.com.sensis.mobile.crf.util.ImageTransformationFactory;
 import au.com.sensis.mobile.crf.util.ImageTransformationParametersBean;
 import au.com.sensis.mobile.crf.util.TransformedImageAttributes;
@@ -103,7 +104,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
 
     /**
      * Invoked by {@link #resolve(String, Device)} if
-     * {@link #isRecognisedAbstractResourceRequest(String)} resturns true.
+     * {@link #isRecognisedAbstractResourceRequest(String)} returns true.
      *
      * @param requestedResourcePath
      *            Requested path. eg. /WEB-INF/view/jsp/detal/bdp.crf.
@@ -116,6 +117,20 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     protected List<Resource> doResolve(final String requestedResourcePath, final Device device) {
 
         final FoundImageFiles imageFiles = findImageFiles(requestedResourcePath, device);
+
+        try {
+            return processFoundImageFiles(requestedResourcePath, device, imageFiles);
+        } catch (final Exception e) {
+            if (getResourceResolutionWarnLogger().isWarnEnabled()) {
+                getResourceResolutionWarnLogger().warn(
+                        "Error resolving requested resource: '" + requestedResourcePath + "'", e);
+            }
+            return new ArrayList<Resource>();
+        }
+    }
+
+    private List<Resource> processFoundImageFiles(final String requestedResourcePath,
+            final Device device, final FoundImageFiles imageFiles) {
 
         if (imageFiles.getFoundFiles().length > 0) {
 
@@ -196,43 +211,13 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
             foundProperties = getPropertiesLoader().loadPropertiesNotNull(propertiesFile);
             debugLogFoundProperties(foundProperties, currGroup);
         } catch (final IOException e) {
-            // TODO
-            throw new RuntimeException("TODO");
+            throw new ResourceResolutionRuntimeException("Could not load properties file: "
+                    + propertiesFile);
         }
         foundProperties.putAll(imageProperties);
 
         return foundProperties;
     }
-
-//    /**
-//     * Return the first concrete resource path for the requested abstract path
-//     * and that has an acceptable image file extension.
-//     *
-//     * {@inheritDoc}
-//     */
-//    @Override
-//    protected List<Resource> doResolveForGroup(final String requestedResourcePath,
-//            final Device device, final Group group) throws ResourceResolutionRuntimeException {
-//
-//        final String newResourcePathMinusExtension = createNewResourcePath(
-//                requestedResourcePath, group);
-//
-//        debugLogCheckingForImagesIn(newResourcePathMinusExtension);
-//
-//        final File[] matchedFiles =
-//                FileIoFacadeFactory.getFileIoFacadeSingleton().list(getRootResourcesDir(),
-//                        newResourcePathMinusExtension, getFileExtensionWildcards());
-//
-//        warnIfMultipleResourcesWithExtensionsFound(requestedResourcePath, matchedFiles);
-//
-//        if (matchedFiles.length > 0) {
-//            final Resource foundResource =
-//                    createFoundResource(requestedResourcePath, device, group, matchedFiles[0]);
-//            return Arrays.asList(foundResource);
-//        } else {
-//            return new ArrayList<Resource>();
-//        }
-//    }
 
     private File createBaseTargetImageDir(final File sourceImage) {
         return sourceImage.getParentFile();
@@ -273,17 +258,17 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         if (format != null) {
             return format;
         } else {
-            throw new IllegalStateException("TODO: image format not supported for file: "
+            throw new ResourceResolutionRuntimeException("Image format not supported for file: "
                     + foundFile);
         }
     }
 
     private void setDeviceImagePercentWidthIfRequired(
-            final ImageTransformationParametersBean parametersBean,
-            final Device device, final Properties imageProperties) {
+            final ImageTransformationParametersBean parametersBean, final Device device,
+            final Properties imageProperties) {
 
+        final String rawPropertyValue = imageProperties.getProperty(WIDTH_PROPERTY_NAME);
         try {
-            final String rawPropertyValue = imageProperties.getProperty(WIDTH_PROPERTY_NAME);
 
             if (StringUtils.isNotBlank(rawPropertyValue) && rawPropertyValue.trim().endsWith("%")) {
                 final Integer percentWidth =
@@ -291,8 +276,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
                 parametersBean.setDeviceImagePercentWidth(percentWidth * getImageRatio(device));
             }
         } catch (final NumberFormatException e) {
-            // TODO: log warning or throw exception?
-            throw new ResourceResolutionRuntimeException("TODO", e);
+            throw new ResourceResolutionRuntimeException("Could not parse width property: '"
+                    + rawPropertyValue + "'", e);
         }
     }
 
@@ -308,8 +293,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
             final ImageTransformationParametersBean parametersBean,
             final Device device, final Properties imageProperties) {
 
+        final String rawPropertyValue = imageProperties.getProperty(WIDTH_PROPERTY_NAME);
         try {
-            final String rawPropertyValue = imageProperties.getProperty(WIDTH_PROPERTY_NAME);
 
             if (StringUtils.isNotBlank(rawPropertyValue)
                     && rawPropertyValue.trim().endsWith("px")) {
@@ -320,22 +305,10 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
             }
 
         } catch (final NumberFormatException e) {
-            // TODO: log warning or throw exception?
-            throw new ResourceResolutionRuntimeException("TODO", e);
+            throw new ResourceResolutionRuntimeException("Could not parse width property: '"
+                    + rawPropertyValue + "'", e);
         }
     }
-
-    // private Properties getImageProperties(final Device device, final String
-    // requestedResourcePath) {
-    // final String requestedPathExtesion =
-    // "." + FilenameUtils.getExtension(requestedResourcePath);
-    //
-    // final String requestedPathMinusExtension =
-    // StringUtils.removeEnd(requestedResourcePath, requestedPathExtesion);
-    //
-    // return getPropertiesLoader().loadPropertiesNotNull(
-    // requestedPathMinusExtension + PROPERTIES_FILE_EXTENSION);
-    // }
 
     private Resource createImageResource(final String requestedResourcePath, final Device device,
             final Group group, final FoundImageFiles imageFiles) {
@@ -369,6 +342,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
                 getImageTransformationFactory().transformImage(foundFile,
                         createBaseTargetImageDir(foundFile), transformationParametersBean);
 
+        logWarningIfUpScaledImage(device, transformedImageAttributes);
+
         final String relativeOutputImagePath =
                 getResourcePathRelativeTo(transformedImageAttributes.getOutputImageAttributes()
                         .getFile(), getRootResourcesDir());
@@ -381,6 +356,28 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         resource.setImageHeight(transformedImageAttributes.getOutputImageAttributes()
                 .getPixelHeight());
         return resource;
+    }
+
+    private void logWarningIfUpScaledImage(final Device device,
+            final TransformedImageAttributes transformedImageAttributes) {
+
+        final ImageAttributes sourceImageAttributes =
+                transformedImageAttributes.getSourceImageAttributes();
+        final ImageAttributes outputImageAttributes =
+                transformedImageAttributes.getOutputImageAttributes();
+
+        if (((outputImageAttributes.getPixelWidth() > sourceImageAttributes.getPixelWidth())
+                || (outputImageAttributes.getPixelHeight()
+                        > sourceImageAttributes.getPixelHeight()))
+                && getResourceResolutionWarnLogger().isWarnEnabled()) {
+
+            getResourceResolutionWarnLogger().warn(
+                    "Scaled image up for device " + device + ". This may produce "
+                            + "unacceptable image quality. Source image attributes: '"
+                            + sourceImageAttributes + "'. Output image attributes: '"
+                            + outputImageAttributes + "'");
+        }
+
     }
 
     private Resource createImageResourceFromExactFileFound(final String requestedResourcePath,
@@ -401,7 +398,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     private void warnIfMultipleResourcesWithExtensionsFound(
             final String requestedResourcePath,
             final File[] matchedFiles) {
-        // TODO: adjust message slightly for scaling.
+
         if ((matchedFiles.length > 1)
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
@@ -409,7 +406,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
                     + requestedResourcePath
                     + "' resolved to multiple real resources with extensions matching "
                     + ArrayUtils.toString(getFileExtensionWildcards())
-                    + ". Will only return the first resource. Total found: "
+                    + ". Will only use the first resource. Total found: "
                     + nonEmptyArrayToString(matchedFiles)
                     + ".");
         }

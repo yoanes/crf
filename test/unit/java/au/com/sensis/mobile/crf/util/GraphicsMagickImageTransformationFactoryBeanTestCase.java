@@ -17,12 +17,13 @@ import au.com.sensis.mobile.crf.util.ImageTransformationFactory.ImageTransformat
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link CommandLineImageTransformationFactoryBean}.
+ * Unit test {@link GraphicsMagickImageTransformationFactoryBean}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJUnit4TestCase {
+public class GraphicsMagickImageTransformationFactoryBeanTestCase extends AbstractJUnit4TestCase {
 
+    private static final int DEVICE_PIXEL_WIDTH = 500;
     private static final int DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_WIDTH = 100;
     private static final int DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT = 75;
 
@@ -32,7 +33,7 @@ public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJ
     private static final int SOURCE_IMAGE_PIXEL_WIDTH = 800;
     private static final int SOURCE_IMAGE_PIXEL_HEIGHT = 600;
 
-    private CommandLineImageTransformationFactoryBean objectUnderTest;
+    private GraphicsMagickImageTransformationFactoryBean objectUnderTest;
 
     private File sourceImage;
     private File outputImageBaseDir;
@@ -62,8 +63,8 @@ public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJ
      */
     @Before
     public void setUp() throws Exception {
-        setObjectUnderTest(new CommandLineImageTransformationFactoryBean(getMockProcessStarter(),
-                getMockImageReader()));
+        setObjectUnderTest(new GraphicsMagickImageTransformationFactoryBean(
+                getMockProcessStarter(), getMockImageReader(), "gm"));
 
         FileIoFacadeFactory.changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
 
@@ -170,9 +171,13 @@ public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJ
 
         replay();
 
+        final ImageTransformationParameters imageTransformationParameters =
+                createAbsolutePixelWidthImageTransformationParameters(
+                        ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_WIDTH);
+
         final TransformedImageAttributes actualImage =
                 getObjectUnderTest().transformImage(getSourceImage(), getOutputImageBaseDir(),
-                        createAbsolutePixelWidthImageTransformationParameters());
+                        imageTransformationParameters);
 
         Assert.assertEquals("actualImage is wrong", createExpectedTransformedImageAttributes(
                 getAbsolutePixelWidthScalingOutputImage(),
@@ -246,17 +251,18 @@ public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJ
                 new ImageTransformationParametersBean();
 
         parametersBean.setDeviceImagePercentWidth(20);
-        parametersBean.setDevicePixelWidth(500);
+        parametersBean.setDevicePixelWidth(DEVICE_PIXEL_WIDTH);
         parametersBean.setOutputImageFormat(ImageFormat.GIF);
         return parametersBean;
     }
 
-    private ImageTransformationParameters createAbsolutePixelWidthImageTransformationParameters() {
+    private ImageTransformationParameters createAbsolutePixelWidthImageTransformationParameters(
+            final int pixelWidth) {
         final ImageTransformationParametersBean parametersBean =
             new ImageTransformationParametersBean();
 
-        parametersBean.setAbsolutePixelWidth(200);
-        parametersBean.setDevicePixelWidth(500);
+        parametersBean.setAbsolutePixelWidth(pixelWidth);
+        parametersBean.setDevicePixelWidth(DEVICE_PIXEL_WIDTH);
         parametersBean.setOutputImageFormat(ImageFormat.GIF);
         return parametersBean;
     }
@@ -265,7 +271,7 @@ public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJ
         final ImageTransformationParametersBean parametersBean =
             new ImageTransformationParametersBean();
 
-        parametersBean.setDevicePixelWidth(500);
+        parametersBean.setDevicePixelWidth(DEVICE_PIXEL_WIDTH);
         parametersBean.setOutputImageFormat(ImageFormat.GIF);
         return parametersBean;
     }
@@ -274,7 +280,7 @@ public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJ
         final ImageTransformationParametersBean parametersBean =
             new ImageTransformationParametersBean();
 
-        parametersBean.setDevicePixelWidth(500);
+        parametersBean.setDevicePixelWidth(DEVICE_PIXEL_WIDTH);
         parametersBean.setOutputImageFormat(ImageFormat.PNG);
         return parametersBean;
     }
@@ -376,7 +382,7 @@ public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJ
     /**
      * @return the objectUnderTest
      */
-    private CommandLineImageTransformationFactoryBean getObjectUnderTest() {
+    private GraphicsMagickImageTransformationFactoryBean getObjectUnderTest() {
         return objectUnderTest;
     }
 
@@ -385,7 +391,7 @@ public class CommandLineImageTransformationFactoryBeanTestCase extends AbstractJ
      *            the objectUnderTest to set
      */
     private void setObjectUnderTest(
-            final CommandLineImageTransformationFactoryBean objectUnderTest) {
+            final GraphicsMagickImageTransformationFactoryBean objectUnderTest) {
 
         this.objectUnderTest = objectUnderTest;
     }

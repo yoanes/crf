@@ -14,10 +14,10 @@ import org.apache.log4j.Logger;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class CommandLineImageTransformationFactoryBean implements ImageTransformationFactory {
+public class GraphicsMagickImageTransformationFactoryBean implements ImageTransformationFactory {
 
     private static final Logger LOGGER =
-            Logger.getLogger(CommandLineImageTransformationFactoryBean.class);
+            Logger.getLogger(GraphicsMagickImageTransformationFactoryBean.class);
 
     private static final double PERCENTAGE_DIVISOR = 100.0d;
 
@@ -28,17 +28,24 @@ public class CommandLineImageTransformationFactoryBean implements ImageTransform
 
     private final ImageReader imageReader;
     private final ProcessStarter processStarter;
+    private final String graphicsMagickExecutable;
 
     /**
      * Constructor.
      *
-     * @param processStarter {@link ProcessStarter} to start a process.
-     * @param imageReader {@link ImageReader} to use to read images.
+     * @param processStarter
+     *            {@link ProcessStarter} to start a process.
+     * @param imageReader
+     *            {@link ImageReader} to use to read images.
+     * @param graphicsMagickExecutable
+     *            path of the GraphicsMagick executable.
      */
-    public CommandLineImageTransformationFactoryBean(final ProcessStarter processStarter,
-            final ImageReader imageReader) {
+    public GraphicsMagickImageTransformationFactoryBean(final ProcessStarter processStarter,
+            final ImageReader imageReader, final String graphicsMagickExecutable) {
+
         this.processStarter = processStarter;
         this.imageReader = imageReader;
+        this.graphicsMagickExecutable = graphicsMagickExecutable;
     }
 
     /**
@@ -114,8 +121,6 @@ public class CommandLineImageTransformationFactoryBean implements ImageTransform
                 calculateOutputImageWidth(imageTransformationParameters, sourceImageAttributes);
         final int outputImageHeight =
                 calculateOutputImageHeight(outputImageWidth, sourceImageAttributes);
-
-        // TODO: warn if output image dimension(s) > source.
 
         final File outputImageDir =
                 createOutputImageDir(outputImageWidth, outputImageHeight, baseTargetImageDir);
@@ -262,8 +267,7 @@ public class CommandLineImageTransformationFactoryBean implements ImageTransform
 
         final List<String> commandLine = new ArrayList<String>();
 
-        // TODO: externalize "gm", "convert"
-        commandLine.add("gm");
+        commandLine.add(getGraphicsMagickExecutable());
         commandLine.add("convert");
 
         if (imageTransformationParameters.scaleToPercentDeviceWidth()
@@ -297,4 +301,10 @@ public class CommandLineImageTransformationFactoryBean implements ImageTransform
         return processStarter;
     }
 
+    /**
+     * @return the graphicsMagickExecutable
+     */
+    private String getGraphicsMagickExecutable() {
+        return graphicsMagickExecutable;
+    }
 }
