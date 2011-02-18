@@ -125,7 +125,9 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         } catch (final Exception e) {
             if (getResourceResolutionWarnLogger().isWarnEnabled()) {
                 getResourceResolutionWarnLogger().warn(
-                        "Error resolving requested resource: '" + requestedResourcePath + "'", e);
+                        "Error resolving requested resource: '"
+                        + requestedResourcePath
+                        + "' for device " + device, e);
             }
             return new ArrayList<Resource>();
         }
@@ -288,16 +290,28 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
             final Properties imageProperties) {
 
         final String rawPropertyValue = imageProperties.getProperty(WIDTH_PROPERTY_NAME);
-        try {
 
-            if (StringUtils.isNotBlank(rawPropertyValue) && rawPropertyValue.trim().endsWith("%")) {
-                final Integer percentWidth =
-                        Integer.valueOf(rawPropertyValue.replaceFirst("%\\s*$", StringUtils.EMPTY));
-                parametersBean.setDeviceImagePercentWidth(percentWidth * getImageRatio(device));
+        if (StringUtils.isNotBlank(rawPropertyValue) && rawPropertyValue.trim().endsWith("%")) {
+
+            final Integer percentWidth = parseNonBlankPercentWidthProperty(rawPropertyValue);
+
+            if (percentWidth <= 0) {
+                throw new ResourceResolutionRuntimeException("Could not parse width property: '"
+                        + rawPropertyValue
+                        + "'. Must be a % or px value greater than 0. eg. 80% or 100px");
             }
+
+            parametersBean.setDeviceImagePercentWidth(percentWidth * getImageRatio(device));
+        }
+    }
+
+    private Integer parseNonBlankPercentWidthProperty(final String rawPropertyValue) {
+        try {
+            return Integer.valueOf(rawPropertyValue.replaceFirst("%\\s*$", StringUtils.EMPTY));
         } catch (final NumberFormatException e) {
             throw new ResourceResolutionRuntimeException("Could not parse width property: '"
-                    + rawPropertyValue + "'", e);
+                    + rawPropertyValue
+                    + "'. Must be a % or px value greater than 0. eg. 80% or 100px", e);
         }
     }
 
@@ -310,20 +324,30 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     }
 
     private void setAbsolutePixelWidthIfRequired(
-            final ImageTransformationParametersBean parametersBean,
-            final Device device, final Properties imageProperties) {
+            final ImageTransformationParametersBean parametersBean, final Device device,
+            final Properties imageProperties) {
 
         final String rawPropertyValue = imageProperties.getProperty(WIDTH_PROPERTY_NAME);
-        try {
 
-            if (StringUtils.isNotBlank(rawPropertyValue)
-                    && rawPropertyValue.trim().endsWith("px")) {
-                final Integer absolutePixelWidth =
-                        Integer.valueOf(rawPropertyValue.replaceFirst("\\s*px\\s*$",
-                                StringUtils.EMPTY));
-                parametersBean.setAbsolutePixelWidth(absolutePixelWidth * getImageRatio(device));
+        if (StringUtils.isNotBlank(rawPropertyValue) && rawPropertyValue.trim().endsWith("px")) {
+
+            final Integer absolutePixelWidth =
+                    parseNonBlankAbsolutePixelWidthProperty(rawPropertyValue);
+
+            if (absolutePixelWidth <= 0) {
+                throw new ResourceResolutionRuntimeException("Could not parse width property: '"
+                        + rawPropertyValue
+                        + "'. Must be a % or px value greater than 0. eg. 80% or 100px");
             }
 
+            parametersBean.setAbsolutePixelWidth(absolutePixelWidth * getImageRatio(device));
+        }
+
+    }
+
+    private Integer parseNonBlankAbsolutePixelWidthProperty(final String rawPropertyValue) {
+        try {
+            return Integer.valueOf(rawPropertyValue.replaceFirst("\\s*px\\s*$", StringUtils.EMPTY));
         } catch (final NumberFormatException e) {
             throw new ResourceResolutionRuntimeException("Could not parse width property: '"
                     + rawPropertyValue + "'", e);

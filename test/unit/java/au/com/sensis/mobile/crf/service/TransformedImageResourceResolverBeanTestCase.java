@@ -456,14 +456,32 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     }
 
     @Test
-    public void testResolveWhenMappingPerformedAndImagePropertiesCannotBeParsed() throws Throwable {
+    public void testResolveWhenMappingPerformedAndImagePropertiesInvalid() throws Throwable {
 
         final String[] testValues =
                 { getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
                         getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
 
         for (final String testValue : testValues) {
-            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+            doTestResolveWhenMappingPerformedAndImagePropertiesInvalid(testValue);
+        }
+
+    }
+
+    private void doTestResolveWhenMappingPerformedAndImagePropertiesInvalid(
+            final String abstractResourceExtension) throws IOException {
+
+        final Properties[] testPropertiesArray =
+                new Properties[] { createIphoneGroupImagePropertiesWithPercentWidthNotAnInteger(),
+                        createIphoneGroupImagePropertiesWithPercentWidthZero(),
+                        createIphoneGroupImagePropertiesWithPercentWidthNegative(),
+                        createIphoneGroupImagePropertiesWithAbsoluteWidthNotAnInteger(),
+                        createIphoneGroupImagePropertiesWithAbsoluteWidthZero(),
+                        createIphoneGroupImagePropertiesWithAbsoluteWidthNegative() };
+
+        for (final Properties testProperties : testPropertiesArray) {
+
+            setObjectUnderTest(createWithAbstractResourceExtension(abstractResourceExtension));
 
             recordGetMatchingGroups();
             final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
@@ -473,15 +491,15 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
 
-            recordLoadIphoneGroupImageProperties(createIphoneGroupInvalidImageProperties());
+            recordLoadIphoneGroupImageProperties(testProperties);
             recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
 
             recordLogWarningExceptionEncountered();
 
             recordPutEmptyResultsIntoResourceCache(resourceCacheKey);
 
-            recordLogWarningIfEmptyResolvedResources(
-                    getResourcePathTestData().getRequestedImageResourcePath());
+            recordLogWarningIfEmptyResolvedResources(getResourcePathTestData()
+                    .getRequestedImageResourcePath());
 
             replay();
 
@@ -502,7 +520,6 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             // Explicit reset since we are in a loop.
             reset();
         }
-
     }
 
     private void recordGetImageRatioDeviceProperty(final Integer ratio) {
@@ -756,9 +773,39 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         return properties;
     }
 
-    private Properties createIphoneGroupInvalidImageProperties() {
+    private Properties createIphoneGroupImagePropertiesWithPercentWidthNotAnInteger() {
         final Properties properties = new Properties();
         properties.setProperty("width", "I'm not a number%");
+        return properties;
+    }
+
+    private Properties createIphoneGroupImagePropertiesWithPercentWidthZero() {
+        final Properties properties = new Properties();
+        properties.setProperty("width", "0%");
+        return properties;
+    }
+
+    private Properties createIphoneGroupImagePropertiesWithPercentWidthNegative() {
+        final Properties properties = new Properties();
+        properties.setProperty("width", "-1%");
+        return properties;
+    }
+
+    private Properties createIphoneGroupImagePropertiesWithAbsoluteWidthNotAnInteger() {
+        final Properties properties = new Properties();
+        properties.setProperty("width", "I'm not a number px");
+        return properties;
+    }
+
+    private Properties createIphoneGroupImagePropertiesWithAbsoluteWidthZero() {
+        final Properties properties = new Properties();
+        properties.setProperty("width", "0px");
+        return properties;
+    }
+
+    private Properties createIphoneGroupImagePropertiesWithAbsoluteWidthNegative() {
+        final Properties properties = new Properties();
+        properties.setProperty("width", "-1px");
         return properties;
     }
 
@@ -921,7 +968,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
     @Test
     public void testResolveWhenMappingPerformedAndResourceDoesNotExist()
-    throws Throwable {
+        throws Throwable {
 
         final String[] testValues = {
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
