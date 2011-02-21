@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
@@ -20,6 +21,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import au.com.sensis.mobile.crf.exception.GroupEvaluationRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.wireless.web.mobile.ThreadLocalContextObjectsHolder;
 
 /**
  * <p>
@@ -31,6 +33,8 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 public class Group implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final String DEVICE_KEY = "device";
 
     /**
      * Name of this group. See {@link #validate(Device)} for valid values.
@@ -82,12 +86,11 @@ public class Group implements Serializable {
             final JexlEngine jexl = new JexlEngine();
             jexl.setLenient(false);
             jexl.setSilent(false);
-            jexl.setFunctions(createJexlFunctionsMap());
+            jexl.setFunctions(createJexlFunctionsMap(device));
 
             final Expression e = jexl.createExpression(getExpr());
 
-            final JexlContext jc = new MapContext();
-            jc.set("device", device);
+            final JexlContext jc = createJexlContext(device);
 
             // Now evaluate the expression, getting the result
             final Object o = e.evaluate(jc);
@@ -105,9 +108,23 @@ public class Group implements Serializable {
         }
     }
 
-    private Map<String, Object> createJexlFunctionsMap() {
+    private JexlContext createJexlContext(final Device device) {
+        final JexlContext jc = new MapContext();
+
+        jc.set(DEVICE_KEY, device);
+
+        for (final Entry<String, Object> entry : ThreadLocalContextObjectsHolder
+                .getObjectMapNotNull().entrySet()) {
+
+            jc.set(entry.getKey(), entry.getValue());
+        }
+
+        return jc;
+    }
+
+    private Map<String, Object> createJexlFunctionsMap(final Device device) {
         final Map<String, Object> functionsMap = new HashMap<String, Object>();
-        functionsMap.put(null, this);
+        functionsMap.put(null, new JexlGroupFunctions(device, this));
         return functionsMap;
     }
 

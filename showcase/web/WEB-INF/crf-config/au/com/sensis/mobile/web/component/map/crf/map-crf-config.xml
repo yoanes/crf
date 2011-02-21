@@ -15,7 +15,7 @@
           - were not resolved by the default crf-config.xml. 
           -->
         <!-- Test usage of the custom CRF inAnyGroup function. -->
-        <group name="mapComponent-advanced" expr="inAnyGroup(device, 'android-os', 'iphone-ipod')" />
+        <group name="mapComponent-advanced" expr="inAnyGroup('android-os', 'iphone-ipod')" />
         
         <!-- Browser family groups. -->        
         <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />

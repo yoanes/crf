@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.jexl2.JexlException;
@@ -15,6 +16,7 @@ import au.com.sensis.mobile.crf.exception.GroupEvaluationRuntimeException;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.common.volantis.devicerepository.api.ImageCategory;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
+import au.com.sensis.wireless.web.mobile.ThreadLocalContextObjectsHolder;
 
 /**
  * Unit test {@link Group}.
@@ -26,8 +28,6 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
     private static final String GROUP_NAME = "myGroupName";
 
     private Device mockDevice;
-
-    private final GroupTestData groupTestData = new GroupTestData();
 
     private Group objectUnderTest;
 
@@ -210,7 +210,7 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testMatchWhenInAllGroupsInvokedAndTrue() throws Throwable {
 
-        getObjectUnderTest().setExpr("inAllGroups(device, 'trueGroup1', 'trueGroup2')");
+        getObjectUnderTest().setExpr("inAllGroups('trueGroup1', 'trueGroup2')");
 
         replay();
 
@@ -221,7 +221,7 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
     public void testMatchWhenInAllGroupsInvokedAndFalse() throws Throwable {
 
         getObjectUnderTest().setExpr(
-                "inAllGroups(device, 'trueGroup1', 'falseGroup1', 'trueGroup2')");
+                "inAllGroups('trueGroup1', 'falseGroup1', 'trueGroup2')");
 
         replay();
 
@@ -231,7 +231,7 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testMatchWhenInAnyGroupInvokedAndTrue() throws Throwable {
         getObjectUnderTest().setExpr(
-                "inAnyGroup(device, 'trueGroup1', 'falseGroup1', 'trueGroup2')");
+                "inAnyGroup('trueGroup1', 'falseGroup1', 'trueGroup2')");
 
         replay();
 
@@ -240,7 +240,7 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testMatchWhenInAnyGroupInvokedAndFalse() throws Throwable {
-        getObjectUnderTest().setExpr("inAnyGroup(device, 'falseGroup1', 'falseGroup2')");
+        getObjectUnderTest().setExpr("inAnyGroup('falseGroup1', 'falseGroup2')");
 
         replay();
 
@@ -252,8 +252,8 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
             throws Throwable {
 
         final String[] expressions =
-                { "inAllGroups(device, 'trueGroup1', 'unknownGroup1', 'unknownGroup2', 'default')",
-                        "inAnyGroup(device, 'trueGroup1', 'unknownGroup1', 'unknownGroup2', 'default')" };
+                { "inAllGroups('trueGroup1', 'unknownGroup1', 'unknownGroup2', 'default')",
+                        "inAnyGroup('trueGroup1', 'unknownGroup1', 'unknownGroup2', 'default')" };
 
         for (final String expr : expressions) {
 
@@ -302,10 +302,10 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
             throws Throwable {
 
         final String[] expressions = {
-                "inAllGroups(device, 'trueGroup1', 'laterGroup1', 'laterGroup2', 'default')",
-                "inAnyGroup(device, 'trueGroup1', 'laterGroup1', 'laterGroup2', 'default')",
-                "inAllGroups(device, 'trueGroup1', '" + GROUP_NAME + "', 'laterGroup1')",
-                "inAnyGroup(device, 'trueGroup1', '" + GROUP_NAME + "', 'laterGroup1')"
+                "inAllGroups('trueGroup1', 'laterGroup1', 'laterGroup2', 'default')",
+                "inAnyGroup('trueGroup1', 'laterGroup1', 'laterGroup2', 'default')",
+                "inAllGroups('trueGroup1', '" + GROUP_NAME + "', 'laterGroup1')",
+                "inAnyGroup('trueGroup1', '" + GROUP_NAME + "', 'laterGroup1')"
         };
 
         final String[] illegalGroups =
@@ -356,6 +356,22 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
             verify();
             reset();
         }
+    }
+
+    @Test
+    public void testMatchWhenThreadLocalContainsExtraObjects() throws Throwable {
+
+        final HashMap<String, Object> objectMap = new HashMap<String, Object>();
+        objectMap.put("iPhoneRegex", ".*iPhone.*");
+        ThreadLocalContextObjectsHolder.setObjectMap(objectMap);
+
+        getObjectUnderTest().setExpr("device.name =~ iPhoneRegex");
+
+        EasyMock.expect(getMockDevice().getName()).andReturn("Apple-iPhone");
+
+        replay();
+
+        Assert.assertTrue("match should be true", getObjectUnderTest().match(getMockDevice()));
     }
 
     private Groups createGroups() {
@@ -414,13 +430,6 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
      */
     public void setMockDevice(final Device mockDevice) {
         this.mockDevice = mockDevice;
-    }
-
-    /**
-     * @return the groupTestData
-     */
-    private GroupTestData getGroupTestData() {
-        return groupTestData;
     }
 
     /**

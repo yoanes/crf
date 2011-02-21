@@ -36,7 +36,7 @@
         <group name="clickToCallSupported" expr="device.clickToCallSupported" />
         
         <!-- Test usage of the custom CRF inAllGroups function. -->
-        <group name="clickToCallSupported-hd640" expr="inAllGroups(device, 'clickToCallSupported', 'HD640')" />
+        <group name="clickToCallSupported-hd640" expr="inAllGroups('clickToCallSupported', 'HD640')" />
         
         <default-group name="default" />
     </groups>

@@ -962,7 +962,8 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
         getMockResourceResolutionWarnLogger().warn(
                 EasyMock.eq("Error resolving requested resource: '"
-                        + getResourcePathTestData().getRequestedImageResourcePath() + "'"),
+                        + getResourcePathTestData().getRequestedImageResourcePath()
+                        + "' for device " + getMockDevice()),
                 EasyMock.isA(ResourceResolutionRuntimeException.class));
     }
 
