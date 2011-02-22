@@ -158,7 +158,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 if (testDataArray[i].getResource() != null) {
                     recordResourceEndsWithDotNull(Boolean.FALSE);
                     recordGetResourceNewPath();
-                    recordGetUserAgent("notAnIPhone");
+                    recordGetImageRatio(null);
                     recordGetImageSize();
                     recordGetJspWriter();
                 } else {
@@ -170,17 +170,22 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 getObjectUnderTest().doTag();
 
                 Assert.assertEquals("incorrect output for testData at index " + i + ": '",
-                        testDataArray[i].getOutputString(),
-                        getStringWriter().getBuffer().toString());
+                        testDataArray[i].getOutputString(), getStringWriter().getBuffer()
+                                .toString());
 
                 // Explicit verify since we are in a loop.
                 verify();
                 resetMocksAndTestData();
             } catch (final Exception e) {
-                throw new RuntimeException("Error for testData at index " + i
-                        + ": '" + testDataArray[i] + "'", e);
+                throw new RuntimeException("Error for testData at index " + i + ": '"
+                        + testDataArray[i] + "'", e);
             }
         }
+    }
+
+    private void recordGetImageRatio(final Integer imageRatio) {
+        EasyMock.expect(getMockDevice().getPropertyAsInteger("custom.crf.image.ratio"))
+                .andReturn(imageRatio);
     }
 
     @Test
@@ -224,27 +229,23 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWithRealImageResourceBean() throws Throwable {
+    public void testDoTagWithRealImageResourceBeanAndImageRatioPropertyNull() throws Throwable {
 
         final int width = 222;
         final int height = 111;
 
         final Resource toGetValuesFrom =
-            getResourcePathTestData().getMappedDefaultGroupPngImageResourcePath();
+                getResourcePathTestData().getMappedDefaultGroupPngImageResourcePath();
 
-        final ImageResourceBean imageResource = new ImageResourceBean(
-                toGetValuesFrom.getOriginalPath(),
-                toGetValuesFrom.getNewPath(),
-                toGetValuesFrom.getRootResourceDir(),
-                getGroupTestData().createDefaultGroup());
+        final ImageResourceBean imageResource =
+                new ImageResourceBean(toGetValuesFrom.getOriginalPath(), toGetValuesFrom
+                        .getNewPath(), toGetValuesFrom.getRootResourceDir(), getGroupTestData()
+                        .createDefaultGroup());
 
         imageResource.setImageHeight(height);
         imageResource.setImageWidth(width);
 
-        final String expectedOutputTag = "<img src=\"" + getMappedDefaultGroupPngImageResourceHref()
-        + "\" " + "width=\"" + width + "\" " + "height=\"" + height + "\" " + "/>";
-
-        recordGetUserAgent("notAnIPhone4");
+        recordGetImageRatio(null);
 
         recordGetImageTagDependencies();
 
@@ -256,9 +257,52 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().doTag();
 
-        Assert.assertEquals("incorrect output,",
-                expectedOutputTag,
-                getStringWriter().getBuffer().toString());
+        final String expectedOutputTag =
+                "<img src=\"" + getMappedDefaultGroupPngImageResourceHref() + "\" " + "width=\""
+                        + width + "\" " + "height=\"" + height + "\" " + "/>";
+
+        Assert.assertEquals("incorrect output,", expectedOutputTag, getStringWriter().getBuffer()
+                .toString());
+
+    }
+
+    @Test
+    public void testDoTagWithRealImageResourceBeanAndImageRatioPropertyNotNull() throws Throwable {
+
+        final int width = 222;
+        final int height = 111;
+
+        final Resource toGetValuesFrom =
+                getResourcePathTestData().getMappedDefaultGroupPngImageResourcePath();
+
+        final ImageResourceBean imageResource =
+                new ImageResourceBean(toGetValuesFrom.getOriginalPath(), toGetValuesFrom
+                        .getNewPath(), toGetValuesFrom.getRootResourceDir(), getGroupTestData()
+                        .createDefaultGroup());
+
+        imageResource.setImageHeight(height);
+        imageResource.setImageWidth(width);
+
+        final Integer imageRatio = 2;
+
+        recordGetImageRatio(imageRatio);
+
+        recordGetImageTagDependencies();
+
+        recordLookupRequestedResourceWhenFound(imageResource);
+
+        recordGetJspWriter();
+
+        replay();
+
+        getObjectUnderTest().doTag();
+
+        final String expectedOutputTag =
+                "<img src=\"" + getMappedDefaultGroupPngImageResourceHref() + "\" " + "width=\""
+                        + (width / imageRatio) + "\" " + "height=\"" + (height / imageRatio)
+                        + "\" " + "/>";
+        Assert.assertEquals("incorrect output,", expectedOutputTag, getStringWriter().getBuffer()
+                .toString());
 
     }
 
@@ -303,11 +347,6 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
         .andReturn(
                 getMappedDefaultGroupPngImageResourcePath()
                 .getNewPath()).atLeastOnce();
-    }
-
-    private void recordGetUserAgent(final String userAgent) {
-
-        EasyMock.expect(getMockDevice().getUserAgent()).andReturn(userAgent).once();
     }
 
     private void recordGetImageSize() {

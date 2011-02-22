@@ -14,6 +14,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import au.com.sensis.mobile.crf.service.ImageResourceBean;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
+import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Facade to an image tag that uses the Content Rendering Framework to resolve
@@ -24,7 +25,14 @@ import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 public class ImageTag extends AbstractTag {
 
     private String src;
-    private static final String IPHONE4_USER_AGENT_NAME_PORTION = "iPhone OS 4";
+
+    /**
+     * Name of the (optional) device property that specifies an extra ratio to apply to a
+     * scaled image. This originated from the iphone 4 retina display. Even though the device
+     * repository pixel width of the screen is 320, we actually have to apply an extra ratio
+     * for the (real) 640 pixel wide retina display.
+     */
+    public static final String IMAGE_RATIO_DEVICE_PROPERTY_NAME = "custom.crf.image.ratio";
 
     /**
      * {@inheritDoc}
@@ -102,13 +110,14 @@ public class ImageTag extends AbstractTag {
             int width = imageWidth;
             int height = imageHeight;
 
-            // iPhone 4 has a high-res screen, so we actually use images twice the size
-            // that they should be displayed - so we therefore need to halve the size that's output.
-            if (getDevice().getUserAgent().contains(IPHONE4_USER_AGENT_NAME_PORTION)) {
-
-                width /= 2;
-                height /= 2;
-            }
+            // imageRatio is non-null for some devices like iPhone 4. This
+            // device has a high-res
+            // screen and we actually use images twice the size that they should
+            // be displayed -
+            // so we therefore need to halve the size that's displayed.
+            final Integer imageRatio = getImageRatioNotNull(getDevice());
+            width /= imageRatio;
+            height /= imageRatio;
 
             jspWriter.print("width=\"" + width + "\" ");
             jspWriter.print("height=\"" + height + "\" ");
@@ -170,4 +179,11 @@ public class ImageTag extends AbstractTag {
         this.src = src;
     }
 
+    private Integer getImageRatioNotNull(final Device device) {
+        Integer imageRatio = device.getPropertyAsInteger(IMAGE_RATIO_DEVICE_PROPERTY_NAME);
+        if (imageRatio == null) {
+            imageRatio = 1;
+        }
+        return imageRatio;
+    }
 }
