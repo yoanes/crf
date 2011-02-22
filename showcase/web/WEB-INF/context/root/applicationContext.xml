@@ -84,11 +84,6 @@
         <property name="clientAppDetectionHolder" ref="requestClientAppDetectionHolder" />
     </bean>
     
-    <bean id="requestClientAppDetectionHolder" class="au.com.sensis.wireless.web.clientapp.RequestClientAppDetectionHolder">
-        <property name="requestAttribute" value="clientApp"/>
-    </bean>
-    
-    
     <!-- Create the context setup filter bean that is referenced in web.xml  -->
     <bean id="contextSetUpFilter" name="contextSetUpFilter"
             class="au.com.sensis.mobile.web.showcase.ContextSetUpFIlterThatWorks">
@@ -98,6 +93,87 @@
         <property name="deviceRecognition" ref="volantisDeviceRecognition"/>
     </bean>
 
-    <!-- ==================================================================================== -->
+    <!-- ======================================================================================= -->
+    <!-- Client App Detection Filter                                                             -->
+    <!-- ======================================================================================= -->
+
+    <bean id="clientAppDetectionFilter"
+            class="au.com.sensis.wireless.web.clientapp.ClientAppDetectionFilter"
+            init-method="validateState">
+
+        <property name="clientAppDetectionMethods">
+            <list>
+                <ref local="referrerClientAppDetectionMethod"/>
+                <ref local="parameterClientAppDetectionMethod"/>
+            </list>
+        </property>
+        <property name="clientAppDetectionHolders">
+            <list>
+                <ref local="sessionClientAppDetectionHolder"/>
+                <ref local="threadLocalClientAppDetectionHolder"/>
+                <ref local="requestClientAppDetectionHolder"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ClientAppType.ANDROID" class="java.lang.String">
+
+        <constructor-arg value="ANDROID"/>
+    </bean>
+
+    <bean id="ClientAppType.IPHONE" class="java.lang.String">
+
+        <constructor-arg value="IPHONE"/>
+    </bean>
+
+    <bean id="abstractClientAppDetectionMethod" abstract="true">
+
+        <property name="latParameter" value="lat"/>
+        <property name="lonParameter" value="lon"/>
+    </bean>
+
+    <bean id="referrerClientAppDetectionMethod" parent="abstractClientAppDetectionMethod"
+            class="au.com.sensis.wireless.web.clientapp.ReferrerClientAppDetectionMethod"
+            init-method="validateState">
+
+        <property name="refParameter" value="ref"/>
+        <property name="referrerPrefixClientAppTypeMap">
+            <map>
+                 <entry key="androidclient" value-ref="ClientAppType.ANDROID"/>
+                 <entry key="iphoneclient" value-ref="ClientAppType.IPHONE"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="parameterClientAppDetectionMethod" parent="abstractClientAppDetectionMethod"
+            class="au.com.sensis.wireless.web.clientapp.ParameterClientAppDetectionMethod"
+            init-method="validateState">
+
+        <property name="parameterName" value="client"/>
+        <property name="paramValueClientAppTypeMap">
+            <map>
+                 <entry key="android" value-ref="ClientAppType.ANDROID"/>
+                 <entry key="iphone" value-ref="ClientAppType.IPHONE"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="requestClientAppDetectionHolder"
+            class="au.com.sensis.wireless.web.clientapp.RequestClientAppDetectionHolder"
+            init-method="validateState">
+
+        <property name="requestAttribute" value="clientApp"/>
+    </bean>
+
+    <bean id="sessionClientAppDetectionHolder"
+            class="au.com.sensis.wireless.web.clientapp.SessionClientAppDetectionHolder"
+            init-method="validateState">
+
+        <property name="sessionAttribute" value="sessionClientAppDetectionHolder-clientApp"/>
+    </bean>
+
+    <bean id="threadLocalClientAppDetectionHolder"
+            class="au.com.sensis.wireless.web.clientapp.ThreadLocalClientAppDetectionHolder"
+            init-method="validateState"/>
  
 </beans>

@@ -10,6 +10,9 @@
         <import name="iphone-ipod-os2" />
         <import name="iphone-ipod" />
         
+        <group name="iphone-clientapp" expr="visitor.isClientApp() 
+            and (visitor.getClientApp().type.name() == 'IPHONE')" />
+        
         <group name="nokia7600" expr = "device.userAgent =~ '.*Nokia7600.*'" />        
         <group name="Apple-iPad" expr="device.name =~ '.*iPad.*'" />
 	 	<group name="Samsung-GT-C5220" expr="device.name =~ '.*Samsung.*C5220.*'" />

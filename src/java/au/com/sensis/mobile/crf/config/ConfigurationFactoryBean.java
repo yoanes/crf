@@ -398,11 +398,23 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
                 try {
                     groupIterator.next().validate(createDefaultDevice());
                 } catch (final GroupEvaluationRuntimeException e) {
-                    throw new ConfigurationRuntimeException("Config at '"
-                            + uiConfiguration.getSourceUrl() + "' is invalid.", e);
+                    // Only log a warning. This leniency is a consequence of CRF allowing callers to
+                    // set arbitrary Jexl context objects via ThreadLocalContextObjectsHolder -
+                    // at start up time, CRF has no easy way to fabricate a valid context for
+                    // group validation.
+                    logWarning(uiConfiguration, e);
                 }
             }
         }
+    }
+
+    private void logWarning(final UiConfiguration uiConfiguration,
+            final GroupEvaluationRuntimeException e) {
+        if (getResourceResolutionWarnLogger().isWarnEnabled()) {
+            getResourceResolutionWarnLogger().warn(
+                    "Config at '" + uiConfiguration.getSourceUrl() + "' is possibly invalid.", e);
+        }
+
     }
 
     private void validateGroupDirsExist() {

@@ -7,11 +7,16 @@
     <config-path></config-path>
     <groups>
         <group name="iphone" expr="device.name =~ '.*iPhone.*'" />
-
-        <!-- Invalid expression. Property of device does not exist. -->
-        <group name="HD800" expr="device.propertyDoesNotExist eq 'HD800'" />
         
-        <group name="large" expr="device.imageCategor eq 'L'" />
+        <!-- Invalid expression. Invalid operator. -->
+        <group name="android-os" expr="device.isA('Android-OS') 
+            dummyOperator device.isA('Android-Emulator')" />
+            
+        <group name="ipad" expr = "device.isA('Apple-iPad')" />
+        <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
+                
+        <group name="L" expr="device.imageCategory eq 'L'" />
+        <group name="M" expr="device.imageCategory eq 'M'" />
         
         <default-group name="default" />
     </groups>

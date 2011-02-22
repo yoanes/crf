@@ -88,8 +88,7 @@ public abstract class IphoneBdpPage extends BdpPage {
     protected abstract void doAssertImg();
 
     private void assertIphoneCss() {
-        final int expectedNumIphoneCssLinks = 10;
-        assertNumCssLinks(expectedNumIphoneCssLinks);
+        assertNumCssLinks(getExpectedNumIphoneCssLinks());
 
         assertCssLinksFoundInLeafGroupUptoDefaultGroup();
 
@@ -103,6 +102,16 @@ public abstract class IphoneBdpPage extends BdpPage {
 
         assertCssLinkFoundFromMapComponent();
 
+        doAssertCssLinks();
+
+    }
+
+    protected void doAssertCssLinks() {
+        // Do nothing.
+    }
+
+    protected int getExpectedNumIphoneCssLinks() {
+        return 10;
     }
 
     private void assertCssLinksFoundInLeafGroupUptoDefaultGroup() {

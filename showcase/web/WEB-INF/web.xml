@@ -68,6 +68,18 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     
+    <!-- Client App Detection Filter -->
+    <!-- Provides some setup when the android or iPhone client is making the request. -->
+    <filter>
+        <filter-name>clientAppDetectionFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>clientAppDetectionFilter</filter-name>
+        <url-pattern>*.action</url-pattern>
+    </filter-mapping>
+    
     <filter>
         <filter-name>contextSetUpFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

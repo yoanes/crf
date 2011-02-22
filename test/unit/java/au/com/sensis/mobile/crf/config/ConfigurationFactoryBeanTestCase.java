@@ -189,52 +189,65 @@ public class ConfigurationFactoryBeanTestCase extends
 
     @Test
     public void testConstructorWhenOneGroupExpressionInvalid() throws Throwable {
-        try {
-            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
-                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
-                    getMockResourceResolutionWarnLogger(),
-                    createConfigurationPaths(CRF_CONFIG_ONE_INVALID_EXPR,
-                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
 
-            Assert.fail("ConfigurationRuntimeException expected");
-        } catch (final ConfigurationRuntimeException e) {
-            final URL configUrl = new ClassPathResource(CRF_CONFIG_ONE_INVALID_EXPR).getURL();
+        EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled()).andReturn(
+                Boolean.TRUE).atLeastOnce();
 
-            Assert.assertEquals("ConfigurationRuntimeException has wrong message",
-                    "Config at '" + configUrl + "' is invalid.", e.getMessage());
+        final URL configUrl = new ClassPathResource(CRF_CONFIG_ONE_INVALID_EXPR).getURL();
 
-            Assert.assertNotNull("ConfigurationRuntimeException should have a cause",
-                    e.getCause());
+        // Don't assert the contents of the exception passed to warn, as it is
+        // thrown by the
+        // Group class (which we can't mock). The GroupTestCase should cover its
+        // operation.
+        getMockResourceResolutionWarnLogger().warn(
+                EasyMock.eq("Config at '" + configUrl + "' is possibly invalid."),
+                (Throwable) EasyMock.notNull());
 
-            // Don't assert the contents of the cause, as it is thrown by the
-            // Group class (which we can't mock). The GroupTestCase should cover its
-            // operation.
-        }
+        recordCreateGroupsCache();
+
+        EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled())
+            .andReturn(Boolean.FALSE).anyTimes();
+
+        replay();
+
+        new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                        CRF_CONFIG_ONE_INVALID_EXPR, getUiResourceRootDirectories()),
+                getMockGroupsCacheFactory());
+
     }
 
     @Test
     public void testConstructorWhenMultipleGroupExpressionsInvalid() throws Throwable {
-        try {
-            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
-                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
-                    getMockResourceResolutionWarnLogger(),
-                    createConfigurationPaths(CRF_CONFIG_MULTIPLE_INVALID_EXPR,
-                            getUiResourceRootDirectories()), getMockGroupsCacheFactory());
+        EasyMock.expect(getMockResourceResolutionWarnLogger().isWarnEnabled()).andReturn(
+                Boolean.TRUE).atLeastOnce();
 
-            Assert.fail("ConfigurationRuntimeException expected");
-        } catch (final ConfigurationRuntimeException e) {
-            final URL configUrl = new ClassPathResource(CRF_CONFIG_MULTIPLE_INVALID_EXPR).getURL();
+        final URL configUrl = new ClassPathResource(CRF_CONFIG_MULTIPLE_INVALID_EXPR).getURL();
 
-            Assert.assertEquals("ConfigurationRuntimeException has wrong message",
-                    "Config at '" + configUrl + "' is invalid.", e.getMessage());
+        // Don't assert the contents of the exception passed to warn, as it is
+        // thrown by the
+        // Group class (which we can't mock). The GroupTestCase should cover its
+        // operation.
+        getMockResourceResolutionWarnLogger().warn(
+                EasyMock.eq("Config at '" + configUrl + "' is possibly invalid."),
+                (Throwable) EasyMock.notNull());
+        getMockResourceResolutionWarnLogger().warn(
+                EasyMock.eq("Config at '" + configUrl + "' is possibly invalid."),
+                (Throwable) EasyMock.notNull());
 
-            Assert.assertNotNull("ConfigurationRuntimeException should have a cause",
-                    e.getCause());
+        recordCreateGroupsCache();
 
-            // Don't assert the contents of the cause, as it is thrown by the
-            // Group class (which we can't mock). The GroupTestCase should cover its
-            // operation.
-        }
+        EasyMock.expect(getMockLogger(ConfigurationFactoryBean.class).isInfoEnabled())
+            .andReturn(Boolean.FALSE).anyTimes();
+
+        replay();
+
+        new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                        CRF_CONFIG_MULTIPLE_INVALID_EXPR, getUiResourceRootDirectories()),
+                getMockGroupsCacheFactory());
 
     }
 

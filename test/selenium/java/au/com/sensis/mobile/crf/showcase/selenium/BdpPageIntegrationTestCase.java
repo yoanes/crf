@@ -3,6 +3,7 @@ package au.com.sensis.mobile.crf.showcase.selenium;
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.HD800BdpPage;
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.IphoneOS2xBdpPage;
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.IphoneOS3xBdpPage;
+import au.com.sensis.mobile.crf.showcase.selenium.fixture.IphoneOS3xClientAppBdpPage;
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.IphoneOS4xBdpPage;
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.Nokia7600BdpPage;
 import au.com.sensis.wireless.test.selenium.UserAgent;
@@ -26,6 +27,11 @@ public class BdpPageIntegrationTestCase extends AbstractSeleniumIntegrationTestC
 
     protected final void openBdpWithUserAgent(final String userAgent) {
         openUrlWithUserAgent("http://localhost:8080/uidev/crfshowcase/crf/bdp.action", userAgent);
+    }
+
+    protected final void openIphoneClientAppBdpWithUserAgent(final String userAgent) {
+        openUrlWithUserAgent("http://localhost:8080/uidev/crfshowcase/crf/bdp.action?client=iphone",
+                userAgent);
     }
 
     /**
@@ -53,6 +59,16 @@ public class BdpPageIntegrationTestCase extends AbstractSeleniumIntegrationTestC
         openBdpWithUserAgent(UserAgent.IPHONE_OS3_1.getUserAgentString());
 
         getPageFixtureFactory().createPageFixture(IphoneOS3xBdpPage.class);
+
+    }
+
+    /**
+     * Test the page for a specific device.
+     */
+    public void testIphoneOS3xClientAppDevice() throws Exception {
+        openIphoneClientAppBdpWithUserAgent(UserAgent.IPHONE_OS3_1.getUserAgentString());
+
+        getPageFixtureFactory().createPageFixture(IphoneOS3xClientAppBdpPage.class);
 
     }
 
