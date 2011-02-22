@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<crf:ui-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
+         xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
+
+    <config-path></config-path>
+    <groups>
+        <group name="iphone" expr="device.name =~ '.*iPhone.*'" />
+        
+        <!-- Duplicate group name. -->
+        <group name="iphone" expr="device.isA('Android-OS') 
+            dummyOperator device.isA('Android-Emulator')" />
+            
+        <group name="ipad" expr = "device.isA('Apple-iPad')" />
+        <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
+                
+        <!-- Invalid expression. Property of device does not exist. -->
+        <group name="L" expr="device.propertyDoesNotExist eq 'L'" />
+        <group name="M" expr="device.imageCategory eq 'M'" />
+
+        <!-- Duplicate group name. -->
+        <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />        
+        
+        <default-group name="default" />
+    </groups>
+
+</crf:ui-configuration>

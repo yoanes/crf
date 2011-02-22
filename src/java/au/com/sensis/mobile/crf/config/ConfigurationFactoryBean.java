@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.filefilter.AndFileFilter;
@@ -380,6 +382,10 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void validateLoadedConfigurationData() {
 
+        validateGroupNamesUnique();
+
+        validateConfigPathsUnique();
+
         validateGroupsByDelegation();
 
         validateGroupDirsExist();
@@ -389,6 +395,66 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         // TODO: validate no duplicate uiconfiguration config-paths and no duplicate group names
         // within a ui configuration.
 
+    }
+
+    private void validateConfigPathsUnique() {
+        final Map<String, UiConfiguration> seenConfigPathsMap =
+                new HashMap<String, UiConfiguration>();
+
+        for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
+
+            if (seenConfigPathsMap.containsKey(uiConfiguration.getConfigPath())) {
+                handleDuplicateConfigPathFound(seenConfigPathsMap, uiConfiguration);
+
+            } else {
+                seenConfigPathsMap.put(uiConfiguration.getConfigPath(), uiConfiguration);
+            }
+        }
+    }
+
+    private void handleDuplicateConfigPathFound(
+            final Map<String, UiConfiguration> seenConfigPathsMap,
+            final UiConfiguration uiConfiguration) {
+
+        final Set<URL> duplicateConfigPathUrls = new HashSet<URL>();
+        duplicateConfigPathUrls.add(uiConfiguration.getSourceUrl());
+        duplicateConfigPathUrls.add(seenConfigPathsMap.get(uiConfiguration.getConfigPath())
+                .getSourceUrl());
+
+        throw new ConfigurationRuntimeException("Duplicate config path of '"
+                + uiConfiguration.getConfigPath() + "' found in: "
+                + duplicateConfigPathUrls);
+    }
+
+    private void validateGroupNamesUnique() {
+        for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
+            validateGroupNamesUnique(uiConfiguration);
+        }
+
+    }
+
+    private void validateGroupNamesUnique(final UiConfiguration uiConfiguration) {
+
+        final Set<String> seenGroupNames = new HashSet<String>();
+        final Set<String> duplicateGroupNames = new HashSet<String>();
+
+        final Iterator<Group> groupIterator = uiConfiguration.groupIterator();
+        while (groupIterator.hasNext()) {
+            final Group currGroup = groupIterator.next();
+
+            if (seenGroupNames.contains(currGroup.getName())) {
+                duplicateGroupNames.add(currGroup.getName());
+
+            } else {
+                seenGroupNames.add(currGroup.getName());
+            }
+        }
+
+        if (!duplicateGroupNames.isEmpty()) {
+            throw new ConfigurationRuntimeException("Config at '" + uiConfiguration.getSourceUrl()
+                    + "' has duplicate group names: " + duplicateGroupNames + ". "
+                    + "Some may have been via imports.");
+        }
     }
 
     private void validateGroupsByDelegation() {

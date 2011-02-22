@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -64,6 +66,17 @@ public class ConfigurationFactoryBeanTestCase extends
         = "/au/com/sensis/mobile/crf/config/crf-config-one-invalid-expr.xml";
     private static final String CRF_CONFIG_MULTIPLE_INVALID_EXPR
         = "/au/com/sensis/mobile/crf/config/crf-config-multiple-invalid-expr.xml";
+
+    private static final String CRF_CONFIG_DUPLICATE_GROUP_NAMES
+        = "/au/com/sensis/mobile/crf/config/crf-config-duplicate-group-names.xml";
+
+    private static final String CRF_CONFIG_DUPLICATE_CONFIG_PATHS
+        = "classpath*:/au/com/sensis/mobile/crf/config/crf-config-duplicate-config-path*.xml,"
+            + "/au/com/sensis/mobile/crf/config/crf-config-multiple-valid-groups.xml";
+    private static final String CRF_CONFIG_DUPLICATE_CONFIG_PATH1
+        = "/au/com/sensis/mobile/crf/config/crf-config-duplicate-config-path1.xml";
+    private static final String CRF_CONFIG_DUPLICATE_CONFIG_PATH2
+        = "/au/com/sensis/mobile/crf/config/crf-config-duplicate-config-path2.xml";
 
     private static final String CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH_PATTERN
         = "au/com/sensis/mobile/crf/config/crf-config-import-global-groups.xml"
@@ -249,6 +262,61 @@ public class ConfigurationFactoryBeanTestCase extends
                         CRF_CONFIG_MULTIPLE_INVALID_EXPR, getUiResourceRootDirectories()),
                 getMockGroupsCacheFactory());
 
+    }
+
+    @Test
+    public void testConstructorWhenDuplicateGroupNamesInSameConfigFile() throws Throwable {
+        try {
+            recordCreateGroupsCache();
+
+            replay();
+
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                    getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                            CRF_CONFIG_DUPLICATE_GROUP_NAMES, getUiResourceRootDirectories()),
+                    getMockGroupsCacheFactory());
+
+            Assert.fail("ConfigurationRuntimeException expected");
+        } catch (final ConfigurationRuntimeException e) {
+            final URL configUrl = new ClassPathResource(CRF_CONFIG_DUPLICATE_GROUP_NAMES).getURL();
+            final Set<String> duplicateGroupNames = new HashSet<String>();
+            duplicateGroupNames.add("iphone");
+            duplicateGroupNames.add("applewebkit");
+            Assert.assertEquals("ConfigurationRuntimeException has wrong message", "Config at '"
+                    + configUrl + "' has duplicate group names: " + duplicateGroupNames + ". "
+                    + "Some may have been via imports.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testConstructorWhenDuplicateConfigPathsInMultipleConfigFiles() throws Throwable {
+        try {
+            recordCreateGroupsCache();
+
+            replay();
+
+            new ConfigurationFactoryBean(getCacheEnabledDeploymentMetadata(),
+                    getResourcePatternResolver(), getXmlBinder(), getXmlValidator(),
+                    getMockResourceResolutionWarnLogger(), createConfigurationPaths(
+                            CRF_CONFIG_DUPLICATE_CONFIG_PATHS, getUiResourceRootDirectories()),
+                    getMockGroupsCacheFactory());
+
+            Assert.fail("ConfigurationRuntimeException expected");
+        } catch (final ConfigurationRuntimeException e) {
+            final URL configUrl1 =
+                    new ClassPathResource(CRF_CONFIG_DUPLICATE_CONFIG_PATH1).getURL();
+            final URL configUrl2 =
+                    new ClassPathResource(CRF_CONFIG_DUPLICATE_CONFIG_PATH2).getURL();
+
+            final Set<URL> duplicateConfigPathUrls = new HashSet<URL>();
+            duplicateConfigPathUrls.add(configUrl1);
+            duplicateConfigPathUrls.add(configUrl2);
+
+            Assert.assertEquals("ConfigurationRuntimeException has wrong message",
+                    "Duplicate config path of 'duplicate/config/path' found in: "
+                            + duplicateConfigPathUrls, e.getMessage());
+        }
     }
 
     @Test
