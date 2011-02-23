@@ -77,7 +77,7 @@
         <name>imgPath</name>
         <description>Render the URI path to the resolved image.</description>
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.ImagePathTag</tag-class>
-        <body-content>scriptless</body-content>
+        <body-content>empty</body-content>
         <attribute>
             <name>src</name>
             <description>The src of the image resource.</description>

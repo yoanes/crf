@@ -254,4 +254,36 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "/selenium/common/w" + width + "/h" + height + "/search." + extension, width,
                 height);
     }
+
+
+    /**
+     * Helper method for asserting the presence of an img element.
+     *
+     * @param message
+     *            Message to use if the test fails.
+     * @param expectedSrc
+     *            Expected src value of the link, relative to the root
+     *            resources/images dir.
+     */
+    protected final void assertImgPath(final String message, final String expectedSrc) {
+        assertTrue(message, getBrowser().isTextPresent(
+                        "/uidev/crfshowcase/uiresources/images/" + getProjectVersion()
+                        + "/" + expectedSrc));
+
+    }
+
+    /**
+     * Assert presence of scaled yellow pages image path.
+     *
+     * @param width
+     *            Width of image.
+     * @param height
+     *            Height of image.
+     */
+    protected void assertScaledYellowPagesImagePath(final int width, final int height) {
+        assertTrue("Yellow Pages img not found", getBrowser().isTextPresent(
+                "/uidev/crfshowcase/uiresources/images/" + getProjectVersion()
+                        + "/default/selenium/common/w" + width + "/h" + height
+                        + "/yellow-pages.png"));
+    }
 }

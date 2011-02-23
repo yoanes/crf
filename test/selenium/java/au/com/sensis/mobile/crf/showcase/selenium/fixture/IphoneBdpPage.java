@@ -50,6 +50,7 @@ public abstract class IphoneBdpPage extends BdpPage {
     private void assertImg() {
         assertNumImgElements(getExpectedNumImgElements());
         assertBodyContentIgnoredWhenImgFound();
+        assertImgPathWhenImgFound();
         assertMapComponentImgFoundPngFormat();
         doAssertImg();
     }
@@ -74,6 +75,10 @@ public abstract class IphoneBdpPage extends BdpPage {
                 90 / getImageDimensionsDivisor());
         assertFalse("WM text should not be present resulting from img body content", getBrowser()
                 .isTextPresent("WM"));
+    }
+
+    private void assertImgPathWhenImgFound() {
+        assertImgPath("wm img path not found", "iphone-ipod/selenium/common/wm.gif");
     }
 
     private void assertMapComponentImgFoundPngFormat() {

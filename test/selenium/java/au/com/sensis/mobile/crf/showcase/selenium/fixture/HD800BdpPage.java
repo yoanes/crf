@@ -108,11 +108,15 @@ public class HD800BdpPage extends BdpPage {
         assertNumImgElements(expectedNumImages);
         assertImgWhenDefaultGroupNodeImageFoundPngFormat();
         assertBrokenImgWhenNoImageFound();
+
         assertBodyContentIgnoredWhenImgFound();
+        assertImgPathWhenImgFound();
 
         assertScaledYellowPagesImage(624, 249);
+        assertScaledYellowPagesImagePath(624, 249);
         assertScaledSearchImage(57, 67, "png", "default");
     }
+
 
     private void assertImgWhenDefaultGroupNodeImageFoundPngFormat() {
         assertImg("unmetered img not found",
@@ -133,6 +137,10 @@ public class HD800BdpPage extends BdpPage {
         assertFalse("WM text should not be present resulting from img body content",
                 getBrowser().isTextPresent("WM"));
 
+    }
+
+    private void assertImgPathWhenImgFound() {
+        assertImgPath("wm img path not found", "HD800/selenium/common/wm.gif");
     }
 
     private void assertDeviceProperties() {

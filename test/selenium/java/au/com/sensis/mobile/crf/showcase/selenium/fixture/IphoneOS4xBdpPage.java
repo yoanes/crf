@@ -29,6 +29,7 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
         assertImgFoundInIntermediateGroupPngFormat();
 
         assertScaledYellowPagesImage(640, 256);
+        assertScaledYellowPagesImagePath(640, 256);
 
         assertScaledSearchImage(228, 271, "png", "default");
     }

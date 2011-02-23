@@ -2,6 +2,8 @@ package au.com.sensis.mobile.crf.showcase.selenium.fixture;
 
 import static junit.framework.Assert.assertTrue;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.thoughtworks.selenium.Selenium;
 
 /**
@@ -105,8 +107,10 @@ public class Nokia7600BdpPage extends BdpPage {
         assertImgWhenLeafGroupNodeImageFoundGifFormat();
         assertBrokenImgWhenNoImageFound();
         assertBodyContentOutputWhenDotNullImgFound();
+        assertImgPathWhenDotNullImgFound();
 
         assertScaledYellowPagesImage(121, 48);
+        assertScaledYellowPagesImagePath(121, 48);
         assertScaledSearchImage(50, 20, "gif", "S");
     }
 
@@ -125,6 +129,10 @@ public class Nokia7600BdpPage extends BdpPage {
     private void assertBodyContentOutputWhenDotNullImgFound() {
         assertTrue("WM text should be present resulting from img body content",
                 getBrowser().isTextPresent("WM"));
+    }
+
+    private void assertImgPathWhenDotNullImgFound() {
+        assertImgPath("wm img path for dot null img not found", StringUtils.EMPTY);
     }
 
     private void assertDeviceProperties() {

@@ -11,6 +11,8 @@
     
 <div><crf:img src="selenium/common/wm.image" id="wherisMobileImg" alt="Whereis Mobile" 
     title="Whereis Mobile" device="${context.device}">WM</crf:img></div>
+<div>resolved wm.image: '<crf:imgPath src="selenium/common/wm.image" 
+    device="${context.device}"/>'</div>
     
 <div><crf:img src="selenium/common/search.image" id="searchImg" alt="Search" 
     title="Search" device="${context.device}">Search</crf:img></div>

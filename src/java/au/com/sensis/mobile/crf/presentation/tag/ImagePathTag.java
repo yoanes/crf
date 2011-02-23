@@ -49,7 +49,7 @@ public class ImagePathTag extends AbstractTag {
     private void doTagWhenResourceFound(final Resource resource) throws IOException, JspException {
 
         if (resource.newPathEndsWithDotNull()) {
-            writeBrokenImagePath(getJspContext().getOut());
+            getJspContext().getOut().write(StringUtils.EMPTY);
         } else {
             writeImagePath(getJspContext().getOut(), resource);
         }
