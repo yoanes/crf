@@ -148,22 +148,58 @@ public class ScriptTagWriter implements TagWriter {
         jspWriter.print("src=\""
                 + src + "\" ");
 
-        for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
-            jspWriter.print(attribute.getLocalName() + "=\""
-                    + attribute.getValue() + "\" ");
-        }
+        writeDynamicTagAttributes(jspWriter);
 
         jspWriter.print("></script>");
     }
+
+
+    private void writeDynamicTagAttributes(final JspWriter jspWriter) throws IOException {
+        boolean charsetAttributeFound = false;
+        boolean typeAttributeFound = false;
+
+        for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
+
+            if ("charset".equals(attribute.getLocalName())) {
+                charsetAttributeFound = true;
+            }
+
+            if ("type".equals(attribute.getLocalName())) {
+                typeAttributeFound = true;
+            }
+
+            jspWriter.print(attribute.getLocalName() + "=\"" + attribute.getValue() + "\" ");
+        }
+
+        writeCharsetAttributeIfNotFound(jspWriter, charsetAttributeFound);
+        writeTypeAttributeIfNotFound(jspWriter, typeAttributeFound);
+    }
+
+
+    private void writeTypeAttributeIfNotFound(final JspWriter jspWriter,
+            final boolean typeAttributeFound)
+            throws IOException {
+
+        if (!typeAttributeFound) {
+            jspWriter.print("type=\"text/javascript\" ");
+        }
+    }
+
+
+    private void writeCharsetAttributeIfNotFound(final JspWriter jspWriter,
+            final boolean charsetAttributeFound) throws IOException {
+
+        if (!charsetAttributeFound) {
+            jspWriter.print("charset=\"utf-8\" ");
+        }
+    }
+
 
     private void writeLinkTagWithBodyContent(final JspWriter jspWriter,
             final JspFragment jspBody) throws IOException, JspException {
         jspWriter.print("<script ");
 
-        for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
-            jspWriter.print(attribute.getLocalName() + "=\""
-                    + attribute.getValue() + "\" ");
-        }
+        writeDynamicTagAttributes(jspWriter);
 
         jspWriter.print(">");
         jspBody.invoke(jspWriter);

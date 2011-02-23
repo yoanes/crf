@@ -144,6 +144,7 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertTrue(message, getBrowser().isElementPresent(
                 "//head/script["
                 + "@type=\"text/javascript\" "
+                + "and @charset=\"utf-8\" "
                 + "and @src=\"/uidev/crfshowcase/uiresources/javascript/"
                 + getProjectVersion() + "/"
                 + expectedSrc + "\""
@@ -245,6 +246,7 @@ public abstract class BdpPage extends AbstractPageFixture {
      *            Height of image.
      * @param extension
      *            Extension that the scaled image should have.
+     * @param group Group that the image was found in.
      */
     protected void assertScaledSearchImage(final int width, final int height,
             final String extension, final String group) {
