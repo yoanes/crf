@@ -1,10 +1,6 @@
 package au.com.sensis.mobile.crf.util;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -23,6 +19,7 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
  * Minifies JavaScript and CSS files using the YUI Compressor.
  *
  * @author Tony Filipe
+ * @author Adrian.Koh2@sensis.com.au
  */
 public class YUIMinifier implements Minifier {
 
@@ -32,81 +29,6 @@ public class YUIMinifier implements Minifier {
     private static final boolean DEFAULT_OBFUSCATE = true;
     private static final boolean DEFAULT_PRESERVE_ALL_SEMICOLONS = false;
     private static final boolean DEFAULT_DISABLE_OPTIMIZATIONS = false;
-    private boolean verbose;
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void minify(final String inputFilename) throws MinificationException {
-
-        final String type = getFileType(inputFilename);
-        validateFileType(type);
-
-        if (LOGGER.isDebugEnabled()) {
-            verbose = true;
-        }
-
-        Reader in = null;
-
-        try {
-            in = new BufferedReader(new FileReader(inputFilename));
-
-            if (isJavaScript(type)) {
-
-                minifyJavaScript(in, inputFilename);
-
-            } else {
-
-                minifyCss(in, inputFilename);
-            }
-
-        } catch (final FileNotFoundException e) {
-
-            throw new MinificationException(
-                    "Couldn't find the specified file '" + inputFilename + "'.", e);
-        } finally {
-            closeReader(in);
-        }
-    }
-
-    /**
-     * Determines the file type based on the file's extension.
-     * @param inputFilename from which to extract the file extension
-     * @return the extension of the given filename
-     * @throws MinificationException if the given filename doesn't contain an extension
-     */
-    private String getFileType(final String inputFilename) throws MinificationException {
-
-        String type = null;
-
-        final int idx = inputFilename.lastIndexOf('.');
-        if ((idx >= 0) && (idx < inputFilename.length() - 1)) {
-            type = inputFilename.substring(idx + 1);
-        }
-
-        if (type == null) {
-            throw new MinificationException(
-                    "Unable to determine file type from the extension of the input file '"
-                    + inputFilename + "'");
-        }
-
-        return type;
-    }
-
-    /**
-     * Validates that the file is of accepted type, (either JavaScript or CSS).
-     * @param type the extension of the file
-     * @throws MinificationException if the given type is not a CSS or JavaScript file type
-     */
-    private void validateFileType(final String type) throws MinificationException {
-
-        if (!isJavaScript(type) && !isCSS(type))  {
-
-            throw new MinificationException(
-                    "Invalid file type, '" + type + "'. Can only minify CSS and JavaScript files");
-        }
-    }
 
     /**
      * Creates a new YUI JavaScriptCompressor for the file read by the given Reader.
@@ -115,7 +37,7 @@ public class YUIMinifier implements Minifier {
      * @throws MinificationException if unable to create a JavaScriptCompressor for the given Reader
      */
     private JavaScriptCompressor createJavaScriptCompressor(final Reader in)
-    throws MinificationException {
+        throws MinificationException {
 
         try {
             final JavaScriptCompressor compressor = new JavaScriptCompressor(in,
@@ -129,34 +51,40 @@ public class YUIMinifier implements Minifier {
     }
 
     /**
-     * Uses the YUI JavaScriptCompressor to minify the file represented by the given Reader, writing
-     * out the result to the given inputFilename path.
-     * @param in the file reader for the input file to be minified
-     * @param outputFilename the full path for the minified output file
-     * @throws MinificationException if unable to perform the minification
+     * Uses the YUI JavaScriptCompressor to minify the file represented by the
+     * given Reader, writing out the result to the given inputFilename path.
+     *
+     * @param inputReader
+     *            a file Reader for the CSS file to be minified
+     * @param outputWriter
+     *            a Writer for the minified output
+     *
+     * @throws MinificationException
+     *             if unable to perform the minification
      */
-    private void minifyJavaScript(final Reader in, final String outputFilename)
-    throws MinificationException {
-
-        final JavaScriptCompressor compressor = createJavaScriptCompressor(in);
+    public void minifyJavaScript(final Reader inputReader, final Writer outputWriter)
+            throws MinificationException {
 
         Writer out = null;
 
         try {
-            // Close the input stream first, and then open the output stream,
-            // because the output file overrides the input file.
-            in.close();
+            final JavaScriptCompressor compressor = createJavaScriptCompressor(inputReader);
 
-            out = new BufferedWriter(new FileWriter(outputFilename, false));
+            out = new BufferedWriter(outputWriter);
 
-            compressor.compress(out, DEFAULT_LINEBREAK_POS, DEFAULT_OBFUSCATE, verbose,
+            compressor.compress(out, DEFAULT_LINEBREAK_POS, DEFAULT_OBFUSCATE, isVerbose(),
                     DEFAULT_PRESERVE_ALL_SEMICOLONS, DEFAULT_DISABLE_OPTIMIZATIONS);
 
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             throw new MinificationException("Unable to perform JavaScript minification", e);
         } finally {
+            closeReader(inputReader);
             closeWriter(out);
         }
+    }
+
+    private boolean isVerbose() {
+        return LOGGER.isDebugEnabled();
     }
 
     /**
@@ -178,31 +106,34 @@ public class YUIMinifier implements Minifier {
     }
 
     /**
-     * Minifies the CSS file read in by the given Reader using the YUI CssCompressor. The
-     * resulting output is written to the given outputFilename.
-     * @param in a file Reader for the CSS file to be minified
-     * @param outputFilename the full path to the minified output file
-     * @throws MinificationException if unable to perform the minification
+     * Minifies the CSS file read in by the given Reader using the YUI
+     * CssCompressor. The resulting output is written to the given
+     * outputFilename.
+     *
+     * @param inputReader
+     *            a file Reader for the CSS file to be minified
+     * @param outputWriter
+     *            a Writer for the minified output
+     * @throws MinificationException
+     *             if unable to perform the minification
      */
-    private void minifyCss(final Reader in, final String outputFilename)
-    throws MinificationException {
+    @Override
+    public void minifyCss(final Reader inputReader, final Writer outputWriter)
+            throws MinificationException {
 
         Writer out = null;
 
         try {
-            final CssCompressor compressor = createCSSCompressor(in);
+            final CssCompressor compressor = createCSSCompressor(inputReader);
 
-            // Close the input stream first, and then open the output stream,
-            // because the output file overrides the input file.
-            in.close();
-
-            out = new BufferedWriter(new FileWriter(outputFilename, false));
+            out = new BufferedWriter(outputWriter);
 
             compressor.compress(out, DEFAULT_LINEBREAK_POS);
 
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             throw new MinificationException("Unable to perform CSS minification", e);
         } finally {
+            closeReader(inputReader);
             closeWriter(out);
         }
     }
@@ -228,17 +159,6 @@ public class YUIMinifier implements Minifier {
             }
         }
     }
-
-    private boolean isJavaScript(final String type) {
-
-        return type.equalsIgnoreCase("js");
-    }
-
-    private boolean isCSS(final String type) {
-
-        return type.equalsIgnoreCase("css");
-    }
-
 
     private class YUIJavaScriptErrorReporter implements ErrorReporter {
 

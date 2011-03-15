@@ -1,13 +1,12 @@
 package au.com.sensis.mobile.crf.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,13 +29,8 @@ public class YUIMinifierTestCase extends AbstractJUnit4TestCase {
     private static final String JS_FILENAME =
         "/au/com/sensis/mobile/crf/util/YUIMinifierTestData/javascriptFile.js";
 
-    private static final String OTHER_FILENAME = "testTextFile.txt";
-
-    private String preMinifiedCSSContent;
-    private String preMinifiedJSContent;
-
-    private File cssFile;
-    private File javascriptFile;
+    private File cssSourceFile;
+    private File javascriptSourceFile;
 
 
     /**
@@ -50,117 +44,60 @@ public class YUIMinifierTestCase extends AbstractJUnit4TestCase {
 
         setObjectUnderTest(new YUIMinifier());
 
-        cssFile = new File(this.getClass().getResource(CSS_FILENAME).toURI());
-        preMinifiedCSSContent = readFileContents(cssFile);
-
-        javascriptFile = new File(this.getClass().getResource(JS_FILENAME).toURI());
-        preMinifiedJSContent = readFileContents(javascriptFile);
-    }
-
-    /**
-     * Restore the test data with its original content.
-     */
-    @After
-    public void tearDown() throws IOException {
-
-        restoreTestFile(cssFile, preMinifiedCSSContent);
-        restoreTestFile(javascriptFile, preMinifiedJSContent);
+        setCssSourceFile(new File(this.getClass().getResource(CSS_FILENAME).toURI()));
+        setJavascriptSourceFile(new File(this.getClass().getResource(JS_FILENAME).toURI()));
     }
 
     @Test
-    public void testMinifyWithUnsupportedFiletype() {
+    public void testMinifyCSS() throws MinificationException, IOException {
 
+        final Writer minifiedCssWriter = new StringWriter();
+        final Reader sourceCssReader = new FileReader(getCssSourceFile());
         try {
-            getObjectUnderTest().minify(OTHER_FILENAME);
+            getObjectUnderTest().minifyCss(sourceCssReader, minifiedCssWriter);
 
-            Assert.fail("MinificationException expected");
-        } catch (final MinificationException e) {
-            // Correct, we expect a MinificationException to be thrown
-        }
-    }
+            final String minifiedContent = minifiedCssWriter.toString();
 
-    @Test
-    public void testMinifyWithNoFiletype() {
+            // Verify that minifaction removes whitespace and comments
+            Assert.assertFalse(minifiedContent.contains(" "));
+            Assert.assertFalse(minifiedContent.contains("\t"));
+            Assert.assertFalse(minifiedContent.contains("/*"));
 
-        try {
-            getObjectUnderTest().minify("/au/com/sensis/extensionlessFile");
-
-            Assert.fail("MinificationException expected");
-        } catch (final MinificationException e) {
-            // Correct, we expect a MinificationException to be thrown
-        }
-    }
-
-    @Test
-    public void testMinifyWithNotFoundFile() {
-
-        try {
-            getObjectUnderTest().minify("/another/path" + JS_FILENAME);
-
-            Assert.fail("MinificationException expected");
-        } catch (final MinificationException e) {
-            // Correct, we expect a MinificationException to be thrown
-        }
-    }
-
-    @Test
-    public void testMinifyCSSFile() throws MinificationException, IOException {
-
-        getObjectUnderTest().minify(cssFile.getPath());
-
-        final String minifiedContent = readFileContents(cssFile);
-
-        // Verify that minifaction removes whitespace and comments
-        Assert.assertFalse(minifiedContent.contains(" "));
-        Assert.assertFalse(minifiedContent.contains("\t"));
-        Assert.assertFalse(minifiedContent.contains("/*"));
-    }
-
-    @Test
-    public void testMinifyJavascriptFile() throws MinificationException, IOException {
-
-        getObjectUnderTest().minify(javascriptFile.getPath());
-
-        final String minifiedContent = readFileContents(javascriptFile);
-
-        // Verify that minifaction removes whitespace and comments
-        Assert.assertFalse(minifiedContent.contains("\t"));
-        Assert.assertFalse(minifiedContent.contains("<!--"));
-    }
-
-
-    // HELPER METHODS
-
-    private String readFileContents(final File filePath) throws IOException  {
-
-        final BufferedReader in = new BufferedReader(new FileReader(filePath));
-
-        final StringBuilder content = new StringBuilder();
-        String line;
-        try {
-            while ((line = in.readLine()) != null) {
-                content.append(line);
-                content.append(System.getProperty("line.separator"));
+            // Basic test that the minifiedContent still contains the original data.
+            Assert.assertTrue("minifiedContent contains id selector",
+                    minifiedContent.contains("#aStyle"));
+        } finally {
+            if (sourceCssReader != null) {
+                sourceCssReader.close();
             }
-        } finally {
-            in.close();
         }
 
-        return content.toString();
     }
 
-    private void restoreTestFile(final File filePath, final String fileContents)
-    throws IOException {
+    @Test
+    public void testMinifyJavaScript() throws MinificationException, IOException {
 
-        final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filePath));
+        final Writer minifiedCssWriter = new StringWriter();
+        final Reader sourceCssReader = new FileReader(getJavascriptSourceFile());
         try {
-            bufferedWriter.write(fileContents);
+            getObjectUnderTest().minifyJavaScript(sourceCssReader, minifiedCssWriter);
+
+            final String minifiedContent = minifiedCssWriter.toString();
+
+            // Verify that minifaction removes whitespace and comments
+            Assert.assertFalse(minifiedContent.contains("\t"));
+            Assert.assertFalse(minifiedContent.contains("<!--"));
+
+            // Basic test that the minifiedContent still contains the original data.
+            Assert.assertTrue("minifiedContent contains id selector",
+                    minifiedContent.contains("function doSomething()"));
         } finally {
-            bufferedWriter.close();
+            if (sourceCssReader != null) {
+                sourceCssReader.close();
+            }
         }
+
     }
-
-
 
     /**
      * @return the objectUnderTest
@@ -174,5 +111,21 @@ public class YUIMinifierTestCase extends AbstractJUnit4TestCase {
      */
     private void setObjectUnderTest(final YUIMinifier objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
+    }
+
+    private void setJavascriptSourceFile(final File javascriptSourceFile) {
+        this.javascriptSourceFile = javascriptSourceFile;
+    }
+
+    private File getJavascriptSourceFile() {
+        return javascriptSourceFile;
+    }
+
+    private void setCssSourceFile(final File cssSourceFile) {
+        this.cssSourceFile = cssSourceFile;
+    }
+
+    private File getCssSourceFile() {
+        return cssSourceFile;
     }
 }

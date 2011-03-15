@@ -15,3 +15,5 @@ env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/images/
 # Allow downstream caching for the showcase so that selenium tests will pass, 
 # otherwise we would have to change the tests to ignore the timestamp that is appended to URLs.
 env.downstream.caching.enabled=true
+
+env.bundle.resources=false

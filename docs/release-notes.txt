@@ -10,6 +10,46 @@ Upgrade Notes
 - Now depends on devices.mdpr version 1.283 or later, as this sets the custom.crf.image.ratio 
   property for iphone 4.
 
+==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
+
+Fixes:
+- CRF-106: CSS3 @media queries minimised incorrectly
+    - Added yuicompressor source as top level directory, copied from version 2.4.2. Applied patch 
+      from http://yuilibrary.com/projects/yuicompressor/ticket/2527986 and published 
+      version 2.4.2-sensis1. We apply the patch ourselves prior to the stable 2.4.3 release. 
+      The fix ensures that CSS3 media queries like:
+      
+          @media all and (orientation:landscape) { ... }
+      
+      will be minimised correctly.
+      
+Upgrade steps:
+- Now depends on:
+    
+    <dependency org="com.yahoo" name="yuicompressor" rev="2.4.2-sensis1" conf="default"/>
+
+==== Version 1.0.6 (tag: contentRenderingFramework_v1_0_6, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
+
+Fixes:
+- CRF-105: JavaScript and CSS minification - race condition may possibly result in 0 length file
+    - minification is now performed in memory without first writing the unminified bundle to disk. 
+      Bundle file is only written out after minification is performed.
+      
+Upgrades steps:
+- none. Should be transparent.
+
+==== Version 1.0.5 (tag: contentRenderingFramework_v1_0_5, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
+
+Fixes:
+- CRF-99 NEW - bundle paths need to contain all matched groups, not just the first one
+
+Other changes:
+- Single CSS files will now also be put into bundles so that we take advantage of CSS minification.
+- All exceptions that occur during bundling are now logged and ignored, not just IOExceptions.
+
+Upgrade steps:
+- none. Should be transparent.
+
 ==== Version 1.0.4 (tag: contentRenderingFramework_v1_0_4) ==== 
 
 - CRF-95 Create Admin servlet for emptying the resource cache

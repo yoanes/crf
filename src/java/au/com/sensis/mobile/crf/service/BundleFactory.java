@@ -6,12 +6,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import org.apache.axis.utils.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.exception.MinificationException;
+import au.com.sensis.mobile.crf.util.MD5Builder;
 import au.com.sensis.mobile.crf.util.Minifier;
 import au.com.sensis.mobile.crf.util.YUIMinifier;
 
@@ -26,15 +31,23 @@ public class BundleFactory {
     private static final Logger LOGGER = Logger.getLogger(BundleFactory.class);
     private boolean willDoMinification = true;
     private final String bundleDir = "bundle/";
-    private final Minifier minifier = new YUIMinifier();
+    private Minifier minifier = new YUIMinifier();
+
+    private enum MinificationType {
+        CSS,
+        JAVASCRIPT,
+        UNKNOWN
+    }
 
     /**
-     * Gets a {@link Resource} formed from bundling the contents of all of the given files.
+     * Gets a {@link Resource} formed from bundling the contents of all of the
+     * given files.
      *
      * @param resourcePathsToInclude
      *            {@link Resource} of each file to include in the bundle.
      * @return {@link Resource} for the bundle.
-     * @throws IOException if unable to read resource files or write out the bundle
+     * @throws IOException
+     *             if unable to read resource files or write out the bundle
      */
     public Resource getBundle(final List<Resource> resourcePathsToInclude) throws IOException {
 
@@ -44,14 +57,16 @@ public class BundleFactory {
 
         final Resource lastResource = getLastResource(resourcePathsToInclude);
 
-        final String bundleFilename = determineBundleFilename(lastResource);
+        final String bundleFilename = determineBundleFilename(resourcePathsToInclude, lastResource);
 
-        writeToFile(bundleFilename, readSourceFiles(resourcePathsToInclude));
+        final String concatenatedSourceFiles = readSourceFiles(resourcePathsToInclude);
 
-        doMinification(bundleFilename);
+        final String minifiedSourceFiles = minify(concatenatedSourceFiles, bundleFilename);
+
+        writeToFile(bundleFilename, minifiedSourceFiles);
 
         // make Resource for bundle
-        return createBundleResourceFrom(lastResource);
+        return createBundleResourceFrom(resourcePathsToInclude, lastResource);
     }
 
     private String readSourceFiles(final List<Resource> resourcePathsToInclude) throws IOException {
@@ -131,16 +146,21 @@ public class BundleFactory {
 
 
     /**
-     * Determines the filename to use for the bundle containing the given Resource.
-     * @param lastResource the Resource to base the bundle filename on
+     * Determines the filename to use for the bundle containing the given
+     * Resource.
+     *
+     * @param resourcePathsToInclude
+     * @param lastResource
+     *            the Resource to base the bundle filename on
      * @return a full file path for the bundle
      */
-    private String determineBundleFilename(final Resource lastResource) {
+    private String determineBundleFilename(final List<Resource> resourcePathsToInclude,
+            final Resource lastResource) {
 
         final StringBuilder bundleFilePath = new StringBuilder();
         bundleFilePath.append(lastResource.getRootResourceDir());
         bundleFilePath.append("/");
-        bundleFilePath.append(createBundleRelativeFilepath(lastResource));
+        bundleFilePath.append(createBundleRelativeFilepath(resourcePathsToInclude, lastResource));
 
         return bundleFilePath.toString();
     }
@@ -155,12 +175,17 @@ public class BundleFactory {
     }
 
     /**
-     * Creates a path to the bundle relative to the rootResourceDir (i.e. that relative path
-     * doesn't include the root resource directory path).
-     * @param resource from which to base the file path on
-     * @return a file path for the bundle, relative to the root resource directory
+     * Creates a path to the bundle relative to the rootResourceDir (i.e. that
+     * relative path doesn't include the root resource directory path).
+     *
+     * @param resourcePathsToInclude
+     * @param resource
+     *            from which to base the file path on
+     * @return a file path for the bundle, relative to the root resource
+     *         directory
      */
-    private String createBundleRelativeFilepath(final Resource resource) {
+    private String createBundleRelativeFilepath(final List<Resource> resourcePathsToInclude,
+            final Resource resource) {
 
         final String resourcePath = resource.getNewPath();
 
@@ -171,10 +196,36 @@ public class BundleFactory {
         bundleFilePath.append(resourcePath.substring(0, lastSeparator + 1));
         // insert bundle path
         bundleFilePath.append(bundleDir);
+
+        // Obfuscate info for all groups so that we don't expose too much info of our
+        // internal workings to clients.
+        bundleFilePath.append(createMd5SumFromGroups(resourcePathsToInclude));
+
+        bundleFilePath.append("/");
         // append the new bundle file name
         bundleFilePath.append(createBundleFilename(resource, lastSeparator + 1));
 
         return bundleFilePath.toString();
+    }
+
+    /**
+     * @param resourcePathsToInclude Resources whose Groups to build the MD5 sum from.
+     * @return MD5 sum created from the name of each group that each resource was resolved to.
+     */
+    private String createMd5SumFromGroups(final List<Resource> resourcePathsToInclude) {
+        MD5Builder md5Builder;
+        try {
+            md5Builder = new MD5Builder();
+        } catch (final NoSuchAlgorithmException e) {
+            throw new IllegalStateException("The MD5 algorithm is not available in yor JVM. "
+                    + "See the Javadoc for MessageDigest.getInstance(String) for further details.",
+                    e);
+        }
+
+        for (final Resource resource : resourcePathsToInclude) {
+            md5Builder.add(resource.getGroup().getName());
+        }
+        return md5Builder.getSumAsHex();
     }
 
     /**
@@ -191,11 +242,12 @@ public class BundleFactory {
         return resource.getNewPath().substring(indexOfFilenameInPath);
     }
 
-    private Resource createBundleResourceFrom(final Resource lastResource) {
+    private Resource createBundleResourceFrom(final List<Resource> resourcePathsToInclude,
+            final Resource lastResource) {
 
-        return new ResourceBean(lastResource.getOriginalPath(),
-                createBundleRelativeFilepath(lastResource),
-                lastResource.getRootResourceDir(), lastResource.getGroup());
+        return new ResourceBean(lastResource.getOriginalPath(), createBundleRelativeFilepath(
+                resourcePathsToInclude, lastResource), lastResource.getRootResourceDir(),
+                lastResource.getGroup());
     }
 
     private int getIndexOfLastPathSeparator(final String path) {
@@ -208,19 +260,75 @@ public class BundleFactory {
         return lastSeparator;
     }
 
-    private void doMinification(final String bundleFilename) {
+    private String minify(final String concatenatedSourceFiles, final String bundleFilename)
+            throws IOException {
 
-        if (shouldDoMinification()) {
-            try {
-                minifier.minify(bundleFilename);
-            } catch (final MinificationException e) {
-                // The exception is logged and swallowed because we can still proceed with
-                // an un-minified bundle.
-                LOGGER.error("Failed to perform minification for bundle '"
-                        + bundleFilename + "'" + e);
+        try {
+            if (shouldDoMinification()) {
+                return doMinify(concatenatedSourceFiles, getMinificationType(bundleFilename));
+
+            } else {
+                return concatenatedSourceFiles;
             }
+
+        } catch (final MinificationException e) {
+            throw new IOException("Unable to perform minification when generating bundle: "
+                    + bundleFilename, e);
         }
     }
+
+    private String doMinify(final String contentToMinify, final MinificationType minificationType)
+            throws MinificationException {
+
+        if (MinificationType.CSS.equals(minificationType)) {
+            return minifyCss(contentToMinify);
+
+        } else if (MinificationType.JAVASCRIPT.equals(minificationType)) {
+            return minifyJavaScript(contentToMinify);
+
+        } else {
+            // Minification not supported so just return the original content.
+            return contentToMinify;
+
+        }
+    }
+
+    private String minifyJavaScript(final String contentToMinify) throws MinificationException {
+        final StringReader sourceReader = new StringReader(contentToMinify);
+        final StringWriter minificationWriter = new StringWriter();
+
+        getMinifier().minifyJavaScript(sourceReader, minificationWriter);
+
+        return minificationWriter.toString();
+    }
+
+    private String minifyCss(final String contentToMinify) throws MinificationException {
+        final StringReader sourceReader = new StringReader(contentToMinify);
+        final StringWriter minificationWriter = new StringWriter();
+
+        getMinifier().minifyCss(sourceReader, minificationWriter);
+
+        return minificationWriter.toString();
+    }
+
+    private MinificationType getMinificationType(final String bundleFilename) {
+        if (hasJavaScriptFileExtension(bundleFilename)) {
+            return MinificationType.JAVASCRIPT;
+        } else if (hasCssFileExtension(bundleFilename)) {
+            return MinificationType.CSS;
+        } else {
+            return MinificationType.UNKNOWN;
+        }
+    }
+
+    private boolean hasCssFileExtension(final String bundleFilename) {
+        return "css".equalsIgnoreCase(FilenameUtils.getExtension(bundleFilename));
+    }
+
+    private boolean hasJavaScriptFileExtension(final String bundleFilename) {
+        return "js".equalsIgnoreCase(FilenameUtils.getExtension(bundleFilename));
+    }
+
 
     /**
      * @return the willDoMinification
@@ -236,5 +344,21 @@ public class BundleFactory {
     void setDoMinification(final boolean willDoMinification) {
 
         this.willDoMinification = willDoMinification;
+    }
+
+    /**
+     * @return the minifier
+     */
+    public Minifier getMinifier() {
+        return minifier;
+    }
+
+    /**
+     * Optionally override the default minifier. Defaults to {@link YUIMinifier}.
+     *
+     * @param minifier the minifier to set.
+     */
+    public void setMinifier(final Minifier minifier) {
+        this.minifier = minifier;
     }
 }

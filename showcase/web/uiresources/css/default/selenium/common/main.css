@@ -3,3 +3,11 @@
 #default {
 	font-family:arial, sans-serif;
 }
+
+/**
+ * Demonstrates Sensis patch to yuicompressor to fix minification of media queries. 
+ * See Jira CRF-106.
+ */
+@media all and (color) {
+    color: #FBB
+}

@@ -1,6 +1,5 @@
 package au.com.sensis.mobile.crf.service;
 
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,10 +129,10 @@ public class JavaScriptResourceAccumulatorBean implements ResourceAccumulator {
                 LOGGER.debug("bundle: " + bundle);
                 allResources = Collections.singletonList(bundle);
 
-            } catch (final IOException e) {
+            } catch (final Exception e) {
                 // If we can't bundle we continue on and return the unbundled list of resources.
-                LOGGER.error("Couldn't read file to perform bundling, "
-                        + "returning unbundled resources. " + e);
+                LOGGER.error("Couldn't create bundle for resources: " + allResources
+                        + ". Returning unbundled resources. ", e);
             }
         }
 
