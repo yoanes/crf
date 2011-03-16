@@ -80,7 +80,7 @@ public class ImageTag extends AbstractTag {
         jspWriter.print("<img ");
 
         jspWriter.print("src=\"" + getTagDependencies().getClientPathPrefix()
-                + getTagDependencies().getDeploymentMetadata().getVersion() + "/" + getSrc()
+                + getTagDependencies().getDeploymentMetadata().getVersion() + "/images/" + getSrc()
                 + "\" ");
 
         writeDynamicTagAttributes(jspWriter);

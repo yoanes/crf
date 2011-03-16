@@ -594,7 +594,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 "<img src=\""
                 + getResourcePathTestData().getImageClientPathPrefix()
                 + getResourcePathTestData().getDeploymentVersion()
-                + "/"
+                + "/images/"
                 + getResourcePathTestData().getRequestedImageResourcePath()
                 + "\" />", StringUtils.EMPTY);
     }
@@ -604,7 +604,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 "<img src=\""
                 + getResourcePathTestData().getImageClientPathPrefix()
                 + getResourcePathTestData().getDeploymentVersion()
-                + "/"
+                + "/images/"
                 + getResourcePathTestData().getRequestedImageResourcePath()
                 + "\" />", BODY_CONTENT);
     }

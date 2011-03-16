@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.presentation.ImageServlet.ImageServletDependencies;
 import au.com.sensis.mobile.crf.service.Resource;
@@ -37,7 +38,7 @@ import au.com.sensis.wireless.web.mobile.MobileContext;
  */
 public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
-    private static final String IMAGES_CLIENT_PATH_PREFIX = "/resources/images/";
+    private static final String IMAGES_CLIENT_PATH_PREFIX = "/uiresources/";
 
     private static final String MIME_TYPE = "image/png";
 
@@ -60,6 +61,8 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     private File expectedMappedFile;
     private ImageServletDependencies imageServletDependencies;
     private final GroupTestData groupTestData = new GroupTestData();
+    private final DeploymentMetadataTestData deploymentMetadataTestData
+        = new DeploymentMetadataTestData();
 
     /**
      * Setup test data.
@@ -88,7 +91,8 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
                 expectedMappedFileOnClasspath).toURI()));
 
         setImageServletDependencies(new ImageServletDependencies(
-                getMockResourceResolverEngine(), IMAGES_CLIENT_PATH_PREFIX));
+                getMockResourceResolverEngine(), IMAGES_CLIENT_PATH_PREFIX,
+                getDeploymentMetadataTestData().createDevDeploymentMetadata()));
     }
 
     /**
@@ -193,8 +197,9 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
     private String getRequestedResourcePath() {
         return IMAGES_CLIENT_PATH_PREFIX
-                + getResourcePathTestData()
-                        .getMapComponentRequestedImageResourcePath();
+                + getDeploymentMetadataTestData().createDevDeploymentMetadata().getVersion()
+                + "/images/"
+                + getResourcePathTestData().getMapComponentRequestedImageResourcePath();
     }
 
     private Resource getResource() {
@@ -392,5 +397,12 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
      */
     private GroupTestData getGroupTestData() {
         return groupTestData;
+    }
+
+    /**
+     * @return the deploymentMetadataTestData
+     */
+    public DeploymentMetadataTestData getDeploymentMetadataTestData() {
+        return deploymentMetadataTestData;
     }
 }

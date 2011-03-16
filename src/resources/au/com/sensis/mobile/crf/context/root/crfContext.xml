@@ -136,6 +136,7 @@
         class="au.com.sensis.mobile.crf.presentation.ImageServlet$ImageServletDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />
         <constructor-arg value="@{crf.env.resources.images.client.path.prefix}" />
+        <constructor-arg ref="crf.deploymentMetadata" />
     </bean>
     
     

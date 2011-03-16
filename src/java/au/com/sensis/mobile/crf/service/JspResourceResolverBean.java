@@ -80,13 +80,13 @@ public class JspResourceResolverBean extends AbstractSingleResourceResolver {
      * {@inheritDoc}
      */
     @Override
-    protected String insertGroupNameAndDeploymentVersionIntoPath(final String requestedResourcePath,
-            final Group group) {
+    protected String insertGroupNameAndDeploymentVersionIntoPath(
+            final String requestedResourcePath, final Group group) {
         return getJspResourcesRootServletPath()
-        + group.getName()
-        + RESOURCE_SEPARATOR
-        + StringUtils.substringAfter(requestedResourcePath,
-                getJspResourcesRootServletPath());
+                + group.getName()
+                + RESOURCE_SEPARATOR
+                + StringUtils.substringAfter(requestedResourcePath,
+                        getJspResourcesRootServletPath());
     }
 
     /**
@@ -122,5 +122,13 @@ public class JspResourceResolverBean extends AbstractSingleResourceResolver {
     @Override
     protected void addResourceToResourceResolutionTreeIfEnabled(final Resource resource) {
         // Do nothing.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getResourceSubDirName() {
+        return StringUtils.EMPTY;
     }
 }

@@ -380,9 +380,21 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      */
     protected String insertGroupNameAndDeploymentVersionIntoPath(
             final String requestedResourcePath, final Group group) {
-        return getDeploymentMetadata().getVersion() + RESOURCE_SEPARATOR + group.getName()
-        + RESOURCE_SEPARATOR + requestedResourcePath;
+        if (StringUtils.isNotBlank(getResourceSubDirName())) {
+            return getDeploymentMetadata().getVersion() + RESOURCE_SEPARATOR
+                    + getResourceSubDirName() + RESOURCE_SEPARATOR + group.getName()
+                    + RESOURCE_SEPARATOR + requestedResourcePath;
+        } else {
+            return getDeploymentMetadata().getVersion() + RESOURCE_SEPARATOR + group.getName()
+                    + RESOURCE_SEPARATOR + requestedResourcePath;
+        }
     }
+
+    /**
+     * @return Name of an extra sub directory to be inserted into the
+     *         resolved path by {@link #insertGroupNameAndDeploymentVersionIntoPath(String, Group)}.
+     */
+    protected abstract String getResourceSubDirName();
 
     /**
      * Debug friendly name of the type of resource that this

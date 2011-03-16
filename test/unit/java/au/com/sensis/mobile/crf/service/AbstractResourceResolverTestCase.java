@@ -688,5 +688,10 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         protected String getRealResourcePathExtension() {
             return ".jsp";
         }
+
+        @Override
+        protected String getResourceSubDirName() {
+            return StringUtils.EMPTY;
+        }
     }
 }

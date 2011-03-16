@@ -593,4 +593,12 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     public String[] getExcludedFileExtensionWildcards() {
         return excludedFileExtensionWildcards;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getResourceSubDirName() {
+        return "images";
+    }
 }

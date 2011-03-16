@@ -234,4 +234,12 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
             getLogger().debug("Checking for images in: '" + newResourcesBasePath + "'");
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getResourceSubDirName() {
+        return "images";
+    }
 }

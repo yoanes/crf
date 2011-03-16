@@ -108,8 +108,8 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "//head/link["
                 + "@type=\"text/css\" "
                 + "and @rel=\"stylesheet\" "
-                + "and @href=\"/uidev/crfshowcase/uiresources/css/"
-                + getProjectVersion() + "/"
+                + "and @href=\"/uidev/crfshowcase/uiresources/"
+                + getProjectVersion() + "/css/"
                 + expectedHref + "\""
                 + "]"));
 
@@ -145,8 +145,8 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "//head/script["
                 + "@type=\"text/javascript\" "
                 + "and @charset=\"utf-8\" "
-                + "and @src=\"/uidev/crfshowcase/uiresources/javascript/"
-                + getProjectVersion() + "/"
+                + "and @src=\"/uidev/crfshowcase/uiresources/"
+                + getProjectVersion() + "/javascript/"
                 + expectedSrc + "\""
                 + "]"));
 
@@ -190,8 +190,8 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "@id=\"" + expectedId + "\" "
                 + "and @title=\"" + expectedTitle + "\" "
                 + "and @alt=\"" + expectedAlt + "\" "
-                + "and @src=\"/uidev/crfshowcase/uiresources/images/"
-                + getProjectVersion() + "/"
+                + "and @src=\"/uidev/crfshowcase/uiresources/"
+                + getProjectVersion() + "/images/"
                 + expectedSrc + "\" "
                 + "and @width=\"" + expectedWidth + "\" "
                 + "and @height=\"" + expectedHeight + "\" "
@@ -218,8 +218,8 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + "@id=\"" + expectedId + "\" "
                 + "and @title=\"" + expectedTitle + "\" "
                 + "and @alt=\"" + expectedAlt + "\" "
-                + "and @src=\"/uidev/crfshowcase/uiresources/images/"
-                + getProjectVersion() + "/"
+                + "and @src=\"/uidev/crfshowcase/uiresources/"
+                + getProjectVersion() + "/images/"
                 + expectedSrc + "\""
                 + "]"));
 
@@ -267,8 +267,8 @@ public abstract class BdpPage extends AbstractPageFixture {
      */
     protected final void assertImgPath(final String message, final String expectedSrc) {
         assertTrue(message, getBrowser().isTextPresent(
-                        "/uidev/crfshowcase/uiresources/images/" + getProjectVersion()
-                        + "/" + expectedSrc));
+                        "/uidev/crfshowcase/uiresources/" + getProjectVersion()
+                        + "/images/" + expectedSrc));
 
     }
 
@@ -282,8 +282,8 @@ public abstract class BdpPage extends AbstractPageFixture {
      */
     protected void assertScaledYellowPagesImagePath(final int width, final int height) {
         assertTrue("Yellow Pages img not found", getBrowser().isTextPresent(
-                "/uidev/crfshowcase/uiresources/images/" + getProjectVersion()
-                        + "/default/selenium/common/w" + width + "/h" + height
+                "/uidev/crfshowcase/uiresources/" + getProjectVersion()
+                        + "/images/default/selenium/common/w" + width + "/h" + height
                         + "/yellow-pages.png"));
     }
 }

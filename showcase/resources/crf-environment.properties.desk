@@ -4,13 +4,13 @@
 
 env.resources.jsp.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase
 env.resources.properties.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/WEB-INF/properties
-env.resources.css.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/css
-env.resources.javascript.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/javascript
-env.resources.images.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/images
+env.resources.css.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/
+env.resources.javascript.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/
+env.resources.images.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/
 
-env.resources.css.client.path.prefix=/uidev/crfshowcase/uiresources/css/
-env.resources.javascript.client.path.prefix=/uidev/crfshowcase/uiresources/javascript/
-env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/images/
+env.resources.css.client.path.prefix=/uidev/crfshowcase/uiresources/
+env.resources.javascript.client.path.prefix=/uidev/crfshowcase/uiresources/
+env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/
 
 # Allow downstream caching for the showcase so that selenium tests will pass, 
 # otherwise we would have to change the tests to ignore the timestamp that is appended to URLs.

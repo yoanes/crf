@@ -12,6 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
+import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
@@ -32,6 +33,7 @@ public class ImageServlet extends HttpServletBean {
     private static final long serialVersionUID = 1L;
     private String imageServletDependenciesBeanName;
     private ImageServletDependencies imageServletDependencies;
+    private String expectedRequestedResourcePathPrefix;
 
     /**
      * Lookup the {@link WebApplicationContext} and retrieve the
@@ -44,11 +46,14 @@ public class ImageServlet extends HttpServletBean {
         super.init(config);
 
         final WebApplicationContext webApplicationContext =
-                WebApplicationContextUtils
-                        .getRequiredWebApplicationContext(config
-                                .getServletContext());
+                WebApplicationContextUtils.getRequiredWebApplicationContext(config
+                        .getServletContext());
         setImageServletDependencies((ImageServletDependencies) webApplicationContext
                 .getBean(getImageServletDependenciesBeanName()));
+        setExpectedRequestedResourcePathPrefix(
+                getImageServletDependencies().getImagesClientPathPrefix()
+                    + getImageServletDependencies().getDeploymentMetadata().getVersion()
+                    + "/images/");
 
     }
 
@@ -88,8 +93,7 @@ public class ImageServlet extends HttpServletBean {
     private boolean requestedResourcePathHasCorrectPrefix(final HttpServletRequest req) {
         return (req.getRequestURI() != null)
                 && req.getRequestURI().startsWith(
-                        getImageServletDependencies()
-                                .getImagesClientPathPrefix());
+                        getExpectedRequestedResourcePathPrefix());
     }
 
     private void setFileNotFoundResponseStatus(final HttpServletResponse resp) {
@@ -119,8 +123,7 @@ public class ImageServlet extends HttpServletBean {
 
     private String getRequestedResourcePath(final HttpServletRequest req) {
         return StringUtils.substringAfter(req.getRequestURI(),
-                getImageServletDependencies()
-                        .getImagesClientPathPrefix());
+                getExpectedRequestedResourcePathPrefix());
     }
 
     private Device getDevice(final HttpServletRequest req) {
@@ -154,6 +157,22 @@ public class ImageServlet extends HttpServletBean {
     }
 
     /**
+     * @return the expectedRequestedResourcePathPrefix
+     */
+    private String getExpectedRequestedResourcePathPrefix() {
+        return expectedRequestedResourcePathPrefix;
+    }
+
+    /**
+     * @param expectedRequestedResourcePathPrefix
+     *            the expectedRequestedResourcePathPrefix to set
+     */
+    private void setExpectedRequestedResourcePathPrefix(
+            final String expectedRequestedResourcePathPrefix) {
+        this.expectedRequestedResourcePathPrefix = expectedRequestedResourcePathPrefix;
+    }
+
+    /**
      * Simple memento encapsulating the singleton collaborators of this
      * {@link ImageServlet} An instance of this memento will be programmatically
      * retrieved from the Spring context.
@@ -162,6 +181,7 @@ public class ImageServlet extends HttpServletBean {
 
         private final ResourceResolverEngine resourceResolverEngine;
         private final String imagesClientPathPrefix;
+        private final DeploymentMetadata deploymentMetadata;
 
         /**
          * Constructor.
@@ -172,12 +192,15 @@ public class ImageServlet extends HttpServletBean {
          * @param imagesClientPathPrefix
          *            Client side prefix for all image paths.
          *            eg. "/resources/images".
+         * @param deploymentMetadata {@link DeploymentMetadata}.
          */
         public ImageServletDependencies(
                 final ResourceResolverEngine resourceResolverEngine,
-                final String imagesClientPathPrefix) {
+                final String imagesClientPathPrefix,
+                final DeploymentMetadata deploymentMetadata) {
             this.resourceResolverEngine = resourceResolverEngine;
             this.imagesClientPathPrefix = imagesClientPathPrefix;
+            this.deploymentMetadata = deploymentMetadata;
         }
 
         /**
@@ -196,6 +219,12 @@ public class ImageServlet extends HttpServletBean {
         public String getImagesClientPathPrefix() {
             return imagesClientPathPrefix;
         }
-    }
 
+        /**
+         * @return the deploymentMetadata
+         */
+        public DeploymentMetadata getDeploymentMetadata() {
+            return deploymentMetadata;
+        }
+    }
 }

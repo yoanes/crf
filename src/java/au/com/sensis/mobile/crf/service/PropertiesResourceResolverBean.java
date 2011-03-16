@@ -2,6 +2,7 @@ package au.com.sensis.mobile.crf.service;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.mobile.crf.config.Group;
@@ -72,17 +73,25 @@ public class PropertiesResourceResolverBean extends AbstractMultipleResourceReso
     }
 
     /**
-     * Overrides the standard implementation to ensure that version is not inserted into the
-     * path, given that properties files are server side resources and will never be visible
-     * to the clients (and hence client side caching will never be an issue).
+     * Overrides the standard implementation to ensure that version is not
+     * inserted into the path, given that properties files are server side
+     * resources and will never be visible to the clients (and hence client side
+     * caching will never be an issue).
      *
      * {@inheritDoc}
      */
     @Override
     protected String insertGroupNameAndDeploymentVersionIntoPath(
             final String requestedResourcePath, final Group group) {
-        return group.getName()
-        + RESOURCE_SEPARATOR + requestedResourcePath;
+        return group.getName() + RESOURCE_SEPARATOR + requestedResourcePath;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getResourceSubDirName() {
+        return StringUtils.EMPTY;
     }
 
 }

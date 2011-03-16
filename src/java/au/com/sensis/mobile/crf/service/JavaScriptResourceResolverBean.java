@@ -223,4 +223,12 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
             getLogger().debug("Finding package resources in: '" + javascriptFilesBaseDir + "'");
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getResourceSubDirName() {
+        return "javascript";
+    }
 }

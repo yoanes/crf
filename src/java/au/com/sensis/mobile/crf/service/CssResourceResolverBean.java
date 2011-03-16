@@ -71,4 +71,12 @@ public class CssResourceResolverBean extends AbstractMultipleResourceResolver {
         return getResourceAccumulatorFactory().getCSSResourceAccumulator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getResourceSubDirName() {
+        return "css";
+    }
+
 }
