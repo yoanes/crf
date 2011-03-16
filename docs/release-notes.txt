@@ -1,14 +1,78 @@
 ==== (PENDING) Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ==== 
 
+Fixes:
+- CRF-91 Add web app version number to the image paths in CSS files
+    - Upgraded to use wl-build-scripts 2.2.0 which changed the location in which
+      the project version number is inserted when uiassets/uiresources are
+      packaged. The structure used for packaging and deployment used to result
+      in dirs like uiresources/css/<version> but they will now be like
+      uiresources/<version>/css. So I've changed the crf code accordingly to
+      accommodate this new structure. This change allows CSS files to use
+      relative URLs for background images. See upgrade notes below for further details.
+
 Upgrade Notes
-- Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ ) installed. The path
-  to this is configured via the env.image.transformation.graphics.magick.path property in the 
+- Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ ) installed, which
+  we use for image scaling. The path to this is configured via the 
+  env.image.transformation.graphics.magick.path property in the 
   crf-environment.properties.* files that are shipped with CRF. However, at the moment, the property
   is just set to "gm" since none of the environments have it installed. Having "gm" on your path
   is advisable for desktop development to aid portability but for other environments, it would
   be better to have an absolute path.     
 - Now depends on devices.mdpr version 1.283 or later, as this sets the custom.crf.image.ratio 
   property for iphone 4.
+- The location in which the project version number is inserted when uiassets/uiresources are 
+  packaged has changed. The structure used for packaging and deployment used to be:
+      
+          uiresources/
+              css/
+                  <version>/
+              images/
+                  <version>/
+              javascript/
+                  <version>/
+           
+      It is now:
+
+          uiresources/
+              <version>/
+                  css/
+                  images/
+                  javascript/
+  
+  This means that background images in CSS files that used absolute URLs _must_ now use relative 
+  URLs. eg. Suppose your project had:
+  
+      /src/web/uiresources/
+          images/
+              default/
+                  component/
+                      map/
+                          tile_bg.gif
+          css/
+              default/ 
+                  component/
+                      map/
+                          map.css                          
+                          
+  and map.css had:
+  
+      background-image: url("/uiresources/images/component/map/tile_bg.image");  
+      
+  then map.css must now have:
+  
+      background-image: url("../../../../images/component/map/tile_bg.image");
+      
+  Note that this relative URL is relative to the CSS file, not the page. So the way to work out how 
+  many "../" to use is to:
+  1. Start at the location of the CSS file in your project and walk up the directory structure 
+     until you get to the "uiresources/" directory. In this case, this is "../../../../".
+  2. Then append "images/" to the path.
+  3. Then append the abstract image path that has the same semantics as what you pass into the
+     <crf:image /> JSP tag.
+     
+  The above usage of relative URLs ensures that the path seen by the client device will contain
+  the version number. This is due to the fact that the CSS file path already contains a version
+  number.
 
 ==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
 

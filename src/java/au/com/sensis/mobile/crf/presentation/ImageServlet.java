@@ -82,8 +82,7 @@ public class ImageServlet extends HttpServletBean {
         } else {
             throw new ServletException(
                     "Requests for abstract images should have a requestUri starting with '"
-                    + getImageServletDependencies()
-                            .getImagesClientPathPrefix()
+                    + getExpectedRequestedResourcePathPrefix()
                     + "'. However, requestUri is '" + request.getRequestURI()
                     + "'");
         }

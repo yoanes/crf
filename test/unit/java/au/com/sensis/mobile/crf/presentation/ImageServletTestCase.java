@@ -182,7 +182,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
             Assert.assertEquals("ServletException has wrong message",
                 "Requests for abstract images should have a requestUri starting with '"
-                        + IMAGES_CLIENT_PATH_PREFIX
+                        + getExpectedRequestedResourcePathPrefix()
                         + "'. However, requestUri is '"
                         + getResourcePathTestData()
                                 .getMapComponentRequestedImageResourcePath()
@@ -196,10 +196,14 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     }
 
     private String getRequestedResourcePath() {
-        return IMAGES_CLIENT_PATH_PREFIX
-                + getDeploymentMetadataTestData().createDevDeploymentMetadata().getVersion()
-                + "/images/"
+        return getExpectedRequestedResourcePathPrefix()
                 + getResourcePathTestData().getMapComponentRequestedImageResourcePath();
+    }
+
+    private String getExpectedRequestedResourcePathPrefix() {
+        return IMAGES_CLIENT_PATH_PREFIX
+                        + getDeploymentMetadataTestData().createDevDeploymentMetadata().getVersion()
+                        + "/images/";
     }
 
     private Resource getResource() {
