@@ -90,7 +90,7 @@
 
         <!-- SDP Common -->
         <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>        
-        <dependency org="com.sensis" name="sdpCommon-web" rev="2.0-002-akoh" conf="default"/>
+        <dependency org="com.sensis" name="sdpCommon-web" rev="2.0-005" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-013" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-utils" rev="1.0-008" conf="default"/>
         
