@@ -10,9 +10,6 @@
         <import name="iphone-ipod-os2" />
         <import name="iphone-ipod" />
         
-        <group name="iphone-clientapp" expr="visitor.isClientApp() 
-            and (visitor.getClientApp().type.name() == 'IPHONE')" />
-        
         <group name="nokia7600" expr = "device.userAgent =~ '.*Nokia7600.*'" />        
         <group name="Apple-iPad" expr="device.name =~ '.*iPad.*'" />
 	 	<group name="Samsung-GT-C5220" expr="device.name =~ '.*Samsung.*C5220.*'" />
@@ -32,6 +29,9 @@
         <group name="webkit" expr="device.userAgent =~ '.*WebKit.*'" />
         <group name="Apple" expr="device.name =~ '.*Apple.*'" />
 	 	<group name="Android" expr="device.userAgent =~ '.*Android.*'" />
+        
+        <!-- Import client app groups. -->
+        <import from="global/clientApps" />
 
         <!-- Image category groups. -->
         <import from="global/imageCategories" />

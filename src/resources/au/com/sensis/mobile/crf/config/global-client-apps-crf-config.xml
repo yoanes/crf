@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<crf:ui-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
+         xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
+
+    <config-path>global/clientApps</config-path>
+    <groups>
+
+        <group name="iphone-clientapp" expr="device.isA('Apple') and visitor.isClientApp() 
+            and (visitor.getClientApp().type.name() == 'IPHONE')" />
+            
+        <group name="android-clientapp" expr="device.isA('Android-OS') and visitor.isClientApp() 
+            and (visitor.getClientApp().type.name() == 'ANDROID')" />
+        
+        <default-group name="default" />
+    </groups>
+
+</crf:ui-configuration>

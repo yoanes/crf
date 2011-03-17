@@ -1,6 +1,21 @@
 ==== (PENDING) Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ==== 
 
 Fixes:
+- CRF-88 Support Grouping by Client 
+    - CRF group config file now expose au.com.sensis.wireless.web.mobile.Visitor to expressions
+      using the name "visitor". global-clientapps-crf-config.xml has been added to define the 
+      following clientapp groups by default:
+      
+        <group name="iphone-clientapp" expr="device.isA('Apple') and visitor.isClientApp() 
+            and (visitor.getClientApp().type.name() == 'IPHONE')" />
+            
+        <group name="android-clientapp" expr="device.isA('Android-OS') and visitor.isClientApp() 
+            and (visitor.getClientApp().type.name() == 'ANDROID')" />
+
+      Apps can import these groups into their CRF group config file like so:
+      
+        <import from="global/clientapps" />      
+
 - CRF-91 Add web app version number to the image paths in CSS files
     - Upgraded to use wl-build-scripts 2.2.0 which changed the location in which
       the project version number is inserted when uiassets/uiresources are
