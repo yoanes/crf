@@ -1,29 +1,24 @@
 ==== (PENDING) Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ==== 
 
-Fixes:
-- CRF-88 Support Grouping by Client 
-    - CRF group config file now expose au.com.sensis.wireless.web.mobile.Visitor to expressions
-      using the name "visitor". global-clientapps-crf-config.xml has been added to define the 
-      following clientapp groups by default:
-      
-        <group name="iphone-clientapp" expr="device.isA('Apple') and visitor.isClientApp() 
-            and (visitor.getClientApp().type.name() == 'IPHONE')" />
-            
-        <group name="android-clientapp" expr="device.isA('Android-OS') and visitor.isClientApp() 
-            and (visitor.getClientApp().type.name() == 'ANDROID')" />
+Bugs:
+* [CRF-93] - NEW - duplicate group names and config paths should be illegal in group config files
+* [CRF-100] - NEW - ImagePathTag should write empty string instead of a .image path when a .null image is found
 
-      Apps can import these groups into their CRF group config file like so:
-      
-        <import from="global/clientapps" />      
+Improvements:
+* [CRF-48] - NEW: crf:link, crf:script, crf:image - obtain device from threadlocal 
+* [CRF-91] - Add web app version number to the image paths in CSS files
+* [CRF-101] - NEW - crf:script tag should default charset to utf-8 and type to text/javascript
+* [CRF-102] - NEW - refactor ImageTag to use device repository attribute to control width/height division instead of hard coded iphone4 detection
 
-- CRF-91 Add web app version number to the image paths in CSS files
-    - Upgraded to use wl-build-scripts 2.2.0 which changed the location in which
-      the project version number is inserted when uiassets/uiresources are
-      packaged. The structure used for packaging and deployment used to result
-      in dirs like uiresources/css/<version> but they will now be like
-      uiresources/<version>/css. So I've changed the crf code accordingly to
-      accommodate this new structure. This change allows CSS files to use
-      relative URLs for background images. See upgrade notes below for further details.
+Stories:
+* [CRF-88] - Support Grouping by Client
+
+Task:
+* [CRF-24] - TransformedImageResourceResolverBean  - images generated at runtime
+* [CRF-25] - GraphicsMagickImageTransformationFactoryBean
+* [CRF-63] - NEW: support for referencing groups from other crf config files
+* [CRF-92] - NEW: support for referencing groups within the same crf config file
+* [CRF-98] - NEW - upgrade map component to use CRF 2
 
 Upgrade Notes
 - Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ ) installed, which
@@ -33,10 +28,12 @@ Upgrade Notes
   is just set to "gm" since none of the environments have it installed. Having "gm" on your path
   is advisable for desktop development to aid portability but for other environments, it would
   be better to have an absolute path.     
-- Now depends on devices.mdpr version 1.283 or later, as this sets the custom.crf.image.ratio 
-  property for iphone 4.
-- The location in which the project version number is inserted when uiassets/uiresources are 
-  packaged has changed. The structure used for packaging and deployment used to be:
+- As per CRF-102 "NEW - refactor ImageTag to use device repository attribute to control width/height 
+  division instead of hard coded iphone4 detection", now depends on devices.mdpr version 1.283 or later, 
+  as this sets the custom.crf.image.ratio property for iphone 4.
+- As per CRF-91 "Add web app version number to the image paths in CSS files", the location in which 
+  the project version number is inserted when uiassets/uiresources are packaged has changed. The 
+  structure used for packaging and deployment used to be:
       
           uiresources/
               css/
@@ -88,6 +85,16 @@ Upgrade Notes
   The above usage of relative URLs ensures that the path seen by the client device will contain
   the version number. This is due to the fact that the CSS file path already contains a version
   number.
+  
+- As per CRF-93 "NEW - duplicate group names and config paths should be illegal in group 
+  config files", duplicate group names within the same CRF config file are now illegal. So are
+  having multiple CRF config files that have the same <config-path />. If either condition is 
+  violated, an exception will be thrown on app startup.
+  
+- As per CRF-88 "Support Grouping by Client", apps can import client app groups into their CRF 
+  group config file like so:
+      
+        <import from="global/clientapps" />      
 
 ==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
 
