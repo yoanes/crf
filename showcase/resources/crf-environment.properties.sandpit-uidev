@@ -4,11 +4,11 @@
 
 env.resources.jsp.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase
 env.resources.properties.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/WEB-INF/properties
-env.resources.css.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/uiresources/css
-env.resources.javascript.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/uiresources/javascript
-env.resources.images.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/uiresources/images
+env.resources.css.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/uiresources/
+env.resources.javascript.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/uiresources/
+env.resources.images.root.dir=/app/smtestapp/sandpit-uidev/crfshowcase/uiresources/
 
 # TODO: use these. Plus set up to be "/" for non-desk environments.
-env.resources.css.client.path.prefix=/uidev/crfshowcase/uiresources/css/
-env.resources.javascript.client.path.prefix=/uidev/crfshowcase/uiresources/javascript/
-env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/images/
+env.resources.css.client.path.prefix=/uidev/crfshowcase/uiresources/
+env.resources.javascript.client.path.prefix=/uidev/crfshowcase/uiresources/
+env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/
