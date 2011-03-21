@@ -21,6 +21,30 @@ Task:
 * [CRF-98] - NEW - upgrade map component to use CRF 2
 
 Upgrade Notes
+- (TODO: updated to 2.0-006) This version depends on sdpCommon-web 2.0-005. The way in which device recognition is performed
+  by MobileContextSetUpFilter was changed in version 2.0-001. In particular, it calls:
+  
+      getDeviceRecognition().identifyDevice(userAgent);
+    
+  instead of:
+  
+      getDeviceRecognition().identifyDevice(userAgent, getServletContext());
+  
+
+  This was a result of eliminating the dependency on the Volantis MCSFilter. In brief, this means 
+  that you must ensure that the deviceRepositoryLocation property
+  is injected into your VolantisDeviceRecognition bean in your Spring context:
+            
+    <bean id="volantisDeviceRecognition"
+            class="au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceRecognition"
+            init-method="initialise">
+
+        <property name="deviceRepositoryLocation" value="${env.mcs.devicerepository.filepath}"/>
+    </bean>
+    
+  and then define env.mcs.devicerepository.filepath in your environment.properties.* files.
+  Refer to the sdpCommon-web release notes for, hopefully, further details.
+
 - Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ ) installed, which
   we use for image scaling. The path to this is configured via the 
   env.image.transformation.graphics.magick.path property in the 
