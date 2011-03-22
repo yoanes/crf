@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================================================
+ ! (c) Volantis Systems Ltd 2004. All Rights Reserved.
+ ! ======================================================================= -->
+
+<!-- ==========================================================================
+ ! For further information on configuring values contained within this
+ ! file please refer to the XML Schema for MCS Config.
+ ! -->
+
+<mcs-config xmlns="http://www.volantis.com/xmlns/mcs/config"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.volantis.com/xmlns/mcs/config http://www.volantis.com/schema/config/v1.0/mcs-config.xsd">
+    <local-repository>
+        <!-- _iid: location:/mcs-config/local-repository -->
+        <!-- _fid: value:/mcs-config/local-repository -->
+        <xml-repository/> <!-- <jdbc-repository>
+            <connection-pool
+                maximum="20"
+                poll-interval="360000"
+                keep-alive="false">
+                <anonymous-data-source
+                    user=""
+                    password="">
+                    <mcs-database
+                        vendor=""
+                        host=""
+                        port=""
+                        source=""/>
+                </anonymous-data-source>
+            </connection-pool>
+        </jdbc-repository> -->
+        <!-- _fid: value:/mcs-config/local-repository -->
+    </local-repository>
+
+    <devices>
+        <standard>
+            <!-- _iid: location:/mcs-config/devices/standard -->
+            <!-- _fid: value:/mcs-config/devices/standard -->
+            <file-repository location="@MCS-DEVICEREPOSITORY-FILEPATH@"/>
+            <!-- _fid: value:/mcs-config/devices/standard -->
+        </standard>
+        <!--
+         ! Logging of unknown devices and periodic submission of the logs by
+         ! email can be enabled.
+         !-->
+        <!--
+        <logging>
+            <log-file>unknown-devices.log</log-file>
+            <e-mail>
+                <e-mail-sending>disable</e-mail-sending>
+            </e-mail>
+        </logging>
+        -->
+    </devices>
+
+    <projects>
+        <default>
+            <xml-policies directory="@MCS-POLICIES-FILEPATH@"/>
+            <!-- _fid: value:/mcs-config/projects/default -->
+            <assets base-url="/">
+                <audio-assets prefix-url="/audio/"/>
+                <dynamic-visual-assets prefix-url="/dynvis/"/>
+                <image-assets prefix-url="/wpm-imageserver/images"/>
+                <script-assets prefix-url="@MCS-SCRIPT-ASSET-PATH@"/>
+                <text-assets prefix-url="/text/"/>
+            </assets>
+        </default>
+        <!-- _iid: location:/mcs-config/projects -->
+    <!-- temporary client project -->
+    </projects>
+
+    <!--
+     ! The secondary repository can also be used to store components
+     ! and assets at runtime.
+     !-->
+    <secondary-repository>
+        <inline-metadata enabled="false"/>
+    </secondary-repository>
+
+    <!--
+     ! On a production server it is recommended that you set all policy caches
+     ! to true, on a development server you may wish to switch off some
+     ! of the policy caches so changes are effective immediately.
+     !-->
+    <policy-cache>
+        <asset-group-cache
+            strategy="least-used"
+            max-entries="200"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <audio-component-cache
+            strategy="least-used"
+            max-entries="500"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <button-image-component-cache
+            enabled="false"/>
+        <chart-component-cache
+            strategy="least-used"
+            max-entries="500"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <device-cache
+            strategy="least-used"
+            max-entries="200"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <dynamic-visual-component-cache
+            strategy="least-used"
+            max-entries="500"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <image-component-cache
+            strategy="least-used"
+            max-entries="500"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <layout-cache
+            strategy="least-used"
+            max-entries="10000"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <link-component-cache
+            strategy="least-used"
+            max-entries="500"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <rollover-image-component-cache
+            strategy="least-used"
+            max-entries="500"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <script-component-cache
+            strategy="least-used"
+            max-entries="500"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <text-component-cache
+            strategy="least-used"
+            max-entries="500"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+        <!--
+         ! Theme caching needs to be enabled in order for externally
+         ! generated style sheets to be cached.
+         !-->
+        <theme-cache
+            strategy="least-used"
+            max-entries="400"
+            timeout="-1"
+            enabled="@MCS-CACHE-POLICIES@"/>
+    </policy-cache>
+
+    <!--
+     ! Configuration relating to JSPs
+     !
+     ! support-required (true | false)
+     !    Controls whether support for jsp pages is required. It should be set
+     !    to false if the web application does not contain any Marlin JSP pages
+     !    and true otherwise. Its primary use is to allow web applications that
+     !    do not use JSPs to prevent unnecessary work being done during
+     !    initialisation.
+     !
+     ! write-direct (true | false)
+     !    Control whether JSP tags should write device dependent content direct
+     !    to the output, or whether they should write device independent
+     !    content to MCS. This should only be set to true for older web
+     !    applications that rely on being able to write direct to the output.
+     !    New web applications should just use the default value of false.
+     !
+     ! resolve-character-references (true | false)
+     !    Controls whether JSP tags attempt to resolve character references
+     !    within their attributes and content before passing them onto PAPI.
+     !    Web applications that do not use character references within JSPs
+     !    should set this to false as it will improve performance slightly.
+     !
+     ! evaluate-page-after-canvas (true | false)
+     !    Control whether JSPs should evaluate page content after the canvas
+     !    tag. This should only be set to true for older web applications that
+     !    rely having JSP content after the canvas tag. New web applications
+     !    should just use the default value of false. If this is set to true
+     !    it may have adverse affects for web applications which generate
+     !    binary content such as WBXML/WMLC or packaged output.
+     !-->
+   <jsp
+       support-required="true"
+       write-direct="false"
+       resolve-character-references="true"
+       evaluate-page-after-canvas="false"/>
+
+    <mcs-agent enabled="true" port="27013" password="mc5pwd"/>
+
+    <!--
+     ! If inline style declarations are required (as opposed to external
+     ! style sheets,) the external generation element below should be
+     ! commented out.
+     !
+     ! To generate external style sheets, the base-directory must exist and
+     ! must contain a subdirectory named 'cssFileCache'.
+     !
+     ! To cache external style sheets the external-generation cache must be
+     ! enabled, and the policy-cache theme-cache (above) must be set to true.
+     !-->
+    <style-sheets>
+        <!--
+        <external-generation cache="enabled"
+            flush-on-restart="true"
+            base-directory="D:\Apps\MCS434\webapps\mcs\css"
+            base-url="/mcs/MCSCSS"/>
+        -->
+        <internal-generation>
+            <cache name="cacheName"
+                strategy="least-recently-used"
+                max-entries="10"/>
+          </internal-generation>
+    </style-sheets>
+
+    <!--
+     ! The directories to which generated chart images, WAP TV modesets, and
+     ! scripts will be written. These directories are either within the web
+     ! application or within the temporary directory made available by the
+     ! application server.
+     !-->
+    <chartimages base="chartimages"/>
+
+    <modesets base="modesets"/>
+
+    <scripts base="scripts"/>
+
+    <!--
+     ! The name of the classes that will provide the functions of a URL
+     ! rewriter plugin, an asset URL rewriter plugin and an asset transcoder
+     ! plugin.
+     !
+     ! <plugins page-url-rewriter="PAGE_URL_REWRITER_CLASS"
+     !          asset-url-rewriter="ASSET_URL_REWRITER_CLASS"
+     !          asset-transcoder="ASSET_TRANSCODER_CLASS"/>
+     !-->
+    <!-- _iid: location:/mcs-config -->
+
+    <remote-policies>
+        <remote-policy-cache
+            cachePolicies="false"
+            defaultTimeToLive="3600"
+            defaultRetryFailedRetrieval="true"
+            defaultRetryInterval="600"
+            defaultRetryMaxCount="5"
+            defaultRetainDuringRetry="true"
+            maxCacheSize="1000"
+            maxTimeToLive="0"
+            allowRetryFailedRetrieval="true"
+            minRetryInterval="0"
+            maxRetryMaxCount="10"
+            allowRetainDuringRetry="true"
+            usePersistentCache="false"
+            minimumTimeToLiveForSharing="600"/>
+        <remote-policy-quotas>
+        </remote-policy-quotas>
+    </remote-policies>
+
+    <servlet-filter>
+        <mime-type value="x-application/vnd.xdime+xml"/>
+        <mime-type value="x-application/vnd.volantis.xdime+xml"/>
+        <!-- _iid: location:/mcs-config/servlet-filter -->
+    </servlet-filter>
+
+    <mcs-plugins>
+        <!--
+         ! Markup Plugins are java classes whose methods can be invoked
+         ! directly from MCS markup using the "invoke" element.  These
+         ! classes must conform to the interface
+         ! com.volantis.mcs.integration.MarkupPlugin.
+         !
+         ! name  - The name by which the markup will refer to the plugin.
+         ! class - The class implementing MarkupPlugin which you wish to
+         !         invoke.
+         ! scope - MarkupPlugins can be defined to have the following scopes:
+         !         o application - The plugin is initialized when the web app
+         !           starts and terminates when the web application ends.
+         !         o session - The plugin is initialized when a new session
+         !           start and terminates when the session ends.
+         !         o canvas - The plugin is initializes when a canvas element
+         !           is invoked and terminates when the canvas generation ends.
+         !
+         ! The initialization arguments are specified as name-value pairs which
+         ! are passed as a java.util.Map to the initialize method of the
+         ! MarkupPlugin.
+         !-->
+        <!--
+        <markup-plugin name="YOUR-PLUGIN-NAME"
+            class="your.class.Name"
+            scope="application">
+            <initialize>
+                <argument name="NAME1" value="VALUE1"/>
+                <argument name="NAME2" value="VALUE2"/>
+            </initialize>
+        </markup-plugin>
+        -->
+        <!-- _iid: location:/mcs-config/mcs-plugins -->
+    </mcs-plugins>
+
+    <application-plugins>
+        <!--
+         ! The MPS application plugin defines the MPS configuration
+         !    internal-base-url       - Defines the url to use for MPS asset
+         !                              resolution from internal requests.
+         !    message-recipient-info  - Defines the user supplied class used to
+         !                              resolve recipient devices and channels.
+         !-->
+        <mps
+            internal-base-url="http://localhost:8080/mcs"
+            message-recipient-info="com.volantis.mps.recipient.DefaultRecipientResolver">
+            <!--
+             ! The channel definitions for MPS transports must be configured
+             !-->
+            <channels>
+                <!--
+                 ! The SMTP channel adapter for MHTML messages
+                 !
+                 !    class     - The class implementing the channel adapter.
+                 !                It should extend the MessageChannel class.
+                 !    host      - The SMTP relay through which all messages are
+                 !                sent.
+                 !    auth      - Determines if sending requests require SMTP
+                 !                authentication.
+                 !    user      - User for SMTP Authentication. Specify "none"
+                 !                if no authentication is required.
+                 !    password  - Password for SMTP Authentication. Specify
+                 !                "none" if no authentication required.
+                 !-->
+                <!-- Uncomment this section to enable the SMTP channel adapter
+                <channel name="smtp"
+                    class="com.volantis.mps.channels.SMTPChannelAdapter">
+                    <argument name="host" value="SMTP-HOST"/>
+                    <argument name="auth" value="false"/>
+                    <argument name="user" value="SMTP-USERNAME"/>
+                    <argument name="password" value="SMTP-PASSWORD"/>
+                </channel>
+                -->
+
+                <!--
+                 ! The SMSC channel adapter for SMS messages
+                 !
+                 !    class              - The class implementing the
+                 !                         channel adapter. It should extend
+                 !                         the MessageChannel class.
+                 !    smsc-ip            - The IP Address of the SMSC.
+                 !    smsc-port          - The port on which the SMSC is
+                 !                         listening.
+                 !    smsc-user          - User for SMSC Authentication.
+                 !    smsc-password      - Password for SMSC Authentication.
+                 !    smsc-bindtype      - Specifies if PDU responses are handled
+                 !                         in a synchronous or asynchronous manner.
+                 !                         The value can be "async" or "sync"
+                 !    smsc-svctype       - Optional argument that can be used to
+                 !                         specify the service type. (See section
+                 !                         5.2.11 of the SMPP protocol specification
+                 !                         version 3.4 for details on the service
+                 !                         types).
+                 !    smsc-svcaddr       - Optional argument that can be used to
+                 !                         override the MSISDN presented to the
+                 !                         far end SMSC. Default behaviour is to
+                 !                         provide the real MSISDN number
+                 !                         associated with the SMSC
+                 !    smsc-supportsmulti - Specifies if a message is sent to
+                 !                         multiple recipients as a single
+                 !                         interaction with the SMSC. The supported
+                 !                         values are "yes" and "no". The SMSC must
+                 !                         support receiving multiple recipients in
+                 !                         a single interaction if the value is "yes"
+                 !-->
+                <!-- Uncomment this section to enable the Logica SMSC channel adapter
+                <channel name="smsc"
+                    class="com.volantis.mps.channels.LogicaSMSChannelAdapter">
+                    <argument name="smsc-ip" value="SMSC-IP"/>
+                    <argument name="smsc-port" value="SMSC-PORT"/>
+                    <argument name="smsc-user" value="SMSC-USERNAME"/>
+                    <argument name="smsc-password" value="SMSC-PASSWORD"/>
+                    <argument name="smsc-bindtype" value="async"/>
+                    <argument name="smsc-supportsmulti" value="no"/>
+                </channel>
+                -->
+
+                <!--
+                 ! The MMSC channel adapter for MMS messages
+                 !
+                 !    class                     - The class implementing the
+                 !                                channel adapter. It should extend
+                 !                                the MessageChannel class
+                 !    url                       - The url of the MMSC.
+                 !    default-contry-code       - The default country code prefix
+                 !                                for recipients without fully
+                 !                                qualified MSISDN numbers.
+                 !-->
+                <!-- Uncomment this section to enable the Nokia MMSC channel adapter
+                <channel name="mmsc"
+                    class="com.volantis.mps.channels.NokiaMMSChannelAdapter">
+                    <argument name="url" value="http://MMSC-HOST:MMSC-PORT"/>
+                    <argument name="default-country-code" value="+44"/>
+                </channel>
+                -->
+                <!--
+                 ! The WAP Push channel adapter for WAP Push messages
+                 !
+                 !    class               - The class implementing the channel adapter.
+                 !                          It should extend the MessageChannel class.
+                 !    url                 - The url of the Now SMS gateway.
+                 !    default-contry-code - The default country code prefix for recipients
+                 !                          without fully qualified MSISDN numbers.
+                 !    message-store-url   - The fully qualified url of the MSS servlet.
+                 !-->
+                <!-- Uncomment this section to enable the NowSMS Wap Push channel adapter
+                <channel name="wappush"
+                    class="com.volantis.mps.channels.NowSMSWAPPushChannelAdapter">
+                    <argument name="url" value="http://WAPP-HOST:WAPP-PORT"/>
+                    <argument name="default-country-code" value="+44"/>
+                    <argument name="message-store-url" value="http://MSS-HOST:MSS-PORT/MSS-CONTEXT/mss"/>
+                </channel>
+                -->
+
+                <!-- _iid: location:/mcs-config/application-plugins/mps/channels -->
+            </channels>
+        </mps>
+    </application-plugins>
+
+    <!--
+     ! The web-application element configures MCS with your web application
+     ! server.
+     !
+     ! The base-url defines the effective URL of the server seen from a client,
+     ! and is used only when there is some URL mapping in use.
+     !
+     ! The internal-url defines the absolute URL of the server as seen from the
+     ! web application, and is used only when there is no other more specific
+     ! prefix, for example, from associated asset groups, for the absolute part
+     ! of their URL.
+     !
+     ! The page-base is used when generating resources. For example the URL
+     ! to generated chart images is prefixed by the web-application base-url,
+     ! the web-application page-base, and the chartimages base attributes
+     ! concatenated together with any additional path delimeters required.
+     !
+     ! The app-server-name indicates the application server in use.
+     !
+     ! The use-server-connection-pool controls whether the application server's
+     ! connection pool should be used, if available. If the connection pool is
+     ! used, the datasource-vendor, datasource, user and password  attributes
+     ! need to be set, and if a BEA Weblogic connection pool is used the
+     ! jndi-provider attribute also needs to be set.
+     !-->
+    <web-application
+        base-url="/"
+        internal-url="http://localhost:8080/"
+        app-server-name="Tomcat41"
+        jndi-provider="t3://JNDI-HOST:JNDI-PORT/"
+        use-server-connection-pool="false"
+        datasource-vendor="JNDI-DATASOURCE-VENDOR"
+        datasource="JNDI-DATASOURCE"
+        user="JNDI-USER"
+        password="JNDI-PASSWORD"
+        anonymous="false"
+        page-base="mcs"/>
+
+    <!--
+     ! The page packaging options. Currently the only option is for mime
+     ! packaging. This is turned off by default (ie. set enabled to false).
+     ! If this node is missing, mime packaging is disabled.
+     !-->
+    <page-packaging>
+        <mime-packaging enabled="false"/>
+    </page-packaging>
+
+    <!--
+     ! The debug attributes control whether comments are written to the
+     ! generated page, and whether the markup for the generated page is also
+     ! written to the MCS log.
+     !-->
+    <debug comments="false"
+           logPageOutput="false"/>
+
+    <!--
+     ! JNDI configuration
+     !-->
+    <!-- Uncomment and update this section to define the initial context parameters for JNDI
+    <jndi-configuration>
+        <initial-context name="initialContext">
+            <parameter name="name1" value="value1"/>
+            <parameter name="name2" value="value2"/>
+        </initial-context>
+    </jndi-configuration>
+    -->
+
+    <!--
+     ! The pipeline configuration options control the caching operation,
+     ! the sql-driver and web services configuration.
+     !-->
+    <pipeline-configuration>
+        <!--
+         ! The general (remote) connection configuration used by various
+         ! pipeline processes to define default connection characteristics.
+         ! The timeout value is measured in seconds. A zero or negative value
+         ! indicates that no timeout is to be applied.
+         !-->
+        <connection timeout="-1"
+            enable-caching="false"
+            max-cache-entries="1000"/>
+
+        <!--
+         ! The caching operation configuration.
+         !-->
+        <caching-operation>
+            <cache name="cacheName"
+                strategy="least-recently-used"
+                max-entries="10"/>
+        </caching-operation>
+
+        <!--
+         ! The sql-driver configuration.
+         !-->
+        <sql-driver>
+            <data-sources>
+                <!--
+                 ! JNDI data source. Note that the initial-context name should
+                 ! exist in the jndi-configuration.
+                 !-->
+                <!-- Uncomment this section to define a JNDI data source
+                <named-data-source name="JNDI">
+                    <jndi-data-source name="JNDI name"
+                        initial-context="initialContext"/>
+                </named-data-source>
+                -->
+
+                <!--
+                 ! Named data source for JDBC data source.
+                 !-->
+                <!-- Uncomment this section to define an Oracle JDBC data source
+                <named-data-source name="JDBC">
+                    <jdbc-driver
+                        database-url="jdbc:oracle:thin:@HOST_NAME:1526:DBNAME"
+                        driver-class="oracle.jdbc.driver.OracleDriver">
+                        <parameter name="name" value="value"/>
+                    </jdbc-driver>
+                </named-data-source>
+                -->
+
+                <!--
+                 ! Named data source for MCS data source.
+                 !-->
+                <!-- Uncomment this section to define an Oracle JDBC data source without parameters
+                <named-data-source name="MCS">
+                    <mcs-database
+                        host="HOST_NAME"
+                        port="1526"
+                        source="DBNAME"
+                        vendor="oracle"/>
+                </named-data-source>
+                -->
+
+                <!--
+                 ! Pooled JDBC connection
+                 !-->
+                <!-- Uncomment this section to define a JDBC based connection pool
+                <named-data-source name="JDBC Pooled">
+                    <connection-pool>
+                        <jdbc-driver
+                            database-url="jdbc:oracle:thin:@HOST_NAME:1526:DBNAME"
+                            driver-class="oracle.jdbc.driver.OracleDriver">
+                            <parameter name="name" value="value"/>
+                        </jdbc-driver>
+                    </connection-pool>
+                </named-data-source>
+                -->
+
+                <!--
+                 ! Pooled MCS connection
+                 !-->
+                <!-- Uncomment this section to define an MCS based connection pool
+                <named-data-source name="MCS Pooled">
+                    <connection-pool>
+                        <mcs-database
+                            host="HOST_NAME"
+                            port="1526"
+                            source="DBNAME"
+                            vendor="oracle"/>
+                    </connection-pool>
+                </named-data-source>
+                -->
+
+                <!-- _iid: location:/mcs-config/pipeline-configuration/sql-driver/data-sources -->
+            </data-sources>
+        </sql-driver>
+
+        <!--
+         ! The web services driver configuration.
+         !-->
+        <web-services-driver>
+            <!--
+             ! The web services description language catalog configuration.
+             !-->
+            <wsdl-catalog>
+                <!--
+                 ! The web services data language entry configuration
+                 !-->
+                <!-- Uncomment this block to define a WSDL entry
+                <wsdl-entry uri="uri/for/wsdl/entry">
+                    <class-resource path="/class/resource/path"/>
+                    <servlet-resource path="/servlet/resource/path"/>
+                    <uri-resource uri="uri/resource"/>
+                </wsdl-entry>
+                -->
+                <!-- _iid: location:/mcs-config/pipeline-configuration/web-services-driver/wsdl-catalog -->
+            </wsdl-catalog>
+        </web-services-driver>
+
+        <!--
+         ! The web driver configuration.
+         !-->
+        <web-driver connection-timeout="-1">
+            <!--
+             ! The script configuration.
+             !-->
+            <!-- Uncomment this block to define filtering "scripts" to be executed on specific content types
+            <script>
+                <module id="id">
+                    <filter content-type="contentType1" class="com.test.ClassName1"/>
+                    <filter content-type="contentType2" class="com.test.ClassName2"/>
+                </module>
+            </script>
+            -->
+
+            <!--
+             ! The proxy configuration.
+             !-->
+            <!-- Uncomment this block to define the proxy configuration
+            <proxy id="id" port="8080" host="localhost"/>
+            -->
+            <!-- _iid: location:/mcs-config/pipeline-configuration/web-driver -->
+        </web-driver>
+
+        <!--
+         ! Transformation control definition.
+         !
+         ! If compile is set to true, we compile transform and transformation
+         ! elements whose compilable attribute is set to true. If compile is
+         ! set to false, no attempt is made to compile transform and
+         ! transformation elements irrespective of the value of their
+         ! compilable attributes.
+         !-->
+        <transform compile="false"/>
+    </pipeline-configuration>
+
+    <!--
+     ! Protocols control definition.
+     !
+     ! Only supports WML at the moment.
+     !-->
+    <protocols>
+        <wml preferred-output-format="wmlc" />
+    </protocols>
+</mcs-config>

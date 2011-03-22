@@ -45,6 +45,35 @@
         <sensis:log-file-set-size refid="crf.jar.custom.jsp.tags.fileset" basedir="${web.dir}"/>
     </target>   
 	
+    <!--
+      - Override imported target: add extra steps to standard library step. 
+      -->
+    <target name="showcase-prepare-resources-for-package" 
+    	depends="build-showcase-prepare-resources-for-package.showcase-prepare-resources-for-package">
+    	
+        <echo message="crf: Overriding showcase showcase-prepare-resources-for-package target to add additional steps." />
+        	
+        <!--
+          - This project's showcase still depends on MCS, since we provide MCS based web pages for
+          - performance testing comparisons.
+          -->
+        <property file="${showcase.cfg.dir}/mcs/mcs.properties.${project.platform}"/>
+
+        <copy file="${showcase.cfg.dir}/mcs/mcs-config.xml" 
+               tofile="${dist.showcase.work.dir}/WEB-INF/mcs-config.xml"
+                overwrite="true">
+            <filterset>
+                <filter token="MCS-DEVICEREPOSITORY-FILEPATH"
+                        value="${mcs.devicerepository.filepath}"/>
+                <filter token="MCS-POLICIES-FILEPATH" value="${mcs.policies.filepath}"/>
+                <filter token="MCS-CACHE-POLICIES" value="${mcs.cache.policies}"/>
+                <filter token="MCS-SCRIPT-ASSET-PATH" value="${mcs.script.asset.path}"/>
+            </filterset>
+        </copy>
+        
+
+    </target>
+	
 	<target name="jaxbCompileCrfConfig" depends="init, require-jdk5-home-property"
 		description="Compile the crf-config.xsd into JAXB beans.">
 

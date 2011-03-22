@@ -227,26 +227,6 @@
       <url-pattern>/MCSCSS/*</url-pattern>
     </servlet-mapping>
 
-
-    <!-- Servlet dedicated to web components. -->
-    <servlet>
-        <servlet-name>webComponentServlet</servlet-name>
-        <servlet-class>
-            org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>
-                /WEB-INF/context/component/webComponentServletContext.xml
-             </param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>webComponentServlet</servlet-name>
-        <url-pattern>/comp/*</url-pattern>
-    </servlet-mapping>
- 
-    
     <!-- crf Servlet. -->
     <servlet>
         <servlet-name>crfResourceResolverServlet</servlet-name>

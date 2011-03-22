@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================================================
+ | Sample log4j configuration file for volantis.
+ ! ======================================================================= -->
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <!-- ==================================================================
+     ! An appender which behaves similar to the default configuration of
+     ! the old volantis logger.
+     ! ================================================================ -->
+    <appender name="DEFAULT-LOG"
+        class="org.apache.log4j.FileAppender">
+        <param name="Append" value="false"/>
+        <param name="File" value="../../../logs/volantis.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%d{dd MMM HH:mm:ss} [%t] %-5p %c %x - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- ==================================================================
+     ! An appender which uses most of the functionality which the old
+     ! volantis logger provided.
+     ! ================================================================ -->
+    <appender name="ROLLING-LOG"
+        class="org.apache.log4j.RollingFileAppender">
+        <param name="Append" value="false"/>
+        <param name="File" value="../../../logs/volantis.log"/>
+        <param name="MaxBackupIndex" value="4"/>
+        <param name="MaxFileSize" value="10MB"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%d{dd MMM HH:mm:ss} [%t] %-5p %c %x - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- ==================================================================
+     ! An appender which writes the output to the console.
+     ! ================================================================ -->
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%d{dd MMM HH:mm:ss} [%t] %-5p %c %x - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- ==================================================================
+     ! An appender which only outputs informational and warning messages
+     ! to a rolling file which is updated daily.
+     ! ================================================================ -->
+    <appender name="INFO-LOG"
+        class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="Append" value="false"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <param name="File" value="../../../logs/volantis.log"/>
+        <param name="Threshold" value="info"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%d{dd MMM HH:mm:ss} [%t] %-5p %c %x - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- ==================================================================
+     ! An appender which does the logging on a background thread similar
+     ! to the old volantis logger.
+     ! ================================================================ -->
+    <appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+
+        <!--
+         ! The following statement selects whether or not the location of
+         ! the logger is available for the layout.
+         !-->
+        <param name="LocationInfo" value="false"/>
+
+        <!-- Use the default appender. -->
+        <appender-ref ref="DEFAULT-LOG"/>
+
+        <!-- Uncomment the following to use the rolling appender. -->
+        <!-- <appender-ref ref="ROLLING-LOG"/> -->
+
+        <!--
+         ! Uncomment the following to log informational messages to
+         ! a separate file.
+         !-->
+        <!-- <appender-ref ref="INFO-LOG"/> -->
+    </appender>
+
+
+    <!-- ==================================================================
+     ! An appender which logs to a socket.
+     ! ================================================================ -->
+    <!--
+    <appender name="SOCKET" class="org.apache.log4j.net.SocketAppender">
+    -->
+    <!--
+     ! The following statement makes sure that the location of
+     ! the logger is available for the layout.
+     !-->
+    <!-- <param name="LocationInfo" value="true"/> -->
+
+    <!-- URL of the host on which to open socket -->
+    <!-- <param name="RemoteHost" value="localhost"/> -->
+    <!-- The port on the host above on which to open socket -->
+    <!-- <param name="Port" value="4445"/> -->
+    <!-- Delay in milliseconds between attempts to open socket -->
+    <!-- <param name="ReconnectionDelay" value="5000"/> -->
+    <!--
+    </appender>
+    -->
+    <!-- _iid: location:/mcs-log4j/appenders -->
+
+    <!-- ==================================================================
+     ! All of the appenders format the output similar to the way that the
+     ! old volantis logger did. Replace the layout element with the
+     ! following to format the output as xml statements.
+     ! ================================================================ -->
+    <!--
+            <layout class="org.apache.log4j.xml.XMLLayout">
+                    <param name="LocationInfo" value="true"/>
+            </layout>
+     !-->
+
+    <!-- _iid: location:/mcs-log4j/categories -->
+
+    <!--
+     ! The list of categories corresponding to the top-level packages used
+     ! by MCS. These categories have been chosen so as to minimize clashes
+     ! between Volantis products running within the same JVM. Where clashes
+     ! exist, such as between MCS and ICS regarding com.volantis.synergetics,
+     ! and an attempt has been made to set different priorities in MCS and ICS
+     ! for this category then the actual priority applied will be
+     ! indeterminately one or other of these settings.
+     !-->
+
+    <!--
+     ! A category that covers the classes used to perform character encoding
+     ! processing.
+     !-->
+    <category name="com.volantis.charset">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers the classes used in JSP tag libraries for
+     ! pipeline processing.
+     !-->
+    <category name="com.volantis.jsp">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers the main runtime processing within MCS.
+     !-->
+    <category name="com.volantis.mcs">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers the styling processing within MCS.
+     !-->
+    <category name="com.volantis.styling">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers the main runtime processing within MPS.
+     !-->
+    <category name="com.volantis.mps">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers various environment abstractions (abstracting
+     ! HTTP and JSP facilities) and providing supporting classes (such as
+     ! exception base classes).
+     !-->
+    <category name="com.volantis.shared">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers a number of classes shared between various
+     ! applications, such as caching mechanisms, logging etc.
+     !-->
+    <category name="com.volantis.synergetics">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers various Web Services classes.
+     !-->
+    <category name="com.volantis.wsif">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers the XML pipeline processing classes.
+     !-->
+    <category name="com.volantis.xml">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+
+    <!--
+     ! A category that covers various re-packaged third-party packages such
+     ! as apache commons digester etc.
+    <category name="our">
+        <priority value="error"/>
+        <appender-ref ref="ASYNC"/>
+    </category>
+     !-->
+
+</log4j:configuration>

@@ -53,7 +53,7 @@
     <dependencies>
     
         <!-- Shared build scripts required by this project. -->    
-        <dependency org="com.sensis" name="wl-build-scripts" rev="2.2.0" conf="buildBootstrap->default" />
+        <dependency org="com.sensis" name="wl-build-scripts" rev="2.3.0" conf="buildBootstrap->default" />
         
         <!-- Commons -->
         <dependency org="apache" name="commons-lang" rev="2.4" conf="default" />
@@ -90,7 +90,7 @@
 
         <!-- SDP Common -->
         <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>        
-        <dependency org="com.sensis" name="sdpCommon-web" rev="2.0-005" conf="default"/>
+        <dependency org="com.sensis" name="sdpCommon-web" rev="2.0-006" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-013" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-utils" rev="1.0-008" conf="default"/>
         
@@ -111,7 +111,7 @@
         <dependency org="com.vladium" name="emma" rev="2.0" conf="test->default"/>
 
         <!-- Testbed depedency. -->
-        <dependency org="com.sensis" name="wl-webapp-testbed" rev="1.0.9" conf="showcase->default"/>        
+        <dependency org="com.sensis" name="wl-webapp-testbed" rev="2.1.0" conf="showcase->default"/>        
         
         <!-- ================================================================================ -->
         <!-- Exclusions. -->
