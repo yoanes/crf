@@ -36,7 +36,33 @@ public abstract class BdpPage extends AbstractPageFixture {
 
         assertAppProperty1LoadedFromMainPropertiesFile();
 
+        assertResourcePrefixes();
+
         doAssertPageStructure();
+    }
+
+    private void assertResourcePrefixes() {
+        final String expectedImgSrcPrefix =
+                "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/images/'";
+        assertTrue("imgSrcPrefix via direct render not found", getBrowser().isTextPresent(
+                "imgSrcPrefix (direct render): " + expectedImgSrcPrefix));
+        assertTrue("imgSrcPrefix via var not found", getBrowser().isTextPresent(
+                "imgSrcPrefix (via var): " + expectedImgSrcPrefix));
+
+        final String expectedLinkHrefPrefix =
+                "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/css/'";
+        assertTrue("linkHrefPrefix via direct render not found", getBrowser().isTextPresent(
+                "linkHrefPrefix (direct render): " + expectedLinkHrefPrefix));
+        assertTrue("linkHrefPrefix via var not found", getBrowser().isTextPresent(
+                "linkHrefPrefix (via var): " + expectedLinkHrefPrefix));
+
+        final String expectedScriptSrcPrefix =
+                "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/javascript/'";
+        assertTrue("scriptSrcPrefix via direct render not found", getBrowser().isTextPresent(
+                "scriptSrcPrefix (direct render): " + expectedScriptSrcPrefix));
+        assertTrue("scriptSrcPrefix via var not found", getBrowser().isTextPresent(
+                "scriptSrcPrefix (via var): " + expectedScriptSrcPrefix));
+
     }
 
     private void assertInlineScriptPresent() {

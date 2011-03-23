@@ -27,6 +27,8 @@
     
     <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/mainProperties.crf"/>
     
+    <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/resourcePrefixes.crf"/>
+    
     <%--
       - Acceptance criteria: test inclusion of relative JSPs via CRF (Jira CRF-16). 
       --%>

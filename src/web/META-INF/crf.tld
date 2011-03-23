@@ -94,6 +94,45 @@
         <dynamic-attributes>false</dynamic-attributes>
     </tag>    
     <tag>
+        <name>imgSrcPrefix</name>
+        <description>Render the prefix that is used for all abstract image src paths.</description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.ImageSrcPrefixTag</tag-class>
+        <body-content>empty</body-content>
+        <dynamic-attributes>false</dynamic-attributes>
+        <attribute>
+            <name>var</name>
+            <description>Optional name of the variable to set the result into.</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>    
+    <tag>
+        <name>linkHrefPrefix</name>
+        <description>Render the prefix that is used for all abstract link href paths.</description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.LinkHrefPrefixTag</tag-class>
+        <body-content>empty</body-content>
+        <dynamic-attributes>false</dynamic-attributes>
+        <attribute>
+            <name>var</name>
+            <description>Optional name of the variable to set the result into.</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>    
+    <tag>
+        <name>scriptSrcPrefix</name>
+        <description>Render the prefix that is used for all abstract script src paths.</description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.ScriptSrcPrefixTag</tag-class>
+        <body-content>empty</body-content>
+        <dynamic-attributes>false</dynamic-attributes>
+        <attribute>
+            <name>var</name>
+            <description>Optional name of the variable to set the result into.</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>    
+    <tag>
         <name>deviceProperty</name>
         <description>Retrieve a named property from the given .</description>
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.DevicePropertyTag</tag-class>

@@ -19,6 +19,7 @@ Task:
 * [CRF-63] - NEW: support for referencing groups from other crf config files
 * [CRF-92] - NEW: support for referencing groups within the same crf config file
 * [CRF-98] - NEW - upgrade map component to use CRF 2
+* [CRF-107] - JavaScript that requests images directly, must handle new /uiresources/<version>/images/ structure
 
 Upgrade Notes
 - (TODO: updated to 2.0-006) This version depends on sdpCommon-web 2.0-005. The way in which device recognition is performed
@@ -119,6 +120,12 @@ Upgrade Notes
   group config file like so:
       
         <import from="global/clientapps" />      
+        
+- As per [CRF-107] "JavaScript that requests images directly, must handle 
+  new /uiresources/<version>/images/ structure", component tag files that used to require an 
+  attribute set to the images source prefix, should now use <crf:imgSrcPrefix /> directly. 
+  This will work out the correct image source prefix, including the version number. 
+        
 
 ==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
 

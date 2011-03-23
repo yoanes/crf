@@ -362,15 +362,15 @@ public class ResourcePathTestData {
     }
 
     public String getCssClientPathPrefix() {
-        return "http://localhost:8080/wl-crf-component-showcase/resources/css/";
+        return "http://localhost:8080/wl-crf-component-showcase/uiresources/";
     }
 
     public String getImageClientPathPrefix() {
-        return "http://localhost:8080/wl-crf-component-showcase/resources/images/";
+        return "http://localhost:8080/wl-crf-component-showcase/uiresources/";
     }
 
     public String getScriptClientPathPrefix() {
-        return "http://localhost:8080/wl-crf-component-showcase/resources/javascript/";
+        return "http://localhost:8080/wl-crf-component-showcase/uiresources/";
     }
 
     public String getMappedDefaultGroupCssResourceHref() {
