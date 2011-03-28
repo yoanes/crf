@@ -22,7 +22,7 @@ Task:
 * [CRF-107] - JavaScript that requests images directly, must handle new /uiresources/<version>/images/ structure
 
 Upgrade Notes
-- (TODO: updated to 2.0-006) This version depends on sdpCommon-web 2.0-005. The way in which device recognition is performed
+- This version depends on sdpCommon-web 2.0-006. The way in which device recognition is performed
   by MobileContextSetUpFilter was changed in version 2.0-001. In particular, it calls:
   
       getDeviceRecognition().identifyDevice(userAgent);
