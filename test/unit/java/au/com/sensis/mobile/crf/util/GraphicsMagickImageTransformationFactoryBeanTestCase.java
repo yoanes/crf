@@ -84,6 +84,8 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
         setDevicePercentWidthScalingOutputImage(new File(getOutputImageBaseDir(),
                 getDevicePercentWidthScalingOutputImageSubDir() + "/myInputImage.png"));
 
+        getObjectUnderTest().setProcessTimeoutMilliseconds(2000);
+
         setDevicePercentWidthScalingCommandLine(Arrays.asList(new String[] { "gm", "convert",
                 "-resize", "100x", "-unsharp", "0x1", getSourceImage().getPath(),
                 getDevicePercentWidthScalingOutputImage().getPath() }));
@@ -339,6 +341,34 @@ public class GraphicsMagickImageTransformationFactoryBeanTestCase extends Abstra
                     "Error when creating scaled image using command: "
                             + getDevicePercentWidthScalingCommandLine() + ". Process exit code: 1",
                     e.getMessage());
+        }
+    }
+
+    @Test
+    public void testScaleImageWhenProcessTookTooLongToExit() throws Throwable {
+
+        recordReadSourceImageAttributes();
+
+        recordMakeOutputImageDirs(getDevicePercentWidthScalingOutputImageSubDir());
+
+        recordStartProcess(getDevicePercentWidthScalingCommandLine());
+
+        EasyMock.expect(getMockProcess().exitValue()).andThrow(
+                new IllegalThreadStateException("test")).atLeastOnce();
+
+        replay();
+
+        try {
+            getObjectUnderTest().transformImage(getSourceImage(), getOutputImageBaseDir(),
+                    createPercentWidthImageTransformationParameters());
+
+            Assert.fail("ImageCreationException expected");
+        } catch (final ImageCreationException e) {
+
+            Assert.assertEquals("ImageCreationException has wrong message",
+                    "Error when creating scaled image using command: "
+                            + getDevicePercentWidthScalingCommandLine()
+                            + ". Process took too long to exit.", e.getMessage());
         }
     }
 

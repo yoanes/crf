@@ -31,6 +31,17 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
     private final String graphicsMagickExecutable;
 
     /**
+     * Default value for {@link #getProcessTimeoutMilliseconds()}.
+     */
+    public static final int DEFAULT_PROCESS_TIMEOUT_MILLISECONDS = 60000;
+
+    /**
+     * Milliseconds to wait for the launched process to terminate. Defaults to
+     * {@link #DEFAULT_PROCESS_TIMEOUT_MILLISECONDS}.
+     */
+    private int processTimeoutMilliseconds = DEFAULT_PROCESS_TIMEOUT_MILLISECONDS;
+
+    /**
      * Constructor.
      *
      * @param processStarter
@@ -46,6 +57,23 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
         this.processStarter = processStarter;
         this.imageReader = imageReader;
         this.graphicsMagickExecutable = graphicsMagickExecutable;
+    }
+
+    /**
+     * @return Milliseconds to wait for the launched process to terminate.
+     *         Defaults to {@link #DEFAULT_PROCESS_TIMEOUT_MILLISECONDS}.
+     */
+    public int getProcessTimeoutMilliseconds() {
+        return processTimeoutMilliseconds;
+    }
+
+    /**
+     * @param processTimeoutMilliseconds
+     *            Milliseconds to wait for the launched process to terminate.
+     *            Defaults to {@link #DEFAULT_PROCESS_TIMEOUT_MILLISECONDS}.
+     */
+    public void setProcessTimeoutMilliseconds(final int processTimeoutMilliseconds) {
+        this.processTimeoutMilliseconds = processTimeoutMilliseconds;
     }
 
     /**
@@ -137,7 +165,7 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
             LOGGER.debug("Transforming image using command: " + commandLine);
         }
 
-        final int processExitValue = waitForProcess(process);
+        final int processExitValue = waitForProcess(process, commandLine);
         validateProcessExitedSuccessfully(processExitValue, commandLine);
 
         return createTransformedImageAttributes(sourceImageAttributes, outputImageFile,
@@ -159,18 +187,33 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
         }
     }
 
-    private int waitForProcess(final Process process) {
+    private int waitForProcess(final Process process, final List<String> commandLine) {
+        final long startTime = System.currentTimeMillis();
         while (!hasProcessExited(process)) {
-            try {
-                Thread.sleep(PROCESS_POLLING_INTERVAL_MILLISECONDS);
-            } catch (final InterruptedException e) {
-                throw new IllegalStateException(
-                        "We were interrupted when waiting for the image scaling process to exit. "
-                                + "This really, really shouldn't happen.", e);
+
+            if (processHasExceededTimeout(startTime)) {
+                throw new ImageCreationException("Error when creating scaled image using command: "
+                        + commandLine + ". Process took too long to exit.");
             }
+
+            sleepUntilNextPollingTime();
         }
         return process.exitValue();
 
+    }
+
+    private boolean processHasExceededTimeout(final long startTime) {
+        return System.currentTimeMillis() - startTime > getProcessTimeoutMilliseconds();
+    }
+
+    private void sleepUntilNextPollingTime() {
+        try {
+            Thread.sleep(PROCESS_POLLING_INTERVAL_MILLISECONDS);
+        } catch (final InterruptedException e) {
+            throw new IllegalStateException(
+                    "We were interrupted when waiting for the image scaling process to exit. "
+                            + "This really, really shouldn't happen.", e);
+        }
     }
 
     private boolean hasProcessExited(final Process process) {

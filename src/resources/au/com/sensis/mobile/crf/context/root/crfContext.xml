@@ -156,6 +156,8 @@
             <bean class="au.com.sensis.mobile.crf.util.ImageReaderBean" />
         </constructor-arg>
         <constructor-arg value="@{crf.env.image.transformation.graphics.magick.path}" />
+        <property name="processTimeoutMilliseconds" 
+            value="@{crf.resources.images.transformation.process.timeout.milliseconds}" />
     </bean>
 
     <!-- TODO: extract this global deploymentMetadata bean (and its class) into somewhere more common? -->
