@@ -107,4 +107,17 @@
             <arg value="${crf.config.jaxb.schema}"/>
         </java>
     </target>
+	
+	<target name="run-image-generation-tests" depends="init"
+        description="Run (offline) image generation tests">
+		
+	    <delete dir="${build.dir}/work/image-generation-tests" />
+	    <mkdir dir="${build.dir}/work/image-generation-tests" />
+		
+        <exec executable="bash" 
+            failonerror="true" resolveexecutable="true">
+		   <arg value="-c" />	
+		   <arg value="test/scripts/image-generation/gimagesTestCase.sh" />	
+        </exec>
+    </target>
 </project>
