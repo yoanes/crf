@@ -2,6 +2,10 @@
 #
 # Content Rendering Framework script for clobbering all generated images.
 #
+# CRF Version: @CRFVERSION@
+#
+# $Revision$
+#
 # Note that this script was developed to run on multiple platforms, including Windows. As such, you will notice a 
 # common idiom of '|tr -d "\r"' is used to strip out carriage return characters that Windows is so fond of.
 #

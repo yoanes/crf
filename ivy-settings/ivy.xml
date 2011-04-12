@@ -48,6 +48,7 @@
     <publications>
         <artifact name="wl-crf" type="jar" ext="jar" conf="default"/>
         <artifact name="wl-crf-test" type="jar" ext="jar" conf="test"/>
+        <artifact name="wl-crf-image-scripts" type="zip" ext="zip" conf="default"/>
     </publications>
 
     <dependencies>

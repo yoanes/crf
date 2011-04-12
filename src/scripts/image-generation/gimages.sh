@@ -2,6 +2,8 @@
 #
 # Content Rendering Framework script for generating scaled images.
 #
+# CRF Version: @CRFVERSION@
+#
 # $Revision$
 #
 # Note that this script was developed to run on multiple platforms, including Windows. As such, you will notice a 

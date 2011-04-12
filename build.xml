@@ -25,6 +25,43 @@
     <import file="shared-build-scripts/src/toplevel/build-library-with-showcase-support.xml" />
 	<import file="shared-build-scripts/src/standard/build-standard-require-jdk5-home-property.xml"/>
 	
+	<target name="init" depends="build-standard-init.init">
+        <echo message="crf: Overriding build-standard-init.init target." />
+        
+		<property name="image.scripts.src.dir" 
+		            value="${src.dir}/scripts/image-generation" />
+        <property name="image.scripts.dist.path" 
+            value="${dist.dir}/${project.name}-image-scripts-${project.version.complete}.zip" />		
+        	
+        <property name="image.scripts.dist.work.dir" location="${build.dir}/work/image-scripts"/>        	
+        	
+        <mkdir dir="${image.scripts.dist.work.dir}" />
+	</target>
+	
+    <target name="prepare-resources-to-publish" depends="build-library-with-showcase-support.prepare-resources-to-publish">
+        <echo message="crf: Overriding build-library-with-showcase-support.prepare-resources-to-publish target." />
+    	
+        <copy todir="${image.scripts.dist.work.dir}" overwrite="true"
+              description="Make the build aware of the build version related properties." >
+            <fileset dir="${image.scripts.src.dir}">
+                <include name="**/*"/>
+            </fileset>
+            <filterset>
+                <filter token="CRFVERSION" value="${project.version.complete}"/>
+            </filterset>
+        </copy>
+      
+        <zip destfile="${image.scripts.dist.path}">
+            <fileset dir="${image.scripts.dist.work.dir}">
+                <include name="**/*"/>
+            </fileset>
+        </zip>
+
+        <copy file="${image.scripts.dist.path}" 
+          tofile="${ivy.publish.dir}/${project.name}-image-scripts-${project.version.complete}.zip"/>
+    </target>
+	
+	
     <!--
       - Override imported target: add extra steps to standard library step. 
       -->
