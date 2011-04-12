@@ -6,11 +6,6 @@
 #
 # Note that this script was developed to run on multiple platforms, including Windows. As such, you will notice a 
 # common idiom of '|tr -d "\r"' is used to strip out carriage return characters that Windows is so fond of.
-#
-# TODO: 
-# 1. Separate wrapper scripts: generate all images, generate for specific image.
-#
-# 2. Install imagemagick on hudson box for regression test.
 
 #set -x
 
@@ -50,6 +45,9 @@ minimumPixels="$defaultMinimumPixels"
 defaultOverwriteWithoutPrompting=false
 overwriteWithoutPrompting="$defaultOverwriteWithoutPrompting"
 
+defaultImageBasepath=""
+imageBasepath="$defaultImageBasepath"
+
 # ==============================================================================
 # Functions.
 
@@ -58,6 +56,7 @@ function echoUsedVariables {
     displayUsedVariable "uiResourcesDir" "$uiResourcesDir" "$defaultUiResourcesDir"
     displayUsedVariable "pixelsIncrement" "$pixelsIncrement" "$defaultPixelsIncrement"
     displayUsedVariable "minimumPixels" "$minimumPixels" "$defaultMinimumPixels"
+    displayUsedVariable "imageBasepath" "$imageBasepath" "$defaultImageBasepath"
     displayUsedVariable "overwriteWithoutPrompting" "$overwriteWithoutPrompting" "$defaultOverwriteWithoutPrompting"
     $echoCmd 
 }
@@ -102,13 +101,7 @@ function displayUsedVariable {
 #    fi
 #}
 
-function findSourceImagesToScale {
-    local imagesResourcesDir="$uiResourcesDir/images"
-    local generatedImageDirRegex=".*[/\\\\]w[0-9]+[/\\\\]h[0-9]+[/\\\\].*"
-    local dotNullImageNamePattern="*.null"
-    local propertyFileNamePattern="*.properties"
-    local md5FileNamePattern="*.md5"
-
+function findAllSourceImagesToScale {
     # Find all properties files first. Only an image that has a matching properties files in any group are
     # candidates for scaling.
     local propertyFiles=`$findCmd $uiResourcesDir -name "*.properties"`
@@ -117,6 +110,41 @@ function findSourceImagesToScale {
         $echoCmd >> "$debugFile"
         $echoCmd "All property files found: $propertyFiles" >> "$debugFile"
     fi
+
+    findSourceImagesForPropertyFiles "$propertyFiles"
+}
+
+function findSourceImagesToScaleFromBasePath {
+    local basePath="$1"
+
+    # Find properties files matching the passed in basePath first. Only an image that has a matching properties files in any group are
+    # candidates for scaling.
+    local propertyFiles=`$findCmd $uiResourcesDir -regex ".*${basePath}.properties$"`
+    if [ "$debug" -eq 0 ]
+    then
+        $echoCmd >> "$debugFile"
+        $echoCmd "Property files found with basePath of ${basePath}: $propertyFiles" >> "$debugFile"
+    fi
+
+    if [ -z "$propertyFiles" ]
+    then
+        $echoCmd 1>&2
+        $echoCmd "ERROR: No ${basePath}.properties files found in $uiResourcesDir. Please create these." 1>&2
+        $echoCmd 1>&2
+        exit 1
+    fi
+
+    findSourceImagesForPropertyFiles "$propertyFiles"
+}
+
+function findSourceImagesForPropertyFiles {
+    local propertyFiles="$1"
+    local imagesResourcesDir="$uiResourcesDir/images"
+    local generatedImageDirRegex=".*[/\\\\]w[0-9]+[/\\\\]h[0-9]+[/\\\\].*"
+    local dotNullImageNamePattern="*.null"
+    local propertyFileNamePattern="*.properties"
+    local md5FileNamePattern="*.md5"
+
     local i=1;
     for propFile in $propertyFiles
     do
@@ -182,7 +210,21 @@ function getExtension {
 }
 
 function scaleImages {
-    local sourceImages=`findSourceImagesToScale`
+    local basePath="$1"
+
+    if [ -z "$basePath" ]
+    then
+        local sourceImages=`findAllSourceImagesToScale`
+    else
+        local sourceImages=`findSourceImagesToScaleFromBasePath "$basePath"`
+    fi
+
+    if [ -z "$sourceImages" ]
+    then
+        $echoCmd "No images found. Exiting." 1>&2
+        exit 1
+    fi
+
     if [ "$debug" -eq 0 ]
     then
         $echoCmd >> "$debugFile"
@@ -309,13 +351,15 @@ function scaleSingleImage {
 # ==============================================================================
 # Processing
 
-while getopts ":r:i:m:ohd" option 
+while getopts ":r:i:m:p:ohd" option 
 do  case "$option" in
         r) uiResourcesDir=$OPTARG
            ;;
         i) pixelsIncrement=$OPTARG
            ;;
         m) minimumPixels=$OPTARG
+           ;;
+        p) imageBasepath=$OPTARG
            ;;
         o) overwriteWithoutPrompting=true
            ;;
@@ -328,5 +372,5 @@ do  case "$option" in
 done
 
 echoUsedVariables
-scaleImages
+scaleImages "$imageBasepath"
 writeLastRunPropertiesFile
