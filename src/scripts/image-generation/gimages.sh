@@ -8,13 +8,9 @@
 # common idiom of '|tr -d "\r"' is used to strip out carriage return characters that Windows is so fond of.
 #
 # TODO: 
-# 0. Regression testing harness for this script. Will hudson box have imagemagick? Probably create separate target for these tests, separate to Java unit tests.
-#    Probably write the tests using shell, so that we can use diff command on actual and expected output.
-# 1. Where to get optional GIF background color from?
-# 2. Separate wrapper scripts: generate all images, generate for specific image.
-# 3. Build scripts: copy $lastRunPropertiesFile to right place for app to pick up at runtime.
-# 4. Verification script: compare source images to hash files. Build should fail if this fails.
-# 5. Build: create distribution for these scripts.
+# 1. Separate wrapper scripts: generate all images, generate for specific image.
+#
+# 2. Install imagemagick on hudson box for regression test.
 
 #set -x
 
@@ -113,6 +109,8 @@ function findSourceImagesToScale {
     local propertyFileNamePattern="*.properties"
     local md5FileNamePattern="*.md5"
 
+    # Find all properties files first. Only an image that has a matching properties files in any group are
+    # candidates for scaling.
     local propertyFiles=`$findCmd $uiResourcesDir -name "*.properties"`
     if [ "$debug" -eq 0 ]
     then
@@ -132,6 +130,7 @@ function findSourceImagesToScale {
         local i=$((i + 1))
     done
 
+    # Now find all images that correspond to the properties files found.
     local findOptions="$imagesResourcesDir -type f -a '!' -path '*CVS*' -a '!' -regex \"$generatedImageDirRegex\" \
             -a '!' -name \"$dotNullImageNamePattern\" -a '!' -name \"$propertyFileNamePattern\" -a '!' -name \"$md5FileNamePattern\" -a \\("
     local i=1;
@@ -256,11 +255,36 @@ function scaleSingleImage {
         local tempFile=$$.tmpImage.$outputExtension
     fi
 
+    if [ `getExtension $currImage` = ".png" -o `getExtension $currImage` = ".PNG" -a \( "$outputExtension" = ".gif" -o "$outputExtension" = ".GIF" \) ]
+    then
+        # Look for optional GIF background color property.
+        local currImageLocalPropertiesFile=${currImage%.*}.properties
+        if [ -e $currImageLocalPropertiesFile ]
+        then
+            local backgroundColorLine=`grep "background.color" $currImageLocalPropertiesFile`
+            local backgroundColor=${backgroundColorLine#background.color=}
+        fi
+        if [ -z "$backgroundColor" ]
+        then
+            local backgroundColor=#FFFFFF
+        fi
+    fi
+
+    if [ "$debug" -eq 0 ]
+    then
+        $echoCmd "background.color value: '$backgroundColor'" 
+    fi
+
     # Resize the image to a temp file first because we want to inspect its dimensions
     # to create the real output path. We already know what the width will be but not the
     # height. We _could_ try calculating it ourselves but 1) calculations in bash are a 
     # pain and 2) we might be off by +/-1px if we calculated it.
-    $convertCmd -strip -resize ${newImageWidth}x -unsharp 0x1 $currImage $tempFile
+    if [ -z "$backgroundColor" ]
+    then
+        $convertCmd -resize ${newImageWidth}x -unsharp 0x1 $currImage $tempFile
+    else
+        $convertCmd -background "$backgroundColor" "$currImage" -resize ${newImageWidth}x -unsharp 0x1 -extent 0x0 "$tempFile"
+    fi
 
     local newImageDimensions=`getImageDimensions $tempFile`
     local newImageHeight=`getHeightFromImageDimensions $newImageDimensions`

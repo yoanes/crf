@@ -28,23 +28,23 @@ debug=1
 
 expectedOutputData="test/scripts/image-generation/test-data/expected-output"
 inputTestData="test/scripts/image-generation/test-data/uiresources-input"
-tempDir="$$.tmp.work"
-testFailedFile="$tempDir/testFailed.txt"
+workDir="build/work/image-generation-tests"
+testFailedFile="$workDir/testFailed.txt"
 gimagesScript="src/scripts/image-generation/gimages.sh"
 
 # ==============================================================================
 # Signal traps.
 
-function removeTempFilesIfNecessary {
-    if [ ! -e "$testFailedFile" ]
-    then
-        $echoCmd -e "\n\nTest cleanup ...removing temporary files ... " && $rmCmd -rf $$.tmp*
-    else
-        $echoCmd -e "TEST FAILED...not removing temporary files created by the test run ... "
-    fi
-}
-
-trap "removeTempFilesIfNecessary" EXIT
+#function removeTempFilesIfNecessary {
+#    if [ ! -e "$testFailedFile" ]
+#    then
+#        $echoCmd -e "\n\nTest cleanup ...removing temporary files ... " && $rmCmd -rf $$.tmp*
+#    else
+#        $echoCmd -e "TEST FAILED...not removing temporary files created by the test run ... "
+#    fi
+#}
+#
+#trap "removeTempFilesIfNecessary" EXIT
 
 # ==============================================================================
 # Functions.
@@ -54,21 +54,22 @@ function setup {
 }
 
 function copyInputTestDataToTempDir {
-    $echoCmd "Making temporary directory $tempDir."
-    $mkdirCmd "$tempDir"
+#    $echoCmd "Making temporary directory $workDir."
+#    $mkdirCmd "$workDir"
 
-    $echoCmd "Copying $inputTestData to $tempDir."
-    $cpCmd -r "$inputTestData" "$tempDir"
+    $echoCmd "Copying $inputTestData to $workDir."
+    $cpCmd -r "$inputTestData" "$workDir"
 }
 
 function invokeGimages {
-    $echoCmd "Running test against temporary directory $tempDir."
-    $gimagesScript -r "$tempDir/uiresources-input" -i50 -m5
+    $echoCmd "Running test against work directory $workDir."
+    $gimagesScript -r "$workDir/uiresources-input" -i50 -m5
 }
 
 function assertExpectedOutput {
     assertExpectedFilePaths
     assertIdentifiedImages
+    assertMd5CheksumFiles
     assertLastRunPropertiesFile
 
     $echoCmd
@@ -77,50 +78,86 @@ function assertExpectedOutput {
 
 function assertExpectedFilePaths {
     $echoCmd
-    $echoCmd "Comparing expected file paths in $expectedOutputData to actual file paths in $tempDir"
+    $echoCmd "Comparing expected file paths in $expectedOutputData to actual file paths in $workDir"
 
-    (cd "$tempDir/uiresources-input" ; $findCmd "images" -type f -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > $$.tmp.actualResources
-    (cd $expectedOutputData ; $findCmd "images" -type f -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > $$.tmp.expectedResources
+    local actualResourcePathsFile="$workDir/actualResources.txt"
+    local expectedResourcePathsFile="$workDir/expectedResources.txt"
 
-    if $diffCmd $$.tmp.expectedResources $$.tmp.actualResources
+    (cd "$workDir/uiresources-input" ; $findCmd "images" -type f -a '!' -path '*CVS*' -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > "$actualResourcePathsFile"
+    (cd $expectedOutputData ; $findCmd "images" -type f -a '!' -path '*CVS*' -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > "$expectedResourcePathsFile"
+
+    if $diffCmd "$expectedResourcePathsFile" "$actualResourcePathsFile"
     then
         # Do nothing
         :
     else
         $echoCmd
-        failTestCase "TEST FAILED. See diff output above. Test output stored in $tempDir."
+        failTestCase "TEST FAILED. See diff output above. Test output stored in $workDir."
     fi
 }
 
 function assertIdentifiedImages {
-    $echoCmd
-    $echoCmd "Comparing expected images in $expectedOutputData to actual images in $tempDir using basic 'identify' command."
+    ###########################################
+    # NOTE: we only do a light comparison of images using the ImageMagick identify command. This is because
+    # images generated with the exact same ImageMagick convert command are not necessarily binary equal. Not
+    # sure exactly why but I think ImageMagick attaches extra properties to the image like the creation date.
+    # So this test isn't particularly good but it's better than nothing.
+    ###########################################
 
-    cat /dev/null > $$.tmp.identifiedActualResources
-    for actualResource in `findAllImagesRelativeToDir $tempDir/uiresources-input`
+    $echoCmd
+    $echoCmd "Comparing expected images in $expectedOutputData to actual images in $workDir using basic 'identify' command."
+
+    local identifiedActualResourcesFile="$workDir/identifiedActualResources.txt"
+    local identifiedExpectedResourcesFile="$workDir/identifiedExpectedResources.txt"
+
+    cat /dev/null > "$identifiedActualResourcesFile"
+    for actualResource in `findAllImagesRelativeToDir $workDir/uiresources-input`
     do
-        (cd $tempDir/uiresources-input ; $identifyCmd $actualResource |cut -f 1,2,3,4,5,6,7 -d" ") >> $$.tmp.identifiedActualResources
+        (cd $workDir/uiresources-input ; $identifyCmd $actualResource |cut -f 1,2,3,4,5,6,7 -d" ") >> "$identifiedActualResourcesFile"
     done
 
-    cat /dev/null > $$.tmp.identifiedExpectedResources
+    cat /dev/null > "$identifiedExpectedResourcesFile"
     for expectedResource in `findAllImagesRelativeToDir $expectedOutputData`
     do
-        (cd $expectedOutputData ; $identifyCmd $expectedResource |cut -f 1,2,3,4,5,6,7 -d" ") >> $$.tmp.identifiedExpectedResources
+        (cd $expectedOutputData ; $identifyCmd $expectedResource |cut -f 1,2,3,4,5,6,7 -d" ") >> "$identifiedExpectedResourcesFile"
     done
 
-    if $diffCmd $$.tmp.identifiedExpectedResources $$.tmp.identifiedActualResources
+    if $diffCmd "$identifiedExpectedResourcesFile" "$identifiedActualResourcesFile"
     then
         # Do nothing
         :
     else
         $echoCmd
-        failTestCase "TEST FAILED. See diff output above. Test output stored in $tempDir."
+        failTestCase "TEST FAILED. See diff output above. Test output stored in $workDir."
+    fi
+}
+
+function assertMd5CheksumFiles {
+    $echoCmd
+    $echoCmd "Comparing expected MD5 checksum files in $expectedOutputData to actual MD5 checksum files in $workDir."
+
+    local testFailed=1
+    for actualMd5File in `( cd "$workDir/uiresources-input" ; $findCmd . -name "*.md5" )`
+    do
+        if $diffCmd "$expectedOutputData/$actualMd5File" "$workDir/uiresources-input/$actualMd5File"
+        then
+            # Do nothing
+            :
+        else
+            local testFailed=0
+        fi
+    done
+
+    if [ "$testFailed" -eq 0 ]
+    then
+        $echoCmd 
+        failTestCase "TEST FAILED. See diff output above. Test output stored in $workDir."
     fi
 }
 
 function assertLastRunPropertiesFile {
     local expectedLastRunPropertiesFile="$expectedOutputData/images/gimages-last-run.properties"
-    local actualLastRunPropertiesFile="$tempDir/uiresources-input/images/gimages-last-run.properties"
+    local actualLastRunPropertiesFile="$workDir/uiresources-input/images/gimages-last-run.properties"
 
     $echoCmd "Comparing expected $expectedLastRunPropertiesFile to $actualLastRunPropertiesFile."
 
