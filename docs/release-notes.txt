@@ -129,8 +129,8 @@ Upgrade Notes
 - When ivy retrieves the crf artifacts, there will be a new 
   lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
   gimages.sh into a new top level directory called "scripts" in your project. Then manually create
-  a wrapper script in the same directory. An example for YPM would be called ypmimages.sh
-  and contain:
+  a wrapper script in the root directory of your project. An example for YPM would be called 
+  ypmimages.sh and contain:
   
 #!/bin/bash
 
