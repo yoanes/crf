@@ -136,14 +136,14 @@ function assertIdentifiedImages {
     cat /dev/null > "$identifiedActualResourcesFile"
     for actualResource in `findAllImagesRelativeToDir "$workDir/images"`
     do
-        (cd "$workDir/images" ; $identifyCmd $actualResource |cut -f 1,2,3,4,5,6,7 -d" ") >> "$identifiedActualResourcesFile"
+        (cd "$workDir/images" ; $identifyCmd $actualResource |cut -f 1,2,3,4,5,6 -d" ") >> "$identifiedActualResourcesFile"
     done
 
     # Apply identify command to every expected resource, strip out the fields we're interested in and capture the result.
     cat /dev/null > "$identifiedExpectedResourcesFile"
     for expectedResource in `findAllImagesRelativeToDir "$expectedOutputDir/images"`
     do
-        (cd "$expectedOutputDir/images" ; $identifyCmd $expectedResource |cut -f 1,2,3,4,5,6,7 -d" ") >> "$identifiedExpectedResourcesFile"
+        (cd "$expectedOutputDir/images" ; $identifyCmd $expectedResource |cut -f 1,2,3,4,5,6 -d" ") >> "$identifiedExpectedResourcesFile"
     done
 
     if $diffCmd "$identifiedExpectedResourcesFile" "$identifiedActualResourcesFile"
