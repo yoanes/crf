@@ -6,8 +6,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.AndFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -165,5 +167,38 @@ public class FileIoFacadeBean implements FileIoFacade {
             throw new IOException("Failed to create directory or one of its parent directories: "
                     + dir);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public File[] list(final File directory, final String filenameWildcardPattern,
+            final String dirnameWildcardPattern) {
+        @SuppressWarnings("unchecked")
+        final Collection<File> foundFiles =
+                FileUtils.listFiles(directory, new WildcardFileFilter(filenameWildcardPattern),
+                        new WildcardFileFilter(dirnameWildcardPattern));
+        if (foundFiles.isEmpty()) {
+            return new File[] {};
+        } else {
+            return foundFiles.toArray(new File[] {});
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean fileExists(final File file) {
+        return file.exists();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isDirectory(final File dir) {
+        return dir.isDirectory();
     }
 }

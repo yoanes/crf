@@ -112,9 +112,9 @@ public class HD800BdpPage extends BdpPage {
         assertBodyContentIgnoredWhenImgFound();
         assertImgPathWhenImgFound();
 
-        assertScaledYellowPagesImage(624, 249);
-        assertScaledYellowPagesImagePath(624, 249);
-        assertScaledSearchImage(57, 67, "png", "default");
+        assertScaledYellowPagesImage(620, 248);
+        assertScaledYellowPagesImagePath(620, 248);
+        assertScaledSearchImage(55, 65, "png", "default");
     }
 
 

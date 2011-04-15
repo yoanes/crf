@@ -38,6 +38,6 @@ env.bundle.resources=true
 # True if you want the resolved resource graph to be logged. 
 env.debug.resource.graph=true
 
-# Path to the Graphics Magick executable.
+# Path to the Graphics Magick executable if you are using the GraphicsMagickImageTransformationFactoryBean.
 # TODO: need Graphics Magick installed for this environment.
 env.image.transformation.graphics.magick.path=gm

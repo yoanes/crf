@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -14,19 +13,26 @@ import org.apache.log4j.Logger;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class GraphicsMagickImageTransformationFactoryBean implements ImageTransformationFactory {
+// TODO: class was not completely finished, since we decided to switch to pre-generating images
+// at build time and only looking them up on disk at runtime
+// (PregeneratedFileLookupImageTransformationFactoryBean). If you decide to resurrect this
+// GraphicsMagickImageTransformationFactoryBean, you need to revisit performance of runtime scaling.
+// eg. 1) make sure images aren't regenerated if they already exist
+//     2) (ideally) prevent concurrent, identical invocations of graphics magick.
+// NOTE, however, that the above two measures may not actually be required, since there are a
+// maximum number of server threads available and, hence, a cap on the maximum number of image
+// transformations that can be occurring simultaneously.
+public class GraphicsMagickImageTransformationFactoryBean
+    extends AbstractImageTransformationFactoryBean {
 
     private static final Logger LOGGER =
             Logger.getLogger(GraphicsMagickImageTransformationFactoryBean.class);
-
-    private static final double PERCENTAGE_DIVISOR = 100.0d;
 
     /**
      * Millisecond interval to poll whether the launched command line process has finished.
      */
     public static final int PROCESS_POLLING_INTERVAL_MILLISECONDS = 100;
 
-    private final ImageReader imageReader;
     private final ProcessStarter processStarter;
     private final String graphicsMagickExecutable;
 
@@ -54,8 +60,8 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
     public GraphicsMagickImageTransformationFactoryBean(final ProcessStarter processStarter,
             final ImageReader imageReader, final String graphicsMagickExecutable) {
 
+        super(imageReader);
         this.processStarter = processStarter;
-        this.imageReader = imageReader;
         this.graphicsMagickExecutable = graphicsMagickExecutable;
     }
 
@@ -80,70 +86,10 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
      * {@inheritDoc}
      */
     @Override
-    public TransformedImageAttributes transformImage(final File sourceImageFile,
-            final File baseOutputImageDir,
-            final ImageTransformationParameters imageTransformationParameters) {
-
-        validateSourceImageFile(sourceImageFile);
-        validateBaseOutputImageDir(baseOutputImageDir);
-
-        try {
-            return doTransformImage(sourceImageFile, baseOutputImageDir,
-                    imageTransformationParameters);
-
-        } catch (final ImageCreationException e) {
-            throw e;
-
-        } catch (final Exception e) {
-            throw new ImageCreationException("Error scaling source image '" + sourceImageFile
-                    + "' to base target directory of '" + baseOutputImageDir
-                    + "' using parameters: '" + imageTransformationParameters + "'", e);
-        }
-
-    }
-
-    private void validateBaseOutputImageDir(final File baseOutputImageDir) {
-        if ((baseOutputImageDir == null) || !baseOutputImageDir.isDirectory()) {
-            throw new ImageCreationException("Base output image dir is not a directory: '"
-                    + baseOutputImageDir + "'");
-        }
-    }
-
-    private void validateSourceImageFile(final File sourceImageFile) {
-        if ((sourceImageFile == null) || !sourceImageFile.canRead()) {
-            throw new ImageCreationException("Cannot read source image file: '" + sourceImageFile
-                    + "'");
-        }
-
-    }
-
-    private TransformedImageAttributes doTransformImage(final File sourceImageFile,
+    protected TransformedImageAttributes doTransformImage(final File sourceImageFile,
+            final ImageAttributes sourceImageAttributes,
             final File baseTargetImageDir,
             final ImageTransformationParameters imageTransformationParameters) throws IOException {
-
-        final ImageAttributes sourceImageAttributes =
-                getImageReader().readImageAttributes(sourceImageFile);
-
-        if (transformationRequired(sourceImageFile, imageTransformationParameters)) {
-
-            return transformImageByCommandLine(sourceImageFile, baseTargetImageDir,
-                    imageTransformationParameters, sourceImageAttributes);
-
-        } else {
-
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("No transformation required for source: " + sourceImageFile
-                        + " and parameters: " + imageTransformationParameters);
-            }
-
-            return createTransformedImageAttributes(sourceImageAttributes);
-        }
-    }
-
-    private TransformedImageAttributes transformImageByCommandLine(final File sourceImageFile,
-            final File baseTargetImageDir,
-            final ImageTransformationParameters imageTransformationParameters,
-            final ImageAttributes sourceImageAttributes) throws IOException {
 
         final int outputImageWidth =
                 calculateOutputImageWidth(imageTransformationParameters, sourceImageAttributes);
@@ -170,13 +116,6 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
 
         return createTransformedImageAttributes(sourceImageAttributes, outputImageFile,
                 outputImageWidth, outputImageHeight);
-    }
-
-    private boolean transformationRequired(final File sourceImageFile,
-            final ImageTransformationParameters imageTransformationParameters) {
-
-        return !imageTransformationParameters.getOutputImageFormat().hasExtension(sourceImageFile)
-                || !imageTransformationParameters.preserveOriginalDimensions();
     }
 
     private void validateProcessExitedSuccessfully(final int processExitValue,
@@ -232,57 +171,6 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
         return (int) (sourceImageAttributes.getInverseAspectRatio() * outputImageWidth);
     }
 
-    private int calculateOutputImageWidth(
-            final ImageTransformationParameters imageTransformationParameters,
-            final ImageAttributes sourceImageAttributes) {
-
-        if (imageTransformationParameters.scaleToAbsolutePixelWidth()) {
-            return imageTransformationParameters.getAbsolutePixelWidth();
-
-        } else if (imageTransformationParameters.scaleToPercentDeviceWidth()) {
-
-            return (int) ((getPercentAsDecimal(imageTransformationParameters
-                            .getDeviceImagePercentWidth())) * imageTransformationParameters
-                            .getDevicePixelWidth());
-        } else {
-            // Preserve original width.
-            return sourceImageAttributes.getPixelWidth();
-        }
-    }
-
-    private TransformedImageAttributes createTransformedImageAttributes(
-            final ImageAttributes sourceImageAttributes, final File outputImageFile,
-            final int scaledImageWidth, final int scaledImageHeight) {
-
-        final TransformedImageAttributesBean transformedImageAttributesBean =
-                new TransformedImageAttributesBean();
-
-        transformedImageAttributesBean.setSourceImageAttributes(sourceImageAttributes);
-        transformedImageAttributesBean.setOutputImageAttributes(createImageAttributes(
-                outputImageFile, scaledImageWidth, scaledImageHeight));
-        return transformedImageAttributesBean;
-    }
-
-    private TransformedImageAttributes createTransformedImageAttributes(
-            final ImageAttributes sourceImageAttributes) {
-
-        final TransformedImageAttributesBean transformedImageAttributesBean =
-            new TransformedImageAttributesBean();
-
-        transformedImageAttributesBean.setSourceImageAttributes(sourceImageAttributes);
-        transformedImageAttributesBean.setOutputImageAttributes(sourceImageAttributes);
-        return transformedImageAttributesBean;
-    }
-
-    private ImageAttributes createImageAttributes(final File outputImageFile,
-            final int scaledImageWidth, final int scaledImageHeight) {
-        final ImageAttributesBean attributesBean = new ImageAttributesBean();
-        attributesBean.setImageFile(outputImageFile);
-        attributesBean.setPixelWidth(scaledImageWidth);
-        attributesBean.setPixelHeight(scaledImageHeight);
-        return attributesBean;
-    }
-
     private File createOutputImageDir(final int scaledImageWidth, final int scaledImageHeight,
             final File baseTargetImageDir) throws IOException {
 
@@ -298,8 +186,7 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
             final File outputImageDir, final File sourceImage) {
 
         final String outputImageFilename =
-                FilenameUtils.getBaseName(sourceImage.getPath()) + "."
-                        + imageTransformationParameters.getOutputImageFormat().getFileExtension();
+                createOutputImageFilename(imageTransformationParameters, sourceImage);
 
         return new File(outputImageDir, outputImageFilename);
     }
@@ -348,17 +235,6 @@ public class GraphicsMagickImageTransformationFactoryBean implements ImageTransf
         commandLine.add(scaledImageWidth + "x");
         commandLine.add("-unsharp");
         commandLine.add("0x1");
-    }
-
-    private double getPercentAsDecimal(final int percent) {
-        return percent / PERCENTAGE_DIVISOR;
-    }
-
-    /**
-     * @return the imageReader
-     */
-    private ImageReader getImageReader() {
-        return imageReader;
     }
 
     /**

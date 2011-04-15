@@ -148,16 +148,11 @@
         <constructor-arg ref="crf.resourceCache"/>
     </bean>  
     
-    <bean id="crf.imageTransformationFactory" class="au.com.sensis.mobile.crf.util.GraphicsMagickImageTransformationFactoryBean">
-        <constructor-arg>
-            <bean class="au.com.sensis.mobile.crf.util.ProcessBuilderStarterBean" />
-        </constructor-arg>
+    <bean id="crf.imageTransformationFactory" class="au.com.sensis.mobile.crf.util.PregeneratedFileLookupImageTransformationFactoryBean">
         <constructor-arg>
             <bean class="au.com.sensis.mobile.crf.util.ImageReaderBean" />
         </constructor-arg>
-        <constructor-arg value="@{crf.env.image.transformation.graphics.magick.path}" />
-        <property name="processTimeoutMilliseconds" 
-            value="@{crf.resources.images.transformation.process.timeout.milliseconds}" />
+        <constructor-arg value="@{crf.env.resources.images.root.dir}/@{global.version}.@{global.build}/images/gimages-last-run.properties" />
     </bean>
 
     <!-- TODO: extract this global deploymentMetadata bean (and its class) into somewhere more common? -->

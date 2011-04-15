@@ -134,7 +134,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     }
 
     private List<Resource> processFoundImageFiles(final String requestedResourcePath,
-            final Device device, final FoundImageFiles imageFiles) {
+            final Device device, final FoundImageFiles imageFiles) throws IOException {
 
         if (imageFiles.getFoundFiles().length > 0) {
 
@@ -355,7 +355,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     }
 
     private Resource createImageResource(final String requestedResourcePath, final Device device,
-            final Group group, final FoundImageFiles imageFiles) {
+            final Group group, final FoundImageFiles imageFiles) throws IOException {
 
         warnIfMultipleResourcesWithExtensionsFound(requestedResourcePath, imageFiles
                 .getFoundFiles());
@@ -373,7 +373,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     }
 
     private Resource createImageResourceByTransformingFoundFile(final String requestedResourcePath,
-            final Device device, final Group group, final File foundFile) {
+            final Device device, final Group group, final File foundFile) throws IOException {
 
         final Properties imageProperties =
             getImageProperties(requestedResourcePath, device);

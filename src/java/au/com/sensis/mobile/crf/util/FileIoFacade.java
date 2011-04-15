@@ -26,6 +26,18 @@ public interface FileIoFacade {
     boolean fileExists(File parentDirectory, String path);
 
     /**
+     * @param file File to test.
+     * @return true if the given file exists.
+     */
+    boolean fileExists(File file);
+
+    /**
+     * @param dir Directory to test.
+     * @return true if the given dir is indeed a directory.
+     */
+    boolean isDirectory(File dir);
+
+    /**
      * Returns a list of files in the given parentDirectory that match the given
      * path and given set of extensions. As such, the last component of path is
      * assumed to be the stem of a file. eg. if path is
@@ -103,6 +115,23 @@ public interface FileIoFacade {
      *         {@link FileFilter}. May not be null.
      */
     File[] list(File directory, FileFilter fileFilter);
+
+    /**
+     *
+     * Returns a list of files in the given directory that match the given
+     * filenameWildcardPattern. Sub-directories will optionally be recursed into as well
+     * if dirnameWildcardPattern is not blank.
+     *
+     * @param directory
+     *            Directory in which to find the files.
+     * @param filenameWildcardPattern
+     *            Wildcard pattern to use for matching files.
+     * @param dirnameWildcardPattern
+     *            Wildcard pattren to use for recursing into directories.
+     * @return a list of files in the given directory that match the given
+     *         patterns. May not be null.
+     */
+    File[] list(File directory, String filenameWildcardPattern, String dirnameWildcardPattern);
 
     /**
      * Writes the given inputFile to the outputStream, then closes the outputStream.
