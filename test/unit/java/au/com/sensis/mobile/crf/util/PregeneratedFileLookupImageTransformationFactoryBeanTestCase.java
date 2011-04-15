@@ -39,11 +39,17 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
     private static final int SOURCE_IMAGE_PIXEL_HEIGHT = 600;
 
     private static final String IMAGE_GENERATION_LAST_RUN_PROPERTIES_CLASSPATH
-        = "/au/com/sensis/mobile/crf/util/gimages-last-run.properties";
+        = "/au/com/sensis/mobile/crf/util"
+            + "/pregeneratedFileLookupImageTransformationFactoryBeanTestData"
+            + "/gimages-last-run.properties";
     private static final String INVALID_IMAGE_GENERATION_LAST_RUN_PROPERTIES_CLASSPATH
-        = "/au/com/sensis/mobile/crf/util/invalid-gimages-last-run.properties";
+        = "/au/com/sensis/mobile/crf/util"
+            + "/pregeneratedFileLookupImageTransformationFactoryBeanTestData"
+            + "/invalid-gimages-last-run.properties";
     private static final String MISSING_IMAGE_GENERATION_LAST_RUN_PROPERTIES_CLASSPATH
-        = "/au/com/sensis/mobile/crf/util/missing-gimages-last-run.properties";
+        = "/au/com/sensis/mobile/crf/util"
+            + "/pregeneratedFileLookupImageTransformationFactoryBeanTestData"
+            + "/missing-gimages-last-run.properties";
 
     private PregeneratedFileLookupImageTransformationFactoryBean objectUnderTest;
 

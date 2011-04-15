@@ -13,6 +13,13 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import au.com.sensis.mobile.crf.exception.ContentRenderingFrameworkRuntimeException;
 
+/**
+ * {@link ImageTransformationFactory} that lookups the transformed image from the pre-generated
+ * images on disk.
+ *
+ * @author Adrian.Koh2@sensis.com.au
+ *
+ */
 public class PregeneratedFileLookupImageTransformationFactoryBean extends AbstractImageTransformationFactoryBean {
 
     // Not final so that we can inject a mock during testing.
