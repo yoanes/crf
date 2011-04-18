@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -17,6 +16,7 @@ import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.util.ImageAttributes;
+import au.com.sensis.mobile.crf.util.ImageReader;
 import au.com.sensis.mobile.crf.util.ImageTransformationFactory;
 import au.com.sensis.mobile.crf.util.ImageTransformationParametersBean;
 import au.com.sensis.mobile.crf.util.TransformedImageAttributes;
@@ -43,7 +43,6 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     private static final String PROPERTIES_FILE_EXTENSION = ".properties";
 
     private static final String WIDTH_PROPERTY_NAME = "width";
-    private static final String OUTPUT_FORMAT_PROPERTY_NAME = "format";
     private static final String BACKGROUND_COLOR_PROPERTY_NAME = "background.color";
 
     private final String [] fileExtensionWildcards;
@@ -51,6 +50,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
 
     private au.com.sensis.mobile.crf.util.PropertiesLoader propertiesLoader;
     private ImageTransformationFactory imageTransformationFactory;
+    private final String imageFormatDeviceRepositoryPropertyName;
+    private ImageReader imageReader;
 
     /**
      * Constructor.
@@ -67,11 +68,14 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
      * @param fileExtensionWildcards
      *            Array of image file extensions to match. Wildcards supported
      *            are '*' as per standard Unix/Windows command line semantics.
+     * @param imageFormatDeviceRepositoryPropertyName Name of the property in the
+     *            device repository that we will use to control the output image format.
      */
     public TransformedImageResourceResolverBean(
             final ResourceResolverCommonParamHolder commonParams,
             final String abstractResourceExtension, final File rootResourcesDir,
-            final String[] fileExtensionWildcards) {
+            final String[] fileExtensionWildcards,
+            final String imageFormatDeviceRepositoryPropertyName) {
 
         super(commonParams, abstractResourceExtension, rootResourcesDir);
 
@@ -79,6 +83,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
 
         this.fileExtensionWildcards = fileExtensionWildcards;
         excludedFileExtensionWildcards = new String [] { "properties" };
+
+        this.imageFormatDeviceRepositoryPropertyName = imageFormatDeviceRepositoryPropertyName;
     }
 
     private void validateFileExtensionWildcards(
@@ -148,21 +154,40 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         }
     }
 
-    private Properties getImageProperties(final String requestedResourcePath, final Device device) {
+    private Properties getImageProperties(final List<File> imagePropertyFiles) {
 
         Properties imageProperties = new Properties();
+
+        for (final File propertyFile : imagePropertyFiles) {
+            imageProperties =
+                accumulateImageProperties(imageProperties,
+                        propertyFile);
+        }
+
+        return imageProperties;
+    }
+
+    private List<File> getImagePropertyFiles(
+            final String requestedResourcePath, final Device device) {
+
+        final List<File> propertyFiles = new ArrayList<File>();
 
         final Iterator<Group> matchingGroupIterator =
                 getMatchingGroupIterator(device, requestedResourcePath);
 
         while (matchingGroupIterator.hasNext()) {
+            final String newResourcePathMinusExtension =
+                    createNewResourcePath(requestedResourcePath, matchingGroupIterator.next());
 
-            imageProperties =
-                    accumulateImagePropertiesFromGroup(requestedResourcePath, imageProperties,
-                            matchingGroupIterator.next());
+            final File propertiesFile =
+                    new File(getRootResourcesDir(), newResourcePathMinusExtension
+                            + PROPERTIES_FILE_EXTENSION);
+            if (FileIoFacadeFactory.getFileIoFacadeSingleton().fileExists(propertiesFile)) {
+                propertyFiles.add(propertiesFile);
+            }
         }
 
-        return imageProperties;
+        return propertyFiles;
     }
 
     private FoundImageFiles findImageFiles(final String requestedResourcePath,
@@ -199,25 +224,21 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
 
     }
 
-    private Properties accumulateImagePropertiesFromGroup(final String requestedResourcePath,
-            final Properties imageProperties, final Group currGroup) {
+    private Properties accumulateImageProperties(final Properties imageProperties,
+            final File propertiesFile) {
 
-        debugLogAccumulatingImagePropertiesFromGroup(requestedResourcePath, currGroup);
+        debugLogAccumulatingImagePropertiesFromFile(propertiesFile);
 
-        final String newResourcePathMinusExtension =
-                createNewResourcePath(requestedResourcePath, currGroup);
-
-        final File propertiesFile =
-                new File(getRootResourcesDir(), newResourcePathMinusExtension
-                        + PROPERTIES_FILE_EXTENSION);
         Properties foundProperties = new Properties();
         try {
             foundProperties = getPropertiesLoader().loadPropertiesNotNull(propertiesFile);
-            debugLogFoundProperties(foundProperties, currGroup);
+            debugLogFoundProperties(foundProperties);
         } catch (final IOException e) {
             throw new ResourceResolutionRuntimeException("Could not load properties file: "
                     + propertiesFile);
         }
+
+        // The order here is important. We want properties from earlier files to take precedence.
         foundProperties.putAll(imageProperties);
 
         return foundProperties;
@@ -243,7 +264,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         // is the width property.
         result.setDevicePixelWidth(device.getPixelsX());
 
-        result.setOutputImageFormat(getOutputImageFormatParameter(foundFile, imageProperties));
+        result.setOutputImageFormat(getOutputImageFormatParameter(device,
+                foundFile));
         result.setBackgroundColor(getBackgroundColorParameter(imageProperties));
 
         if (getLogger().isDebugEnabled()) {
@@ -262,26 +284,26 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     }
 
     private ImageTransformationFactory.ImageFormat getOutputImageFormatParameter(
-            final File foundFile, final Properties imageProperties) {
+            final Device device, final File foundFile) {
 
-        ImageTransformationFactory.ImageFormat format;
-
-        if (imageProperties.getProperty(OUTPUT_FORMAT_PROPERTY_NAME) != null) {
-            format =
-                    ImageTransformationFactory.ImageFormat.fromString(imageProperties
-                            .getProperty(OUTPUT_FORMAT_PROPERTY_NAME));
-        } else {
-            format =
-                    ImageTransformationFactory.ImageFormat.fromString(FilenameUtils
-                            .getExtension(foundFile.getPath()));
+        if (ImageTransformationFactory.ImageFormat.GIF.hasExtension(foundFile)) {
+            // We can't necessarily transform GIF to PNG, especially if the GIF is an animated
+            // GIF so in this case, we ignore the device repository.
+            return ImageTransformationFactory.ImageFormat.GIF;
         }
 
-        if (format != null) {
-            return format;
-        } else {
-            throw new ResourceResolutionRuntimeException("Image format not supported for file: "
-                    + foundFile + " and image properties " + imageProperties);
+        final String deviceRepositoryImageFormat
+            = device.getPropertyAsString(getImageFormatDeviceRepositoryPropertyName());
+        if (deviceRepositoryImageFormat != null) {
+            final ImageTransformationFactory.ImageFormat tempResult
+                = ImageTransformationFactory.ImageFormat.fromString(deviceRepositoryImageFormat);
+            if (ImageTransformationFactory.ImageFormat.PNG.equals(tempResult)) {
+                return ImageTransformationFactory.ImageFormat.PNG;
+            }
         }
+
+        // Default format.
+        return ImageTransformationFactory.ImageFormat.GIF;
 
     }
 
@@ -364,19 +386,25 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
 
         if (foundFile.getPath().endsWith(Resource.DOT_NULL_EXTENSION)) {
             return createImageResourceFromExactFileFound(requestedResourcePath, group, foundFile);
+        }
+
+        final List<File> imagePropertyFiles = getImagePropertyFiles(requestedResourcePath, device);
+        if (imagePropertyFiles.isEmpty()) {
+            return createImageResourceFromExactFileFound(requestedResourcePath, group, foundFile);
 
         } else {
             return createImageResourceByTransformingFoundFile(requestedResourcePath, device, group,
-                    foundFile);
+                    foundFile, imagePropertyFiles);
         }
 
     }
 
     private Resource createImageResourceByTransformingFoundFile(final String requestedResourcePath,
-            final Device device, final Group group, final File foundFile) throws IOException {
+            final Device device, final Group group, final File foundFile,
+            final List<File> imagePropertyFiles) throws IOException {
 
         final Properties imageProperties =
-            getImageProperties(requestedResourcePath, device);
+            getImageProperties(imagePropertyFiles);
 
         final ImageTransformationParametersBean transformationParametersBean =
                 createImageTransformationParametersBean(device, imageProperties,
@@ -426,9 +454,22 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
 
     private Resource createImageResourceFromExactFileFound(final String requestedResourcePath,
             final Group group, final File foundFile) {
-        return new ImageResourceBean(requestedResourcePath,
-                getResourcePathRelativeTo(foundFile, getRootResourcesDir()),
-                getRootResourcesDir(), group);
+        if (foundFile.getPath().endsWith(Resource.DOT_NULL_EXTENSION)) {
+            return new ImageResourceBean(requestedResourcePath, getResourcePathRelativeTo(
+                    foundFile, getRootResourcesDir()), getRootResourcesDir(), group);
+
+        } else {
+            final ImageAttributes sourceImageAttributes =
+                    getImageReader().readImageAttributes(foundFile);
+
+            final ImageResourceBean imageResourceBean =
+                    new ImageResourceBean(requestedResourcePath, getResourcePathRelativeTo(
+                            foundFile, getRootResourcesDir()), getRootResourcesDir(), group);
+            imageResourceBean.setImageWidth(sourceImageAttributes.getPixelWidth());
+            imageResourceBean.setImageHeight(sourceImageAttributes.getPixelHeight());
+
+            return imageResourceBean;
+        }
     }
 
     private String getResourcePathRelativeTo(final File file, final File rootResourcesDir) {
@@ -514,19 +555,16 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         }
     }
 
-    private void debugLogAccumulatingImagePropertiesFromGroup(final String requestedResourcePath,
-            final Group currGroup) {
+    private void debugLogAccumulatingImagePropertiesFromFile(final File propertiesFile) {
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug(
-                    "Accumulating properties for '" + requestedResourcePath + "' from group '"
-                            + currGroup + "'");
+            getLogger().debug("Accumulating properties from '" + propertiesFile + "'");
         }
     }
 
-    private void debugLogFoundProperties(final Properties foundProperties, final Group currGroup) {
+    private void debugLogFoundProperties(final Properties foundProperties) {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug(
-                    "Found properties from group '" + currGroup + ": " + foundProperties);
+                    "Found properties: " + foundProperties);
         }
     }
 
@@ -600,5 +638,26 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
     @Override
     protected String getResourceSubDirName() {
         return "images";
+    }
+
+    /**
+     * @return the imageFormatDeviceRepositoryPropertyName
+     */
+    private String getImageFormatDeviceRepositoryPropertyName() {
+        return imageFormatDeviceRepositoryPropertyName;
+    }
+
+    /**
+     * @return the imageReader
+     */
+    private ImageReader getImageReader() {
+        return imageReader;
+    }
+
+    /**
+     * @param imageReader the imageReader to set
+     */
+    public void setImageReader(final ImageReader imageReader) {
+        this.imageReader = imageReader;
     }
 }

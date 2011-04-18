@@ -254,13 +254,17 @@ public abstract class BdpPage extends AbstractPageFixture {
     /**
      * Assert presence of scaled yellow pages image.
      *
-     * @param width Width of image.
-     * @param height Height of image.
+     * @param width
+     *            Width of image.
+     * @param height
+     *            Height of image.
+     * @param extension Extension of the image.
      */
-    protected void assertScaledYellowPagesImage(final int width, final int height) {
+    protected void assertScaledYellowPagesImage(final int width, final int height,
+            final String extension) {
         assertImg("Yellow Pages img not found", "yellowPagesLogoImg", "Yellow Pages",
                 "Yellow Pages", "default/selenium/common/w" + width + "/h" + height
-                        + "/yellow-pages.png", width, height);
+                        + "/yellow-pages." + extension, width, height);
     }
 
     /**
@@ -305,11 +309,13 @@ public abstract class BdpPage extends AbstractPageFixture {
      *            Width of image.
      * @param height
      *            Height of image.
+     * @param extension Extension of the image.
      */
-    protected void assertScaledYellowPagesImagePath(final int width, final int height) {
+    protected void assertScaledYellowPagesImagePath(final int width, final int height,
+            final String extension) {
         assertTrue("Yellow Pages img not found", getBrowser().isTextPresent(
                 "/uidev/crfshowcase/uiresources/" + getProjectVersion()
                         + "/images/default/selenium/common/w" + width + "/h" + height
-                        + "/yellow-pages.png"));
+                        + "/yellow-pages." + extension));
     }
 }

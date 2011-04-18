@@ -412,6 +412,13 @@ public class ResourcePathTestData {
                 getGroupTestData().createAppleGroup());
     }
 
+    public Resource getMappedAppleGroupImagePropertiesResourcePath() {
+        return new ResourceBean(getRequestedImageResourcePath(), getDeploymentVersion() + "/"
+                + getImageResourceSubDirName() + "/apple/common/unmetered.properties",
+                getRootResourcesPath(),
+                getGroupTestData().createAppleGroup());
+    }
+
     public Resource getMappedDefaultGroupPngImageResourcePath() {
         return new ResourceBean(getRequestedImageResourcePath(), getDeploymentVersion() + "/"
                 + getImageResourceSubDirName() + "/default/common/unmetered.png",
@@ -421,6 +428,12 @@ public class ResourcePathTestData {
     public Resource getMappedIphoneGroupPngImageResourcePath() {
         return new ImageResourceBean(getRequestedImageResourcePath(), getDeploymentVersion() + "/"
                 + getImageResourceSubDirName() + "/iphone/common/unmetered.png",
+                getRootResourcesPath(), getGroupTestData().createIPhoneGroup());
+    }
+
+    public Resource getMappedIphoneGroupImagePropertiesResourcePath() {
+        return new ImageResourceBean(getRequestedImageResourcePath(), getDeploymentVersion() + "/"
+                + getImageResourceSubDirName() + "/iphone/common/unmetered.properties",
                 getRootResourcesPath(), getGroupTestData().createIPhoneGroup());
     }
 
@@ -457,9 +470,15 @@ public class ResourcePathTestData {
     }
 
     public Resource getMappedIphoneGroupGifImageResourcePath() {
-        return new ResourceBean(getRequestedImageResourcePath(), getDeploymentVersion() + "/"
-                + getImageResourceSubDirName() + "/iphone/common/unmetered.gif",
-                getRootResourcesPath(), getGroupTestData().createIPhoneGroup());
+        final ImageResourceBean resourceBean =
+                new ImageResourceBean(getRequestedImageResourcePath(), getDeploymentVersion() + "/"
+                        + getImageResourceSubDirName() + "/iphone/common/unmetered.gif",
+                        getRootResourcesPath(), getGroupTestData().createIPhoneGroup());
+
+        resourceBean.setImageWidth(800);
+        resourceBean.setImageHeight(600);
+
+        return resourceBean;
     }
 
     public String getMappedDefaultGroupPngImageResourceHref() {

@@ -70,11 +70,13 @@
                             <value>*</value>
                         </list>
                     </constructor-arg>
+                    <constructor-arg value="@{crf.resources.images.format.device.repository.property.name}"/>
                     <property name="propertiesLoader">
                         <bean class="au.com.sensis.mobile.crf.util.PropertiesLoaderBean"/>                    
                     </property>
                     <property name="imageTransformationFactory"
                         ref="crf.imageTransformationFactory"  />
+                    <property name="imageReader" ref="crf.imageReader" />
                 </bean>
                 
                 <bean class="au.com.sensis.mobile.crf.service.JavaScriptResourceResolverBean">
@@ -150,10 +152,12 @@
     
     <bean id="crf.imageTransformationFactory" class="au.com.sensis.mobile.crf.util.PregeneratedFileLookupImageTransformationFactoryBean">
         <constructor-arg>
-            <bean class="au.com.sensis.mobile.crf.util.ImageReaderBean" />
+            <ref local="crf.imageReader"/>
         </constructor-arg>
         <constructor-arg value="@{crf.env.resources.images.root.dir}/@{global.version}.@{global.build}/images/gimages-last-run.properties" />
     </bean>
+    
+    <bean id="crf.imageReader" class="au.com.sensis.mobile.crf.util.ImageReaderBean" />
 
     <!-- TODO: extract this global deploymentMetadata bean (and its class) into somewhere more common? -->
     <bean id="crf.deploymentMetadata" class="au.com.sensis.mobile.crf.config.DeploymentMetadata">

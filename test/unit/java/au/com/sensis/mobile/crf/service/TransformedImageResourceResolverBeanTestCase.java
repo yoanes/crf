@@ -17,7 +17,9 @@ import org.junit.Test;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
+import au.com.sensis.mobile.crf.util.ImageAttributes;
 import au.com.sensis.mobile.crf.util.ImageAttributesBean;
+import au.com.sensis.mobile.crf.util.ImageReader;
 import au.com.sensis.mobile.crf.util.ImageTransformationFactory;
 import au.com.sensis.mobile.crf.util.ImageTransformationParametersBean;
 import au.com.sensis.mobile.crf.util.TransformedImageAttributes;
@@ -41,11 +43,13 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     private static final int SOURCE_IMAGE_PIXEL_WIDTH = 800;
     private static final int SOURCE_IMAGE_PIXEL_HEIGHT = 600;
     private static final String BACKGROUND_COLOR = "#FFF";
+    private static final String IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME = "preferredimagetype";
 
     private Device mockDevice;
     private TransformedImageResourceResolverBean objectUnderTest;
     private au.com.sensis.mobile.crf.util.PropertiesLoader mockPropertiesLoader;
     private ImageTransformationFactory mockImageTransformationFactory;
+    private ImageReader mockImageReader;
 
     /**
      * Setup test data.
@@ -59,10 +63,12 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         setObjectUnderTest(new TransformedImageResourceResolverBean(
                 getResourceResolverCommonParamHolder(), getResourcePathTestData()
                         .getAbstractImageExtensionWithLeadingDot(), getResourcesRootDir(),
-                MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS));
+                MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS,
+                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME));
 
         getObjectUnderTest().setPropertiesLoader(getMockPropertiesLoader());
         getObjectUnderTest().setImageTransformationFactory(getMockImageTransformationFactory());
+        getObjectUnderTest().setImageReader(getMockImageReader());
 
     }
 
@@ -73,10 +79,12 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         final TransformedImageResourceResolverBean resolverBean =
                 new TransformedImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                         abstractResourceExtension, getResourcesRootDir(),
-                        MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS);
+                        MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS,
+                        IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME);
 
         resolverBean.setPropertiesLoader(getMockPropertiesLoader());
         resolverBean.setImageTransformationFactory(getMockImageTransformationFactory());
+        resolverBean.setImageReader(getMockImageReader());
 
         return resolverBean;
     }
@@ -92,7 +100,8 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
         return new TransformedImageResourceResolverBean(commonParams,
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(), getResourcesRootDir(),
-                MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS);
+                MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS,
+                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME);
     }
 
     @Override
@@ -101,7 +110,8 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
         return new TransformedImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                 getResourcePathTestData().getCssExtensionWithoutLeadingDot(), rootResourcesDir,
-                MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS);
+                MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS,
+                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME);
     }
 
     @Override
@@ -115,7 +125,8 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
         return new TransformedImageResourceResolverBean(commonParams,
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
-                getResourcesRootDir(), MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS);
+                getResourcesRootDir(), MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS,
+                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME);
     }
 
     @Test
@@ -135,7 +146,8 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             try {
                 new TransformedImageResourceResolverBean(getResourceResolverCommonParamHolder(),
                         getResourcePathTestData().getCssExtensionWithoutLeadingDot(),
-                        getResourcesRootDir(), testValue);
+                        getResourcesRootDir(), testValue,
+                        IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME);
 
                 Assert.fail("IllegalArgumentException expected for testValue: '"
                         + ArrayUtils.toString(testValue) + "'");
@@ -150,7 +162,8 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     }
 
     @Test
-    public void testResolveWhenMappingPerformedAndSingleResourceFound() throws Throwable {
+    public void testResolveWhenSingleResourceFoundAndPngOutputPreferredAndSourceIsPng()
+        throws Throwable {
 
         final String[] testValues =
                 { getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
@@ -167,13 +180,18 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
 
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
             recordLoadIphoneGroupImageProperties(createIphoneGroupPercentWidthImageProperties());
             recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetPNGPreferredImageType();
 
             recordGetDeviceAttributesForImageScaling();
 
             recordGetImageRatioDeviceProperty(null);
-            recordTransformImage(createPercentWidthImageTransformationParameters(
+            recordTransformPngImage(createPercentWidthImageTransformationParameters(
                     1), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
                     OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT,
                     getMappedScaledIphoneGroupPngImageResourcePath());
@@ -205,7 +223,185 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     }
 
     @Test
-    public void testResolveWhenMappingPerformedAndSingleResourceFoundAndGifOutputSpecified()
+    public void testResolveWhenSingleResourceFoundAndPngOutputPreferredAndSourceIsGif()
+            throws Throwable {
+
+        final String[] testValues =
+                { getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
+                        getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetMatchingGroups();
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
+            recordGetMatchingGroupIterator(2);
+
+            recordListIphoneFilesByExtension(getSingleMatchedGifImageArray());
+
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
+            recordLoadIphoneGroupImageProperties(createIphoneGroupGifPercentWidthImageProperties());
+            recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetDeviceAttributesForImageScaling();
+
+            recordGetImageRatioDeviceProperty(null);
+            recordTransformGifImage(createPercentWidthGifImageTransformationParameters(1),
+                    SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT, OUTPUT_IMAGE_PIXEL_WIDTH,
+                    OUTPUT_IMAGE_PIXEL_HEIGHT, getMappedScaledIphoneGroupGifImageResourcePath());
+
+            recordPutResourceCache(resourceCacheKey,
+                    getMappedScaledIphoneGroupGifImageResourcePath());
+
+            replay();
+
+            final List<Resource> actualResources =
+                    getObjectUnderTest().resolve(
+                            getResourcePathTestData().getRequestedImageResourcePath(),
+                            getMockDevice());
+
+            // Explicit verify since we are in a loop.
+            verify();
+
+            final List<Resource> expectedResources =
+                    Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+            assertComplexObjectsEqual("actualResources is wrong", expectedResources,
+                    actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
+        }
+
+    }
+
+    @Test
+    public void testResolveWhenSingleResourceFoundAndJpegOutputPreferred()
+            throws Throwable {
+
+        final String[] testValues =
+                { getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
+                        getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetMatchingGroups();
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
+            recordGetMatchingGroupIterator(2);
+
+            recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
+
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
+            recordLoadIphoneGroupImageProperties(createIphoneGroupGifPercentWidthImageProperties());
+            recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetJpegPreferredImageType();
+
+            recordGetDeviceAttributesForImageScaling();
+
+            recordGetImageRatioDeviceProperty(null);
+            recordTransformPngImage(createPercentWidthGifImageTransformationParameters(1),
+                    SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT, OUTPUT_IMAGE_PIXEL_WIDTH,
+                    OUTPUT_IMAGE_PIXEL_HEIGHT, getMappedScaledIphoneGroupGifImageResourcePath());
+
+            recordPutResourceCache(resourceCacheKey,
+                    getMappedScaledIphoneGroupGifImageResourcePath());
+
+            replay();
+
+            final List<Resource> actualResources =
+                    getObjectUnderTest().resolve(
+                            getResourcePathTestData().getRequestedImageResourcePath(),
+                            getMockDevice());
+
+            // Explicit verify since we are in a loop.
+            verify();
+
+            final List<Resource> expectedResources =
+                    Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+            assertComplexObjectsEqual("actualResources is wrong", expectedResources,
+                    actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
+        }
+
+    }
+
+    @Test
+    public void testResolveWhenSingleResourceFoundAndNullPreferredOutputFormat()
+            throws Throwable {
+
+        final String[] testValues =
+                { getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
+                        getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetMatchingGroups();
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
+            recordGetMatchingGroupIterator(2);
+
+            recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
+
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
+            recordLoadIphoneGroupImageProperties(createIphoneGroupGifPercentWidthImageProperties());
+            recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetNullPreferredImageType();
+
+            recordGetDeviceAttributesForImageScaling();
+
+            recordGetImageRatioDeviceProperty(null);
+            recordTransformPngImage(createPercentWidthGifImageTransformationParameters(1),
+                    SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT, OUTPUT_IMAGE_PIXEL_WIDTH,
+                    OUTPUT_IMAGE_PIXEL_HEIGHT, getMappedScaledIphoneGroupGifImageResourcePath());
+
+            recordPutResourceCache(resourceCacheKey,
+                    getMappedScaledIphoneGroupGifImageResourcePath());
+
+            replay();
+
+            final List<Resource> actualResources =
+                    getObjectUnderTest().resolve(
+                            getResourcePathTestData().getRequestedImageResourcePath(),
+                            getMockDevice());
+
+            // Explicit verify since we are in a loop.
+            verify();
+
+            final List<Resource> expectedResources =
+                    Arrays.asList(getMappedScaledIphoneGroupGifImageResourcePath());
+            assertComplexObjectsEqual("actualResources is wrong", expectedResources,
+                    actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
+        }
+
+    }
+
+    @Test
+    public void testResolveWhenSingleResourceFoundAndGifOutputPreferred()
         throws Throwable {
 
         final String[] testValues =
@@ -223,13 +419,18 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
 
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
             recordLoadIphoneGroupImageProperties(createIphoneGroupGifPercentWidthImageProperties());
             recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetGifPreferredImageType();
 
             recordGetDeviceAttributesForImageScaling();
 
             recordGetImageRatioDeviceProperty(null);
-            recordTransformImage(createPercentWidthGifImageTransformationParameters(
+            recordTransformPngImage(createPercentWidthGifImageTransformationParameters(
                     1), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
                     OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT,
                     getMappedScaledIphoneGroupGifImageResourcePath());
@@ -260,8 +461,28 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
     }
 
+    private void recordGetGifPreferredImageType() {
+        EasyMock.expect(getMockDevice().getPropertyAsString(
+                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME)).andReturn("GIF");
+    }
+
+    private void recordGetPNGPreferredImageType() {
+        EasyMock.expect(getMockDevice().getPropertyAsString(
+                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME)).andReturn("PNG");
+    }
+
+    private void recordGetJpegPreferredImageType() {
+        EasyMock.expect(getMockDevice().getPropertyAsString(
+                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME)).andReturn("JPEG");
+    }
+
+    private void recordGetNullPreferredImageType() {
+        EasyMock.expect(getMockDevice().getPropertyAsString(
+                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME)).andReturn(null);
+    }
+
     @Test
-    public void testResolveWhenMappingPerformedAndSingleResourceFoundAndScaledUp()
+    public void testResolveWhenSingleResourceFoundAndScaledUp()
         throws Throwable {
 
         final String[] testValues =
@@ -279,13 +500,18 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
 
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
             recordLoadIphoneGroupImageProperties(createIphoneGroupPercentWidthImageProperties());
             recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetPNGPreferredImageType();
 
             recordGetDeviceAttributesForImageScaling();
 
             recordGetImageRatioDeviceProperty(null);
-            recordTransformImage(createPercentWidthImageTransformationParameters(
+            recordTransformPngImage(createPercentWidthImageTransformationParameters(
                     1), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
                     SOURCE_IMAGE_PIXEL_WIDTH * 2, SOURCE_IMAGE_PIXEL_HEIGHT * 2,
                     getMappedScaledIphoneGroupPngImageResourcePath());
@@ -339,7 +565,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     }
 
     @Test
-    public void testResolveWhenMappingPerformedAndSingleResourceFoundAndAbsolutePixelWidth()
+    public void testResolveWhenSingleResourceFoundAndAbsolutePixelWidth()
             throws Throwable {
 
         final String[] testValues =
@@ -357,16 +583,21 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
 
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
             final int scaledImagePixelWidth = 180;
             recordLoadIphoneGroupImageProperties(createIphoneGroupAbsoluteWidthImageProperties(
                     scaledImagePixelWidth));
             recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
 
+            recordGetPNGPreferredImageType();
+
             recordGetDeviceAttributesForImageScaling();
 
             recordGetImageRatioDeviceProperty(null);
 
-            recordTransformImage(createAbsoluteWidthImageTransformationParameters(
+            recordTransformPngImage(createAbsoluteWidthImageTransformationParameters(
                     scaledImagePixelWidth, 1),
                     SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
                     scaledImagePixelWidth, OUTPUT_IMAGE_PIXEL_HEIGHT,
@@ -400,7 +631,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     }
 
     @Test
-    public void testResolveWhenMappingPerformedAndSingleResourceFoundAndImageRatioNotNull()
+    public void testResolveWhenSingleResourceFoundAndImageRatioNotNull()
         throws Throwable {
 
         final String[] testValues =
@@ -418,13 +649,18 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
 
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
             recordLoadIphoneGroupImageProperties(createIphoneGroupPercentWidthImageProperties());
             recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetPNGPreferredImageType();
 
             recordGetDeviceAttributesForImageScaling();
 
             recordGetImageRatioDeviceProperty(2);
-            recordTransformImage(createPercentWidthImageTransformationParameters(
+            recordTransformPngImage(createPercentWidthImageTransformationParameters(
                     2), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
                     OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT,
                     getMappedScaledIphoneGroupPngImageResourcePath());
@@ -490,6 +726,9 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
             recordGetMatchingGroupIterator(2);
 
             recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
+
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
 
             recordLoadIphoneGroupImageProperties(testProperties);
             recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
@@ -593,12 +832,17 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordListIphoneFilesByExtension(getSingleMatchedPngImageArray());
 
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
             recordLoadIphoneGroupImageProperties(new Properties());
             recordLoadAppleGroupImageProperties(new Properties());
 
+            recordGetPNGPreferredImageType();
+
             recordGetDeviceAttributesForImageScaling();
 
-            recordTransformImage(createImageTransformationParametersPreserveDimensions(),
+            recordTransformPngImage(createImageTransformationParametersPreserveDimensions(),
                     SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
                     SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
                     getMappedScaledIphoneGroupPngImageResourcePath());
@@ -628,8 +872,80 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         }
 
     }
+    @Test
+    public void testResolveWhenNoImageTransformationPropertiesFilesAndGifSourceAndPreferPngOutput()
+        throws Throwable {
 
-    private void recordTransformImage(
+        final String[] testValues =
+        { getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
+                getResourcePathTestData().getAbstractImageExtensionWithoutLeadingDot() };
+
+        for (final String testValue : testValues) {
+            setObjectUnderTest(createWithAbstractResourceExtension(testValue));
+
+            recordGetMatchingGroups();
+            final ResourceCacheKey resourceCacheKey = createResourceCacheKey();
+            recordCheckResourceCache(resourceCacheKey, Boolean.FALSE);
+
+            recordGetMatchingGroupIterator(2);
+
+            recordListIphoneFilesByExtension(getSingleMatchedGifImageArray());
+
+            recordIphoneImagePropertiesFileExists(Boolean.FALSE);
+            recordAppleImagePropertiesFileExists(Boolean.FALSE);
+
+            EasyMock.expect(getMockImageReader().readImageAttributes(
+                    getMappedIPhoneGifImageResourcePath().getNewFile()))
+                        .andReturn(createIphoneGifImageAttributes());
+
+            recordPutResourceCache(resourceCacheKey,
+                    getMappedIPhoneGifImageResourcePath());
+
+            replay();
+
+            final List<Resource> actualResources =
+                getObjectUnderTest().resolve(
+                        getResourcePathTestData().getRequestedImageResourcePath(),
+                        getMockDevice());
+
+            // Explicit verify since we are in a loop.
+            verify();
+
+            final List<Resource> expectedResources =
+                Arrays.asList(getMappedIPhoneGifImageResourcePath());
+            assertComplexObjectsEqual("actualResources is wrong", expectedResources,
+                    actualResources);
+
+            assertResourceResolutionTreeUpdated(expectedResources);
+
+            // Explicit reset since we are in a loop.
+            reset();
+        }
+    }
+
+    private ImageAttributes createIphoneGifImageAttributes() {
+        final ImageAttributesBean imageAttributesBean = new ImageAttributesBean();
+
+        imageAttributesBean.setImageFile(getMappedIPhoneGifImageResourcePath().getNewFile());
+        imageAttributesBean.setPixelWidth(SOURCE_IMAGE_PIXEL_WIDTH);
+        imageAttributesBean.setPixelHeight(SOURCE_IMAGE_PIXEL_HEIGHT);
+
+        return imageAttributesBean;
+    }
+
+    private void recordAppleImagePropertiesFileExists(final Boolean exists) {
+        EasyMock.expect(getMockFileIoFacade().fileExists(
+                getMappedAppleGroupImagePropertiesResourcePath().getNewFile()))
+                .andReturn(exists);
+    }
+
+    private void recordIphoneImagePropertiesFileExists(final Boolean exists) {
+        EasyMock.expect(getMockFileIoFacade().fileExists(
+                getMappedIPhoneImagePropertiesResourcePath().getNewFile()))
+                    .andReturn(exists);
+    }
+
+    private void recordTransformPngImage(
             final ImageTransformationParameters imageTransformationParameters,
             final int sourcePixelWidth, final int sourcePixelHeight,
             final int outputPixelWidth, final int outputPixelHeight,
@@ -644,27 +960,39 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
                         outputPixelWidth, outputPixelHeight, mappedResource));
     }
 
+    private void recordTransformGifImage(
+            final ImageTransformationParameters imageTransformationParameters,
+            final int sourcePixelWidth, final int sourcePixelHeight, final int outputPixelWidth,
+            final int outputPixelHeight, final Resource mappedResource) {
+
+        EasyMock.expect(
+                getMockImageTransformationFactory().transformImage(
+                        getMappedIPhoneGroupGifImageResourcePath().getNewFile(),
+                        getMappedIPhoneGroupGifImageResourcePath().getNewFile().getParentFile(),
+                        imageTransformationParameters)).andReturn(
+                createTransformedImageAttributes(sourcePixelWidth, sourcePixelHeight,
+                        outputPixelWidth, outputPixelHeight, mappedResource));
+    }
+
     private void recordGetDeviceAttributesForImageScaling() {
         EasyMock.expect(getMockDevice().getPixelsX()).andReturn(new Integer(450));
     }
 
     private void recordLoadIphoneGroupImageProperties(final Properties properties)
             throws IOException {
-        final File propertiesFile =
-                new File(getMappedIPhonePngImageResourcePath().getNewFile().getParentFile(),
-                        "unmetered.properties");
 
-        EasyMock.expect(getMockPropertiesLoader().loadPropertiesNotNull(propertiesFile)).andReturn(
+        EasyMock.expect(
+                getMockPropertiesLoader().loadPropertiesNotNull(
+                        getMappedIPhoneImagePropertiesResourcePath().getNewFile())).andReturn(
                 properties);
     }
 
     private void recordLoadAppleGroupImageProperties(final Properties properties)
             throws IOException {
-        final File propertiesFile =
-                new File(getMappedAppleGroupImageResourcePath().getNewFile().getParentFile(),
-                        "unmetered.properties");
 
-        EasyMock.expect(getMockPropertiesLoader().loadPropertiesNotNull(propertiesFile)).andReturn(
+        EasyMock.expect(
+                getMockPropertiesLoader().loadPropertiesNotNull(
+                        getMappedAppleGroupImagePropertiesResourcePath().getNewFile())).andReturn(
                 properties);
     }
 
@@ -762,7 +1090,6 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     private Properties createIphoneGroupGifPercentWidthImageProperties() {
         final Properties properties = new Properties();
         properties.setProperty("width", "20%");
-        properties.setProperty("format", "gif");
         properties.setProperty("background.color", BACKGROUND_COLOR);
         return properties;
     }
@@ -844,6 +1171,11 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
                 getMappedIPhonePngImageResourcePath().getNewFile() };
     }
 
+    private File[] getSingleMatchedGifImageArray() {
+        return new File[] {
+                getMappedIPhoneGifImageResourcePath().getNewFile() };
+    }
+
     private File[] getSingleMatchedDotNullImageArray() {
         return new File[] {
                 getMappedIPhoneDotNullImageResourcePath().getNewFile() };
@@ -859,6 +1191,14 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         return getResourcePathTestData().getMappedIphoneGroupPngImageResourcePath();
     }
 
+    private Resource getMappedIPhoneImagePropertiesResourcePath() {
+        return getResourcePathTestData().getMappedIphoneGroupImagePropertiesResourcePath();
+    }
+
+    private Resource getMappedIPhoneGifImageResourcePath() {
+        return getResourcePathTestData().getMappedIphoneGroupGifImageResourcePath();
+    }
+
     private Resource getMappedIPhoneDotNullImageResourcePath() {
         return getResourcePathTestData().getMappedIphoneGroupDotNullImageResourcePath();
     }
@@ -868,7 +1208,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     }
 
     @Test
-    public void testResolveWhenMappingPerformedAndMultipleResourcesFound() throws Throwable {
+    public void testResolveWhenMultipleResourcesFound() throws Throwable {
 
         final String[] testValues = {
                 getResourcePathTestData().getAbstractImageExtensionWithLeadingDot(),
@@ -887,14 +1227,19 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
 
             recordLogWarningResolveToSingleFoundMultipleResources();
 
+            recordIphoneImagePropertiesFileExists(Boolean.TRUE);
+            recordAppleImagePropertiesFileExists(Boolean.TRUE);
+
             recordLoadIphoneGroupImageProperties(createIphoneGroupPercentWidthImageProperties());
             recordLoadAppleGroupImageProperties(createAppleGroupPercentWidthImageProperties());
+
+            recordGetPNGPreferredImageType();
 
             recordGetDeviceAttributesForImageScaling();
 
             recordGetImageRatioDeviceProperty(null);
 
-            recordTransformImage(createPercentWidthImageTransformationParameters(
+            recordTransformPngImage(createPercentWidthImageTransformationParameters(
                     1), SOURCE_IMAGE_PIXEL_WIDTH, SOURCE_IMAGE_PIXEL_HEIGHT,
                     OUTPUT_IMAGE_PIXEL_WIDTH, OUTPUT_IMAGE_PIXEL_HEIGHT,
                     getMappedScaledIphoneGroupPngImageResourcePath());
@@ -1093,6 +1438,11 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
         return getResourcePathTestData().getMappedAppleGroupImageResourcePath();
     }
 
+    private Resource getMappedAppleGroupImagePropertiesResourcePath() {
+
+        return getResourcePathTestData().getMappedAppleGroupImagePropertiesResourcePath();
+    }
+
     private Resource getMappedIphoneGroupPngImageResourcePath() {
 
         return getResourcePathTestData().getMappedIphoneGroupPngImageResourcePath();
@@ -1194,5 +1544,19 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     public void setMockImageTransformationFactory(
             final ImageTransformationFactory mockImageTransformationFactory) {
         this.mockImageTransformationFactory = mockImageTransformationFactory;
+    }
+
+    /**
+     * @return the mockImageReader
+     */
+    public ImageReader getMockImageReader() {
+        return mockImageReader;
+    }
+
+    /**
+     * @param mockImageReader the mockImageReader to set
+     */
+    public void setMockImageReader(final ImageReader mockImageReader) {
+        this.mockImageReader = mockImageReader;
     }
 }

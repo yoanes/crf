@@ -25,9 +25,9 @@ public class IphoneOS2xBdpPage extends IphoneBdpPage {
     protected void doAssertImg() {
         assertImgFoundInNonDefaultGroupPngFormat();
 
-        assertScaledYellowPagesImage(320, 128);
-        assertScaledYellowPagesImagePath(320, 128);
-        assertScaledSearchImage(55, 65, "gif", "default");
+        assertScaledYellowPagesImage(320, 128, "png");
+        assertScaledYellowPagesImagePath(320, 128, "png");
+        assertScaledSearchImage(55, 65, "png", "default");
     }
 
     private void assertImgFoundInNonDefaultGroupPngFormat() {
