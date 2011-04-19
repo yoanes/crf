@@ -26,9 +26,9 @@ identifyCmd="identify"
 # Define default vars.
 debug=1
 
-inputTestData="test/scripts/image-generation/test-data/uiresources-input"
+inputTestData="test/scripts/image-generation/test-data/input/gimages"
 baseExpectedOutputData="test/scripts/image-generation/test-data/expected-output"
-baseWorkDir="build/work/image-generation-tests"
+baseWorkDir="build/work/image-generation-tests/gimagesTestCase"
 testFailedFile="$baseWorkDir/testFailed.txt"
 gimagesScript="src/scripts/image-generation/gimages.sh"
 

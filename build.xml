@@ -151,16 +151,21 @@
 	    <delete dir="${build.dir}/work/image-generation-tests" />
 	    <mkdir dir="${build.dir}/work/image-generation-tests" />
 	
-	<exec executable="chmod" failonerror="true" >
-		<arg value="u+x" />
-		<arg value="test/scripts/image-generation/gimagesTestCase.sh" />	
-  		<arg value="src/scripts/image-generation/gimages.sh" />	
-	</exec>		
+        <exec executable="chmod" failonerror="true" >
+        	<arg value="u+x" />
+        	<arg value="test/scripts/image-generation/*.sh" />	
+        </exec>		
 
         <exec executable="bash" 
             failonerror="true" resolveexecutable="true">
 		   <arg value="-c" />	
 		   <arg value="test/scripts/image-generation/gimagesTestCase.sh" />	
+        </exec>
+		
+        <exec executable="bash" 
+            failonerror="true" resolveexecutable="true">
+		   <arg value="-c" />	
+		   <arg value="test/scripts/image-generation/verifyGimagesTestCase.sh" />	
         </exec>
     </target>
 </project>

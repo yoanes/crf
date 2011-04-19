@@ -17,16 +17,10 @@
 trap "echo -e \"\n\nCleanup ...removing temporary files ... \" && rm -f $$.tmp*" EXIT
 
 # ==============================================================================
-# Define commands using variables. Allows us to easily replace these all with "echo"
-# during development/debugging.
+# Source includes.
 
-echoCmd="echo"
-catCmd="cat"
-findCmd="find"
-exprCmd="expr"
-identifyCmd="identify"
-convertCmd="convert" 
-opensslCmd="openssl"
+scriptDir=`dirname "$0"`
+source "$scriptDir/common.sh"
 
 # ==============================================================================
 # Define default vars.
@@ -74,118 +68,6 @@ END
     $echoCmd ""
     $echoCmd "Generated $uiResourcesDir/$lastRunPropertiesFile"
 }
-
-function displayUsedVariable {
-    local variableLabel="$1"
-    local variableValue="$2"
-    local defaultVariableValue="$3"
-    if [ "$variableValue" = "$defaultVariableValue" ]
-    then
-        $echoCmd "    $variableLabel: '$variableValue' (default)"
-    else 
-        $echoCmd "    $variableLabel: '$variableValue'"
-    fi
-}
-
-#function findAllSourceImages {
-#    local imagesResourcesDir="$uiResourcesDir/images"
-#    local generatedImageDirRegex=".*w[0-9]+[/\\\\]h[0-9]+[/\\\\].*"
-#    local dotNullImageNamePattern="*.null"
-#    local propertyFileNamePattern="*.properties"
-#    local md5FileNamePattern="*.md5"
-#    if [ -n "$filter" ]
-#    then
-#        $findCmd "$imagesResourcesDir" -type f -a '!' -path '*CVS*' -a '!' -regex "$generatedImageDirRegex" \
-#            -a '!' -name "$dotNullImageNamePattern" -a '!' -name "$propertyFileNamePattern" -a '!' -name "$md5FileNamePattern" -a $filter
-#    else
-#        $findCmd "$imagesResourcesDir" -type f -a '!' -path '*CVS*' -a '!' -regex "$generatedImageDirRegex" \
-#            -a '!' -name "$dotNullImageNamePattern" -a '!' -name "$propertyFileNamePattern" -a '!' -name "$md5FileNamePattern" 
-#    fi
-#}
-
-function findAllSourceImagesToScale {
-    # Find all properties files first. Only an image that has a matching properties files in any group are
-    # candidates for scaling.
-    local propertyFiles=`$findCmd $uiResourcesDir -name "*.properties"`
-    if [ "$debug" -eq 0 ]
-    then
-        $echoCmd >> "$debugFile"
-        $echoCmd "All property files found: $propertyFiles" >> "$debugFile"
-    fi
-
-    findSourceImagesForPropertyFiles "$propertyFiles"
-}
-
-function findSourceImagesToScaleFromBasePath {
-    local basePath="$1"
-
-    # Find properties files matching the passed in basePath first. Only an image that has a matching properties files in any group are
-    # candidates for scaling.
-    local propertyFiles=`$findCmd $uiResourcesDir -regex ".*${basePath}.properties$"`
-    if [ "$debug" -eq 0 ]
-    then
-        $echoCmd >> "$debugFile"
-        $echoCmd "Property files found with basePath of ${basePath}: $propertyFiles" >> "$debugFile"
-    fi
-
-    if [ -z "$propertyFiles" ]
-    then
-        $echoCmd 1>&2
-        $echoCmd "ERROR: No ${basePath}.properties files found in $uiResourcesDir. Please create these." 1>&2
-        $echoCmd 1>&2
-        exit 1
-    fi
-
-    findSourceImagesForPropertyFiles "$propertyFiles"
-}
-
-function findSourceImagesForPropertyFiles {
-    local propertyFiles="$1"
-    local imagesResourcesDir="$uiResourcesDir/images"
-    local generatedImageDirRegex=".*[/\\\\]w[0-9]+[/\\\\]h[0-9]+[/\\\\].*"
-    local dotNullImageNamePattern="*.null"
-    local propertyFileNamePattern="*.properties"
-    local md5FileNamePattern="*.md5"
-
-    local i=1;
-    for propFile in $propertyFiles
-    do
-        local groupRelativePropertyFile=${propFile#$imagesResourcesDir/*/}
-        if [ $i -eq 1 ] 
-        then
-            echo $groupRelativePropertyFile > $$.tmp.propFiles
-        else 
-            echo $groupRelativePropertyFile >> $$.tmp.propFiles
-        fi
-        local i=$((i + 1))
-    done
-
-    # Now find all images that correspond to the properties files found.
-    local findOptions="$imagesResourcesDir -type f -a '!' -path '*CVS*' -a '!' -regex \"$generatedImageDirRegex\" \
-            -a '!' -name \"$dotNullImageNamePattern\" -a '!' -name \"$propertyFileNamePattern\" -a '!' -name \"$md5FileNamePattern\" -a \\("
-    local i=1;
-    for propFile in `sort $$.tmp.propFiles |uniq`
-    do
-        if [ "$debug" -eq 0 ]
-        then
-            $echoCmd >> "$debugFile"
-            $echoCmd "propertyFile: $propFile" >> "$debugFile"
-        fi
-        local propertyFileBasename=`basename $propFile |tr -d "\r"`
-        local imageFileStem=${propertyFileBasename%.properties}
-        if [ $i -eq 1 ] 
-        then
-            local findOptions="${findOptions} -name \"${imageFileStem}.*\" "
-        else
-            local findOptions="${findOptions} -o -name \"${imageFileStem}.*\" "
-        fi
-        local i=$((i + 1))
-    done
-    local findOptions="${findOptions} \\)"
-
-    eval $findCmd $findOptions
-}
-
 
 function getImageDimensions {
     local imagePath="$1"
@@ -274,8 +156,10 @@ function scaleImages {
 
         # Generate a hash of the image just processed. This can be later used to tell if the image is
         # consistent with the last time that the images were generated.
+        # We use the openssl command for better portability between linux and Mac OS X. The latter
+        # lacks md5sum and the md5 command that it ships with is very basic.  
         currImageHashFile="$currImage.md5"
-        $opensslCmd dgst -md5 -hex $currImage |cut -f 2 -d" " |tr -d "\r" > $currImageHashFile
+        $computeMd5 $currImage > $currImageHashFile
         $echoCmd "Generated hash file \"$currImageHashFile\""
         $echoCmd ""
 
