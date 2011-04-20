@@ -1,4 +1,4 @@
-==== (PENDING) Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ==== 
+==== Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ==== 
 
 Bugs:
 * [CRF-93] - NEW - duplicate group names and config paths should be illegal in group config files
@@ -20,6 +20,10 @@ Task:
 * [CRF-92] - NEW: support for referencing groups within the same crf config file
 * [CRF-98] - NEW - upgrade map component to use CRF 2
 * [CRF-107] - JavaScript that requests images directly, must handle new /uiresources/<version>/images/ structure
+* [CRF-111] - Development time pre-generation of scaled images
+* [CRF-112] - PregeneratedFileLookupImageTransformationFactoryBean
+* [CRF-113] - Build time verification of pre-generated scaled images
+* [CRF-114] - Build scripts for pregenerated images - script distribution
 
 Upgrade Notes
 - This version depends on sdpCommon-web 2.0-006. The way in which device recognition is performed
@@ -31,7 +35,6 @@ Upgrade Notes
   
       getDeviceRecognition().identifyDevice(userAgent, getServletContext());
   
-
   This was a result of eliminating the dependency on the Volantis MCSFilter. In brief, this means 
   that you must ensure that the deviceRepositoryLocation property
   is injected into your VolantisDeviceRecognition bean in your Spring context:
@@ -45,17 +48,11 @@ Upgrade Notes
     
   and then define env.mcs.devicerepository.filepath in your environment.properties.* files.
   Refer to the sdpCommon-web release notes for, hopefully, further details.
-
-- Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ ) installed, which
-  we use for image scaling. The path to this is configured via the 
-  env.image.transformation.graphics.magick.path property in the 
-  crf-environment.properties.* files that are shipped with CRF. However, at the moment, the property
-  is just set to "gm" since none of the environments have it installed. Having "gm" on your path
-  is advisable for desktop development to aid portability but for other environments, it would
-  be better to have an absolute path.     
+  
 - As per CRF-102 "NEW - refactor ImageTag to use device repository attribute to control width/height 
-  division instead of hard coded iphone4 detection", now depends on devices.mdpr version 1.283 or later, 
+  division instead of hard coded iphone4 detection", CRF now depends on devices.mdpr version 1.283 or later, 
   as this sets the custom.crf.image.ratio property for iphone 4.
+  
 - As per CRF-91 "Add web app version number to the image paths in CSS files", the location in which 
   the project version number is inserted when uiassets/uiresources are packaged has changed. The 
   structure used for packaging and deployment used to be:
@@ -125,8 +122,14 @@ Upgrade Notes
   new /uiresources/<version>/images/ structure", component tag files that used to require an 
   attribute set to the images source prefix, should now use <crf:imgSrcPrefix /> directly. 
   This will work out the correct image source prefix, including the version number. 
+  
+- As per [CRF-111] "Development time pre-generation of scaled images" and 
+  [CRF-112] "PregeneratedFileLookupImageTransformationFactoryBean", CRf 2.x transparently handles 
+  both the CRF 1.x style of images (ie. no image scaling) and the new CRF 2.x image scaling.
+  Only images that have a corresponding properties file are candidates/requests for image scaling.
         
-- When ivy retrieves the crf artifacts, there will be a new 
+- As per [CRF-114] "Build scripts for pregenerated images - script distribution", when ivy retrieves 
+  the crf artifacts, there will be a new 
   lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
   all *.sh scripts into a new top level directory called "scripts" in your project. Then manually create
   a wrapper script for gimages.sh in the root directory of your project. Example for YPM would be 
@@ -142,11 +145,25 @@ Upgrade Notes
      pre-generate scaled images for files matching the given group relative image stem. eg.
      "./ypmimages.sh common/logo" would look for common/logo.properties in your group directories
      and if found, generate scaled versions for each common/logo.* image.
-     
+  Only images with a corresponding properties file anywhere under your uiresources/images directory
+  are candidates for scaling.
   See "./scripts/gimages.sh -h" for more info on the -i and -m options. 
   
-- You should now depend on wl-build-scripts 2.3.1 to ensure that your build scripts will invoke
+- As per [CRF-113] "Build time verification of pre-generated scaled images", you should now depend 
+  on wl-build-scripts 2.3.1 to ensure that your build scripts will invoke
   verify-image-generation. See the wl-build-scripts release notes.  
+  
+Other notes
+- The following are requirements for [CRF-25] GraphicsMagickImageTransformationFactoryBean. However,
+  it was decided that this bean would not be configured by default (we went with 
+  [CRF-111] "Development time pre-generation of scaled images" instead) and is not yet recommended for a 
+  production environment. Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ ) 
+  installed, which we use for image scaling. The path to this is configured via the 
+  env.image.transformation.graphics.magick.path property in the 
+  crf-environment.properties.* files that are shipped with CRF. However, at the moment, the property
+  is just set to "gm" since none of the environments have it installed. Having "gm" on your path
+  is advisable for desktop development to aid portability but for other environments, it would
+  be better to have an absolute path.     
   
 
 ==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
