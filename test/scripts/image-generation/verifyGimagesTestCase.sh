@@ -98,6 +98,16 @@ function testVerifyImagesIncorrectMd5Sum {
     $echoCmd "testVerifyImagesIncorrectMd5Sum PASSED"
 }
 
+function testVerifyImagesMissingLastRunProperties {
+    $echoCmd
+    $echoCmd "testVerifyImagesMissingLastRunProperties start"
+
+    setup "$baseWorkDir/testVerifyImagesMissingLastRunProperties"
+    doTest "$inputTestData/verifyImagesMissingLastRunProperties" "$baseWorkDir/testVerifyImagesMissingLastRunProperties" "1"
+
+    $echoCmd "testVerifyImagesMissingLastRunProperties PASSED"
+}
+
 function testVerifyImagesSuccessful {
     $echoCmd
     $echoCmd "testVerifyImagesSuccessful start"
@@ -108,11 +118,10 @@ function testVerifyImagesSuccessful {
     $echoCmd "testVerifyImagesSuccessful PASSED"
 }
 
-
-
 # ==============================================================================
 # Run the tests.
 
 testVerifyImagesMissingMd5File
 testVerifyImagesIncorrectMd5Sum
+testVerifyImagesMissingLastRunProperties
 testVerifyImagesSuccessful

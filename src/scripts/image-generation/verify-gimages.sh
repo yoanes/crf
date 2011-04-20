@@ -30,6 +30,7 @@ debugFile=$$.tmp.debug
 
 defaultUiResourcesDir="src/web/uiresources"
 uiResourcesDir="$defaultUiResourcesDir"
+lastRunPropertiesFile="gimages-last-run.properties"
 
 # ==============================================================================
 # Functions.
@@ -42,6 +43,16 @@ function echoUsedVariables {
 
 function usage {
     $echoCmd "Usage: $0 [-r <uiresources directory>]"
+}
+
+function verifyLastRunPropertiesFile {
+    local expectedFile="$uiResourcesDir/images/$lastRunPropertiesFile"
+
+    if [ ! -e $expectedFile ]
+    then
+        $echoCmd
+        failVerification "ERROR: $expectedFile verification FAILED. You must run the <your project prefix>images.sh script (eg. ypmimages.sh) in the root of your project, then commit the images that are generated under $uiResourcesDir."
+    fi
 }
 
 function verifyImageMd5Sums {
@@ -113,6 +124,7 @@ do  case "$option" in
 done
 
 echoUsedVariables
+verifyLastRunPropertiesFile
 verifyImageMd5Sums
 
 # ==============================================================================
