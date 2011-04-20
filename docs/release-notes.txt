@@ -128,15 +128,15 @@ Upgrade Notes
         
 - When ivy retrieves the crf artifacts, there will be a new 
   lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
-  gimages.sh into a new top level directory called "scripts" in your project. Then manually create
-  a wrapper script in the root directory of your project. An example for YPM would be called 
-  ypmimages.sh and contain:
+  all *.sh scripts into a new top level directory called "scripts" in your project. Then manually create
+  a wrapper script for gimages.sh in the root directory of your project. Example for YPM would be 
+  ypmimages.sh:
   
 #!/bin/bash
 
 ./scripts/gimages.sh -r src/web/uiresources -i5 -m5 -p "$1"
 
-  This script can then be executed in two ways:
+  ypmimages.sh can then be executed in two ways:
   1. ./ypmimages.sh: Pre-generate scaled images for CRF 2 to have access to at runtime.
   2. ./ypmimages.sh <group relative image stem>: Like the previous invocation but only
      pre-generate scaled images for files matching the given group relative image stem. eg.
@@ -144,6 +144,10 @@ Upgrade Notes
      and if found, generate scaled versions for each common/logo.* image.
      
   See "./scripts/gimages.sh -h" for more info on the -i and -m options. 
+  
+- You should now depend on wl-build-scripts 2.3.1 to ensure that your build scripts will invoke
+  verify-image-generation. See the wl-build-scripts release notes.  
+  
 
 ==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
 
