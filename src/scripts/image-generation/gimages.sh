@@ -105,8 +105,8 @@ function scaleImages {
 
     if [ -z "$sourceImages" ]
     then
-        $echoCmd "No images found. Exiting." 1>&2
-        exit 1
+        $echoCmd "No images found."
+        return 0
     fi
 
     if [ "$debug" -eq 0 ]
