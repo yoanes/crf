@@ -157,8 +157,8 @@ function assertIdentifiedImages {
 }
 
 function assertMd5ChecksumFiles {
-    local workDir="$1"
-    local expectedOutputDir="$2"
+    local expectedOutputDir="$1"
+    local workDir="$2"
 
     $echoCmd
     $echoCmd "Comparing expected MD5 checksum files in $expectedOutputDir to actual MD5 checksum files in $workDir."
@@ -183,8 +183,8 @@ function assertMd5ChecksumFiles {
 }
 
 function assertLastRunPropertiesFile {
-    local workDir="$1"
-    local expectedOutputDir="$2"
+    local expectedOutputDir="$1"
+    local workDir="$2"
 
     local expectedLastRunPropertiesFile="$expectedOutputDir/images/gimages-last-run.properties"
     local actualLastRunPropertiesFile="$workDir/images/gimages-last-run.properties"
