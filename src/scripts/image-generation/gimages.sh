@@ -66,7 +66,7 @@ minimumPixels=$minimumPixels
 overwriteWithoutPrompting=$overwriteWithoutPrompting
 END
     $echoCmd ""
-    $echoCmd "Generated $uiResourcesDir/$lastRunPropertiesFile"
+    $echoCmd "Generated $uiResourcesDir/images/$lastRunPropertiesFile"
 }
 
 function getImageDimensions {

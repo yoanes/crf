@@ -145,7 +145,10 @@ Upgrade Notes
 ./scripts/gimages.sh -r src/web/uiresources -i5 -m5 -p "$1"
 
   ypmimages.sh can then be executed in two ways:
-  1. ./ypmimages.sh: Pre-generate scaled images for CRF 2 to have access to at runtime.
+  1. ./ypmimages.sh: Pre-generate scaled images for CRF 2 to have access to at runtime. This 
+     must be run prior to your first CRF 2 deployment, even if none of your images are candidates
+     for pre-generated scaling. This is because a properties file is recorded that CRF-113 below
+     will check for. 
   2. ./ypmimages.sh <group relative image stem>: Like the previous invocation but only
      pre-generate scaled images for files matching the given group relative image stem. eg.
      "./ypmimages.sh common/logo" would look for common/logo.properties in your group directories
