@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Content Rendering Framework script for verifying that all candidate images for generating 
-# scaled images have been processed.
+# scaled images have been processed. If not, the script exits with a status code of 1.
 #
 # CRF Version: @CRFVERSION@
 #
@@ -65,7 +65,7 @@ function verifyImageMd5Sums {
             computeMd5 "$currImage" > "$tempMd5File"
 
             $echoCmd "Comparing computed checksum to $currImageMd5File ..."
-            if $diffCmd "$tempMd5File" "$currImageMd5File" 1>&2
+            if $diffCmd "$tempMd5File" "$currImageMd5File"
             then
                 $echoCmd "... OK"
                 :
@@ -74,7 +74,7 @@ function verifyImageMd5Sums {
             fi
         
         else
-            $echoCmd "NOT found" 1>&2
+            $echoCmd "NOT found"
             verificationPassed="false"
         fi
 

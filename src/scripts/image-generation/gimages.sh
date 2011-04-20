@@ -158,8 +158,8 @@ function scaleImages {
         # consistent with the last time that the images were generated.
         # We use the openssl command for better portability between linux and Mac OS X. The latter
         # lacks md5sum and the md5 command that it ships with is very basic.  
-        currImageHashFile="$currImage.md5"
-        $computeMd5 $currImage > $currImageHashFile
+        currImageHashFile="${currImage}.md5"
+        computeMd5 $currImage > $currImageHashFile
         $echoCmd "Generated hash file \"$currImageHashFile\""
         $echoCmd ""
 
