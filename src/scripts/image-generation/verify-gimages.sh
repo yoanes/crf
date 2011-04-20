@@ -86,8 +86,7 @@ function verifyImageMd5Sums {
         $echoCmd "MD5 verification PASSED"
     else
         $echoCmd
-        # TODO: wrapper for this that knows the name of the project specific script so that we can report what the user should run.
-        failVerification "MD5 verification FAILED. You must run your generate images script and then commit the generated images under $uiResourcesDir."
+        failVerification "ERROR: MD5 verification FAILED. You must run the <your project prefix>images.sh script (eg. ypmimages.sh) in the root of your project, then commit the images that are generated under $uiResourcesDir."
     fi
 	
 }
