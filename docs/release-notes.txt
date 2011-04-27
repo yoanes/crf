@@ -1,7 +1,9 @@
 ==== Version 2.0.0 (tag: contentRenderingFramework_v2_0_0) ==== 
 
 Incremented version number to mark official version 2 release.
-No changes since 1.1.0.
+No code changes since 1.1.0 but I did fix up the release notes which previously missed a few
+pertinent aspects. I won't bother re-publishing 1.1.1 since no one should be depending on that
+version (they should be using 2.0.0 instead). 
 
 ==== Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ==== 
 
