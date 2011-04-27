@@ -90,7 +90,7 @@ function usage {
 
 function getExtension {
     local filePath="$1"
-    $exprCmd "$filePath" ':' '.*\(\.[A-Za-z][A-Za-z][A-Za-z]\)$'
+    $exprCmd "$filePath" ':' '.*\.\([A-Za-z][A-Za-z][A-Za-z]\)$'
 }
 
 function scaleImages {
@@ -133,18 +133,22 @@ function scaleImages {
             $echoCmd "currImageDir: \"$currImageDir\"" >> "$debugFile"
         fi
 
-        local newImageWidth=$(($imageWidth - $pixelsIncrement))
+        # Set newImageWidth to imageWidth to start with to handle the case where a GIF is required.
+        # This will also cause a PNG version to be created that we probably don't need but it's 
+        # okay to create it.
+        local newImageWidth=$imageWidth
         while [ $newImageWidth -gt $minimumPixels ]
         do
-            scaleSingleImage $currImage $imageBaseName $currImageDir $newImageWidth 
+            local outputExtension=`getExtension $currImage`
+            scaleSingleImage "$currImage" "$imageBaseName" "$currImageDir" "$newImageWidth" "$outputExtension" 
 
-            if [ `getExtension $currImage` = ".png" -o `getExtension $currImage` = ".PNG" ]
+            if [ "$outputExtension" = "png" -o "$outputExtension" = "PNG" ]
             then
                 currGifImageWithLowerCaseExtension=${currImage%.*}.gif
                 currGifImageWithUpperCaseExtension=${currImage%.*}.GIF
                 if [ ! -e "$currGifImageWithLowerCaseExtension" -a ! -e "$currGifImageWithUpperCaseExtension" ]
                 then
-                    scaleSingleImage $currImage $imageBaseName $currImageDir $newImageWidth "gif"
+                    scaleSingleImage "$currImage" "$imageBaseName" "$currImageDir" "$newImageWidth" "gif"
                 fi
             fi
 
@@ -176,14 +180,9 @@ function scaleSingleImage {
     local newImageWidth="$4"
     local outputExtension="$5"
 
-    if [ -z "$outputExtension" ]
-    then
-        local tempFile=$$.tmpImage
-    else
-        local tempFile=$$.tmpImage.$outputExtension
-    fi
+    local tempFile=$$.tmpImage.$outputExtension
 
-    if [ `getExtension $currImage` = ".png" -o `getExtension $currImage` = ".PNG" -a \( "$outputExtension" = ".gif" -o "$outputExtension" = ".GIF" \) ]
+    if [ \( `getExtension $currImage` = "png" -o `getExtension $currImage` = "PNG" \) -a \( "$outputExtension" = "gif" -o "$outputExtension" = "GIF" \) ]
     then
         # Look for optional GIF background color property.
         local currImageLocalPropertiesFile=${currImage%.*}.properties
@@ -201,6 +200,8 @@ function scaleSingleImage {
     if [ "$debug" -eq 0 ]
     then
         $echoCmd "background.color value: '$backgroundColor'" 
+        $echoCmd "outputExtension: '$outputExtension'" 
+        $echoCmd "currImage: '$currImage'" 
     fi
 
     # Resize the image to a temp file first because we want to inspect its dimensions
