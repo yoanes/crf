@@ -77,9 +77,17 @@ Upgrade Notes
                   css/
                   images/
                   javascript/
+                  
+  In your existing crf-environment.properties.* files, you must make the following changes:
+  1. You must omit the "css/" from the end of the env.resources.css.root.dir property.  
+  2. You must omit the "javascript/" from the end of the env.resources.javascript.root.dir property.
+  3. You must omit the "images/" from the end of the env.resources.images.root.dir property.
+  4. You must omit the "css/" from the end of the env.resources.css.client.path.prefix property.  
+  5. You must omit the "javascript/" from the end of the env.resources.javascript.client.path.prefix property.
+  6. You must omit the "images/" from the end of the env.resources.images.client.path.prefix property.
   
-  This means that background images in CSS files that used absolute URLs _must_ now use relative 
-  URLs. eg. Suppose your project had:
+  The above structure change means that background images in CSS files that used absolute URLs 
+  _must_ now use relative URLs. eg. Suppose your project had:
   
       /src/web/uiresources/
           images/
