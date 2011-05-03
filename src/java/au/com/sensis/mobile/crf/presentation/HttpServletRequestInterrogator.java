@@ -12,6 +12,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public final class HttpServletRequestInterrogator {
 
+    private static final String URI_PATH_SEPARATOR = "/";
+
     /**
      * See servlet-2_5-mrel2-spec.pdf, page 61: request attribute containing the URI if a
      * request is an include.
@@ -78,24 +80,28 @@ public final class HttpServletRequestInterrogator {
     }
 
     /**
-     * @return Transforms the current include URI to be relative to the webapp context root.
+     * @return Transforms the current include URI to be relative to the webapp
+     *         context root.
      */
     private String transformIncludeUriToContextRelative() {
 
         final String includeUri = getIncludeUri().toString();
 
+        // ContextPath could be like "/mywebapp", "/" or "".
         String includeUriWithoutContextRoot =
-                StringUtils.remove(includeUri, getHttpServletRequest().getContextPath());
+                StringUtils.removeStart(includeUri, getHttpServletRequest().getContextPath());
 
         if (isRelativeUri(includeUriWithoutContextRoot)) {
             // grab the URI of the original JSP requested then remove the end of
             // the path.
             final String originalPath =
-                    StringUtils.substringBeforeLast(getHttpServletRequest().getServletPath(), "/");
+                    StringUtils.substringBeforeLast(getHttpServletRequest().getServletPath(),
+                            URI_PATH_SEPARATOR);
 
             // add the name of the include JSP to the path to create the real
             // path for this resource.
-            includeUriWithoutContextRoot = originalPath + "/" + includeUriWithoutContextRoot;
+            includeUriWithoutContextRoot =
+                    originalPath + URI_PATH_SEPARATOR + includeUriWithoutContextRoot;
         }
 
         return includeUriWithoutContextRoot;
@@ -107,7 +113,7 @@ public final class HttpServletRequestInterrogator {
      */
     private boolean isRelativeUri(final String includeUri) {
         return StringUtils.startsWith(includeUri, "..")
-                || (StringUtils.countMatches(includeUri, "/") < 1);
+                || (StringUtils.countMatches(includeUri, URI_PATH_SEPARATOR) < 1);
     }
 
     /**
@@ -128,5 +134,5 @@ public final class HttpServletRequestInterrogator {
         toStringBuilder.append("isInclude", isInclude());
         return toStringBuilder.toString();
     }
-
 }
+

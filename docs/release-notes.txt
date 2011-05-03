@@ -184,6 +184,11 @@ Other notes
   be better to have an absolute path.     
   
 
+==== Version 1.0.8 (tag: contentRenderingFramework_v1_0_8, branch: branch_contentRenderingFramework_v1_0_7) ==== 
+
+Fixes:
+- CRF-116 Resolved JSP paths mangled if webapp contextPath is "/".
+
 ==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
 
 Fixes:

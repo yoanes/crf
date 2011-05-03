@@ -62,22 +62,29 @@ public class HttpServletRequestInterrogatorTestCase extends
 
     @Test
     public void testGetRequestUriWhenInclude() throws Throwable {
-        getSpringMockHttpServletRequest().setContextPath("/mywebapp");
+        final String [] testContextPaths = { "/mywebapp", "", "/" };
+
+        for (int i = 0; i < testContextPaths.length; i++) {
+            doTestGetRequestUriWhenIncludeForGivenContextPath(testContextPaths[i]);
+        }
+    }
+
+    private void doTestGetRequestUriWhenIncludeForGivenContextPath(final String contextPath) {
+        getSpringMockHttpServletRequest().setContextPath(contextPath);
         getSpringMockHttpServletRequest().setServletPath(FORWARD_URI);
 
         final String[] includeUris =
-                { "/mywebapp/WEB-INF/view/common/logo.jsp",
-                        "../common/header.jsp", "advert.jsp", "/index.jsp" };
+                { contextPath + "/WEB-INF/view/common/logo.jsp", "../common/header.jsp",
+                        "advert.jsp", contextPath + "/index.jsp" };
         final String[] expectedRequestUris =
-                { "/WEB-INF/view/common/logo.jsp",
-                        "/WEB-INF/view/home/../common/header.jsp",
+                { "/WEB-INF/view/common/logo.jsp", "/WEB-INF/view/home/../common/header.jsp",
                         "/WEB-INF/view/home/advert.jsp", "/index.jsp" };
         for (int i = 0; i < includeUris.length; i++) {
-            getSpringMockHttpServletRequest().setAttribute(
-                    "javax.servlet.include.request_uri", includeUris[i]);
-            Assert.assertEquals("requestUri Is wrong for test item " + i,
-                    expectedRequestUris[i], getObjectUnderTest()
-                            .getRequestUri());
+            getSpringMockHttpServletRequest().setAttribute("javax.servlet.include.request_uri",
+                    includeUris[i]);
+            Assert.assertEquals("requestUri Is wrong for test URI " + i + " and contextPath: '"
+                    + contextPath + "'", expectedRequestUris[i], getObjectUnderTest()
+                    .getRequestUri());
         }
     }
 
