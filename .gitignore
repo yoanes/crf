@@ -1,0 +1,4 @@
+build/
+eclipseBin/
+lib/
+shared-build-scripts/
