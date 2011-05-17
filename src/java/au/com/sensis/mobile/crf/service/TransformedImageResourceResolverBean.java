@@ -82,7 +82,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         validateFileExtensionWildcards(fileExtensionWildcards);
 
         this.fileExtensionWildcards = fileExtensionWildcards;
-        excludedFileExtensionWildcards = new String [] { "properties" };
+        excludedFileExtensionWildcards = new String [] { "properties", "*.md5" };
 
         this.imageFormatDeviceRepositoryPropertyName = imageFormatDeviceRepositoryPropertyName;
     }

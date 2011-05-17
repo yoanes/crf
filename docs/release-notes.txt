@@ -1,3 +1,29 @@
+==== Version 2.0.1 (tag: contentRenderingFramework_v2_0_1) ==== 
+
+Jiras:
+* CRF-117 Migrate CVS repository to GIT
+* CRF-118 Modifications to support Linux (ubuntu) development
+    * build-bootstrap.xml now loads user.<your w login number>.properties to ensure that developers can override the default ivy cache dir 
+      location.
+    * crf-verify-images.sh now ensures that the delegate script is executable before attempting to execute it. 
+    * crf-environment.properties.desk is now parameterised with the following tokens:
+        * TOMCAT_HOME (replaced with tomcat.home)
+        * WEBAPP_CONTEXT_PATH (replaced with showcase.context.path)
+    * mcs.properties.desk now contains the following to allow developers to configure these for their own desktops:
+    
+        # Set these from your user.<your w number login>.properties file in the root of the project.
+        #mcs.devicerepository.filepath=
+        #mcs.policies.filepath=
+    * Fixed bug in TransformedImageResourceResolverBean which is platform dependent. *.md5 files are now correctly ignored when searching
+      for image files.
+        
+
+Upgrade notes:
+* Now depends on:
+
+	<dependency org="com.sensis" name="wl-build-scripts" rev="2.3.2" conf="buildBootstrap->default" />
+	<dependency org="com.thoughtworks" name="selenium-server-standalone" rev="2.0b3" conf="test->default"/>
+
 ==== Version 2.0.0 (tag: contentRenderingFramework_v2_0_0) ==== 
 
 Incremented version number to mark official version 2 release.

@@ -2,18 +2,20 @@
 ## ENVIRONMENT : DESK
 ########################################################
 
-env.resources.jsp.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase
-env.resources.properties.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/WEB-INF/properties
-env.resources.css.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/
-env.resources.javascript.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/
-env.resources.images.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-crf-showcase/uiresources/
+env.resources.jsp.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase
+env.resources.properties.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/WEB-INF/properties
+env.resources.css.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
+env.resources.javascript.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
+env.resources.images.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
 
-env.resources.css.client.path.prefix=/uidev/crfshowcase/uiresources/
-env.resources.javascript.client.path.prefix=/uidev/crfshowcase/uiresources/
-env.resources.images.client.path.prefix=/uidev/crfshowcase/uiresources/
+env.resources.css.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
+env.resources.javascript.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
+env.resources.images.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
 
 # Allow downstream caching for the showcase so that selenium tests will pass, 
 # otherwise we would have to change the tests to ignore the timestamp that is appended to URLs.
 env.downstream.caching.enabled=true
 
+# Ensure that resource bundling is disabled for desktop deployment, since the automated tests are based on the non-bundled
+# resource paths.
 env.bundle.resources=false

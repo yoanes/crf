@@ -38,7 +38,7 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     private static final int OUTPUT_IMAGE_PIXEL_WIDTH = 90;
     private static final String[] MATCHED_IMAGE_FILE_EXTENSION_WILDCARDS = new String[] { "*" };
     private static final String[] EXCLUDED_IMAGE_FILE_EXTENSION_WILDCARDS
-        = new String[] { "properties" };
+        = new String[] { "properties", "*.md5" };
 
     private static final int SOURCE_IMAGE_PIXEL_WIDTH = 800;
     private static final int SOURCE_IMAGE_PIXEL_HEIGHT = 600;

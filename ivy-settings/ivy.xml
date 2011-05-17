@@ -54,7 +54,7 @@
     <dependencies>
     
         <!-- Shared build scripts required by this project. -->    
-        <dependency org="com.sensis" name="wl-build-scripts" rev="2.3.1" conf="buildBootstrap->default" />
+        <dependency org="com.sensis" name="wl-build-scripts" rev="2.3.2" conf="buildBootstrap->default" />
         
         <!-- Commons -->
         <dependency org="apache" name="commons-lang" rev="2.4" conf="default" />
@@ -107,7 +107,7 @@
         <dependency org="org.springframework" name="spring-test" rev="2.5.5" conf="test->default"/>
         
         <dependency org="com.thoughtworks" name="selenium-java-client-driver" rev="1.0.1" conf="test->default"/>
-        <dependency org="com.thoughtworks" name="selenium-server-standalone" rev="2.0a5" conf="test->default"/>
+        <dependency org="com.thoughtworks" name="selenium-server-standalone" rev="2.0b3" conf="test->default"/>
         
         <dependency org="com.vladium" name="emma" rev="2.0" conf="test->default"/>
 

@@ -44,7 +44,22 @@
     <!-- Private targets (names start with a hyphen so they cannot be executed directly). -->
     
     <!-- Top level target to initialize all properties. -->
-    <target name="-bootstrap-init-props" depends="-bootstrap-init-dir-props, -bootstrap-init-lib-props, -bootstrap-init-ivy-props"/>
+    <target name="-bootstrap-init-props" depends="-init-user-props, -bootstrap-init-dir-props, -bootstrap-init-lib-props, -bootstrap-init-ivy-props"/>
+
+    <target name="-init-env-prop-access">
+        <!-- load environment vars into properties, with 'env' prefix -->
+        <property environment="env"/>
+    </target>
+
+    <target name="-init-user-props" depends="-init-env-prop-access">
+
+        <!--
+          - Source user specific properties file. Developers can use this
+          - to set user specific variables, such as ivy cache locations.
+          -->
+        <echo message="Looking for user properties from: ${basedir}/user.${env.USERNAME}.properties" />
+        <property file="${basedir}/user.${env.USERNAME}.properties"/>
+    </target>
     
     <target name="-bootstrap-init-dir-props">
         <!-- Location to install the shared build scripts, relative to the project being built. -->

@@ -25,8 +25,8 @@
     <import file="shared-build-scripts/src/toplevel/build-library-with-showcase-support.xml" />
 	<import file="shared-build-scripts/src/standard/build-standard-require-jdk5-home-property.xml"/>
 	
-	<target name="init" depends="build-standard-init.init">
-        <echo message="crf: Overriding build-standard-init.init target." />
+	<target name="showcase-init" depends="build-showcase-init.showcase-init">
+        <echo message="crf: Overriding build-showcase-init.showcase-init target." />
         
 		<property name="image.scripts.src.dir" 
 		            value="${src.dir}/scripts/image-generation" />
@@ -36,6 +36,20 @@
         <property name="image.scripts.dist.work.dir" location="${build.dir}/work/image-scripts"/>        	
         	
         <mkdir dir="${image.scripts.dist.work.dir}" />
+	
+        <!--
+          - This project's showcase still depends on MCS, since we provide MCS based web pages for
+          - performance testing comparisons.
+          -->
+        <property file="${showcase.cfg.dir}/mcs/mcs.properties.${project.platform}"/>
+	
+        <!-- 
+          - Webapp context path for the showcase. Default value is what the selenium tests are based on. This "funny" path-
+          - was chosen for compatibility with the sandpit-uidev environment, which was historically the only "real"
+          - environment we had for testing the showcase.
+          -->
+	    <property name="showcase.context.path" value="/uidev/crfshowcase"/>
+	
 	</target>
 	
     <target name="prepare-resources-to-publish" depends="build-library-with-showcase-support.prepare-resources-to-publish">
@@ -90,24 +104,26 @@
     	
         <echo message="crf: Overriding showcase showcase-prepare-resources-for-package target to add additional steps." />
         	
-        <!--
-          - This project's showcase still depends on MCS, since we provide MCS based web pages for
-          - performance testing comparisons.
-          -->
-        <property file="${showcase.cfg.dir}/mcs/mcs.properties.${project.platform}"/>
-
         <copy file="${showcase.cfg.dir}/mcs/mcs-config.xml" 
                tofile="${dist.showcase.work.dir}/WEB-INF/mcs-config.xml"
                 overwrite="true">
             <filterset>
                 <filter token="MCS-DEVICEREPOSITORY-FILEPATH"
-                        value="${mcs.devicerepository.filepath}"/>
+                        value="${device.repository.path}"/>
                 <filter token="MCS-POLICIES-FILEPATH" value="${mcs.policies.filepath}"/>
                 <filter token="MCS-CACHE-POLICIES" value="${mcs.cache.policies}"/>
                 <filter token="MCS-SCRIPT-ASSET-PATH" value="${mcs.script.asset.path}"/>
             </filterset>
         </copy>
-        
+	
+	    <!-- CRF -->
+        <copy tofile="${showcase.classes.dir}/crf-environment.properties" overwrite="true" 
+            file="${showcase.cfg.dir}/crf-environment.properties.${project.platform}" >
+            <filterset>
+                <filter token="TOMCAT_HOME" value="${tomcat.home}" />
+                <filter token="WEBAPP_CONTEXT_PATH" value="${showcase.context.path}" />
+            </filterset>
+        </copy>
 
     </target>
 	

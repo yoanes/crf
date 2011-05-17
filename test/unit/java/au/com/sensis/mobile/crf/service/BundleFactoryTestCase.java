@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -243,15 +244,8 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
 
     private File getRootResourceDir(final String fileClasspath) throws URISyntaxException {
 
-        final String filepath = this.getClass().getResource(fileClasspath).toURI().toString();
-
-        final int endIndex = filepath.indexOf(fileClasspath);
-        int startIndex = 0;
-        if (filepath.indexOf("file:/") > -1) {
-            startIndex = 6;
-        }
-
-        return new File(filepath.substring(startIndex, endIndex));
+    	return new File(this.getClass().getResource("/").toURI());
+    	
     }
 
     private String readFileContents(final File filePath) throws IOException  {

@@ -1,8 +1,6 @@
-mcs.devicerepository.filepath=D:/var/mcs/devices/devices.mdpr
-mcs.policies.filepath=D:/Data/eclipse-projects/contentRenderingFramework/showcase/resources/mcs/policies
-
-mcs.mgrp.component.scripts.base.url=/wl-crf-showcase/comp/
-mcs.mgrp.component.images.base.url=http://localhost:8080/common-imageserver/
+# Set these from your user.<your w number login>.properties file in the root of the project.
+#mcs.devicerepository.filepath=
+#mcs.policies.filepath=
 
 mcs.cache.policies=false
 mcs.script.asset.path=/wl-crf-showcase/scripts/
