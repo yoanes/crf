@@ -39,9 +39,7 @@
         <property name="locations">
             <list>
                 <value>classpath:/au/com/sensis/mobile/crf/crf.properties</value>
-                
-                <!-- Load a platform dependent environment properties file. -->
-                <value>classpath:/au/com/sensis/mobile/crf/crf-environment.properties.@{global.platform}</value>
+                <value>classpath:/crf-environment.properties</value>
             </list>
         </property>
     </bean>                
@@ -61,7 +59,6 @@
         <property name="locations">
             <list>
                 <value>classpath:/crf.properties</value>
-                <value>classpath:/crf-environment.properties</value>
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="true"/>

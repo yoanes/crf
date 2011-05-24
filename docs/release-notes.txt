@@ -1,3 +1,27 @@
+==== Version 2.0.2 (tag: contentRenderingFramework_v2_0_2) ====
+
+Merged changes in from old CVS repository, version contentRenderingFramework_v1_0_10.$
+
+Default environment property files are no longer shipped with the crf jar. This is due to the Mobiles team restructure.
+There is no longer anything common between the environments of each app and hence crf can no longer predict 
+sensible defaults.
+
+Upgrade steps:
+1. _Before you upgrade_, take the version prior to this and extract all property files that match the following pattern
+    from the crf jar file and place them in a temporary directory:
+
+    au/com/sensis/mobile/crf/crf-environment.properties.<platform>
+
+2. In your project, you should already have property files that match the above for each platform. Append
+   the contents of the above files to each of the files that you already have.
+
+3. Now you can upgrade your dependency and pull in the new version of crf.
+
+4. For future upgrades, note that the following file in the jar is provided as a template for you to check what properties
+   should be specified by your app.
+
+    au/com/sensis/mobile/crf/crf-environment-template.properties
+
 ==== Version 2.0.1 (tag: contentRenderingFramework_v2_0_1) ==== 
 
 Jiras:
