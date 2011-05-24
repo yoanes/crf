@@ -619,13 +619,12 @@ public class ConfigurationFactoryBeanTestCase extends
             final URL config2Url =
                     new ClassPathResource(CRF_CONFIG_EMPTY_PATH_CLASSPATH_PATTERN_MATCH2).getURL();
             Assert.assertTrue("ConfigurationRuntimeException has wrong message prefix",
-            		e.getMessage().startsWith("Multiple configurations with a default (empty) "
+                    e.getMessage().startsWith("Multiple configurations with a default (empty) "
                             + "config path were found. Only one is allowed: "));
-            
-			Assert.assertTrue("e.getMessage() does not contain config1Url", 
-					e.getMessage().contains(config1Url.toString()));
-			Assert.assertTrue("e.getMessage() does not contain config2Url", 
-					e.getMessage().contains(config2Url.toString()));
+            Assert.assertTrue("e.getMessage() does not contain config1Url", 
+                    e.getMessage().contains(config1Url.toString()));
+            Assert.assertTrue("e.getMessage() does not contain config2Url", 
+                    e.getMessage().contains(config2Url.toString()));
         }
 
     }
