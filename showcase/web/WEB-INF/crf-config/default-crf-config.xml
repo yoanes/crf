@@ -7,7 +7,7 @@
     <config-path></config-path>
     <groups>
         <!-- Device specific groups. -->
-        <import name="iphone-ipod-os2" />
+        <import name="iphone-ipod-os2-x" />
         <import name="iphone-ipod" />
         
         <group name="nokia7600" expr = "device.userAgent =~ '.*Nokia7600.*'" />        

@@ -8,16 +8,32 @@
     <groups>
 
         <!-- Apple devices. -->
-        <group name="iphone4" expr="device.userAgent =~ '.*iPhone OS 4.*'" />    
-        <group name="iphone-ipod-os2" expr="device.name =~ '.*iPhone.*' and device.userAgent =~ '.*OS 2_.*'" />
-        <group name="iphone-ipod" expr="device.name =~ '.*iPhone.*'" />
+        <group name="iphone-ipod-os2-x" expr="(device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')) and device.userAgent =~ '.*OS 2_.*'" />
+        <group name="iphone-ipod-os3-x" expr="(device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')) and device.userAgent =~ '.*OS 3_.*'" />
+        <group name="iphone-ipod-os4-x" expr="(device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')) and device.userAgent =~ '.*OS 4_.*'" />
+        
+        <group name="iphone-ipod-upto-os3-x" expr="inAnyGroup('iphone-ipod-os-2-x', 'iphone-ipod-os-3-x')" />
+        <group name="iphone-ipod-upto-os4-x" expr="inAnyGroup('iphone-ipod-upto-os3-x', 'iphone-ipod-os-4-x')" />
+        <group name="iphone-ipod" expr="device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')" />
+        
+        <group name="ipad-os3-x" expr="device.isA('Apple-iPad') and device.userAgent =~ '.*OS 3_.*'" />
+        <group name="ipad-os4-x" expr="device.isA('Apple-iPad') and device.userAgent =~ '.*OS 4_.*'" />        
+        
+        <group name="ipad-upto-os4-x" expr="inAnyGroup('ipad-os3-x', 'ipad-os4-x')" />
         <group name="ipad" expr="device.isA('Apple-iPad')" />
+        
         <group name="apple" expr="device.isA('Apple')" />
         
         <!-- Android devices. -->
         <group name="sex10" expr="device.isA('SonyEricsson-X10')" />
         <group name="sex10mini" expr="device.isA('SE-X10-mini')" />
         <group name="htc-desire" expr="device.isA('HTC-Desire') or device.isA('HTC-A8183')" />
+
+        <group name="android-os1-x" expr="device.isA('Android-OS') and device.userAgent =~ '.*Android 1\..*'" />        
+        <group name="android-os2-x" expr="device.isA('Android-OS') and device.userAgent =~ '.*Android 2\..*'" />
+        
+        <group name="android-upto-os2-x" expr="inAnyGroup('android-os1-x', 'android-os2-x')" />
+        
         <group name="android-os" expr="device.isA('Android-OS')" />
         
         <!-- Windows 7. -->

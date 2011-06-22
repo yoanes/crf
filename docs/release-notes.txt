@@ -1,3 +1,7 @@
+==== (PENDING) Version 2.0.3 (tag: contentRenderingFramework_v2_0_3) ====
+
+Updated global-devices-crf-config.xml, including fixes to the android and iphone related groups.
+
 ==== Version 2.0.2 (tag: contentRenderingFramework_v2_0_2) ====
 
 Merged changes in from old CVS repository, version contentRenderingFramework_v1_0_10.$

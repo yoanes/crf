@@ -1,7 +1,8 @@
 <?xml version="1.0" ?>
 
 <project name="wl-crf"
-    xmlns:sensis="antlib:au.com.sensis.mobiles">
+    xmlns:sensis="antlib:au.com.sensis.mobiles"
+	xmlns:local="antlib:wl-crf">
 
     <description>Builds the crf-component.</description>
 
@@ -104,28 +105,42 @@
     	
         <echo message="crf: Overriding showcase showcase-prepare-resources-for-package target to add additional steps." />
         	
-        <copy file="${showcase.cfg.dir}/mcs/mcs-config.xml" 
-               tofile="${dist.showcase.work.dir}/WEB-INF/mcs-config.xml"
-                overwrite="true">
-            <filterset>
-                <filter token="MCS-DEVICEREPOSITORY-FILEPATH"
-                        value="${device.repository.path}"/>
-                <filter token="MCS-POLICIES-FILEPATH" value="${mcs.policies.filepath}"/>
-                <filter token="MCS-CACHE-POLICIES" value="${mcs.cache.policies}"/>
-                <filter token="MCS-SCRIPT-ASSET-PATH" value="${mcs.script.asset.path}"/>
-            </filterset>
-        </copy>
-	
-	    <!-- CRF -->
-        <copy tofile="${showcase.classes.dir}/crf-environment.properties" overwrite="true" 
-            file="${showcase.cfg.dir}/crf-environment.properties.${project.platform}" >
-            <filterset>
-                <filter token="TOMCAT_HOME" value="${tomcat.home}" />
-                <filter token="WEBAPP_CONTEXT_PATH" value="${showcase.context.path}" />
-            </filterset>
-        </copy>
+	   <local:crf-config todir="${showcase.classes.dir}" />
 
     </target>
+	
+   <target name="do-showcase-hotswap"
+        depends="build-showcase-hotswap.do-showcase-hotswap">
+    
+        <echo message="crf: Overriding showcase do-showcase-hotswap target to add additional steps." />
+            
+        <local:crf-config todir="${hotswap.server.webapps.dir}/${showcase.webapp.name}/WEB-INF/classes"/>
+    </target>
+
+    <macrodef name="crf-config" uri="antlib:wl-crf">
+        <attribute name="todir" />
+        <sequential>
+            <copy file="${showcase.cfg.dir}/mcs/mcs-config.xml" 
+                   tofile="${dist.showcase.work.dir}/WEB-INF/mcs-config.xml"
+                    overwrite="true">
+                <filterset>
+                    <filter token="MCS-DEVICEREPOSITORY-FILEPATH"
+                            value="${device.repository.path}"/>
+                    <filter token="MCS-POLICIES-FILEPATH" value="${mcs.policies.filepath}"/>
+                    <filter token="MCS-CACHE-POLICIES" value="${mcs.cache.policies}"/>
+                    <filter token="MCS-SCRIPT-ASSET-PATH" value="${mcs.script.asset.path}"/>
+                </filterset>
+            </copy>
+	
+            <copy tofile="@{todir}/crf-environment.properties" overwrite="true" 
+                file="${showcase.cfg.dir}/crf-environment.properties.${project.platform}" >
+                <filterset>
+                    <filter token="TOMCAT_HOME" value="${tomcat.home}" />
+                    <filter token="WEBAPP_CONTEXT_PATH" value="${showcase.context.path}" />
+                </filterset>
+            </copy>
+        </sequential>
+    </macrodef>
 	
 	<target name="jaxbCompileCrfConfig" depends="init, require-jdk5-home-property"
 		description="Compile the crf-config.xsd into JAXB beans.">
