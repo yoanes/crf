@@ -43,7 +43,7 @@ public class JavaScriptBundleFactory extends BundleFactory {
      * @return the name to be used for the bundle file.
      */
     @Override
-    protected String createBundleFilename(final Resource resource,
+    protected String createBundleFileBasename(final Resource resource,
             final int indexOfFilenameInPath) {
 
         if (isPackageRequested(resource.getOriginalPath())) {

@@ -115,9 +115,10 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
 
         final String bundleContents = readFileContents(bundle.getNewFile());
 
-        Assert.assertTrue("generated bundle path is incorrect", bundle.getNewPath().endsWith(
-                "/bundle/" + createExpectedGroupsMd5Sum() + "/"
-                        + getAnExistingTestCssFile2().getName()));
+        Assert.assertTrue("generated bundle path is incorrect. Was: '" + bundle.getNewPath() + "'",
+                bundle.getNewPath().endsWith(
+                        "/bundle-" + createExpectedGroupsMd5Sum() + "-"
+                                + getAnExistingTestCssFile2().getName()));
         Assert.assertTrue("generated bundle does not contain contents of file 1", bundleContents
                 .contains(CSS_FILE1_CONTENT_EXTRACT));
         Assert.assertTrue("generated bundle does not contain contents of file 2", bundleContents
@@ -171,9 +172,10 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
 
         final String bundleContents = readFileContents(bundle.getNewFile());
 
-        Assert.assertTrue("generated bundle path is incorrect", bundle.getNewPath().endsWith(
-                "/bundle/" + createExpectedGroupsMd5Sum() + "/"
-                        + getAnExistingTestJavaScriptFile2().getName()));
+        Assert.assertTrue("generated bundle path is incorrect. Was: '" + bundle.getNewPath() + "'",
+                bundle.getNewPath().endsWith(
+                        "/bundle-" + createExpectedGroupsMd5Sum() + "-"
+                                + getAnExistingTestJavaScriptFile2().getName()));
         Assert.assertTrue("generated bundle does not contain contents of file 1", bundleContents
                 .contains(JAVASCRIPT_FILE1_CONTENT_EXTRACT));
         Assert.assertTrue("generated bundle does not contain contents of file 2", bundleContents

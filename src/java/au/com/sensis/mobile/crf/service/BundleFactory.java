@@ -30,7 +30,7 @@ public class BundleFactory {
 
     private static final Logger LOGGER = Logger.getLogger(BundleFactory.class);
     private boolean willDoMinification = true;
-    private final String bundleDir = "bundle/";
+    private static final String bundleFilePrefix = "bundle-";
     private Minifier minifier = new YUIMinifier();
 
     private enum MinificationType {
@@ -195,15 +195,15 @@ public class BundleFactory {
         // append the original file path (without the file name)
         bundleFilePath.append(resourcePath.substring(0, lastSeparator + 1));
         // insert bundle path
-        bundleFilePath.append(bundleDir);
+        bundleFilePath.append(bundleFilePrefix);
 
         // Obfuscate info for all groups so that we don't expose too much info of our
         // internal workings to clients.
         bundleFilePath.append(createMd5SumFromGroups(resourcePathsToInclude));
 
-        bundleFilePath.append("/");
+        bundleFilePath.append("-");
         // append the new bundle file name
-        bundleFilePath.append(createBundleFilename(resource, lastSeparator + 1));
+        bundleFilePath.append(createBundleFileBasename(resource, lastSeparator + 1));
 
         return bundleFilePath.toString();
     }
@@ -229,14 +229,14 @@ public class BundleFactory {
     }
 
     /**
-     * Creates an appropriate bundle filename from the given {@link Resource}.
+     * Creates an appropriate bundle file basename from the given {@link Resource}.
      *
      * @param resource from which to derive the bundle name from
      * @param indexOfFilenameInPath the index of the start of the filename in the {@link Resource}'s
      *  getNewPath() method.
      * @return the name to be used for the bundle file.
      */
-    protected String createBundleFilename(final Resource resource,
+    protected String createBundleFileBasename(final Resource resource,
             final int indexOfFilenameInPath) {
 
         return resource.getNewPath().substring(indexOfFilenameInPath);

@@ -1,6 +1,22 @@
-==== (PENDING) Version 2.0.3 (tag: contentRenderingFramework_v2_0_3) ====
+==== Version 2.0.3 (tag: contentRenderingFramework_v2_0_3) ====
 
-Updated global-devices-crf-config.xml, including fixes to the android and iphone related groups.
+Fixes:
+- CRF-121: Relative URLs for background CSS images break when switching from bundled to non-bundled CSS files
+    - Bundle paths have been changed from paths like so (ie. bundle and md5sum dirs): 
+    
+        /uiresources/2.0.3/css/mapComponent-advanced/selenium/component/map/bundle/4c73c57bcd04d4b722133ba7a659ffc0/map.css
+    
+    to (ie. bundle and md5sum are part of the bundle basename):
+
+        /uiresources/2.0.3/css/mapComponent-advanced/selenium/component/map/bundle-4c73c57bcd04d4b722133ba7a659ffc0-map.css
+
+    This ensures that relative paths in the bundled and non-bundled versions are identically resolved.
+
+Other changes:
+- Updated global-devices-crf-config.xml, including fixes to the android and iphone related groups.
+
+Upgrade steps:
+- should be transparent.
 
 ==== Version 2.0.2 (tag: contentRenderingFramework_v2_0_2) ====
 

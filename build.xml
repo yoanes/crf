@@ -25,31 +25,36 @@
 <!--    <import file="shared-build-scripts/src/toplevel/build-component-with-showcase-support.xml" />-->
     <import file="shared-build-scripts/src/toplevel/build-library-with-showcase-support.xml" />
 	<import file="shared-build-scripts/src/standard/build-standard-require-jdk5-home-property.xml"/>
-	
-	<target name="showcase-init" depends="build-showcase-init.showcase-init">
-        <echo message="crf: Overriding build-showcase-init.showcase-init target." />
+
+    <target name="showcase-init-props" depends="build-showcase-init-props.showcase-init-props">
+        <echo message="crf: Overriding build-showcase-init-props.showcase-init-props target." />
         
-		<property name="image.scripts.src.dir" 
-		            value="${src.dir}/scripts/image-generation" />
+        <property name="image.scripts.src.dir" 
+                    value="${src.dir}/scripts/image-generation" />
         <property name="image.scripts.dist.path" 
-            value="${dist.dir}/${project.name}-image-scripts-${project.version.complete}.zip" />		
-        	
-        <property name="image.scripts.dist.work.dir" location="${build.dir}/work/image-scripts"/>        	
-        	
-        <mkdir dir="${image.scripts.dist.work.dir}" />
-	
+            value="${dist.dir}/${project.name}-image-scripts-${project.version.complete}.zip" />        
+            
+        <property name="image.scripts.dist.work.dir" location="${build.dir}/work/image-scripts"/>           
+            
         <!--
           - This project's showcase still depends on MCS, since we provide MCS based web pages for
           - performance testing comparisons.
           -->
         <property file="${showcase.cfg.dir}/mcs/mcs.properties.${project.platform}"/>
-	
+    
         <!-- 
           - Webapp context path for the showcase. Default value is what the selenium tests are based on. This "funny" path-
           - was chosen for compatibility with the sandpit-uidev environment, which was historically the only "real"
           - environment we had for testing the showcase.
           -->
-	    <property name="showcase.context.path" value="/uidev/crfshowcase"/>
+        <property name="showcase.context.path" value="/uidev/crfshowcase"/>
+    
+    </target>
+	
+	<target name="showcase-init" depends="build-showcase-init.showcase-init">
+        <echo message="crf: Overriding build-showcase-init.showcase-init target." />
+        
+        <mkdir dir="${image.scripts.dist.work.dir}" />
 	
 	</target>
 	
