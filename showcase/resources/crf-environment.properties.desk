@@ -44,7 +44,7 @@ env.cache.stats.logging.period.milliseconds=60000
 env.downstream.caching.enabled=true
 
 # True if you want CSS and JavaScript resources to be bundled.
-env.bundle.resources=true
+env.bundle.resources=false
 
 # True if you want the resolved resource graph to be logged. 
 env.debug.resource.graph=true
