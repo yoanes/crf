@@ -263,7 +263,42 @@ Other notes
   is just set to "gm" since none of the environments have it installed. Having "gm" on your path
   is advisable for desktop development to aid portability but for other environments, it would
   be better to have an absolute path.     
-  
+
+==== Version 1.0.10 (tag: contentRenderingFramework_v1_0_10, branch: branch_contentRenderingFramework_v1_0_7 ) ==== 
+
+Default environment property files are no longer shipped with the crf jar. This is due to the Mobiles team restructure.
+There is no longer anything common between the environments of each app and hence crf can no longer predict 
+sensible defaults.
+
+Upgrade steps:
+1. _Before you upgrade_, take the version prior to this and extract all property files that match the following pattern
+    from the crf jar file and place them in a temporary directory:
+
+    au/com/sensis/mobile/crf/crf-environment.properties.<platform>
+    
+2. In your project, you should already have property files that match the above for each platform. Append
+   the contents of the above files to each of the files that you already have.
+
+3. Now you can upgrade your dependency and pull in the new version of crf.
+
+4. For future upgrades, note that the following file in the jar is provided as a template for you to check what properties
+   should be specified by your app.
+
+    au/com/sensis/mobile/crf/crf-environment-template.properties
+
+==== Version 1.0.9 (tag: contentRenderingFramework_v1_0_9, branch: branch_contentRenderingFramework_v1_0_7 ) ==== 
+
+Selectively backpatched some changes from the 2.x series in the Git repository to get project development working reasonably well on a 
+Unix box. 
+Note that you need:
+1. To create your own user.<login name>.properties file in the root of the project like my user.w12495.properties.
+2. You need the imageserver project checked out of CVS.
+3. You need the devices.mdpr device repository checked out of either CVS or GIT and the device.repository.path property set
+   in user.<login name>.propertie. 
+   
+NOTE !!!!! Due to the very selective backpatching and because I accidentally created the branch_contentRenderingFramework_v1_0_7 branch
+as a sub branch of the branch_contentRenderingFramework_v1_0_4 branch, it is inadvisable to incrementally import any of these changes
+from CVS to GIT using git cvsimport - it won't work out correctly/easily.  
 
 ==== Version 1.0.8 (tag: contentRenderingFramework_v1_0_8, branch: branch_contentRenderingFramework_v1_0_7) ==== 
 
