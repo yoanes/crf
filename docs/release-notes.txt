@@ -1,3 +1,14 @@
+==== Version 2.0.4 (tag: contentRenderingFramework_v2_0_4) ====
+
+Fixes:
+- (Reopened) CRF-121: Relative URLs for background CSS images break when switching from bundled to non-bundled CSS files
+    - When BundleFactory is asked to create a bundle, it will filter out any files that are already 
+      bundles. Prior to 2.0.3, this was "automatically" done due to the bundles existing in
+      subdirectories, which a non-recursive pattern of *.js  would ignore.  
+      
+Upgrade steps:
+- should be transparent.
+
 ==== Version 2.0.3 (tag: contentRenderingFramework_v2_0_3) ====
 
 Fixes:

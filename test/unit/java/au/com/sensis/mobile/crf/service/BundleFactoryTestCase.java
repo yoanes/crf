@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -41,14 +40,25 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
         "/au/com/sensis/mobile/crf/service/bundleFactoryTestData/cssFile1.css";
     private static String anExistingTestCssFile2Classpath =
         "/au/com/sensis/mobile/crf/service/bundleFactoryTestData/cssFile2.css";
+    private static String anExistingCssBundleFileClasspath =
+        "/au/com/sensis/mobile/crf/service/bundleFactoryTestData/"
+            + "-bundle-c21f969b5f03d33d43e04f8f136e7682-cssFile.css";
 
     private static String anExistingTestJavaScriptFile1Classpath =
         "/au/com/sensis/mobile/crf/service/bundleFactoryTestData/jsFile1.js";
     private static String anExistingTestJavaScriptFile2Classpath =
         "/au/com/sensis/mobile/crf/service/bundleFactoryTestData/jsFile2.js";
+    private static String anExistingJavaScriptBundleFileClasspath =
+        "/au/com/sensis/mobile/crf/service/bundleFactoryTestData/"
+            + "-bundle-761079f6d08f961eb60330113c5fda28-jsFile.js";
 
+    private static File anExistingTestCssFile1;
+    private static File anExistingTestJavaScriptFile1;
     private static File anExistingTestCssFile2;
     private static File anExistingTestJavaScriptFile2;
+
+    private static File anExistingCssBundleFile;
+    private static File anExistingJavaScriptBundleFile;
 
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private final GroupTestData groupTestData = new GroupTestData();
@@ -57,6 +67,7 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
 
     private Resource mockResource;
     private Resource mockResource2;
+    private Resource mockResource3;
 
     private Minifier mockMinifier;
 
@@ -73,10 +84,20 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().setMinifier(getMockMinifier());
 
+        setAnExistingTestCssFile1(new File(this.getClass().getResource(
+                getAnExistingTestCssFile1Classpath()).toURI()));
         setAnExistingTestCssFile2(new File(this.getClass().getResource(
                 getAnExistingTestCssFile2Classpath()).toURI()));
+
+        setAnExistingTestJavaScriptFile1(new File(this.getClass().getResource(
+                getAnExistingTestJavaScriptFile1Classpath()).toURI()));
         setAnExistingTestJavaScriptFile2(new File(this.getClass().getResource(
                 getAnExistingTestJavaScriptFile2Classpath()).toURI()));
+
+        setAnExistingCssBundleFile(new File(this.getClass().getResource(
+                getAnExistingCssBundleFileClasspath()).toURI()));
+        setAnExistingJavaScriptBundleFile(new File(this.getClass().getResource(
+                getAnExistingJavaScriptBundleFileClasspath()).toURI()));
     }
 
     @Test
@@ -103,11 +124,14 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
         final List<Resource> resources = new ArrayList<Resource>();
         resources.add(mockResource);
         resources.add(mockResource2);
+        resources.add(mockResource3);
 
-        recordExpectationsForResource(mockResource, getAnExistingTestCssFile1Classpath(),
-                getGroupTestData().createIPhoneGroup());
+        recordExpectationsForResource(mockResource, getAnExistingTestCssFile1(), getGroupTestData()
+                .createIPhoneGroup());
         recordExpectationsForLastResource(mockResource2, getAnExistingTestCssFile2Classpath(),
-                getGroupTestData().createAppleGroup());
+                getAnExistingTestCssFile2(), getGroupTestData().createAppleGroup());
+        recordExpectationsForBundleResource(mockResource3,
+                getAnExistingCssBundleFile());
 
         replay();
 
@@ -117,7 +141,7 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertTrue("generated bundle path is incorrect. Was: '" + bundle.getNewPath() + "'",
                 bundle.getNewPath().endsWith(
-                        "/bundle-" + createExpectedGroupsMd5Sum() + "-"
+                        "/-bundle-" + createExpectedGroupsMd5Sum() + "-"
                                 + getAnExistingTestCssFile2().getName()));
         Assert.assertTrue("generated bundle does not contain contents of file 1", bundleContents
                 .contains(CSS_FILE1_CONTENT_EXTRACT));
@@ -134,10 +158,10 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
         resources.add(mockResource);
         resources.add(mockResource2);
 
-        recordExpectationsForResource(mockResource, getAnExistingTestCssFile1Classpath(),
-                getGroupTestData().createIPhoneGroup());
+        recordExpectationsForResource(mockResource, getAnExistingTestCssFile1(), getGroupTestData()
+                .createIPhoneGroup());
         recordExpectationsForLastResource(mockResource2, getAnExistingTestCssFile2Classpath(),
-                getGroupTestData().createAppleGroup());
+                getAnExistingTestCssFile2(), getGroupTestData().createAppleGroup());
 
         getMockMinifier().minifyCss(EasyMock.isA(Reader.class), EasyMock.isA(Writer.class));
 
@@ -160,11 +184,15 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
         final List<Resource> resources = new ArrayList<Resource>();
         resources.add(mockResource);
         resources.add(mockResource2);
+        resources.add(mockResource3);
 
-        recordExpectationsForResource(mockResource, getAnExistingTestJavaScriptFile1Classpath(),
+        recordExpectationsForResource(mockResource, getAnExistingTestJavaScriptFile1(),
                 getGroupTestData().createIPhoneGroup());
         recordExpectationsForLastResource(mockResource2,
-                getAnExistingTestJavaScriptFile2Classpath(), getGroupTestData().createAppleGroup());
+                getAnExistingTestJavaScriptFile2Classpath(), getAnExistingTestJavaScriptFile2(),
+                getGroupTestData().createAppleGroup());
+        recordExpectationsForBundleResource(mockResource3,
+                getAnExistingJavaScriptBundleFile());
 
         replay();
 
@@ -174,7 +202,7 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertTrue("generated bundle path is incorrect. Was: '" + bundle.getNewPath() + "'",
                 bundle.getNewPath().endsWith(
-                        "/bundle-" + createExpectedGroupsMd5Sum() + "-"
+                        "/-bundle-" + createExpectedGroupsMd5Sum() + "-"
                                 + getAnExistingTestJavaScriptFile2().getName()));
         Assert.assertTrue("generated bundle does not contain contents of file 1", bundleContents
                 .contains(JAVASCRIPT_FILE1_CONTENT_EXTRACT));
@@ -191,10 +219,11 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
         resources.add(mockResource);
         resources.add(mockResource2);
 
-        recordExpectationsForResource(mockResource, getAnExistingTestJavaScriptFile1Classpath(),
+        recordExpectationsForResource(mockResource, getAnExistingTestJavaScriptFile1(),
                 getGroupTestData().createIPhoneGroup());
         recordExpectationsForLastResource(mockResource2,
-                getAnExistingTestJavaScriptFile2Classpath(), getGroupTestData().createAppleGroup());
+                getAnExistingTestJavaScriptFile2Classpath(), getAnExistingTestJavaScriptFile2(),
+                getGroupTestData().createAppleGroup());
 
         getMockMinifier().minifyJavaScript(EasyMock.isA(Reader.class), EasyMock.isA(Writer.class));
 
@@ -223,31 +252,35 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
     // HELPER METHODS
 
     private void recordExpectationsForLastResource(final Resource mockResource,
-            final String fileClasspath, final Group group) throws URISyntaxException {
+            final String fileClasspath, final File file, final Group group)
+            throws URISyntaxException {
 
-        final File rootResourceDir = getRootResourceDir(fileClasspath);
-
-        EasyMock.expect(mockResource.getRootResourceDir()).andReturn(rootResourceDir).atLeastOnce();
+        EasyMock.expect(mockResource.getRootResourceDir())
+            .andReturn(getRootResourceDir()).atLeastOnce();
         EasyMock.expect(mockResource.getNewPath()).andReturn(fileClasspath).atLeastOnce();
 
-        EasyMock.expect(mockResource.getOriginalPath()).andReturn("original path");
+        EasyMock.expect(mockResource.getOriginalPath()).andReturn("original path").atLeastOnce();
 
-        recordExpectationsForResource(mockResource, fileClasspath, group);
+        recordExpectationsForResource(mockResource, file, group);
     }
 
     private void recordExpectationsForResource(final Resource mockResource,
-            final String fileClasspath, final Group group) throws URISyntaxException {
+            final File file, final Group group) throws URISyntaxException {
 
-        final File cssFile = new File(this.getClass().getResource(fileClasspath).toURI());
-
-        EasyMock.expect(mockResource.getNewFile()).andReturn(cssFile);
+        EasyMock.expect(mockResource.getNewFile()).andReturn(file).atLeastOnce();
         EasyMock.expect(mockResource.getGroup()).andReturn(group).atLeastOnce();
     }
 
-    private File getRootResourceDir(final String fileClasspath) throws URISyntaxException {
+    private void recordExpectationsForBundleResource(final Resource mockResource,
+            final File newFile) throws URISyntaxException {
 
-    	return new File(this.getClass().getResource("/").toURI());
-    	
+        EasyMock.expect(mockResource.getNewFile()).andReturn(newFile).atLeastOnce();
+    }
+
+    private File getRootResourceDir() throws URISyntaxException {
+
+        return new File(this.getClass().getResource("/").toURI());
+
     }
 
     private String readFileContents(final File filePath) throws IOException  {
@@ -394,5 +427,53 @@ public class BundleFactoryTestCase extends AbstractJUnit4TestCase {
      */
     public static String getAnExistingTestJavaScriptFile2Classpath() {
         return anExistingTestJavaScriptFile2Classpath;
+    }
+
+    public Resource getMockResource3() {
+        return mockResource3;
+    }
+
+    public void setMockResource3(final Resource mockResource3) {
+        this.mockResource3 = mockResource3;
+    }
+
+    private static File getAnExistingCssBundleFile() {
+        return anExistingCssBundleFile;
+    }
+
+    private static void setAnExistingCssBundleFile(final File anExistingCssBundleFile) {
+        BundleFactoryTestCase.anExistingCssBundleFile = anExistingCssBundleFile;
+    }
+
+    private static File getAnExistingJavaScriptBundleFile() {
+        return anExistingJavaScriptBundleFile;
+    }
+
+    private static void setAnExistingJavaScriptBundleFile(final File anExistingJavaScriptBundleFile) {
+        BundleFactoryTestCase.anExistingJavaScriptBundleFile = anExistingJavaScriptBundleFile;
+    }
+
+    private static String getAnExistingCssBundleFileClasspath() {
+        return anExistingCssBundleFileClasspath;
+    }
+
+    private static String getAnExistingJavaScriptBundleFileClasspath() {
+        return anExistingJavaScriptBundleFileClasspath;
+    }
+
+    private static File getAnExistingTestCssFile1() {
+        return anExistingTestCssFile1;
+    }
+
+    private static void setAnExistingTestCssFile1(final File anExistingTestCssFile1) {
+        BundleFactoryTestCase.anExistingTestCssFile1 = anExistingTestCssFile1;
+    }
+
+    private static File getAnExistingTestJavaScriptFile1() {
+        return anExistingTestJavaScriptFile1;
+    }
+
+    private static void setAnExistingTestJavaScriptFile1(final File anExistingTestJavaScriptFile1) {
+        BundleFactoryTestCase.anExistingTestJavaScriptFile1 = anExistingTestJavaScriptFile1;
     }
 }

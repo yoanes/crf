@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.axis.utils.StringUtils;
@@ -30,7 +31,7 @@ public class BundleFactory {
 
     private static final Logger LOGGER = Logger.getLogger(BundleFactory.class);
     private boolean willDoMinification = true;
-    private static final String bundleFilePrefix = "bundle-";
+    private final String bundleFilePrefix = "-bundle-";
     private Minifier minifier = new YUIMinifier();
 
     private enum MinificationType {
@@ -40,8 +41,7 @@ public class BundleFactory {
     }
 
     /**
-     * Gets a {@link Resource} formed from bundling the contents of all of the
-     * given files.
+     * Gets a {@link Resource} formed from bundling the contents of all of the given files.
      *
      * @param resourcePathsToInclude
      *            {@link Resource} of each file to include in the bundle.
@@ -55,18 +55,35 @@ public class BundleFactory {
             return null;
         }
 
-        final Resource lastResource = getLastResource(resourcePathsToInclude);
+        final List<Resource> filteredResourcePaths
+            = filterResourcePathsToRemoveBundles(resourcePathsToInclude);
 
-        final String bundleFilename = determineBundleFilename(resourcePathsToInclude, lastResource);
+        final Resource lastResource = getLastResource(filteredResourcePaths);
 
-        final String concatenatedSourceFiles = readSourceFiles(resourcePathsToInclude);
+        final String bundleFilename = determineBundleFilename(filteredResourcePaths, lastResource);
+
+        final String concatenatedSourceFiles = readSourceFiles(filteredResourcePaths);
 
         final String minifiedSourceFiles = minify(concatenatedSourceFiles, bundleFilename);
 
         writeToFile(bundleFilename, minifiedSourceFiles);
 
         // make Resource for bundle
-        return createBundleResourceFrom(resourcePathsToInclude, lastResource);
+        return createBundleResourceFrom(filteredResourcePaths, lastResource);
+    }
+
+    private List<Resource> filterResourcePathsToRemoveBundles(
+            final List<Resource> resourcePathsToInclude) {
+
+        final List<Resource> filteredResourcePaths = new ArrayList<Resource>();
+        for (final Resource resource : resourcePathsToInclude) {
+
+            if (!resource.getNewFile().getName().startsWith(bundleFilePrefix)) {
+                filteredResourcePaths.add(resource);
+            }
+
+        }
+        return filteredResourcePaths;
     }
 
     private String readSourceFiles(final List<Resource> resourcePathsToInclude) throws IOException {
@@ -217,7 +234,7 @@ public class BundleFactory {
         try {
             md5Builder = new MD5Builder();
         } catch (final NoSuchAlgorithmException e) {
-            throw new IllegalStateException("The MD5 algorithm is not available in yor JVM. "
+            throw new IllegalStateException("The MD5 algorithm is not available in your JVM. "
                     + "See the Javadoc for MessageDigest.getInstance(String) for further details.",
                     e);
         }
