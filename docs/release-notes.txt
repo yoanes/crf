@@ -264,7 +264,7 @@ Other notes
   is advisable for desktop development to aid portability but for other environments, it would
   be better to have an absolute path.     
 
-==== Version 1.0.10 (tag: contentRenderingFramework_v1_0_10, branch: branch_contentRenderingFramework_v1_0_7 ) ==== 
+==== Version 1.0.10 (CVS tag: contentRenderingFramework_v1_0_10, CVS branch: branch_contentRenderingFramework_v1_0_7 ) ==== 
 
 Default environment property files are no longer shipped with the crf jar. This is due to the Mobiles team restructure.
 There is no longer anything common between the environments of each app and hence crf can no longer predict 
@@ -286,7 +286,7 @@ Upgrade steps:
 
     au/com/sensis/mobile/crf/crf-environment-template.properties
 
-==== Version 1.0.9 (tag: contentRenderingFramework_v1_0_9, branch: branch_contentRenderingFramework_v1_0_7 ) ==== 
+==== Version 1.0.9 (CVS tag: contentRenderingFramework_v1_0_9, CVS branch: branch_contentRenderingFramework_v1_0_7 ) ==== 
 
 Selectively backpatched some changes from the 2.x series in the Git repository to get project development working reasonably well on a 
 Unix box. 
