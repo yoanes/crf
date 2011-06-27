@@ -30,12 +30,14 @@ public class ImageReaderBean implements ImageReader {
         Validate.notNull(imageFile, "imageFile must not be null.");
         Validate.isTrue(imageFile.canRead(), "imageFile must be readable: '" + imageFile + "'");
 
-        final Dimension dimension  = getImageDimensions(imageFile);
-
         final ImageAttributesBean imageAttributesBean = new ImageAttributesBean();
         imageAttributesBean.setImageFile(imageFile);
-        imageAttributesBean.setPixelWidth((int) dimension.getWidth());
-        imageAttributesBean.setPixelHeight((int) dimension.getHeight());
+
+        final Dimension dimension = getImageDimensions(imageFile);
+        if (dimension != null) {
+            imageAttributesBean.setPixelWidth((int) dimension.getWidth());
+            imageAttributesBean.setPixelHeight((int) dimension.getHeight());
+        }
 
         return imageAttributesBean;
     }
