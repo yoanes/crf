@@ -20,6 +20,8 @@ public class ImageReaderBeanTestCase extends AbstractJUnit4TestCase {
 
     private File gifFileWithPngExtension;
     private File gifFileWithCorrectExtension;
+    private File invalidImageFile;
+    private File svgImageFile;
 
     /**
      * Setup test data.
@@ -34,7 +36,14 @@ public class ImageReaderBeanTestCase extends AbstractJUnit4TestCase {
         setGifFileWithCorrectExtension(new ClassPathResource(
                 "au/com/sensis/mobile/crf/util/imageReaderBeanTestData/myplaces_ok.gif").getFile());
         setGifFileWithPngExtension(new ClassPathResource(
-                "au/com/sensis/mobile/crf/util/imageReaderBeanTestData/myplaces_ok.png").getFile());
+                "au/com/sensis/mobile/crf/util/imageReaderBeanTestData/"
+                        + "gif_with_png_file_extension.png").getFile());
+        setInvalidImageFile(new ClassPathResource(
+                "au/com/sensis/mobile/crf/util/imageReaderBeanTestData/invalid_image.png")
+                    .getFile());
+        setSvgImageFile(new ClassPathResource(
+                "au/com/sensis/mobile/crf/util/imageReaderBeanTestData/an_svg_image.svg")
+                    .getFile());
     }
 
     @Test
@@ -52,11 +61,30 @@ public class ImageReaderBeanTestCase extends AbstractJUnit4TestCase {
         final ImageAttributes imageAttributes = getObjectUnderTest().readImageAttributes(
                 getGifFileWithPngExtension());
 
-        Assert.assertEquals(
-                "width of image with incorrect file extension should be 0 (ie. unknown)", 0,
+        Assert.assertEquals("width of image incorrectly read", 42, imageAttributes.getPixelWidth());
+        Assert.assertEquals("height of image incorrectly read", 32, imageAttributes
+                .getPixelHeight());
+    }
+
+    @Test
+    public void testReadImageAttributesOfInvalidImageFile() throws Exception {
+        final ImageAttributes imageAttributes = getObjectUnderTest().readImageAttributes(
+                getInvalidImageFile());
+
+        Assert.assertEquals("width of invalid image should be 0 since it cannot be determined", 0,
                 imageAttributes.getPixelWidth());
-        Assert.assertEquals(
-                "height of image with incorrect file extension should be 0 (ie. unknown)", 0,
+        Assert.assertEquals("height of invalid image should be 0 since it cannot be determined", 0,
+                imageAttributes.getPixelHeight());
+    }
+
+    @Test
+    public void testReadImageAttributesOfSvgImageFile() throws Exception {
+        final ImageAttributes imageAttributes = getObjectUnderTest().readImageAttributes(
+                getSvgImageFile());
+
+        Assert.assertEquals("width of svg image should be 0 since it cannot be determined", 0,
+                imageAttributes.getPixelWidth());
+        Assert.assertEquals("height of svg image should be 0 since it cannot be determined", 0,
                 imageAttributes.getPixelHeight());
     }
 
@@ -82,6 +110,22 @@ public class ImageReaderBeanTestCase extends AbstractJUnit4TestCase {
 
     private void setObjectUnderTest(final ImageReaderBean objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
+    }
+
+    private File getInvalidImageFile() {
+        return invalidImageFile;
+    }
+
+    private void setInvalidImageFile(final File invalidImageFile) {
+        this.invalidImageFile = invalidImageFile;
+    }
+
+    private File getSvgImageFile() {
+        return svgImageFile;
+    }
+
+    private void setSvgImageFile(final File svgImageFile) {
+        this.svgImageFile = svgImageFile;
     }
 
 }

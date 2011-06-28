@@ -1,3 +1,15 @@
+==== Version 2.0.5 (tag: contentRenderingFramework_v2_0_5) ====
+
+Fixes:
+- CRF-122: Images with file extensions that do not match the image header are not resolved by crf:img
+    - If the dimensions cannot be determined, they are set to 0 by ImageReaderBean. ImageTag will
+      output the image tag without width or height attributes, as per CRF 1.x behaviour.
+    - Image extension is no longer considered when determining the dimensions of an image. The
+      image header is used instead. So incorrectly named images should be handled better now.
+      
+Upgrade steps:
+- should be transparent.
+
 ==== Version 2.0.4 (tag: contentRenderingFramework_v2_0_4) ====
 
 Fixes:

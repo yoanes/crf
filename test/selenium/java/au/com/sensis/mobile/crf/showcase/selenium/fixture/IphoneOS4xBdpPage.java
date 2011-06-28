@@ -42,7 +42,8 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
             final String extension) {
         assertImg("Yellow Pages img not found", "yellowPagesLogoImg", "Yellow Pages",
                 "Yellow Pages", "default/selenium/common/w" + width + "/h" + height
-                        + "/yellow-pages." + extension, width / 2, height / 2);
+                        + "/yellow-pages." + extension, width / getImageDimensionsDivisor(), height
+                        / getImageDimensionsDivisor());
     }
 
     /**
@@ -52,8 +53,8 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
     protected void assertScaledSearchImage(final int width, final int height,
             final String extension, final String group) {
         assertImg("Search img not found", "searchImg", "Search", "Search", group
-                + "/selenium/common/w" + width + "/h" + height + "/search." + extension, width / 2,
-                height / 2);
+                + "/selenium/common/w" + width + "/h" + height + "/search." + extension, width
+                / getImageDimensionsDivisor(), height / getImageDimensionsDivisor());
     }
 
     /**

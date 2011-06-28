@@ -59,7 +59,7 @@ public abstract class IphoneBdpPage extends BdpPage {
      * @return number of expected img elements.
      */
     protected int getExpectedNumImgElements() {
-        return 2;
+        return 2 + super.getNumExpectedImages();
     }
 
     /**
@@ -85,6 +85,17 @@ public abstract class IphoneBdpPage extends BdpPage {
         assertImg("in.img not found", "mapZoomIn", "Map Zoom In", "Map Zoom In",
                 "mapComponent-advanced/selenium/component/map/in.png",
                 45 / getImageDimensionsDivisor(), 32 / getImageDimensionsDivisor());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void assertGifImageWithPngFileExtension() {
+        assertImg("gifWithPngFileExtension img not found", "gifWithPngFileExtension",
+                "gifWithPngFileExtension", "gifWithPngFileExtension",
+                "default/selenium/common/gif_with_png_file_extension.png",
+                42 / getImageDimensionsDivisor(), 32 / getImageDimensionsDivisor());
     }
 
     /**

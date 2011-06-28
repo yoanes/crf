@@ -38,6 +38,10 @@ public abstract class BdpPage extends AbstractPageFixture {
 
         assertResourcePrefixes();
 
+        assertGifImageWithPngFileExtension();
+
+        assertSvgImageWhoseDimensionsCannotBeDetermined();
+
         doAssertPageStructure();
     }
 
@@ -85,6 +89,31 @@ public abstract class BdpPage extends AbstractPageFixture {
      */
     protected final int getNumExpectedScripts() {
         return 2;
+    }
+
+    /**
+     * @return number of scripts expected by this abstract BdpPage.
+     */
+    protected final int getNumExpectedImages() {
+        return 2;
+    }
+
+    /**
+     * Assert that a gif image with an incorrect file extension of png is still handled correctly.
+     */
+    protected void assertGifImageWithPngFileExtension() {
+        assertImg("gifWithPngFileExtension img not found", "gifWithPngFileExtension",
+                "gifWithPngFileExtension", "gifWithPngFileExtension",
+                "default/selenium/common/gif_with_png_file_extension.png", 42, 32);
+    }
+
+    /**
+     * Assert that a gif image with an incorrect file extension of png is still handled correctly.
+     */
+    protected void assertSvgImageWhoseDimensionsCannotBeDetermined() {
+        assertImgWithoutDimensions("anSvgImage img not found", "anSvgImage",
+                "anSvgImage", "anSvgImage",
+                "default/selenium/common/an_svg_image.svg");
     }
 
     /**
@@ -221,6 +250,34 @@ public abstract class BdpPage extends AbstractPageFixture {
                 + expectedSrc + "\" "
                 + "and @width=\"" + expectedWidth + "\" "
                 + "and @height=\"" + expectedHeight + "\" "
+                + "]"));
+
+    }
+
+    /**
+     * Helper method for asserting the presence of an img element that does not have
+     * width or height attributes.
+     *
+     * @param message Message to use if the test fails.
+     * @param expectedId Expected id attribute.
+     * @param expectedTitle Expected title attribute.
+     * @param expectedAlt Expected alt attribute.
+     * @param expectedSrc Expected src value of the link, relative to the root
+     *      resources/images dir.
+     */
+    protected final void assertImgWithoutDimensions(final String message, final String expectedId,
+            final String expectedTitle, final String expectedAlt,
+            final String expectedSrc) {
+        assertTrue(message, getBrowser().isElementPresent(
+                "//body//img["
+                + "@id=\"" + expectedId + "\" "
+                + "and @title=\"" + expectedTitle + "\" "
+                + "and @alt=\"" + expectedAlt + "\" "
+                + "and @src=\"/uidev/crfshowcase/uiresources/"
+                + getProjectVersion() + "/images/"
+                + expectedSrc + "\" "
+                + "and not(@width) "
+                + "and not(@height)"
                 + "]"));
 
     }

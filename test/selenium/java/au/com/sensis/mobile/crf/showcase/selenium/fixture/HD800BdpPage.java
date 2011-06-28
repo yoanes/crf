@@ -104,7 +104,7 @@ public class HD800BdpPage extends BdpPage {
     }
 
     private void assertHD800Img() {
-        final int expectedNumImages = 5;
+        final int expectedNumImages = 5 + super.getNumExpectedImages();
         assertNumImgElements(expectedNumImages);
         assertImgWhenDefaultGroupNodeImageFoundPngFormat();
         assertBrokenImgWhenNoImageFound();
