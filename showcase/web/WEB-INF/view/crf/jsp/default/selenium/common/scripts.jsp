@@ -21,11 +21,13 @@
 <%--
   - Test scripts requested by package.
   --%>
-<crf:script src="selenium/fielddecorators/package" type="text/javascript" device="${context.device}"/> 
-<crf:script src="selenium/grid/package" type="text/javascript" device="${context.device}"/> 
-<crf:script src="selenium/reporting/package" type="text/javascript" device="${context.device}"/> 
-<crf:script src="selenium/animation/package" type="text/javascript" device="${context.device}"/>
-<crf:script src="selenium/layers/package" type="text/javascript" device="${context.device}"/> 
+<crf:bundleScripts id="showcasePackages" device="${context.device}">  
+	<crf:script src="selenium/fielddecorators/package" type="text/javascript" device="${context.device}"/> 
+	<crf:script src="selenium/grid/package" type="text/javascript" device="${context.device}"/> 
+	<crf:script src="selenium/reporting/package" type="text/javascript" device="${context.device}"/> 
+	<crf:script src="selenium/animation/package" type="text/javascript" device="${context.device}"/>
+	<crf:script src="selenium/layers/package" type="text/javascript" device="${context.device}"/> 
+</crf:bundleScripts>
 
 <%--
   - Test scripts from a component.

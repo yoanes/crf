@@ -67,8 +67,9 @@ public class ScriptTagWriterFactory {
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes,
             final String href, final String name,
-            final ScriptTagDependencies scriptTagDependencies) {
+            final ScriptTagDependencies scriptTagDependencies,
+            final BundleScriptsTag parentBundleScriptsTag) {
         return new ScriptTagWriter(device, dynamicAttributes, href, name,
-                scriptTagDependencies);
+                scriptTagDependencies, parentBundleScriptsTag);
     }
 }

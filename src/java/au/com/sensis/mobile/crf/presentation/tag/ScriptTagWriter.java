@@ -28,6 +28,7 @@ public class ScriptTagWriter implements TagWriter {
     private final List<DynamicTagAttribute> dynamicAttributes;
     private final String href;
     private final String name;
+    private final BundleScriptsTag parentBundleScriptsTag;
 
     private final ScriptTagDependencies scriptTagDependencies;
 
@@ -48,12 +49,14 @@ public class ScriptTagWriter implements TagWriter {
     public ScriptTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes, final String href,
-            final String name, final ScriptTagDependencies scriptTagDependencies) {
+            final String name, final ScriptTagDependencies scriptTagDependencies,
+            final BundleScriptsTag parentBundleScriptsTag) {
         this.device = device;
         this.dynamicAttributes = dynamicAttributes;
         this.href = href;
         this.name = name;
         this.scriptTagDependencies = scriptTagDependencies;
+        this.parentBundleScriptsTag = parentBundleScriptsTag;
     }
 
 
@@ -121,7 +124,11 @@ public class ScriptTagWriter implements TagWriter {
 
     private void resolveResourceAndWriteTag(final JspWriter jspWriter) throws IOException {
 
-        writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
+        final List<Resource> allResourcePaths = getAllResourcePaths();
+        if (getParentBundleScriptsTag() != null) {
+            getParentBundleScriptsTag().addResourcesToBundle(allResourcePaths);
+        }
+        writeLinkTagForEachResource(jspWriter, allResourcePaths);
 
     }
 
@@ -255,6 +262,11 @@ public class ScriptTagWriter implements TagWriter {
      */
     private ScriptTagDependencies getTagDependencies() {
         return scriptTagDependencies;
+    }
+
+
+    private BundleScriptsTag getParentBundleScriptsTag() {
+        return parentBundleScriptsTag;
     }
 
 }
