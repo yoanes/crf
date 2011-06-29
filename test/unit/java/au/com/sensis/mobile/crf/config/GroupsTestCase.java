@@ -195,6 +195,13 @@ public class GroupsTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
+    public void testMatchingGroupsDefaultGroupNullAndNoOtherGroups() throws Throwable {
+        final List<Group> groups = getObjectUnderTest().matchingGroups(getMockDevice());
+        Assert.assertNotNull("groups  should not be null", groups);
+        Assert.assertTrue("groups should be empty", groups.isEmpty());
+    }
+
+    @Test
     public void testMatchingGroupIteratorWhenMultipleMatches() throws Throwable {
         recordBehaviourWhenSetGroupsAndSetDefaultGroupInvoked();
 

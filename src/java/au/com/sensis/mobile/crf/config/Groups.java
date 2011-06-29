@@ -75,7 +75,7 @@ public class Groups {
         // the default group. However, there is no harm in doing so and it makes
         // the code a bit more robust to any future changes to the DefaultGroup
         // semantics.
-        if (getDefaultGroup().match(device)) {
+        if (getDefaultGroup() != null && getDefaultGroup().match(device)) {
             matchingGroups.add(getDefaultGroup());
         }
 
