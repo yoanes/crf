@@ -1,3 +1,16 @@
+==== Version 2.0.6 (tag: contentRenderingFramework_v2_0_6) ====
+
+Fixes:
+- CRF-120: NullPointerException when importing an unknown group from a CRF config file
+    - http://trackit.sensis.com.au/browse/CRF-120
+- CRF-123: Resource Resolution Warnings appear to be erroneous
+    - http://trackit.sensis.com.au/browse/CRF-123
+- CRF-124: Can we have a "tablet" group in the crf default config ?
+    - http://trackit.sensis.com.au/browse/CRF-124
+
+Upgrade steps:
+- should be transparent.
+
 ==== Version 2.0.5 (tag: contentRenderingFramework_v2_0_5) ====
 
 Fixes:
