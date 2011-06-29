@@ -8,12 +8,29 @@
     <groups>
 
         <!-- Apple devices. -->
+        
+        <group name="iphone-os2-x" expr="device.isA('Apple-iPhone') and device.userAgent =~ '.*iPhone OS 2_.*'" />
+        <group name="iphone-os3-x" expr="device.isA('Apple-iPhone') and device.userAgent =~ '.*iPhone OS 3_.*'" />
+        <group name="iphone-os4-x" expr="device.isA('Apple-iPhone') and device.userAgent =~ '.*iPhone OS 4_.*'" />
+        
+        <group name="iphone-upto-os3-x" expr="inAnyGroup('iphone-os2-x', 'iphone-os3-x')" />
+        <group name="iphone-upto-os4-x" expr="inAnyGroup('iphone-upto-os3-x', 'iphone-os4-x')" />
+        <group name="iphone" expr="device.isA('Apple-iPhone')" />
+
+        <group name="ipod-touch-os2-x" expr="device.isA('Apple-iPod-Touch') and device.userAgent =~ '.*iPhone OS 2_.*'" />
+        <group name="ipod-touch-os3-x" expr="device.isA('Apple-iPod-Touch') and device.userAgent =~ '.*iPhone OS 3_.*'" />
+        <group name="ipod-touch-os4-x" expr="device.isA('Apple-iPod-Touch') and device.userAgent =~ '.*iPhone OS 4_.*'" />
+        
+        <group name="ipod-touch-upto-os3-x" expr="inAnyGroup('ipod-touch-os2-x', 'ipod-touch-os3-x')" />
+        <group name="ipod-touch-upto-os4-x" expr="inAnyGroup('ipod-touch-upto-os3-x', 'ipod-touch-os4-x')" />
+        <group name="ipod-touch" expr="device.isA('Apple-iPod-Touch')" />
+        
         <group name="iphone-ipod-os2-x" expr="(device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')) and device.userAgent =~ '.*OS 2_.*'" />
         <group name="iphone-ipod-os3-x" expr="(device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')) and device.userAgent =~ '.*OS 3_.*'" />
         <group name="iphone-ipod-os4-x" expr="(device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')) and device.userAgent =~ '.*OS 4_.*'" />
         
-        <group name="iphone-ipod-upto-os3-x" expr="inAnyGroup('iphone-ipod-os-2-x', 'iphone-ipod-os-3-x')" />
-        <group name="iphone-ipod-upto-os4-x" expr="inAnyGroup('iphone-ipod-upto-os3-x', 'iphone-ipod-os-4-x')" />
+        <group name="iphone-ipod-upto-os3-x" expr="inAnyGroup('iphone-ipod-os2-x', 'iphone-ipod-os3-x')" />
+        <group name="iphone-ipod-upto-os4-x" expr="inAnyGroup('iphone-ipod-upto-os3-x', 'iphone-ipod-os4-x')" />
         <group name="iphone-ipod" expr="device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')" />
         
         <group name="ipad-os3-x" expr="device.isA('Apple-iPad') and device.userAgent =~ '.*OS 3_.*'" />
@@ -25,9 +42,15 @@
         <group name="apple" expr="device.isA('Apple')" />
         
         <!-- Android devices. -->
-        <group name="sex10" expr="device.isA('SonyEricsson-X10')" />
-        <group name="sex10mini" expr="device.isA('SE-X10-mini')" />
+        <group name="sex10" expr="device.isA('SonyEricsson-X10') or 
+                                  device.isA('SonyEricsson-X10-OS2')" />
+        <group name="sex10mini" expr="device.isA('SE-X10-mini') or
+                                      device.isA('SE-X10-mini-OS2') or
+                                      device.isA('SE-X10-mini-Pro-OS2')" />
+                                      
+        <group name="htcDiamond" expr="device.isA('HTC-Diamond')" />
         <group name="htc-desire" expr="device.isA('HTC-Desire') or device.isA('HTC-A8183')" />
+        <group name="htcTouchHD2" expr="device.isA('HTC-TouchHD2')" />
 
         <group name="android-os1-x" expr="device.isA('Android-OS') and device.userAgent =~ '.*Android 1\..*'" />        
         <group name="android-os2-x" expr="device.isA('Android-OS') and device.userAgent =~ '.*Android 2\..*'" />
@@ -37,7 +60,7 @@
         <group name="android-os" expr="device.isA('Android-OS')" />
         
         <!-- Windows 7. -->
-        <group name="windows7" expr="device.isA('SP-WindowsMobile-7')" />
+        <group name="windows-mobile-7" expr="device.isA('SP-WindowsMobile-7') or device.isA('PPC-WindowsMobile-7')" />
         
         <!-- Blackberry -->
         <group name="blackberry" expr="device.isA('RIM-Blackberry')" />
@@ -46,11 +69,24 @@
         <group name="thub" expr="device.isA('SAGEM-HomeManager')" />
         
         <!-- Nokia devices. -->
+        <group name="nokia6120" expr="device.isA('Nokia-6120c')" />
+        <group name="nokia6720" expr="device.isA('Nokia-6720c')" />
+        <group name="nokiaE51" expr="device.isA('Nokia-E51')" />
+        <group name="nokiaE71" expr="device.isA('Nokia-E71')" />
+        <group name="nokiaN85" expr="device.isA('Nokia-N85')" />
+        <group name="nokiaN95" expr="device.isA('Nokia-N95')" />
+        <group name="nokiaN96" expr="device.isA('Nokia-N96')" />
+        
         <group name="nokiaS60DP3" expr="device.isA('Nokia-Series60-DP3_0')" />
         <group name="nokiaS60DP5" expr="device.isA('Nokia-Series60-DP5_0')" />
         
         <!-- Samsung devices. -->
         <group name="samsungC5220" expr="device.isA('Samsung-GT-C5220') " />        
+        
+        <!-- Tablets -->
+        <group name="tablet" expr="
+            device.getPropertyAsString('custom.device.classification') eq 'tablet' or
+            device.getPropertyAsString('custom.device.classification') eq 'pc'" />
         
         <!-- PC. -->
         <group name="mozilla" expr="device.isA('PC-Win32-Mozilla') or
@@ -58,8 +94,11 @@
                                     device.isA('PC-UNIX-Mozilla')"/>
                                     
         <group name="opera" expr="device.isA('PC-Win32-Opera') or
-                                  device.isA('PC-MacOS-Opera') or
-                                  device.isA('PC-UNIX-Opera')"/>
+                                    device.isA('PC-MacOS-Opera') or
+                                    device.isA('PC-UNIX-Opera') or device.isA('SAGEM-HomeManager')"/>
+                                    
+        <!--  XHTML devices -->
+        <group name="xhtml" expr="device.getPropertyAsString('UAProf.CcppAccept') =~ '.*application\/xhtml\+xml.*'"/>
         
         <default-group name="default" />
     </groups>
