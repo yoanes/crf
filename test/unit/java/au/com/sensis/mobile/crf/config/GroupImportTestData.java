@@ -26,4 +26,10 @@ public class GroupImportTestData {
         return groupImport;
     }
 
+    public GroupImport createGroupThatDoesNotExistFromDefaultNamespace() {
+        final GroupImport groupImport = new GroupImport();
+        groupImport.setGroupName("group-that-doesn't-exist");
+        return groupImport;
+    }
+
 }

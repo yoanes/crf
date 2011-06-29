@@ -4,11 +4,11 @@
          xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
          xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
 
-    <config-path>global/devices</config-path>
+    <config-path></config-path>
     <groups>
-        <group name="android-os" expr="device.isA('Android-OS') or device.isA('Android-Emulator')" />
-        <group name="thub" expr="device.isA('SAGEM-HomeManager')" />
-
+        <!-- Attempt to import group that doesn't exist from default global config file. -->
+        <import name="group-that-doesn't-exist"/>
+        
         <default-group name="default" />
     </groups>
 

@@ -48,6 +48,13 @@ public class GroupTestData {
         return group;
     }
 
+    public Group createThubGroup() {
+        final Group group = new Group();
+        group.setName("thub");
+        group.setExpr("device.isA('SAGEM-HomeManager')");
+        return group;
+    }
+
     public Group createHD800Group() {
         final Group group = new Group();
         group.setName("HD800");
@@ -75,5 +82,4 @@ public class GroupTestData {
         group.setExpr("device.imageCategory eq 'XS'");
         return group;
     }
-
 }

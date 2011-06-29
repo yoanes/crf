@@ -260,18 +260,59 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
         final List<Group> importedGroups = new ArrayList<Group>();
 
-        final UiConfiguration importedUiConfiguration =
-                getGlobalUiConfigurationByExactConfigPath(groupImport.getFromConfigPath());
+        final UiConfiguration importedUiConfiguration
+            = getGlobalUiConfigurationByExactConfigPath(groupImport.getFromConfigPath());
 
         if (StringUtils.isNotBlank(groupImport.getGroupName())) {
-            final Group groupToImport =
-                    importedUiConfiguration.getGroups().getGroupByName(groupImport.getGroupName());
-            importedGroups.add(creatNewGroup(groupToImport));
+            importGroupByName(groupImport, importedGroups, parentUiConfiguration.getSourceUrl(),
+                    importedUiConfiguration);
         } else {
             importedGroups.addAll(createNewGroups(importedUiConfiguration.getGroups().getGroups()));
         }
 
         return importedGroups;
+    }
+
+    private void importGroupByName(final GroupImport groupImport, final List<Group> importedGroups,
+            final URL parentUiConfigurationSourceUrl,
+            final UiConfiguration importedUiConfiguration) {
+
+        final Group groupToImport = importedUiConfiguration.getGroups().getGroupByName(
+                groupImport.getGroupName());
+
+        if (groupToImport != null) {
+            importedGroups.add(creatNewGroup(groupToImport));
+
+        } else {
+            final String exceptionMessage = buildGroupImportNotFoundMessage(
+                    groupImport, parentUiConfigurationSourceUrl, importedUiConfiguration);
+            throw new ConfigurationRuntimeException(exceptionMessage);
+        }
+    }
+
+    private String buildGroupImportNotFoundMessage(final GroupImport groupImport,
+            final URL parentUiConfigurationSourceUrl,
+            final UiConfiguration importedUiConfiguration) {
+
+        final StringBuilder exceptionMessageBuilder = new StringBuilder(
+                "Error parsing config file '" + parentUiConfigurationSourceUrl + "'. "
+                        + groupImport + " not found in " + importedUiConfiguration.getSourceUrl()
+                        + "'. Available global config files and groups: [");
+
+        final Iterator<UiConfiguration> itUiConfiguration = getGlobalConfigPathUiConfigurations()
+                .iterator();
+        while (itUiConfiguration.hasNext()) {
+            final UiConfiguration uiConfiguration = itUiConfiguration.next();
+            exceptionMessageBuilder.append(uiConfiguration.groupNameSummary());
+
+            if (itUiConfiguration.hasNext()) {
+                exceptionMessageBuilder.append(", ");
+            } else {
+                exceptionMessageBuilder.append("]");
+            }
+        }
+
+        return exceptionMessageBuilder.toString();
     }
 
     private List<Group> createNewGroups(final Group[] groups) {
@@ -808,7 +849,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
                 return true;
             }
 
-            if ((obj == null) || !this.getClass().equals(obj.getClass())) {
+            if (obj == null || !this.getClass().equals(obj.getClass())) {
                 return false;
             }
 

@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.log4j.Logger;
 
 import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
@@ -100,7 +101,7 @@ public class UiConfiguration {
      * @return true if this {@link UiConfiguration} applies to the given requested resource path.
      */
     public boolean appliesToPath(final String requestedResourcePath) {
-        return (requestedResourcePath != null) && requestedResourcePath.contains(getConfigPath());
+        return requestedResourcePath != null && requestedResourcePath.contains(getConfigPath());
     }
 
     /**
@@ -108,7 +109,7 @@ public class UiConfiguration {
      *         (ie. does not apply to any specific config path).
      */
     public boolean hasDefaultConfigPath() {
-        return (getConfigPath() == null) || StringUtils.isBlank(getConfigPath());
+        return getConfigPath() == null || StringUtils.isBlank(getConfigPath());
     }
 
     /**
@@ -235,7 +236,7 @@ public class UiConfiguration {
             return true;
         }
 
-        if ((obj == null) || !this.getClass().equals(obj.getClass())) {
+        if (obj == null || !this.getClass().equals(obj.getClass())) {
             return false;
         }
 
@@ -283,6 +284,22 @@ public class UiConfiguration {
         toStringBuilder.append("groupsAndImports", getGroupsAndImports());
 
         // Ignore getMatchingGroupsCache();
+
+        return toStringBuilder.toString();
+    }
+
+    /**
+     * A friendly summary of all group names.
+     *
+     * @return A friendly summary of all group names.
+     */
+    public String groupNameSummary() {
+        final ToStringBuilder toStringBuilder = new ToStringBuilder(this,
+                ToStringStyle.SHORT_PREFIX_STYLE);
+        toStringBuilder.append("sourceUrl", getSourceUrl());
+        toStringBuilder.append("configPath", getConfigPath());
+
+        toStringBuilder.append("groups", getGroups().groupNameSummary());
 
         return toStringBuilder.toString();
     }
