@@ -231,7 +231,7 @@
     
     <bean id="crf.groupsEhcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation" value="classpath:/au/com/sensis/mobile/crf/config/groups-ehcache.xml" />
-        <property name="cacheManagerName" value="crf.groupsEhcacheManager" />
+        <property name="cacheManagerName" value="@{crf.env.ehcache.mbean.name.prefix}.crf.groupsEhcacheManager" />
     </bean>
     
     <bean id="crf.resourceCache" class="au.com.sensis.mobile.crf.service.EhcacheResourceCacheBean">
@@ -251,7 +251,7 @@
     
     <bean id="crf.resourcesEhcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation" value="classpath:/au/com/sensis/mobile/crf/config/resources-ehcache.xml" />
-        <property name="cacheManagerName" value="crf.resourcesEhcacheManager" />
+        <property name="cacheManagerName" value="@{crf.env.ehcache.mbean.name.prefix}.crf.resourcesEhcacheManager" />
     </bean>
 
     <bean id="crf.groupsEhcacheManagerMBeanRegister" 

@@ -1,3 +1,22 @@
+==== (PENDING) Version 2.0.7 (tag: contentRenderingFramework_v2_0_7) ====
+
+Fixes:
+- CRF-94: NEW - Deploying multiple CRF apps to the same Tomcat instance results in an
+  InstanceAlreadyExistsException for the ehcache MBeans
+    - http://trackit.sensis.com.au/browse/CRF-94
+    
+Upgrade steps:
+- Define a new property in your crf-environment.properties file, replacing the example value
+  with an appropriate name for your app::
+
+    # Prefix to use for Ehcache MBean names. Set this to a unique prefix that identifies your
+    # application. If you leave the default value unchanged and deploy another app that does the same,
+    # the apps will interfere with each other at start up time (only one will succeed).
+    env.ehcache.mbean.name.prefix=unknownApp 
+    
+  As a reminder, a template properties file exists in 
+  au/com/sensis/mobile/crf/crf-environment-template.properties in the crf JAR.
+
 ==== Version 2.0.6 (tag: contentRenderingFramework_v2_0_6) ====
 
 Fixes:

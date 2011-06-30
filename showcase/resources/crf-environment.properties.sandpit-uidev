@@ -45,5 +45,10 @@ env.downstream.caching.enabled=false
 # True if you want CSS and JavaScript resources to be bundled.
 env.bundle.resources=false
 
+# Prefix to use for Ehcache MBean names. Set this to a unique prefix that identifies your 
+# application. If you leave the default value unchanged and deploy another app that does the same,
+# the apps will interfere with each other at start up time (only one will succeed).
+env.ehcache.mbean.name.prefix=crfShowcase
+
 # True if you want the resolved resource graph to be logged. 
 env.debug.resource.graph=true
