@@ -2,16 +2,13 @@ package au.com.sensis.mobile.crf.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
-
-import au.com.sensis.mobile.crf.exception.ContentRenderingFrameworkRuntimeException;
 
 /**
  * {@link ImageTransformationFactory} that lookups the transformed image from the pre-generated
@@ -20,51 +17,19 @@ import au.com.sensis.mobile.crf.exception.ContentRenderingFrameworkRuntimeExcept
  * @author Adrian.Koh2@sensis.com.au
  *
  */
-public class PregeneratedFileLookupImageTransformationFactoryBean extends AbstractImageTransformationFactoryBean {
+public class PregeneratedFileLookupImageTransformationFactoryBean
+    extends AbstractImageTransformationFactoryBean {
 
     // Not final so that we can inject a mock during testing.
     private static Logger logger =
             Logger.getLogger(PregeneratedFileLookupImageTransformationFactoryBean.class);
 
-    private static final String IMAGE_WIDTH_PIXELS_INTERVAL_PROPERTY_NAME = "pixelsIncrement";
-
-    /**
-     * Number of pixels between each pre-generated image along the "width dimension".
-     */
-    private int imageWidthPixelsInterval;
-
-    private Properties imageGenerationLastRunProperties;
-
     /**
      * @param imageReader
      *            {@link ImageReader} to use to read images.
-     * @param imageWidthPixelsInterval
-     *            Number of pixels between each pre-generated image along the
-     *            "width dimension".
      */
-    public PregeneratedFileLookupImageTransformationFactoryBean(final ImageReader imageReader,
-            final File imageGenerationLastRunPropertiesFile) {
+    public PregeneratedFileLookupImageTransformationFactoryBean(final ImageReader imageReader) {
         super(imageReader);
-
-        loadImageGenerationLastRunProperties(imageGenerationLastRunPropertiesFile);
-    }
-
-    private void loadImageGenerationLastRunProperties(
-            final File imageGenerationLastRunPropertiesFile) {
-        try {
-            setImageGenerationLastRunProperties(PropertiesLoaderUtils
-                    .loadProperties(new FileSystemResource(imageGenerationLastRunPropertiesFile)));
-            if (logger.isInfoEnabled()) {
-                logger.info("Loaded properties from '" + imageGenerationLastRunPropertiesFile
-                        + "': " + getImageGenerationLastRunProperties());
-            }
-        } catch (final IOException e) {
-            throw new ContentRenderingFrameworkRuntimeException("Properties file '"
-                    + imageGenerationLastRunPropertiesFile + "' could not be loaded. "
-                    + "Have you run the image pre-generation script as part of your build?", e);
-        }
-
-        loadImageWidthPixelsInterval();
     }
 
     @Override
@@ -73,11 +38,10 @@ public class PregeneratedFileLookupImageTransformationFactoryBean extends Abstra
             final ImageTransformationParameters imageTransformationParameters) throws IOException {
 
         final int outputImageWidth =
-                findNearestPregeneratedImageWidth(sourceImageAttributes,
+                findNearestPregeneratedImageWidth(baseTargetImageDir, sourceImageAttributes,
                         imageTransformationParameters);
 
         final File outputImageWidthDir = new File(baseTargetImageDir, "w" + outputImageWidth);
-        validateOutputImageWidthDir(outputImageWidthDir, sourceImageFile);
 
         final String outputImageFilename =
                 createOutputImageFilename(imageTransformationParameters, sourceImageFile);
@@ -97,17 +61,8 @@ public class PregeneratedFileLookupImageTransformationFactoryBean extends Abstra
 
     }
 
-    private void validateOutputImageWidthDir(final File outputImageWidthDir,
-            final File sourceImageFile) {
-        if (!FileIoFacadeFactory.getFileIoFacadeSingleton().isDirectory(outputImageWidthDir)) {
-            throw new ImageCreationException(sourceImageFile.getName()
-                    + " could not be found under " + outputImageWidthDir
-                    + " because the directory does not exist.");
-        }
-    }
-
     private void logWarnIfMultipleImagesFound(final File[] foundPregeneratedImages) {
-        if ((foundPregeneratedImages.length > 1) && logger.isEnabledFor(Level.WARN)) {
+        if (foundPregeneratedImages.length > 1 && logger.isEnabledFor(Level.WARN)) {
             logger.warn("Multiple images found with the same width: "
                     + ArrayUtils.toString(foundPregeneratedImages) + ". Returning the first one. ");
         }
@@ -121,22 +76,58 @@ public class PregeneratedFileLookupImageTransformationFactoryBean extends Abstra
         }
     }
 
-    private int findNearestPregeneratedImageWidth(final ImageAttributes sourceImageAttributes,
+    private int findNearestPregeneratedImageWidth(final File baseTargetImageDir,
+            final ImageAttributes sourceImageAttributes,
             final ImageTransformationParameters imageTransformationParameters) {
-        final int outputImageWidth =
-                roundWidthToNearestPregenerated(calculateOutputImageWidth(
-                        imageTransformationParameters, sourceImageAttributes));
 
-        // Refuse to look for an image that is larger than the source image.
-        if (outputImageWidth > sourceImageAttributes.getPixelWidth()) {
-            return sourceImageAttributes.getPixelWidth();
+        final int outputImageWidthRequested = calculateRequestedOutputImageWidth(
+                imageTransformationParameters, sourceImageAttributes);
+
+        final File[] availableOutputImageWidthDirs = getAllAvailableImageWidthDirs(
+                baseTargetImageDir);
+
+        final TreeSet<Integer> availableOutputImageWidths =
+            buildTreeSetFromFoundWidths(availableOutputImageWidthDirs);
+
+        final NavigableSet<Integer> widthsLessThanOrEqualToRequested = availableOutputImageWidths
+                .headSet(new Integer(outputImageWidthRequested), true);
+        final Integer greatestLowerBoundWidth = widthsLessThanOrEqualToRequested.pollLast();
+
+        if (greatestLowerBoundWidth != null) {
+            return greatestLowerBoundWidth;
         } else {
-            return outputImageWidth;
+            // The requested image width is smallest than the smallest output image found so
+            // just return the smallest we found.
+            return availableOutputImageWidths.pollFirst();
         }
+
     }
 
-    private int roundWidthToNearestPregenerated(final int calculateOutputImageWidth) {
-        return calculateOutputImageWidth - (calculateOutputImageWidth % getImageWidthPixelsInterval());
+    private TreeSet<Integer> buildTreeSetFromFoundWidths(
+            final File[] availableOutputImageWidthDirs) {
+
+        final TreeSet<Integer> availableOutputImageWidths = new TreeSet<Integer>();
+        for (final File imageWidthDir : availableOutputImageWidthDirs) {
+            final String availableWidth = StringUtils.stripStart(imageWidthDir.getName(), "w");
+            try {
+                availableOutputImageWidths.add(Integer.parseInt(availableWidth));
+            } catch (final NumberFormatException e) {
+                throw new ImageCreationException("The found image width directory '"
+                        + imageWidthDir + "' has an invalid width specified in its path.");
+            }
+        }
+        return availableOutputImageWidths;
+    }
+
+    private File[] getAllAvailableImageWidthDirs(final File baseTargetImageDir) {
+        final File[] availableOutputImageWidthDirs = FileIoFacadeFactory.getFileIoFacadeSingleton()
+                .list(baseTargetImageDir, new String[] { "w*" });
+
+        if (availableOutputImageWidthDirs.length == 0) {
+            throw new ImageCreationException("No pregenerated image directories found under "
+                    + baseTargetImageDir);
+        }
+        return availableOutputImageWidthDirs;
     }
 
     private int getPregeneratedImageHeight(final File outputImage) {
@@ -149,41 +140,4 @@ public class PregeneratedFileLookupImageTransformationFactoryBean extends Abstra
                     + "' has an invalid height specified in its path.", e);
         }
     }
-
-    /**
-     * @return the imageWidthPixelsInterval
-     */
-    private int getImageWidthPixelsInterval() {
-        return imageWidthPixelsInterval;
-    }
-
-    private void loadImageWidthPixelsInterval() {
-        final String rawImageWidthPixelsIntervalProperty =
-                getImageGenerationLastRunProperties().getProperty(
-                        IMAGE_WIDTH_PIXELS_INTERVAL_PROPERTY_NAME);
-        try {
-            imageWidthPixelsInterval = Integer.parseInt(rawImageWidthPixelsIntervalProperty);
-        } catch (final NumberFormatException e) {
-            throw new ContentRenderingFrameworkRuntimeException("Loaded property '"
-                    + IMAGE_WIDTH_PIXELS_INTERVAL_PROPERTY_NAME + "' must be an integer. Was: '"
-                    + rawImageWidthPixelsIntervalProperty + "'", e);
-        }
-    }
-
-    /**
-     * @return the imageGenerationLastRunProperties
-     */
-    private Properties getImageGenerationLastRunProperties() {
-        return imageGenerationLastRunProperties;
-    }
-
-    /**
-     * @param imageGenerationLastRunProperties
-     *            the imageGenerationLastRunProperties to set
-     */
-    private void setImageGenerationLastRunProperties(
-            final Properties imageGenerationLastRunProperties) {
-        this.imageGenerationLastRunProperties = imageGenerationLastRunProperties;
-    }
-
 }

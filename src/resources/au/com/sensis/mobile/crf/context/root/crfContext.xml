@@ -154,7 +154,6 @@
         <constructor-arg>
             <ref local="crf.imageReader"/>
         </constructor-arg>
-        <constructor-arg value="@{crf.env.resources.images.root.dir}/@{global.version}.@{global.build}/images/gimages-last-run.properties" />
     </bean>
     
     <bean id="crf.imageReader" class="au.com.sensis.mobile.crf.util.ImageReaderBean" />

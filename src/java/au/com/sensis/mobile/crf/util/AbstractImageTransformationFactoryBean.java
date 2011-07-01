@@ -144,7 +144,7 @@ public abstract class AbstractImageTransformationFactoryBean
      * @param sourceImageAttributes Attributes of the source image.
      * @return how wide the output image should be.
      */
-    protected int calculateOutputImageWidth(
+    protected int calculateRequestedOutputImageWidth(
             final ImageTransformationParameters imageTransformationParameters,
             final ImageAttributes sourceImageAttributes) {
 

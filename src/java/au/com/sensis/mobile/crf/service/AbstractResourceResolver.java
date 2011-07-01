@@ -94,7 +94,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc}.
      */
     private List<Resource> resolveRecognisedPath(final String requestedResourcePath,
             final Device device) throws ResourceResolutionRuntimeException {
@@ -134,7 +134,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
     private void logWarningIfEmptyResolvedResources(final String requestedResourcePath,
             final Device device, final List<Resource> resolvedResources) {
-        if ((resolvedResources != null) && resolvedResources.isEmpty()
+        if (resolvedResources != null && resolvedResources.isEmpty()
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "No resource was found for requested resource '" + requestedResourcePath
@@ -144,7 +144,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
     private void logWarningIfEmptyCachedResources(final String requestedResourcePath,
             final Device device, final ResourceCacheEntry cachedResources) {
-        if ((cachedResources != null) && cachedResources.isEmptyResources()
+        if (cachedResources != null && cachedResources.isEmptyResources()
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "Cached empty resources found and returned for requested resource '"
@@ -173,17 +173,17 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     private boolean cachedEntryIsValid(final ResourceCacheEntry cachedResources) {
-        return (cachedEntryHasNonEmptyResources(cachedResources))
-                || (cachedEntryHasEmptyResources(cachedResources) && cachedResources
-                        .maxRefreshCountReached());
+        return cachedEntryHasNonEmptyResources(cachedResources)
+                || cachedEntryHasEmptyResources(cachedResources) && cachedResources
+                        .maxRefreshCountReached();
     }
 
     private boolean cachedEntryHasNonEmptyResources(final ResourceCacheEntry cachedResources) {
-        return (cachedResources != null) && !cachedResources.isEmptyResources();
+        return cachedResources != null && !cachedResources.isEmptyResources();
     }
 
     private boolean cachedEntryHasEmptyResources(final ResourceCacheEntry cachedResources) {
-        return (cachedResources != null) && cachedResources.isEmptyResources();
+        return cachedResources != null && cachedResources.isEmptyResources();
     }
 
     /**
@@ -623,7 +623,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @return cached resources for the given key.
      */
     protected final ResourceCacheEntry getCachedResources(final ResourceCacheKey resourceCacheKey) {
-        if ((resourceCacheKey != null) && getResourceCache().contains(resourceCacheKey)) {
+        if (resourceCacheKey != null && getResourceCache().contains(resourceCacheKey)) {
             debugLogResourcesFoundInCache();
             return getResourceCache().get(resourceCacheKey);
         } else {

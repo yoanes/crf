@@ -92,7 +92,8 @@ public class GraphicsMagickImageTransformationFactoryBean
             final ImageTransformationParameters imageTransformationParameters) throws IOException {
 
         final int outputImageWidth =
-                calculateOutputImageWidth(imageTransformationParameters, sourceImageAttributes);
+                calculateRequestedOutputImageWidth(imageTransformationParameters,
+                        sourceImageAttributes);
         final int outputImageHeight =
                 calculateOutputImageHeight(outputImageWidth, sourceImageAttributes);
 
