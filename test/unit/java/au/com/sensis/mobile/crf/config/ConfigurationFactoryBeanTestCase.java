@@ -784,7 +784,7 @@ public class ConfigurationFactoryBeanTestCase extends
         } catch (final ConfigurationRuntimeException e) {
 
             Assert.assertEquals("ConfigurationRuntimeException has wrong message",
-                    "No global UiConfiguration found with a configPath "
+                    "No UiConfiguration found with a configPath "
                             + "matching requested import path: 'global/i-don't-exist'", e
                             .getMessage());
         }
@@ -792,7 +792,7 @@ public class ConfigurationFactoryBeanTestCase extends
     }
 
     @Test
-    public void testImportGlobalGroupsFromGroupThatDoesNotExist() throws Throwable {
+    public void testImportGlobalGroupThatDoesNotExist() throws Throwable {
         recordLoggerIsInfoEnabled(Boolean.TRUE);
 
         final ClassPathResource sourceClassPathResource = new ClassPathResource(
@@ -822,7 +822,7 @@ public class ConfigurationFactoryBeanTestCase extends
                     "Error parsing config file '" + sourceClassPathResource.getURL()
                             + "'. " + groupImportForNonExistentGroup
                             + " not found in " + globalDevicesConfigClassPathResource.getURL()
-                            + "'. Available global config files and groups: ["
+                            + "'. Available config files and groups: ["
                             + createGlobalDevicesGroupNamesSummary()
                             + createGlobalExtraDevicesGroupNamesSummary()
                             + createGlobalImageCategoriesGroupNamesSummary() + "]", e.getMessage());
@@ -835,7 +835,7 @@ public class ConfigurationFactoryBeanTestCase extends
                 GLOBAL_DEVICES_CONFIG_CLASSPATH);
 
         return "UiConfiguration[sourceUrl=" + globalDevicesConfigClassPathResource.getURL()
-                + ",configPath=global/devices,groups=[android-os, thub], ";
+                + ",configPath=global/devices,groups=[android-os, thub]], ";
     }
 
     private String createGlobalExtraDevicesGroupNamesSummary() throws IOException {
@@ -843,7 +843,7 @@ public class ConfigurationFactoryBeanTestCase extends
                 GLOBAL_EXTRA_DEVICES_CONFIG_CLASSPATH);
 
         return "UiConfiguration[sourceUrl=" + globalDevicesConfigClassPathResource.getURL()
-            + ",configPath=global/extraDevices,groups=[ipad], ";
+            + ",configPath=global/extraDevices,groups=[ipad]], ";
     }
 
     private String createGlobalImageCategoriesGroupNamesSummary() throws IOException {
@@ -851,7 +851,7 @@ public class ConfigurationFactoryBeanTestCase extends
                 GLOBAL_IMAGE_CATEGORIES_CONFIG_CLASSPATH);
 
         return "UiConfiguration[sourceUrl=" + globalDevicesConfigClassPathResource.getURL()
-            + ",configPath=global/imageCategories,groups=[L, M]";
+            + ",configPath=global/imageCategories,groups=[L, M]]";
     }
 
     @Test

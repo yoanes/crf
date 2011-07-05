@@ -240,6 +240,7 @@ public class Groups {
                 summaryBuilder.append(", ");
             }
         }
+        summaryBuilder.append("]");
 
         return summaryBuilder.toString();
     }

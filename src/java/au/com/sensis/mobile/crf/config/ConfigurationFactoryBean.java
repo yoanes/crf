@@ -64,12 +64,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
      */
     private List<UiConfiguration> uiConfigurations;
 
-    /**
-     * {@link UiConfiguration}s that are only used to resolve imports from
-     * the {@link UiConfiguration}s returned by {@link #getUiConfiguration(String)}.
-     */
-    private List<UiConfiguration> globalConfigPathUiConfigurations;
-
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
     private final GroupsCacheFactory groupsCacheFactory;
 
@@ -112,7 +106,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void initUiConfigurations() {
         setUiConfigurations(new ArrayList<UiConfiguration>());
-        setGlobalConfigPathUiConfigurations(new ArrayList<UiConfiguration>());
         loadConfigurationFilesWithSchemaValidation();
         finaliseGroupsAndImports();
         validateLoadedConfigurationData();
@@ -121,10 +114,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void infoLogLoadingDone() {
         if (logger.isInfoEnabled()) {
-
-            for (final UiConfiguration uiConfiguration : getGlobalConfigPathUiConfigurations()) {
-                logger.info("Loaded configuration: " + uiConfiguration);
-            }
 
             for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
                 logger.info("Loaded configuration: " + uiConfiguration);
@@ -158,8 +147,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
             final UiConfiguration uiConfiguration = unmarshallToUiConfiguration(resource);
 
-            addToCorrectList(uiConfiguration, defaultUiConfigurations, getUiConfigurations(),
-                    getGlobalConfigPathUiConfigurations());
+            addToCorrectList(uiConfiguration, defaultUiConfigurations, getUiConfigurations());
         }
 
         validateOneAndOnlyOneDefaultUiConfiguration(defaultUiConfigurations);
@@ -168,12 +156,13 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     }
 
     private void finaliseGroupsAndImports() {
-        for (final UiConfiguration uiConfiguration : getGlobalConfigPathUiConfigurations()) {
+        for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
             finaliseGroupsAndImports(uiConfiguration);
         }
 
         for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
-            finaliseGroupsAndImports(uiConfiguration);
+            // Throw away the intermediate groupsAndImports because we don't need them anymore.
+            uiConfiguration.setGroupsAndImports(null);
         }
     }
 
@@ -190,9 +179,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         groups.setGroups(finalisedGroups.toArray(new Group[] {}));
         groups.setDefaultGroup(uiConfiguration.getGroupsAndImports().getDefaultGroup());
         uiConfiguration.setGroups(groups);
-
-        // Throw away the intermediate groupsAndImports because we don't need them anymore.
-        uiConfiguration.setGroupsAndImports(null);
     }
 
     private void finaliseGroupOrImport(final UiConfiguration parentUiConfiguration,
@@ -261,10 +247,10 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         final List<Group> importedGroups = new ArrayList<Group>();
 
         final UiConfiguration importedUiConfiguration
-            = getGlobalUiConfigurationByExactConfigPath(groupImport.getFromConfigPath());
+            = getUiConfigurationByExactConfigPath(groupImport.getFromConfigPath());
 
         if (StringUtils.isNotBlank(groupImport.getGroupName())) {
-            importGroupByName(groupImport, importedGroups, parentUiConfiguration.getSourceUrl(),
+            importGroupByName(groupImport, importedGroups, parentUiConfiguration,
                     importedUiConfiguration);
         } else {
             importedGroups.addAll(createNewGroups(importedUiConfiguration.getGroups().getGroups()));
@@ -274,10 +260,10 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     }
 
     private void importGroupByName(final GroupImport groupImport, final List<Group> importedGroups,
-            final URL parentUiConfigurationSourceUrl,
+            final UiConfiguration parentUiConfiguration,
             final UiConfiguration importedUiConfiguration) {
 
-        final Group groupToImport = importedUiConfiguration.getGroups().getGroupByName(
+        final Group groupToImport = importedUiConfiguration.getGroupsAndImports().getGroupByName(
                 groupImport.getGroupName());
 
         if (groupToImport != null) {
@@ -285,33 +271,36 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
         } else {
             final String exceptionMessage = buildGroupImportNotFoundMessage(
-                    groupImport, parentUiConfigurationSourceUrl, importedUiConfiguration);
+                    groupImport, parentUiConfiguration, importedUiConfiguration);
             throw new ConfigurationRuntimeException(exceptionMessage);
         }
     }
 
     private String buildGroupImportNotFoundMessage(final GroupImport groupImport,
-            final URL parentUiConfigurationSourceUrl,
+            final UiConfiguration parentUiConfiguration,
             final UiConfiguration importedUiConfiguration) {
 
         final StringBuilder exceptionMessageBuilder = new StringBuilder(
-                "Error parsing config file '" + parentUiConfigurationSourceUrl + "'. "
+                "Error parsing config file '" + parentUiConfiguration.getSourceUrl() + "'. "
                         + groupImport + " not found in " + importedUiConfiguration.getSourceUrl()
-                        + "'. Available global config files and groups: [");
+                        + "'. Available config files and groups: [");
 
-        final Iterator<UiConfiguration> itUiConfiguration = getGlobalConfigPathUiConfigurations()
-                .iterator();
+        final Iterator<UiConfiguration> itUiConfiguration = getUiConfigurations().iterator();
+        boolean haveOutputAGroupNameSummary = false;
         while (itUiConfiguration.hasNext()) {
             final UiConfiguration uiConfiguration = itUiConfiguration.next();
-            exceptionMessageBuilder.append(uiConfiguration.groupNameSummary());
+            // Yes, we really do mean !=
+            if (uiConfiguration != parentUiConfiguration) {
+                if (haveOutputAGroupNameSummary) {
+                    exceptionMessageBuilder.append(", ");
+                }
+                exceptionMessageBuilder.append(uiConfiguration.groupNameSummary());
+                haveOutputAGroupNameSummary = true;
 
-            if (itUiConfiguration.hasNext()) {
-                exceptionMessageBuilder.append(", ");
-            } else {
-                exceptionMessageBuilder.append("]");
             }
         }
 
+        exceptionMessageBuilder.append("]");
         return exceptionMessageBuilder.toString();
     }
 
@@ -332,14 +321,14 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         return newGroup;
     }
 
-    private UiConfiguration getGlobalUiConfigurationByExactConfigPath(final String fromConfigPath) {
-        for (final UiConfiguration uiConfiguration : getGlobalConfigPathUiConfigurations()) {
+    private UiConfiguration getUiConfigurationByExactConfigPath(final String fromConfigPath) {
+        for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
             if (uiConfiguration.getConfigPath().equals(fromConfigPath)) {
                 return uiConfiguration;
             }
         }
         throw new ConfigurationRuntimeException(
-                "No global UiConfiguration found with a configPath "
+                "No UiConfiguration found with a configPath "
                         + "matching requested import path: '" + fromConfigPath + "'");
     }
 
@@ -374,13 +363,10 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void addToCorrectList(final UiConfiguration uiConfiguration,
             final List<UiConfiguration> defaultUiConfigurations,
-            final List<UiConfiguration> uiConfigurations,
-            final List<UiConfiguration> globalConfigPathUiConfigurations) {
+            final List<UiConfiguration> uiConfigurations) {
 
         if (uiConfiguration.hasDefaultConfigPath()) {
             defaultUiConfigurations.add(uiConfiguration);
-        } else if (uiConfiguration.hasGlobalConfigPath()) {
-            globalConfigPathUiConfigurations.add(uiConfiguration);
         } else {
             uiConfigurations.add(uiConfiguration);
         }
@@ -541,12 +527,12 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void logMissingGroupDirsWarningIfRequired(final UiConfiguration uiConfiguration,
             final Set<String> groupsMissingADir) {
-        if (!groupsMissingADir.isEmpty() && getResourceResolutionWarnLogger().isWarnEnabled()) {
+        if (!groupsMissingADir.isEmpty() && !uiConfiguration.hasGlobalConfigPath()
+                && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "No group directories found for groups: " + groupsMissingADir
-                            + " for UiConfiguration loaded from: "
-                            + uiConfiguration.getSourceUrl() + ". Searched directories: "
-                            + getUiResourceRootDirectories());
+                            + " for UiConfiguration loaded from: " + uiConfiguration.getSourceUrl()
+                            + ". Searched directories: " + getUiResourceRootDirectories());
         }
     }
 
@@ -696,18 +682,12 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     private boolean loadedUiConfigurationOutOfDate() {
         try {
             final Resource[] resources = getConfigurationResources();
-            if (resources.length != getUiConfigurations().size()
-                    + getGlobalConfigPathUiConfigurations().size()) {
+            if (resources.length != getUiConfigurations().size()) {
                 return true;
             }
 
-
-            final List<UiConfiguration> allUiConfigurations = new ArrayList<UiConfiguration>();
-            allUiConfigurations.addAll(getUiConfigurations());
-            allUiConfigurations.addAll(getGlobalConfigPathUiConfigurations());
-
             final List<UrlAndTimestamp> previousUrlAndTimestampsLoaded =
-                    createUrlAndTimestamps(allUiConfigurations);
+                    createUrlAndTimestamps(getUiConfigurations());
             final List<UrlAndTimestamp> newUrlAndTimestamps = createUrlAndTimestamps(resources);
 
             if (!previousUrlAndTimestampsLoaded.equals(newUrlAndTimestamps)) {
@@ -768,21 +748,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private void setUiConfigurations(final List<UiConfiguration> uiConfigurations) {
         this.uiConfigurations = uiConfigurations;
-    }
-
-    /**
-     * @return the globalConfigPathUiConfigurations
-     */
-    private List<UiConfiguration> getGlobalConfigPathUiConfigurations() {
-        return globalConfigPathUiConfigurations;
-    }
-
-    /**
-     * @param globalConfigPathUiConfigurations the globalConfigPathUiConfigurations to set
-     */
-    private void setGlobalConfigPathUiConfigurations(
-            final List<UiConfiguration> globalConfigPathUiConfigurations) {
-        this.globalConfigPathUiConfigurations = globalConfigPathUiConfigurations;
     }
 
     /**

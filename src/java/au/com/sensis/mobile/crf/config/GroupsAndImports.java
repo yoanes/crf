@@ -13,7 +13,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  */
 public class GroupsAndImports {
 
-    private GroupOrImport[] groupOrImport;
+    private GroupOrImport[] groupOrImport = new GroupOrImport [] {};
 
     private DefaultGroup defaultGroup;
 
@@ -56,7 +56,7 @@ public class GroupsAndImports {
             return true;
         }
 
-        if ((obj == null) || !this.getClass().equals(obj.getClass())) {
+        if (obj == null || !this.getClass().equals(obj.getClass())) {
             return false;
         }
 
@@ -88,5 +88,17 @@ public class GroupsAndImports {
             .append("groupOrImport", getGroupOrImport())
             .append("defaultGroup", getDefaultGroup())
             .toString();
+    }
+
+    public Group getGroupByName(final String groupName) {
+        // TODO: maybe create a map for the lookup. Performance probably isn't an issue
+        // since this only occurs at app start up time but for some reason, it still makes me
+        // queasy.
+        for (final GroupOrImport groupOrImport : getGroupOrImport()) {
+            if (groupOrImport.isGroup() && groupName.equals(groupOrImport.getGroup().getName())) {
+                return groupOrImport.getGroup();
+            }
+        }
+        return null;
     }
 }
