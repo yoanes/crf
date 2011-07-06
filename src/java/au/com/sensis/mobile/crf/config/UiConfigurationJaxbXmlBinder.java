@@ -133,7 +133,9 @@ public class UiConfigurationJaxbXmlBinder implements XmlBinder {
             groupImport.setGroupName(jaxbImport.getName());
         }
 
-        if (StringUtils.isNotBlank(jaxbImport.getFrom())) {
+        // The "from" field may be blank, since it is valid for a UiConfiguration to have a
+        // blank config-path.
+        if (jaxbImport.getFrom() != null) {
             groupImport.setFromConfigPath(jaxbImport.getFrom());
         }
 

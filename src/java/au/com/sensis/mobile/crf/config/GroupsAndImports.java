@@ -90,6 +90,12 @@ public class GroupsAndImports {
             .toString();
     }
 
+    /**
+     * Get the group with the given name. Will ignore imports.
+     *
+     * @param groupName Name of the group to get.
+     * @return the group with the given name. Null if not found.
+     */
     public Group getGroupByName(final String groupName) {
         // TODO: maybe create a map for the lookup. Performance probably isn't an issue
         // since this only occurs at app start up time but for some reason, it still makes me

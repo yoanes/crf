@@ -73,6 +73,22 @@ public class Group implements Serializable {
     private transient Groups parentGroups;
 
     /**
+     * {@link Group} that this {@link Group} is imported from. In this case
+     * {@link #getExpr()} should be ignored (should be empty anyway) and we should
+     * delegate to {@link #getImportedGroup()}.
+     *
+     * <p>
+     * Note that this field is <b>transient</b>. This field is only
+     * used privately during {@link #match(Device)} evaluation. It is anticipated
+     * that any caching of {@link Group} instances will only occur to cache the result
+     * of {@link #match(Device)} evaluation.
+     * </p>
+     */
+    private transient Group importedGroup;
+
+
+
+    /**
      * Returns true if this group matches the given {@link Device}.
      *
      * @param device
@@ -267,6 +283,20 @@ public class Group implements Serializable {
     }
 
     /**
+     * @return the importedGroup
+     */
+    public Group getImportedGroup() {
+        return importedGroup;
+    }
+
+    /**
+     * @param importedGroup the importedGroup to set
+     */
+    public void setImportedGroup(final Group importedGroup) {
+        this.importedGroup = importedGroup;
+    }
+
+    /**
      * @return true if this group is a default group. The default implementation
      *         always returns false.
      */
@@ -283,7 +313,7 @@ public class Group implements Serializable {
             return true;
         }
 
-        if ((obj == null) || !this.getClass().equals(obj.getClass())) {
+        if (obj == null || !this.getClass().equals(obj.getClass())) {
             return false;
         }
 
@@ -297,8 +327,14 @@ public class Group implements Serializable {
 
         // Don't include index. The index is really just associated with the container
         // just that we're lazy and stash it in this group rather than create another
-        // wrapper. Not including the index allows us to detect if a group is a duplicate,
-        // even if it has a different index.
+        // wrapper.
+
+        if (getImportedGroup() != null && rhs.getImportedGroup() != null) {
+            equalsBuilder.append(getImportedGroup().getName(), rhs.getImportedGroup().getName());
+            equalsBuilder.append(getImportedGroup().getExpr(), rhs.getImportedGroup().getExpr());
+        } else {
+            equalsBuilder.append(getImportedGroup(), rhs.getImportedGroup());
+        }
 
         return equalsBuilder.isEquals();
     }
@@ -311,14 +347,13 @@ public class Group implements Serializable {
         final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
         hashCodeBuilder.append(getName());
         hashCodeBuilder.append(getExpr());
+        hashCodeBuilder.append(getImportedGroup());
 
         // Ignore getParentGroups() due to cyclic dependency.
 
         // Don't include index. The index is really just associated with the container
         // just that we're lazy and stash it in this group rather than create another
-        // wrapper. Not including the index allows us to detect if a group is a duplicate,
-        // even if it has a different index.
-
+        // wrapper.
 
         return hashCodeBuilder.toHashCode();
     }
@@ -332,6 +367,7 @@ public class Group implements Serializable {
         toStringBuilder.append("name", getName());
         toStringBuilder.append("expr", getExpr());
         toStringBuilder.append("index", getIndex());
+        toStringBuilder.append("importedGroup", getImportedGroup());
 
         // Ignore getParentGroups() due to cyclic dependency.
 
@@ -363,5 +399,4 @@ public class Group implements Serializable {
     private void validateExpr(final Device mockDevice) {
         match(mockDevice);
     }
-
 }

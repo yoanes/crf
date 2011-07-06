@@ -1,5 +1,7 @@
 package au.com.sensis.mobile.crf.config;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Test data for the {@link GroupImport} class.
  *
@@ -29,6 +31,20 @@ public class GroupImportTestData {
     public GroupImport createGroupThatDoesNotExistFromDefaultNamespace() {
         final GroupImport groupImport = new GroupImport();
         groupImport.setGroupName("group-that-doesn't-exist");
+        return groupImport;
+    }
+
+    public GroupImport createAppleWebkitImportFromEmptyNamespace() {
+        final GroupImport groupImport = new GroupImport();
+        groupImport.setGroupName("applewebkit");
+        groupImport.setFromConfigPath(StringUtils.EMPTY);
+        return groupImport;
+    }
+
+    public GroupImport createAndroidImportFromGlobalDevicesNamespace() {
+        final GroupImport groupImport = new GroupImport();
+        groupImport.setGroupName("android-os");
+        groupImport.setFromConfigPath("global/devices");
         return groupImport;
     }
 

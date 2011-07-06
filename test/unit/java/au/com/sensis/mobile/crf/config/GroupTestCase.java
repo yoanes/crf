@@ -418,6 +418,36 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
                 group.isDefault());
     }
 
+    @Test
+    public void testEqualsWhenImportedGroupNullOnBothSides() throws Exception {
+        final Group group1 = new Group();
+        final Group group2 = new Group();
+
+        Assert.assertEquals("Groups should be equal", group1, group2);
+
+    }
+
+    @Test
+    public void testEqualsWhenImportedGroupNullOnLeftSideOnly() throws Exception {
+        final Group group1 = new Group();
+        final Group group2 = new Group();
+        group2.setImportedGroup(new Group());
+
+        Assert.assertFalse("Groups should not be equal", group1.equals(group2));
+
+    }
+
+    @Test
+    public void testEqualsWhenImportedGroupNullOnRightSideOnly() throws Exception {
+        final Group group1 = new Group();
+        group1.setImportedGroup(new Group());
+
+        final Group group2 = new Group();
+
+        Assert.assertFalse("Groups should not be equal", group1.equals(group2));
+
+    }
+
     /**
      * @return the mockDevice
      */

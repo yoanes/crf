@@ -25,7 +25,7 @@ public class UiConfigurationJaxbXmlBinderTestCase extends AbstractJUnit4TestCase
     private static final String CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH_PATTERN
         = "/au/com/sensis/mobile/crf/config/crf-config-import-global-groups.xml";
     private static final String CRF_CONFIG_IMPORT_WITHOUT_REQUIRED_ATTRIBUTES_CLASSPATH_PATTERN
-    = "/au/com/sensis/mobile/crf/config/crf-config-import-without-required-attributes.xml";
+        = "/au/com/sensis/mobile/crf/config/crf-config-import-without-required-attributes.xml";
 
     private UiConfigurationJaxbXmlBinder objectUnderTest;
     private JaxbXMLBinderImpl jaxbXMLBinderImpl;

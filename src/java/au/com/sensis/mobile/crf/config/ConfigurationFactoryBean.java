@@ -189,7 +189,8 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
         } else if (groupOrImport.isGroupImport()) {
 
-            validateLegalImportScope(parentUiConfiguration, groupOrImport.getGroupImport());
+// TODO: validate that they aren't attempting to import an import. Can only import an explicitly
+// defined group.
 
             final List<Group> importedGroups = importGroups(parentUiConfiguration,
                     groupOrImport.getGroupImport());
@@ -198,42 +199,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
             throw new IllegalStateException("GroupOrImport has neither a Group or a GroupImport: "
                     + groupOrImport + "This should never happen.");
         }
-    }
-
-    private void validateLegalImportScope(final UiConfiguration parentUiConfiguration,
-            final GroupImport groupImport) {
-
-        if (globalImportsGlobal(parentUiConfiguration, groupImport)) {
-
-            throw new ConfigurationRuntimeException("Illegal for global UiConfiguration at '"
-                    + parentUiConfiguration.getSourceUrl()
-                    + "' to import from another global config path of '"
-                    + groupImport.getFromConfigPath()
-                    + "'. Note that global configs have a config path " + "starting with "
-                    + UiConfiguration.GLOBAL_CONFIG_PATH_PREFIX);
-
-        }
-
-        if (nonGlobalImportsNonGlobal(parentUiConfiguration, groupImport)) {
-
-            throw new ConfigurationRuntimeException("Illegal for non-global UiConfiguration at '"
-                    + parentUiConfiguration.getSourceUrl()
-                    + "' to import from another non-global config path of '"
-                    + groupImport.getFromConfigPath()
-                    + "'. Note that global configs have a config path " + "starting with "
-                    + UiConfiguration.GLOBAL_CONFIG_PATH_PREFIX);
-        }
-    }
-
-    private boolean nonGlobalImportsNonGlobal(final UiConfiguration parentUiConfiguration,
-            final GroupImport groupImport) {
-        return !parentUiConfiguration.hasGlobalConfigPath()
-                && !groupImport.hasGlobalConfigPath();
-    }
-
-    private boolean globalImportsGlobal(final UiConfiguration parentUiConfiguration,
-            final GroupImport groupImport) {
-        return parentUiConfiguration.hasGlobalConfigPath() && groupImport.hasGlobalConfigPath();
     }
 
     private List<Group> importGroups(final UiConfiguration parentUiConfiguration,
@@ -316,8 +281,10 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private Group creatNewGroup(final Group groupToImport) {
         final Group newGroup = new Group();
+        // TODO: need to be able to assign new name to group.
         newGroup.setName(groupToImport.getName());
-        newGroup.setExpr(groupToImport.getExpr());
+        newGroup.setExpr(StringUtils.EMPTY);
+        newGroup.setImportedGroup(groupToImport);
         return newGroup;
     }
 

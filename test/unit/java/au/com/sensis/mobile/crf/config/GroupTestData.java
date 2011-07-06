@@ -1,5 +1,8 @@
 package au.com.sensis.mobile.crf.config;
 
+import org.apache.commons.lang.StringUtils;
+
+
 /**
  * Test data for the {@link Group} class.
  *
@@ -21,10 +24,26 @@ public class GroupTestData {
         return group;
     }
 
+    public Group createImportedIpadGroup(final Group importedGroup) {
+        final Group group = new Group();
+        group.setName("ipad");
+        group.setExpr(StringUtils.EMPTY);
+        group.setImportedGroup(importedGroup);
+        return group;
+    }
+
     public Group createAndroidGroup() {
         final Group group = new Group();
         group.setName("android-os");
         group.setExpr("device.isA('Android-OS') or device.isA('Android-Emulator')");
+        return group;
+    }
+
+    public Group createImportedAndroidGroup(final Group importedGroup) {
+        final Group group = new Group();
+        group.setName("android-os");
+        group.setExpr(StringUtils.EMPTY);
+        group.setImportedGroup(importedGroup);
         return group;
     }
 
@@ -45,6 +64,14 @@ public class GroupTestData {
         final Group group = new Group();
         group.setName("applewebkit");
         group.setExpr("device.userAgent =~ '.*AppleWebKit.*'");
+        return group;
+    }
+
+    public Group createImportedAppleWebkitGroup(final Group importedGroup) {
+        final Group group = new Group();
+        group.setName("applewebkit");
+        group.setExpr(StringUtils.EMPTY);
+        group.setImportedGroup(importedGroup);
         return group;
     }
 
@@ -69,10 +96,26 @@ public class GroupTestData {
         return group;
     }
 
+    public Group createImportedLargeImageCategoryGroup(final Group importedGroup) {
+        final Group group = new Group();
+        group.setName("L");
+        group.setExpr(StringUtils.EMPTY);
+        group.setImportedGroup(importedGroup);
+        return group;
+    }
+
     public Group createMediumGroup() {
         final Group group = new Group();
         group.setName("M");
         group.setExpr("device.imageCategory eq 'M'");
+        return group;
+    }
+
+    public Group createImportedMediumGroup(final Group importedGroup) {
+        final Group group = new Group();
+        group.setName("M");
+        group.setExpr(StringUtils.EMPTY);
+        group.setImportedGroup(importedGroup);
         return group;
     }
 

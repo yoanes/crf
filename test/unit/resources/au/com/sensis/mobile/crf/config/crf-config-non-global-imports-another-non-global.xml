@@ -6,7 +6,7 @@
 
     <config-path>i-am-a-non-global-config</config-path>
     <groups>
-        <import name="dummy"  from="you should not import a non-global config"/>
+        <import name="applewebkit" from=""/>
         
         <default-group name="default" />
     </groups>
