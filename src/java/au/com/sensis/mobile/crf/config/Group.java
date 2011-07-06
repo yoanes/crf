@@ -98,6 +98,15 @@ public class Group implements Serializable {
      */
     public boolean match(final Device device)
         throws GroupEvaluationRuntimeException {
+
+        if (getImportedGroup() != null) {
+            return getImportedGroup().match(device);
+        } else {
+            return doMatch(device);
+        }
+    }
+
+    private boolean doMatch(final Device device) {
         try {
             final JexlEngine jexl = new JexlEngine();
             jexl.setLenient(false);

@@ -40,7 +40,9 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
     public void setUp() throws Exception {
         setObjectUnderTest(new Group());
         getObjectUnderTest().setName(GROUP_NAME);
-        getObjectUnderTest().setParentGroups(createGroups());
+
+        final Groups parentGroups = createGroups(getObjectUnderTest());
+        getObjectUnderTest().setParentGroups(parentGroups);
     }
 
     @Test
@@ -374,7 +376,42 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
         Assert.assertTrue("match should be true", getObjectUnderTest().match(getMockDevice()));
     }
 
-    private Groups createGroups() {
+    @Test
+    public void testMatchWhenGroupIsAnImport() throws Exception {
+        final Groups groupsContainingGroupToImport = createGroupsToImport();
+        final Group groupToImport = groupsContainingGroupToImport.getGroupByName("groupToImport");
+
+        getObjectUnderTest().setExpr(StringUtils.EMPTY);
+        getObjectUnderTest().setImportedGroup(groupToImport);
+
+        Assert.assertTrue("match should be true", getObjectUnderTest().match(getMockDevice()));
+    }
+
+    @Test
+    public void testMatchWhenImportedGroupInvokesInAnyGroupFunction() throws Exception {
+        final Groups groupsContainingGroupToImport = createGroupsToImport();
+        final Group groupToImport = groupsContainingGroupToImport
+                .getGroupByName("groupToImportWithInAnyGroupFunction");
+
+        getObjectUnderTest().setExpr(StringUtils.EMPTY);
+        getObjectUnderTest().setImportedGroup(groupToImport);
+
+        Assert.assertTrue("match should be true", getObjectUnderTest().match(getMockDevice()));
+    }
+
+    @Test
+    public void testMatchWhenImportedGroupInvokesInAllGroupsFunction() throws Exception {
+        final Groups groupsContainingGroupToImport = createGroupsToImport();
+        final Group groupToImport = groupsContainingGroupToImport
+                .getGroupByName("groupToImportWithInAllGroupsFunction");
+
+        getObjectUnderTest().setExpr(StringUtils.EMPTY);
+        getObjectUnderTest().setImportedGroup(groupToImport);
+
+        Assert.assertTrue("match should be true", getObjectUnderTest().match(getMockDevice()));
+    }
+
+    private Groups createGroups(final Group groupToInsert) {
         final Groups groups = new Groups();
         final Group trueGroup1 = new Group();
         trueGroup1.setName("trueGroup1");
@@ -404,7 +441,47 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
         defaultGroup.setName("default");
 
         groups.setGroups(new Group[] { trueGroup1, falseGroup1, trueGroup2, falseGroup2,
-                getObjectUnderTest(), laterGroup1, laterGroup2 });
+                groupToInsert, laterGroup1, laterGroup2 });
+        groups.setDefaultGroup(defaultGroup);
+
+        return groups;
+    }
+
+    private Groups createGroupsToImport() {
+        final Groups groups = new Groups();
+        final Group importedTrueGroup1 = new Group();
+        importedTrueGroup1.setName("importedTrueGroup1");
+        importedTrueGroup1.setExpr("true");
+
+        final Group importedFalseGroup1 = new Group();
+        importedFalseGroup1.setName("importedFalseGroup1");
+        importedFalseGroup1.setExpr("false");
+
+        final Group importedTrueGroup2 = new Group();
+        importedTrueGroup2.setName("importedTrueGroup2");
+        importedTrueGroup2.setExpr("true");
+
+        final Group groupToImportWithoutGroupFunction = new Group();
+        groupToImportWithoutGroupFunction.setName("groupToImport");
+        groupToImportWithoutGroupFunction.setExpr("true");
+
+        final Group groupToImportWithInAnyGroupFunction = new Group();
+        groupToImportWithInAnyGroupFunction.setName("groupToImportWithInAnyGroupFunction");
+        groupToImportWithInAnyGroupFunction.setExpr(
+                "inAnyGroup('importedFalseGroup1', 'importedTrueGroup1')");
+
+        final Group groupToImportWithInAllGroupsFunction = new Group();
+        groupToImportWithInAllGroupsFunction.setName("groupToImportWithInAllGroupsFunction");
+        groupToImportWithInAllGroupsFunction.setExpr(
+                "inAllGroups('importedTrueGroup2', 'importedTrueGroup1')");
+
+        final DefaultGroup defaultGroup = new DefaultGroup();
+        defaultGroup.setName("default");
+
+        groups.setGroups(new Group[] { importedTrueGroup1, importedFalseGroup1, importedTrueGroup2,
+                groupToImportWithoutGroupFunction, groupToImportWithInAnyGroupFunction,
+                groupToImportWithInAllGroupsFunction });
+
         groups.setDefaultGroup(defaultGroup);
 
         return groups;
