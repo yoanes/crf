@@ -162,6 +162,9 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
         for (final UiConfiguration uiConfiguration : getUiConfigurations()) {
             // Throw away the intermediate groupsAndImports because we don't need them anymore.
+            // We couldn't throw each away immediately after a UiConfiguration was processed,
+            // since the UiConfigurations are processed in an unpredictable order and later
+            // UiConfigurations may attempt to import from earlier ones.
             uiConfiguration.setGroupsAndImports(null);
         }
     }
@@ -211,9 +214,9 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         final UiConfiguration importedUiConfiguration
             = getUiConfigurationByExactConfigPath(groupImport.getFromConfigPath());
 
-        if (StringUtils.isNotBlank(groupImport.getGroupName())) {
-            importGroupByName(groupImport, importedGroups, parentUiConfiguration,
-                    importedUiConfiguration);
+        if (StringUtils.isNotBlank(groupImport.getEffectiveGroupName())) {
+            importGroupByName(groupImport, parentUiConfiguration, importedUiConfiguration,
+                    importedGroups);
         } else {
             importedGroups.addAll(importAllGroups(parentUiConfiguration, groupImport,
                     importedUiConfiguration));
@@ -238,9 +241,10 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         }
     }
 
-    private void importGroupByName(final GroupImport groupImport, final List<Group> importedGroups,
+    private void importGroupByName(final GroupImport groupImport,
             final UiConfiguration parentUiConfiguration,
-            final UiConfiguration importedUiConfiguration) {
+            final UiConfiguration importedUiConfiguration,
+            final List<Group> importedGroups) {
 
         // NOTE: we only allow importing a group that is explicitly defined in the imported
         // configuration. We don't allow importing an imported group. This greatly simplifies

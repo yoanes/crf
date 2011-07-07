@@ -326,6 +326,10 @@ public class Group implements Serializable {
             return false;
         }
 
+        return doEquals(obj);
+    }
+
+    private boolean doEquals(final Object obj) {
         final Group rhs = (Group) obj;
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 

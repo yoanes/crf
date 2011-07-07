@@ -71,6 +71,13 @@ public class Groups {
             }
         }
 
+        addDefaultGroupToMatchingGroups(device, matchingGroups);
+
+        return matchingGroups;
+    }
+
+    private void addDefaultGroupToMatchingGroups(final Device device,
+            final List<Group> matchingGroups) {
         // Strictly speaking, we probably don't need to bother calling match for
         // the default group. However, there is no harm in doing so and it makes
         // the code a bit more robust to any future changes to the DefaultGroup
@@ -78,8 +85,6 @@ public class Groups {
         if (getDefaultGroup() != null && getDefaultGroup().match(device)) {
             matchingGroups.add(getDefaultGroup());
         }
-
-        return matchingGroups;
     }
 
     /**
