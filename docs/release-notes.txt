@@ -1,3 +1,59 @@
+==== Version 2.0.8 (tag: contentRenderingFramework_v2_0_8) ====
+
+Fixes:
+- CRF-126: Import groups from non-global config files
+    - You can now import a group from any other config file, as long as it is not an import itself.
+        - the import element in group config files now takes three attributes: 
+          'name', 'fromConfigPath', 'fromName'. A fragment of the XSD that describes them is:
+                  
+            <xs:complexType name="Import">
+                <xs:annotation>
+                    <xs:documentation>
+                        Imports a group(s) from other files. At least one of "name", "fromName"
+                        or "fromConfigPath" must be set. 
+                    </xs:documentation>
+                </xs:annotation>
+        
+                <xs:attribute name="name" type="xs:string" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Name that the (single) imported group will be given in this config file. 
+                            If only one of "name" and "fromName" is given, the other will automatically 
+                            use the same value.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>        
+                <xs:attribute name="fromConfigPath" type="xs:string" use="optional">        
+                    <xs:annotation>
+                        <xs:documentation>
+                            Config path (ie. namespace) of the file from which to import a group(s).
+                            If neither "name" or "fromName" is specified, all groups will be imported. 
+                            If config path is not specified, it defaults to "global/devices" but note that
+                            at least one of "name", "fromName" or "fromConfigPath" must be explicitly set. 
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="fromName" type="xs:string" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Name of the (single) group to import. If only one of "name" and "fromName" is
+                            given, the other will automatically use the same value.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:complexType>
+            
+        - If you import a group by name and that group is also an import, it is treated the same
+          way as the group not being found. An exception will be thrown to indicate the error.
+          
+        - If you import all groups from another config file and at least one of them is an import,
+          an exception will be thrown to indicate the error.
+
+Upgrade steps:
+- should be transparent. However, when writing new import elements in your group config files, you 
+  should take careful note of the difference between the 'name' and 'fromName' attributes above
+  and what happens if you only specify one of them.  
+
 ==== Version 2.0.7 (tag: contentRenderingFramework_v2_0_7) ====
 
 Fixes:
