@@ -63,16 +63,38 @@
     <xs:complexType name="Import">
         <xs:annotation>
             <xs:documentation>
-                Imports a group(s) from other files. At least one of "name" and "from"
-                must be set. If name is set, only that named group is imported, otherwise
-                all groups (except the default group) are imported. If from is provided,
-                groups will be imported from the config file matching that namespace, otherwise
-                a default namespace will be consulted ("global/devices"). 
+                Imports a group(s) from other files. At least one of "name", "fromName"
+                or "fromConfigPath" must be set. 
             </xs:documentation>
         </xs:annotation>
 
-        <xs:attribute name="name" type="xs:string" use="optional"/>        
-        <xs:attribute name="from" type="xs:string" use="optional" />        
+        <xs:attribute name="name" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    Name that the (single) imported group will be given in this config file. 
+                    If only one of "name" and "fromName" is given, the other will automatically 
+                    use the same value.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>        
+        <xs:attribute name="fromConfigPath" type="xs:string" use="optional">        
+            <xs:annotation>
+                <xs:documentation>
+                    Config path (ie. namespace) of the file from which to import a group(s).
+                    If neither "name" or "fromName" is specified, all groups will be imported. 
+                    If config path is not specified, it defaults to "global/devices" but note that
+                    at least one of "name", "fromName" or "fromConfigPath" must be explicitly set. 
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="fromName" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    Name of the (single) group to import. If only one of "name" and "fromName" is
+                    given, the other will automatically use the same value.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
     
 </xs:schema>

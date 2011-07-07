@@ -48,4 +48,20 @@ public class GroupImportTestData {
         return groupImport;
     }
 
+    public GroupImport createRenamedNokia6120cImportFromDefaultNamespace() {
+        final GroupImport groupImport = new GroupImport();
+        groupImport.setGroupName("6120c");
+        groupImport.setFromConfigPath("global/devices");
+        groupImport.setFromGroupName("nokia6120c");
+        return groupImport;
+    }
+
+    public GroupImport createRenamedNokia6720cImportFromNonDefaultNamespace() {
+        final GroupImport groupImport = new GroupImport();
+        groupImport.setGroupName("6720c");
+        groupImport.setFromConfigPath("global/extraDevices");
+        groupImport.setFromGroupName("nokia6720c");
+        return groupImport;
+    }
+
 }

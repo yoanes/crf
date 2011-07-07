@@ -229,10 +229,10 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
             final UiConfiguration importedUiConfiguration) {
 
         final Group groupToImport = importedUiConfiguration.getGroupsAndImports().getGroupByName(
-                groupImport.getGroupName());
+                groupImport.getEffectiveFromGroupName());
 
         if (groupToImport != null) {
-            importedGroups.add(creatNewGroup(groupToImport));
+            importedGroups.add(creatNewGroup(groupImport, groupToImport));
 
         } else {
             final String exceptionMessage = buildGroupImportNotFoundMessage(
@@ -279,9 +279,16 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         return newGroups;
     }
 
+    private Group creatNewGroup(final GroupImport groupImport, final Group groupToImport) {
+        final Group newGroup = new Group();
+        newGroup.setName(groupImport.getEffectiveGroupName());
+        newGroup.setExpr(StringUtils.EMPTY);
+        newGroup.setImportedGroup(groupToImport);
+        return newGroup;
+    }
+
     private Group creatNewGroup(final Group groupToImport) {
         final Group newGroup = new Group();
-        // TODO: need to be able to assign new name to group.
         newGroup.setName(groupToImport.getName());
         newGroup.setExpr(StringUtils.EMPTY);
         newGroup.setImportedGroup(groupToImport);

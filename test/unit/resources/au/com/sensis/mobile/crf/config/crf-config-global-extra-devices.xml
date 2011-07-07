@@ -6,7 +6,8 @@
 
     <config-path>global/extraDevices</config-path>
     <groups>
-        <group name="ipad" expr = "device.isA('Apple-iPad')" />
+        <group name="ipad" expr="device.isA('Apple-iPad')" />
+        <group name="nokia6720c" expr="device.isA('Nokia-6720c')" />
         
         <default-group name="default" />
     </groups>

@@ -24,7 +24,6 @@
     <!-- Import shared build scripts. --> 
 <!--    <import file="shared-build-scripts/src/toplevel/build-component-with-showcase-support.xml" />-->
     <import file="shared-build-scripts/src/toplevel/build-library-with-showcase-support.xml" />
-	<import file="shared-build-scripts/src/standard/build-standard-require-jdk5-home-property.xml"/>
 
     <target name="showcase-init-props" depends="build-showcase-init-props.showcase-init-props">
         <echo message="crf: Overriding build-showcase-init-props.showcase-init-props target." />
@@ -147,7 +146,7 @@
         </sequential>
     </macrodef>
 	
-	<target name="jaxbCompileCrfConfig" depends="init, require-jdk5-home-property"
+	<target name="jaxbCompileCrfConfig" depends="init"
 		description="Compile the crf-config.xsd into JAXB beans.">
 
         <property name="crf.config.jaxb.targetPackage" value="au.com.sensis.mobile.crf.config.jaxb.generated"/>
@@ -160,17 +159,8 @@
 		   </fileset>
         </path>
 
-        <!--
-          - The current version of the xjc task (JAXB RI 2.1.3 - 2.1.9)
-          - does not behave well with JDK 1.6: loading of the default-value plugin fails.
-          - So we execute the XJCFacade class directly with jdk 1.5.
-          -
-          - This approach isn't too horrid except for the fact that you have to list every
-          - binding file explicitly if it doesn't have a *.xjb extension.
-          -->
         <java classname="com.sun.tools.xjc.XJCFacade"
             classpathref="crf.config.jaxb.classpath" fork="true"
-            jvm="${jdk5.home}/bin/java"
             failonerror="true">
             <arg value="-p"/>
             <arg value="${crf.config.jaxb.targetPackage}"/>

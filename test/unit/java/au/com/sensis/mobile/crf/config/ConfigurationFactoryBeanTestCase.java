@@ -108,10 +108,17 @@ public class ConfigurationFactoryBeanTestCase extends
         "/au/com/sensis/mobile/crf/config/validUiResources/css";
     private static final String VALID_IMAGES_ROOT_DIR_CLASSPATH =
         "/au/com/sensis/mobile/crf/config/validUiResources/images";
+
+    private static final String IMPORT_GLOBAL_GROUPS_VALID_CSS_ROOT_DIR_CLASSPATH =
+        "/au/com/sensis/mobile/crf/config/importGlobalGroupsValidUiResources/css";
+    private static final String IMPORT_GLOBAL_GROUPS_VALID_IMAGES_ROOT_DIR_CLASSPATH =
+        "/au/com/sensis/mobile/crf/config/importGlobalGroupsValidUiResources/images";
+
     private static final String MISSING_GROUPS_CSS_ROOT_DIR_CLASSPATH =
         "/au/com/sensis/mobile/crf/config/uiResourcesMissingGroupDirs/css";
     private static final String MISSING_GROUPS_IMAGES_ROOT_DIR_CLASSPATH =
         "/au/com/sensis/mobile/crf/config/uiResourcesMissingGroupDirs/images";
+
     private static final String EXTRA_GROUPS_CSS_ROOT_DIR_CLASSPATH =
         "/au/com/sensis/mobile/crf/config/uiResourcesExtraGroupDirs/css";
     private static final String EXTRA_GROUPS_MAGES_ROOT_DIR_CLASSPATH =
@@ -731,6 +738,9 @@ public class ConfigurationFactoryBeanTestCase extends
 
     @Test
     public void testImportGlobalGroups() throws Throwable {
+        setUiResourceRootDirectories(Arrays.asList(getImportGlobalGroupsValidUiResourcesCssRootDir(),
+                getImportGlobalGroupsValidUiResourcesImagesRootDir()));
+
         recordLoggerIsInfoEnabled(Boolean.TRUE);
 
         final ClassPathResource sourceClassPathResource =
@@ -739,7 +749,14 @@ public class ConfigurationFactoryBeanTestCase extends
         recordLoggerInfo("Resolving import for " + sourceClassPathResource.getURL() + ": "
                 + getGroupImportTestData().createAndroidOsImportFromDefaultNamespace(), 1);
         recordLoggerInfo("Resolving import for " + sourceClassPathResource.getURL() + ": "
+                + getGroupImportTestData().createRenamedNokia6120cImportFromDefaultNamespace(), 1);
+
+        recordLoggerInfo("Resolving import for " + sourceClassPathResource.getURL() + ": "
                 + getGroupImportTestData().createiPadImportFromNonDefaultNamespace(), 1);
+        recordLoggerInfo("Resolving import for " + sourceClassPathResource.getURL() + ": "
+                + getGroupImportTestData().createRenamedNokia6720cImportFromNonDefaultNamespace(),
+                    1);
+
         recordLoggerInfo("Resolving import for " + sourceClassPathResource.getURL() + ": "
                 + getGroupImportTestData().createImageCategoriesGroupImport(), 1);
 
@@ -848,7 +865,7 @@ public class ConfigurationFactoryBeanTestCase extends
                 GLOBAL_DEVICES_CONFIG_CLASSPATH);
 
         return "UiConfiguration[sourceUrl=" + globalDevicesConfigClassPathResource.getURL()
-                + ",configPath=global/devices,groups=[android-os, thub]], ";
+                + ",configPath=global/devices,groups=[android-os, thub, nokia6120c]], ";
     }
 
     private String createGlobalExtraDevicesGroupNamesSummary() throws IOException {
@@ -856,7 +873,7 @@ public class ConfigurationFactoryBeanTestCase extends
                 GLOBAL_EXTRA_DEVICES_CONFIG_CLASSPATH);
 
         return "UiConfiguration[sourceUrl=" + globalDevicesConfigClassPathResource.getURL()
-            + ",configPath=global/extraDevices,groups=[ipad]], ";
+            + ",configPath=global/extraDevices,groups=[ipad, nokia6720c]], ";
     }
 
     private String createGlobalImageCategoriesGroupNamesSummary() throws IOException {
@@ -1048,16 +1065,26 @@ public class ConfigurationFactoryBeanTestCase extends
         final Group group1 = getGroupTestData().createIPhoneGroup();
         final Group group2 = getGroupTestData().createImportedAndroidGroup(
                 uiConfigurationGlobalDevices.getGroups().getGroupByName("android-os"));
-        final Group group3 = getGroupTestData().createImportedIpadGroup(
+
+        final Group group3 = getGroupTestData().createImportedAndRenamedNokia6120cGroup(
+                uiConfigurationGlobalDevices.getGroups().getGroupByName("nokia6120c"));
+
+        final Group group4 = getGroupTestData().createImportedIpadGroup(
                 uiConfigurationGlobalExtraDevices.getGroups().getGroupByName("ipad"));
-        final Group group4 = getGroupTestData().createAppleWebkitGroup();
-        final Group group5 = getGroupTestData().createImportedLargeImageCategoryGroup(
+
+        final Group group5 = getGroupTestData().createImportedAndRenamedNokia6720cGroup(
+                uiConfigurationGlobalExtraDevices.getGroups().getGroupByName("nokia6720c"));
+
+        final Group group6 = getGroupTestData().createAppleWebkitGroup();
+        final Group group7 = getGroupTestData().createImportedLargeImageCategoryGroup(
                 uiConfigurationGlobalImageCategories.getGroups().getGroupByName("L"));
-        final Group group6 = getGroupTestData().createImportedMediumGroup(
+
+        final Group group8 = getGroupTestData().createImportedMediumGroup(
                 uiConfigurationGlobalImageCategories.getGroups().getGroupByName("M"));
 
         final Groups groups = new Groups();
-        groups.setGroups(new Group[] { group1, group2, group3, group4, group5, group6 });
+        groups.setGroups(new Group[] { group1, group2, group3, group4, group5, group6, group7,
+                group8 });
         groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
@@ -1077,9 +1104,10 @@ public class ConfigurationFactoryBeanTestCase extends
 
         final Group group1 = getGroupTestData().createAndroidGroup();
         final Group group2 = getGroupTestData().createThubGroup();
+        final Group group3 = getGroupTestData().createNokia6120cGroup();
 
         final Groups groups = new Groups();
-        groups.setGroups(new Group[] { group1, group2});
+        groups.setGroups(new Group[] { group1, group2, group3 });
         groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
@@ -1098,9 +1126,10 @@ public class ConfigurationFactoryBeanTestCase extends
         uiConfiguration.setConfigPath("global/extraDevices");
 
         final Group group1 = getGroupTestData().createIpadGroup();
+        final Group group2 = getGroupTestData().createNokia6720cGroup();
 
         final Groups groups = new Groups();
-        groups.setGroups(new Group[] { group1 });
+        groups.setGroups(new Group[] { group1, group2 });
         groups.setDefaultGroup(getGroupTestData().createDefaultGroup());
 
         uiConfiguration.setGroups(groups);
@@ -1293,6 +1322,16 @@ public class ConfigurationFactoryBeanTestCase extends
 
     private File getValidUiResourcesImagesRootDir() throws Exception {
         return new File(getClass().getResource(VALID_IMAGES_ROOT_DIR_CLASSPATH).toURI());
+    }
+
+    private File getImportGlobalGroupsValidUiResourcesCssRootDir() throws Exception {
+        return new File(getClass().getResource(IMPORT_GLOBAL_GROUPS_VALID_CSS_ROOT_DIR_CLASSPATH)
+                .toURI());
+    }
+
+    private File getImportGlobalGroupsValidUiResourcesImagesRootDir() throws Exception {
+        return new File(getClass()
+                .getResource(IMPORT_GLOBAL_GROUPS_VALID_IMAGES_ROOT_DIR_CLASSPATH).toURI());
     }
 
     private File getMissingGroupsUiResourcesCssRootDir() throws Exception {

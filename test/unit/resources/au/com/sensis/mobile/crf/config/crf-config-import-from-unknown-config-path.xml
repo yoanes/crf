@@ -6,7 +6,7 @@
 
     <config-path></config-path>
     <groups>
-        <import name="ipad"  from="global/i-don't-exist"/>
+        <import name="ipad" fromConfigPath="global/i-don't-exist"/>
         
         <default-group name="default" />
     </groups>

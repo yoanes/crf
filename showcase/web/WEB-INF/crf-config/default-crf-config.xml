@@ -29,12 +29,15 @@
         <group name="webkit" expr="device.userAgent =~ '.*WebKit.*'" />
         <group name="Apple" expr="device.name =~ '.*Apple.*'" />
 	 	<group name="Android" expr="device.userAgent =~ '.*Android.*'" />
+	 	
+	 	<!-- Import from "map component" as a new group name. -->
+	 	<import name="advancedMapAddons" fromConfigPath="selenium/component/map" fromName="mapComponent-advanced" />
         
         <!-- Import client app groups. -->
-        <import from="global/clientApps" />
+        <import fromConfigPath="global/clientApps" />
 
         <!-- Image category groups. -->
-        <import from="global/imageCategories" />
+        <import fromConfigPath="global/imageCategories" />
         
         <group name="clickToCallSupported" expr="device.clickToCallSupported" />
         

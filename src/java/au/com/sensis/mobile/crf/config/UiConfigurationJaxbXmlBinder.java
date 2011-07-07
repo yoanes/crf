@@ -133,10 +133,14 @@ public class UiConfigurationJaxbXmlBinder implements XmlBinder {
             groupImport.setGroupName(jaxbImport.getName());
         }
 
-        // The "from" field may be blank, since it is valid for a UiConfiguration to have a
-        // blank config-path.
-        if (jaxbImport.getFrom() != null) {
-            groupImport.setFromConfigPath(jaxbImport.getFrom());
+        if (StringUtils.isNotBlank(jaxbImport.getFromName())) {
+            groupImport.setFromGroupName(jaxbImport.getFromName());
+        }
+
+        // The "fromConfigPath" field may be blank, since it is valid for a UiConfiguration to have
+        // a blank config-path (which reperesents the default config).
+        if (jaxbImport.getFromConfigPath() != null) {
+            groupImport.setFromConfigPath(jaxbImport.getFromConfigPath());
         }
 
         return new GroupOrImportBean(groupImport);
@@ -146,10 +150,11 @@ public class UiConfigurationJaxbXmlBinder implements XmlBinder {
             final au.com.sensis.mobile.crf.config.jaxb.generated.Import jaxbImport) {
 
         if (StringUtils.isBlank(jaxbImport.getName())
-                && StringUtils.isBlank(jaxbImport.getFrom())) {
+                && StringUtils.isBlank(jaxbImport.getFromName())
+                && StringUtils.isBlank(jaxbImport.getFromConfigPath())) {
             throw new XmlBinderRuntimeException(
-                    "import element must have either or both the 'name' and "
-                            + "'from' attributes set to a non-blank value.");
+                    "import element must have at least one of 'name', "
+                        + "'fromName' or 'fromConfigPath' attributes set.");
         }
     }
 

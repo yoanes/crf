@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.showcase.selenium.fixture;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import junit.framework.Assert;
 
@@ -43,6 +44,8 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertSvgImageWhoseDimensionsCannotBeDetermined();
 
         doAssertPageStructure();
+
+        assertMapAddons();
     }
 
     private void assertResourcePrefixes() {
@@ -120,6 +123,13 @@ public abstract class BdpPage extends AbstractPageFixture {
      * Subclasses to provide further assertions.
      */
     protected abstract void doAssertPageStructure();
+
+    /**
+     * Assert that the mapAddons are on the page. Defaults to asserting that they are not.
+     */
+    protected void assertMapAddons() {
+        assertFalse(getBrowser().isTextPresent("[advancedMapAddons] mapAddons.jsp"));
+    }
 
     /**
      * Helper method for asserting the number of CSS links present.

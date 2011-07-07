@@ -305,6 +305,14 @@ public abstract class IphoneBdpPage extends BdpPage {
         assertImageCategoryText();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected final void assertMapAddons() {
+        assertTrue(getBrowser().isTextPresent("[advancedMapAddons] mapAddons.jsp"));
+    }
+
     protected void assertImageCategoryText() {
         assertTrue("imageCategory is wrong",
                 getBrowser().isTextPresent("'custom.imageCategory': L"));

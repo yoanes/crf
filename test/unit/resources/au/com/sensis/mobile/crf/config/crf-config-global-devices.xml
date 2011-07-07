@@ -8,6 +8,7 @@
     <groups>
         <group name="android-os" expr="device.isA('Android-OS') or device.isA('Android-Emulator')" />
         <group name="thub" expr="device.isA('SAGEM-HomeManager')" />
+        <group name="nokia6120c" expr="device.isA('Nokia-6120c')" />
 
         <default-group name="default" />
     </groups>

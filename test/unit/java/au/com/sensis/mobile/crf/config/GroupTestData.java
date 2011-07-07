@@ -125,4 +125,34 @@ public class GroupTestData {
         group.setExpr("device.imageCategory eq 'XS'");
         return group;
     }
+
+    public Group createNokia6120cGroup() {
+        final Group group = new Group();
+        group.setName("nokia6120c");
+        group.setExpr("device.isA('Nokia-6120c')");
+        return group;
+    }
+
+    public Group createNokia6720cGroup() {
+        final Group group = new Group();
+        group.setName("nokia6720c");
+        group.setExpr("device.isA('Nokia-6720c')");
+        return group;
+    }
+
+    public Group createImportedAndRenamedNokia6120cGroup(final Group importedGroup) {
+        final Group group = new Group();
+        group.setName("6120c");
+        group.setExpr(StringUtils.EMPTY);
+        group.setImportedGroup(importedGroup);
+        return group;
+    }
+
+    public Group createImportedAndRenamedNokia6720cGroup(final Group importedGroup) {
+        final Group group = new Group();
+        group.setName("6720c");
+        group.setExpr(StringUtils.EMPTY);
+        group.setImportedGroup(importedGroup);
+        return group;
+    }
 }

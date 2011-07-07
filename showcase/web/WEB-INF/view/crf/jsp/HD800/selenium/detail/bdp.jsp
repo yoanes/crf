@@ -35,5 +35,7 @@
     <jsp:include page="../../../selenium/common/images.crf"/>
     
     <jsp:include page="../../../selenium/component/map/map.crf"/>    
+    
+    <jsp:include page="../../../selenium/detail/mapAddons.crf"/>
   </body>
 </crf:html>

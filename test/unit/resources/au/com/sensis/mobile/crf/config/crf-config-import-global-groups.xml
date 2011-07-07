@@ -10,14 +10,20 @@
 
         <!-- Import group from default global config file. -->        
         <import name="android-os"/>
+        
+        <!-- Import group from default global config file and rename it. -->
+        <import name="6120c" fromName="nokia6120c"/>
 
         <!-- Import group from global config file explicitly. -->        
-        <import name="ipad"  from="global/extraDevices"/>
+        <import name="ipad"  fromConfigPath="global/extraDevices"/>
+        
+        <!-- Import group from global config file explicitly and rename it. -->        
+        <import name="6720c"  fromConfigPath="global/extraDevices" fromName="nokia6720c"/>
         
         <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
         
         <!-- Import an entire config file. -->
-        <import from="global/imageCategories" />
+        <import fromConfigPath="global/imageCategories" />
         
         <default-group name="default" />
     </groups>

@@ -73,8 +73,8 @@ public class UiConfigurationJaxbXmlBinderTestCase extends AbstractJUnit4TestCase
             Assert.assertNotNull("XmlBinderRuntimeException should have a cause.", e.getCause());
 
             Assert.assertEquals("XmlBinderRuntimeException cause has wrong message",
-                    "import element must have either or both the 'name' and "
-                            + "'from' attributes set to a non-blank value.", e.getCause()
+                    "import element must have at least one of 'name', "
+                            + "'fromName' or 'fromConfigPath' attributes set.", e.getCause()
                             .getMessage());
         }
 
@@ -106,7 +106,13 @@ public class UiConfigurationJaxbXmlBinderTestCase extends AbstractJUnit4TestCase
                 getGroupImportTestData().createAndroidOsImportFromDefaultNamespace()));
 
         resultList.add(new GroupOrImportBean(
+                getGroupImportTestData().createRenamedNokia6120cImportFromDefaultNamespace()));
+
+        resultList.add(new GroupOrImportBean(
                 getGroupImportTestData().createiPadImportFromNonDefaultNamespace()));
+
+        resultList.add(new GroupOrImportBean(
+                getGroupImportTestData().createRenamedNokia6720cImportFromNonDefaultNamespace()));
 
         resultList.add(new GroupOrImportBean(
                 getGroupTestData().createAppleWebkitGroup()));
