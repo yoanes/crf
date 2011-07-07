@@ -289,17 +289,17 @@ public class UiConfiguration {
     }
 
     /**
-     * A friendly summary of all group names.
+     * A friendly summary of all group names from {@link #getGroupsAndImports()}, excluding imports.
      *
-     * @return A friendly summary of all group names.
+     * @return A friendly summary of all group names from {@link #getGroupsAndImports()}, excluding
+     *         imports.
      */
-    public String groupNameSummary() {
+    public String groupsAndImportsGroupNameSummary() {
         final ToStringBuilder toStringBuilder = new ToStringBuilder(this,
                 ToStringStyle.SHORT_PREFIX_STYLE);
         toStringBuilder.append("sourceUrl", getSourceUrl());
         toStringBuilder.append("configPath", getConfigPath());
-
-        toStringBuilder.append("groups", getGroups().groupNameSummary());
+        toStringBuilder.append("groups", getGroupsAndImports().groupNameSummary());
 
         return toStringBuilder.toString();
     }

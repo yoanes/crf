@@ -4,10 +4,10 @@
          xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
          xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
 
-    <config-path></config-path>
+    <config-path>dodgyImporter</config-path>
     <groups>
-        <!-- Attempt to import group that doesn't exist from default global config file. -->
-        <import name="group-that-doesn't-exist"/>
+        <!-- Import all groups from config path of "importer". -->        
+        <import fromConfigPath="importer" />
         
         <default-group name="default" />
     </groups>

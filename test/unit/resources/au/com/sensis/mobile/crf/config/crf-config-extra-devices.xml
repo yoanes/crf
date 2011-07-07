@@ -4,9 +4,10 @@
          xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
          xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
 
-    <config-path>i-am-a-non-global-config</config-path>
+    <config-path>extraDevices</config-path>
     <groups>
-        <import name="applewebkit" fromConfigPath=""/>
+        <group name="ipad" expr="device.isA('Apple-iPad')" />
+        <group name="nokia6720c" expr="device.isA('Nokia-6720c')" />
         
         <default-group name="default" />
     </groups>

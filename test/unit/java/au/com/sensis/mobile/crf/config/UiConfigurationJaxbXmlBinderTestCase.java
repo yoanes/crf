@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +21,8 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
  */
 public class UiConfigurationJaxbXmlBinderTestCase extends AbstractJUnit4TestCase {
 
-    private static final String CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH_PATTERN
-        = "/au/com/sensis/mobile/crf/config/crf-config-import-global-groups.xml";
+    private static final String CRF_CONFIG_IMPORT_GROUPS_CLASSPATH_PATTERN
+        = "/au/com/sensis/mobile/crf/config/crf-config-import-groups.xml";
     private static final String CRF_CONFIG_IMPORT_WITHOUT_REQUIRED_ATTRIBUTES_CLASSPATH_PATTERN
         = "/au/com/sensis/mobile/crf/config/crf-config-import-without-required-attributes.xml";
 
@@ -48,7 +47,7 @@ public class UiConfigurationJaxbXmlBinderTestCase extends AbstractJUnit4TestCase
     @Test
     public void testUnmarshall() throws Throwable {
         final URL xmlUrl =
-                new ClassPathResource(CRF_CONFIG_IMPORT_GLOBAL_GROUPS_CLASSPATH_PATTERN).getURL();
+                new ClassPathResource(CRF_CONFIG_IMPORT_GROUPS_CLASSPATH_PATTERN).getURL();
         final UiConfiguration uiConfiguration = getObjectUnderTest().unmarshall(xmlUrl);
 
         assertComplexObjectsEqual("uiConfiguration is wrong", createExpectedUiConfiguration(),
@@ -82,7 +81,7 @@ public class UiConfigurationJaxbXmlBinderTestCase extends AbstractJUnit4TestCase
 
     private UiConfiguration createExpectedUiConfiguration() {
         final UiConfiguration uiConfiguration = new UiConfiguration();
-        uiConfiguration.setConfigPath(StringUtils.EMPTY);
+        uiConfiguration.setConfigPath("importer");
         uiConfiguration.setGroupsAndImports(createGroupsAndImports());
         return uiConfiguration;
     }

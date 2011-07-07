@@ -18,7 +18,7 @@ public class GroupImportTestData {
     public GroupImport createiPadImportFromNonDefaultNamespace() {
         final GroupImport groupImport = new GroupImport();
         groupImport.setGroupName("ipad");
-        groupImport.setFromConfigPath("global/extraDevices");
+        groupImport.setFromConfigPath("extraDevices");
         return groupImport;
     }
 
@@ -28,9 +28,10 @@ public class GroupImportTestData {
         return groupImport;
     }
 
-    public GroupImport createGroupThatDoesNotExistFromDefaultNamespace() {
+    public GroupImport createGroupImportForGroupThatDoesNotExistFromImporterNamespace() {
         final GroupImport groupImport = new GroupImport();
-        groupImport.setGroupName("group-that-doesn't-exist");
+        groupImport.setGroupName("android-os");
+        groupImport.setFromConfigPath("importer");
         return groupImport;
     }
 
@@ -59,8 +60,14 @@ public class GroupImportTestData {
     public GroupImport createRenamedNokia6720cImportFromNonDefaultNamespace() {
         final GroupImport groupImport = new GroupImport();
         groupImport.setGroupName("6720c");
-        groupImport.setFromConfigPath("global/extraDevices");
+        groupImport.setFromConfigPath("extraDevices");
         groupImport.setFromGroupName("nokia6720c");
+        return groupImport;
+    }
+
+    public GroupImport createGroupImportAllFromImporterNamespace() {
+        final GroupImport groupImport = new GroupImport();
+        groupImport.setFromConfigPath("importer");
         return groupImport;
     }
 

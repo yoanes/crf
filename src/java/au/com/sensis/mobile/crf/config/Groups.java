@@ -225,23 +225,4 @@ public class Groups {
         toStringBuilder.append("defaultGroup", getDefaultGroup());
         return toStringBuilder.toString();
     }
-
-    /**
-     * A friendly summary of all group names.
-     *
-     * @return a friendly summary of all group names.
-     */
-    public String groupNameSummary() {
-        final StringBuilder summaryBuilder = new StringBuilder("[");
-
-        for (int i = 0; i < getGroups().length; i++) {
-            summaryBuilder.append(getGroups()[i].getName());
-            if (i < getGroups().length - 1) {
-                summaryBuilder.append(", ");
-            }
-        }
-        summaryBuilder.append("]");
-
-        return summaryBuilder.toString();
-    }
 }

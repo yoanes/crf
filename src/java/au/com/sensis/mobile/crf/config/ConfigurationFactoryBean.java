@@ -189,9 +189,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
         } else if (groupOrImport.isGroupImport()) {
 
-// TODO: validate that they aren't attempting to import an import. Can only import an explicitly
-// defined group.
-
             final List<Group> importedGroups = importGroups(parentUiConfiguration,
                     groupOrImport.getGroupImport());
             finalisedGroups.addAll(importedGroups);
@@ -218,16 +215,36 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
             importGroupByName(groupImport, importedGroups, parentUiConfiguration,
                     importedUiConfiguration);
         } else {
-            importedGroups.addAll(createNewGroups(importedUiConfiguration.getGroups().getGroups()));
+            importedGroups.addAll(importAllGroups(parentUiConfiguration, groupImport,
+                    importedUiConfiguration));
         }
 
         return importedGroups;
+    }
+
+    private List<Group> importAllGroups(final UiConfiguration parentUiConfiguration,
+            final GroupImport groupImport, final UiConfiguration importedUiConfiguration) {
+
+        if (importedUiConfiguration.getGroupsAndImports().containsImports()) {
+            // NOTE: we only allow importing groups that are explicitly defined in the imported
+            // configuration. We don't allow importing an imported group. This greatly simplifies
+            // the import code and eliminates the need to handle cyclic dependencies.
+            throw new ConfigurationRuntimeException("Error parsing config file '"
+                    + parentUiConfiguration.getSourceUrl() + "'. " + groupImport
+                    + " attempts to import groups from a config file that also contains imports.");
+
+        } else {
+            return createNewGroups(importedUiConfiguration.getGroupsAndImports().getGroups());
+        }
     }
 
     private void importGroupByName(final GroupImport groupImport, final List<Group> importedGroups,
             final UiConfiguration parentUiConfiguration,
             final UiConfiguration importedUiConfiguration) {
 
+        // NOTE: we only allow importing a group that is explicitly defined in the imported
+        // configuration. We don't allow importing an imported group. This greatly simplifies
+        // the import code and eliminates the need to handle cyclic dependencies.
         final Group groupToImport = importedUiConfiguration.getGroupsAndImports().getGroupByName(
                 groupImport.getEffectiveFromGroupName());
 
@@ -259,7 +276,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
                 if (haveOutputAGroupNameSummary) {
                     exceptionMessageBuilder.append(", ");
                 }
-                exceptionMessageBuilder.append(uiConfiguration.groupNameSummary());
+                exceptionMessageBuilder.append(uiConfiguration.groupsAndImportsGroupNameSummary());
                 haveOutputAGroupNameSummary = true;
 
             }
@@ -392,9 +409,6 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         validateGroupDirsExist();
 
         validateUiResourceDirsExistAsGroups();
-
-        // TODO: validate no duplicate uiconfiguration config-paths and no duplicate group names
-        // within a ui configuration.
 
     }
 

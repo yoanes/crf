@@ -4,7 +4,7 @@
          xmlns:crf="http://mobile.sensis.com.au/web/crf/config"
          xsi:schemaLocation="http://mobile.sensis.com.au/web/crf/config crf-config.xsd">
 
-    <config-path></config-path>
+    <config-path>importer</config-path>
     <groups>
         <group name="iphone" expr="device.name =~ '.*iPhone.*'" />
 
@@ -14,11 +14,11 @@
         <!-- Import group from default global config file and rename it. -->
         <import name="6120c" fromName="nokia6120c"/>
 
-        <!-- Import group from global config file explicitly. -->        
-        <import name="ipad"  fromConfigPath="global/extraDevices"/>
+        <!-- Import group from non-global config file explicitly. -->        
+        <import name="ipad"  fromConfigPath="extraDevices"/>
         
-        <!-- Import group from global config file explicitly and rename it. -->        
-        <import name="6720c"  fromConfigPath="global/extraDevices" fromName="nokia6720c"/>
+        <!-- Import group from non-global config file explicitly and rename it. -->        
+        <import name="6720c" fromConfigPath="extraDevices" fromName="nokia6720c"/>
         
         <group name="applewebkit" expr="device.userAgent =~ '.*AppleWebKit.*'" />
         

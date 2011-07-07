@@ -1,5 +1,8 @@
 package au.com.sensis.mobile.crf.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -106,5 +109,54 @@ public class GroupsAndImports {
             }
         }
         return null;
+    }
+
+    /**
+     * A friendly summary of all group names. Will ignore imports.
+     *
+     * @return a friendly summary of all group names. Will ignore imports.
+     */
+    public String groupNameSummary() {
+        final StringBuilder summaryBuilder = new StringBuilder("[");
+
+        boolean haveOutputAGroupName = false;
+        for (int i = 0; i < getGroupOrImport().length; i++) {
+            if (getGroupOrImport()[i].isGroup()) {
+                if (haveOutputAGroupName) {
+                    summaryBuilder.append(", ");
+                }
+                summaryBuilder.append(getGroupOrImport()[i].getGroup().getName());
+                haveOutputAGroupName = true;
+            }
+        }
+        summaryBuilder.append("]");
+
+        return summaryBuilder.toString();
+    }
+
+    /**
+     * @return all contained {@link Group}s. Will ignore imports.
+     */
+    public Group[] getGroups() {
+        final List<Group> groups = new ArrayList<Group>();
+        for (final GroupOrImport groupOrImport : getGroupOrImport()) {
+            if (groupOrImport.isGroup()) {
+                groups.add(groupOrImport.getGroup());
+            }
+        }
+        return groups.toArray(new Group [] {});
+
+    }
+
+    /**
+     * @return true if this {@link GroupsAndImports} contains any imports.
+     */
+    public boolean containsImports() {
+        for (final GroupOrImport groupOrImport : getGroupOrImport()) {
+            if (groupOrImport.isGroupImport()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
