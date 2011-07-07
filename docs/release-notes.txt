@@ -48,6 +48,10 @@ Fixes:
           
         - If you import all groups from another config file and at least one of them is an import,
           an exception will be thrown to indicate the error.
+          
+        - If you import a group that uses either the "inAnyGroup" or "inAllGroups" functions, then
+          these functions are evaluated in the context of the config file containing the original
+          group.
 
 Upgrade steps:
 - should be transparent. However, when writing new import elements in your group config files, you 
