@@ -298,4 +298,22 @@ public abstract class IphoneBdpPage extends BdpPage {
         assertTrue("imageCategory is wrong",
                 getBrowser().isTextPresent("'custom.imageCategory': L"));
     }
+
+    /**
+     * Assert expected out of the bundleScriptsTag.
+     */
+    @Override
+    protected void assertBundleScriptsTagOutputPresent() {
+        assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File1",
+                "true");
+        assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File2",
+                "true");
+
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File1", "null");
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File2", "null");
+
+        // inherited from default group.
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File1", "true");
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File2", "true");
+    }
 }

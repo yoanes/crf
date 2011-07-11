@@ -57,8 +57,9 @@
     type="text/javascript" device="${context.device}"/>
     
 <%--
-  - TODO: Bundle Scripts tag.
+  - Explicit bundling of scripts for page authors.
   --%>
 <crf:bundleScripts id="showcaseAppBundle" device="${context.device}">  
+    <crf:script src="selenium/showcaseAppBundlePackage1/package" type="text/javascript" device="${context.device}"/>
+    <crf:script src="selenium/showcaseAppBundlePackage2/package" type="text/javascript" device="${context.device}"/>
 </crf:bundleScripts>
-    

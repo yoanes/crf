@@ -38,6 +38,8 @@ public abstract class BdpPage extends AbstractPageFixture {
 
         assertResourcePrefixes();
 
+        assertBundleScriptsTagOutputPresent();
+
         doAssertPageStructure();
     }
 
@@ -66,9 +68,36 @@ public abstract class BdpPage extends AbstractPageFixture {
     }
 
     private void assertInlineScriptPresent() {
-        final String myScriptVariable = getBrowser().getEval("window.myScript");
-        assertEquals("myScriptVariable set by inline script has wrong value",
-                "I am here and you should see me only once", myScriptVariable);
+        assertBundleScriptsTagJavaScriptVariable("window.myScript",
+                "I am here and you should see me only once");
+    }
+
+    /**
+     * Assert expected out of the bundleScriptsTag.
+     */
+    protected void assertBundleScriptsTagOutputPresent() {
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File1", "true");
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File2", "true");
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File1", "true");
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File2", "true");
+
+        assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File1",
+                "null");
+        assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File2",
+                "null");
+    }
+
+    /**
+     * Assert that the page contains a JavaScript variable set to the given value.
+     *
+     * @param scriptVariableName Name of the variable to assert.
+     * @param expectedValue Expected value of the variable.
+     */
+    protected void assertBundleScriptsTagJavaScriptVariable(final String scriptVariableName,
+            final String expectedValue) {
+        final String scriptVariable = getBrowser().getEval("window." + scriptVariableName);
+        assertEquals(scriptVariableName + " set by BundleScriptsTag has wrong value",
+                expectedValue, scriptVariable);
     }
 
     /**
@@ -84,7 +113,7 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @return number of scripts expected by this abstract BdpPage.
      */
     protected final int getNumExpectedScripts() {
-        return 2;
+        return 3;
     }
 
     /**
