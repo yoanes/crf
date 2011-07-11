@@ -21,13 +21,11 @@
 <%--
   - Test scripts requested by package.
   --%>
-<crf:bundleScripts id="showcasePackages" device="${context.device}">  
-	<crf:script src="selenium/fielddecorators/package" type="text/javascript" device="${context.device}"/> 
-	<crf:script src="selenium/grid/package" type="text/javascript" device="${context.device}"/> 
-	<crf:script src="selenium/reporting/package" type="text/javascript" device="${context.device}"/> 
-	<crf:script src="selenium/animation/package" type="text/javascript" device="${context.device}"/>
-	<crf:script src="selenium/layers/package" type="text/javascript" device="${context.device}"/> 
-</crf:bundleScripts>
+<crf:script src="selenium/fielddecorators/package" type="text/javascript" device="${context.device}"/> 
+<crf:script src="selenium/grid/package" type="text/javascript" device="${context.device}"/> 
+<crf:script src="selenium/reporting/package" type="text/javascript" device="${context.device}"/> 
+<crf:script src="selenium/animation/package" type="text/javascript" device="${context.device}"/>
+<crf:script src="selenium/layers/package" type="text/javascript" device="${context.device}"/> 
 
 <%--
   - Test scripts from a component.
@@ -57,3 +55,10 @@
   --%>
 <crf:script src="http://localhost:8080/something.js" 
     type="text/javascript" device="${context.device}"/>
+    
+<%--
+  - TODO: Bundle Scripts tag.
+  --%>
+<crf:bundleScripts id="showcaseAppBundle" device="${context.device}">  
+</crf:bundleScripts>
+    

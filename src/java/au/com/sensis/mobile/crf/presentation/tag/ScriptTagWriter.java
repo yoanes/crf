@@ -45,6 +45,8 @@ public class ScriptTagWriter implements TagWriter {
      * @param name
      *            name attribute of the tag.
      * @param scriptTagDependencies Singleton collaborators.
+     * @param parentBundleScriptsTag {@link BundleScriptsTag} that is the parent of the script tag.
+     *            Null if there is no parent.
      */
     public ScriptTagWriter(
             final Device device,
@@ -116,20 +118,23 @@ public class ScriptTagWriter implements TagWriter {
         }
     }
 
-
     private boolean isAbsoluteUrl(final String href) {
         return href.startsWith(ABSOLUTE_URL_PREFIX);
     }
-
 
     private void resolveResourceAndWriteTag(final JspWriter jspWriter) throws IOException {
 
         final List<Resource> allResourcePaths = getAllResourcePaths();
         if (getParentBundleScriptsTag() != null) {
-            getParentBundleScriptsTag().addResourcesToBundle(allResourcePaths);
+            postponeWriteForBundleScriptsTag(allResourcePaths);
+        } else {
+            writeLinkTagForEachResource(jspWriter, allResourcePaths);
         }
-        writeLinkTagForEachResource(jspWriter, allResourcePaths);
+    }
 
+
+    private void postponeWriteForBundleScriptsTag(final List<Resource> allResourcePaths) {
+        getParentBundleScriptsTag().addResourcesToBundle(allResourcePaths);
     }
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,

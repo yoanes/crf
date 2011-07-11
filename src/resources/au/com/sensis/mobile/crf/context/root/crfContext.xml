@@ -134,6 +134,14 @@
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
     </bean>
     
+    <bean id="crf.bundleScriptsTagDependencies" 
+        class="au.com.sensis.mobile.crf.presentation.tag.BundleScriptsTagDependencies">
+        <constructor-arg ref="crf.deploymentMetadata" />
+        <constructor-arg value="@{crf.env.resources.app.bundles.client.path.prefix}" />
+        <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+        <constructor-arg value="@{crf.env.resources.app.bundles.root.dir}" />
+    </bean>
+    
     <bean id="crf.imageServletDependencies" 
         class="au.com.sensis.mobile.crf.presentation.ImageServlet$ImageServletDependencies">
         <constructor-arg ref="crf.resourceResolverEngine" />

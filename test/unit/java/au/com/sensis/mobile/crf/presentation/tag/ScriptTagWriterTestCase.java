@@ -35,8 +35,7 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ScriptTagWriterTestCase extends
-AbstractJUnit4TestCase {
+public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
 
     private static final String DYN_ATTR_URI = "http://www.w3.org/2002/06/xhtml2";
 
@@ -58,6 +57,7 @@ AbstractJUnit4TestCase {
     private Device mockDevice;
     private FileIoFacade mockFileIoFacade;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
+    private BundleScriptsTag mockBundleScriptsTag;
 
     /**
      * Test setup.
@@ -111,7 +111,7 @@ AbstractJUnit4TestCase {
     public void testGetIdWhenSrcNotBlank() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
                 new ArrayList<DynamicTagAttribute>(), getRequestedScriptResourcePath(), null,
-                createTagDependencies()));
+                createTagDependencies(), null));
 
         Assert.assertEquals("id is wrong", getRequestedScriptResourcePath(), getObjectUnderTest()
                 .getId());
@@ -125,7 +125,7 @@ AbstractJUnit4TestCase {
         for (final String testValue : testValues) {
             setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
                     new ArrayList<DynamicTagAttribute>(), testValue, "myName",
-                    createTagDependencies()));
+                    createTagDependencies(), null));
 
             Assert.assertEquals("id is wrong", "myName", getObjectUnderTest().getId());
         }
@@ -135,7 +135,8 @@ AbstractJUnit4TestCase {
     @Test
     public void testWriteTagWhenHrefIsBlankAndNoDynamicAttributes() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
-                new ArrayList<DynamicTagAttribute>(), null, SCRIPT_NAME, createTagDependencies()));
+                new ArrayList<DynamicTagAttribute>(), null, SCRIPT_NAME, createTagDependencies(),
+                null));
 
         getMockJspFragment().invoke(getMockJspWriter());
 
@@ -152,7 +153,7 @@ AbstractJUnit4TestCase {
     public void testWriteTagWhenHrefIsBlankAndOneDynamicAttribute() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays
                 .asList(createTitleDynamicAttribute()), null, SCRIPT_NAME,
-                    createTagDependencies()));
+                    createTagDependencies(), null));
 
         getMockJspFragment().invoke(getMockJspWriter());
 
@@ -169,7 +170,7 @@ AbstractJUnit4TestCase {
     public void testWriteTagWhenHrefIsBlankAndTwoDynamicAttributes() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays.asList(
                 createTitleDynamicAttribute(), createIdDynamicAttribute()), null, SCRIPT_NAME,
-                createTagDependencies()));
+                createTagDependencies(), null));
 
         getMockJspFragment().invoke(getMockJspWriter());
 
@@ -187,7 +188,7 @@ AbstractJUnit4TestCase {
     public void testWriteTagWhenHrefIsAbsoluteAndNoDynamicAttributes() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
                 new ArrayList<DynamicTagAttribute>(), ABSOLUTE_HREF, null,
-                    createTagDependencies()));
+                    createTagDependencies(), null));
 
         replay();
 
@@ -202,7 +203,7 @@ AbstractJUnit4TestCase {
     public void testWriteTagWhenHrefIsAbsoluteAndOneDynamicAttribute() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays
                 .asList(createTitleDynamicAttribute()), ABSOLUTE_HREF, null,
-                createTagDependencies()));
+                createTagDependencies(), null));
 
         replay();
 
@@ -217,7 +218,7 @@ AbstractJUnit4TestCase {
     public void testWriteTagWhenHrefIsAbsoluteAndTwoDynamicAttributes() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays.asList(
                 createTitleDynamicAttribute(), createIdDynamicAttribute()), ABSOLUTE_HREF, null,
-                createTagDependencies()));
+                createTagDependencies(), null));
 
         replay();
 
@@ -229,7 +230,24 @@ AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testWriteTag() throws Throwable {
+    public void testWriteTagWhenHrefIsAbsoluteAndTwoDynamicAttributesAndParentBundleScriptsTag()
+        throws Throwable {
+
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays.asList(
+                createTitleDynamicAttribute(), createIdDynamicAttribute()), ABSOLUTE_HREF, null,
+                createTagDependencies(), getMockBundleScriptsTag()));
+
+        replay();
+
+        getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
+
+        Assert.assertEquals("incorrect output", "<script src=\"" + ABSOLUTE_HREF
+                + "\" title=\"My Image\" id=\"myJavaScript\" charset=\"utf-8\" "
+                + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
+    }
+
+    @Test
+    public void testWriteTagWhenHrefNotBlankAndNotAbsolute() throws Throwable {
         final TestData[] testDataArray = getTestDataForHrefNotBlank();
         for (int i = 0; i < testDataArray.length; i++) {
             try {
@@ -256,12 +274,36 @@ AbstractJUnit4TestCase {
         }
     }
 
+    @Test
+    public void testWriteTagWhenHrefNotBlankAndNotAbsoluteAndParentBundleScriptsTag()
+            throws Throwable {
+
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays.asList(
+                createTitleDynamicAttribute(), createIdDynamicAttribute()),
+                getRequestedScriptResourcePath(), null, createTagDependencies(),
+                getMockBundleScriptsTag()));
+
+        final List<Resource> foundResources = Arrays
+                .asList(getMappedDefaultGroupScriptResourcePath(),
+                        getMappediPhoneGroupScriptResourcePath());
+        recordGetResource(foundResources);
+
+        getMockBundleScriptsTag().addResourcesToBundle(foundResources);
+
+        replay();
+
+        getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
+
+        Assert.assertEquals("output to page should be empty",
+                StringUtils.EMPTY, getStringWriter().getBuffer().toString());
+    }
+
     private ScriptTagWriter createObjectUnderTestWhenSrcNotBlank(
             final TestData testData) {
         return new ScriptTagWriter(getMockDevice(),
                 testData.getDynamicAttributes(),
                 getRequestedScriptResourcePath(), null,
-                createTagDependencies(testData));
+                createTagDependencies(testData), null);
     }
 
     private ScriptTagDependencies createTagDependencies(
@@ -626,5 +668,19 @@ AbstractJUnit4TestCase {
     public void setMockResolutionWarnLogger(
             final ResourceResolutionWarnLogger mockResolutionWarnLogger) {
         this.mockResolutionWarnLogger = mockResolutionWarnLogger;
+    }
+
+    /**
+     * @return the mockBundleScriptsTag
+     */
+    public BundleScriptsTag getMockBundleScriptsTag() {
+        return mockBundleScriptsTag;
+    }
+
+    /**
+     * @param mockBundleScriptsTag the mockBundleScriptsTag to set
+     */
+    public void setMockBundleScriptsTag(final BundleScriptsTag mockBundleScriptsTag) {
+        this.mockBundleScriptsTag = mockBundleScriptsTag;
     }
 }

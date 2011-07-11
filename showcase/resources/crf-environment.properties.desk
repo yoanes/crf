@@ -7,10 +7,12 @@ env.resources.properties.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/WEB-INF/
 env.resources.css.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
 env.resources.javascript.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
 env.resources.images.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
+env.resources.app.bundles.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
 
 env.resources.css.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
 env.resources.javascript.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
 env.resources.images.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
+env.resources.app.bundles.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
 
 # True if the loaded ui configuration should be cached or not. False indicates that it will be dynamically
 # reloaded to reflect changes. 

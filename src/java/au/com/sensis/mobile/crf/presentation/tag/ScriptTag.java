@@ -72,7 +72,7 @@ public class ScriptTag extends AbstractDuplicatePreventingTag {
     @Override
     protected TagWriter createTagWriter() {
         final BundleScriptsTag parentBundleScriptsTag =
-            (BundleScriptsTag)findAncestorWithClass(this,
+            (BundleScriptsTag) findAncestorWithClass(this,
                     BundleScriptsTag.class);
 
         return ScriptTagWriterFactory
