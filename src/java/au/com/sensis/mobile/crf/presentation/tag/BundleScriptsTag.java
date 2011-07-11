@@ -62,9 +62,9 @@ public class BundleScriptsTag extends AbstractTag {
 
     @Override
     public void doTag() throws JspException, IOException {
-        // Let any child tags do their thing. If they wish to have their resources bundled by
-        // this tag, we expect them to find us using the standard JEE mechanisms,
-        // then call addResourcesToBundle.
+        // Let any child tags do their thing. If they wish to have their external JavaScript
+        // resources bundled by this tag, we expect them to find us using the standard JEE
+        // mechanisms, then call addResourcesToBundle.
         getJspBody().invoke(null);
 
         if (LOGGER.isDebugEnabled()) {

@@ -76,6 +76,8 @@ public abstract class BdpPage extends AbstractPageFixture {
      * Assert expected out of the bundleScriptsTag.
      */
     protected void assertBundleScriptsTagOutputPresent() {
+        assertBundleScriptsTagJavaScriptVariable("showcaseAppBundleInlineScript", "true");
+
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File1", "true");
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File2", "true");
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File1", "true");
@@ -85,6 +87,10 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "null");
         assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File2",
                 "null");
+
+        assertAbsolutelyReferencedScript(
+                "BundleScriptsTag child sourced from absolute URL not found",
+                "http://localhost:8080/showcaseAppBundleAbsoluteUrl.js");
     }
 
     /**
@@ -113,7 +119,7 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @return number of scripts expected by this abstract BdpPage.
      */
     protected final int getNumExpectedScripts() {
-        return 3;
+        return 5;
     }
 
     /**
