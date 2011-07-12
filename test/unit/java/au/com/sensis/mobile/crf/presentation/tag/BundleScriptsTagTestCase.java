@@ -57,6 +57,8 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     private MockServletContext springMockServletContext;
 
+    private BundleScriptsTagCache mockBundleScriptsTagCache;
+
     private File sourceBundle1NewFile;
     private String sourceBundle1NewPath;
     private File sourceBundle2NewFile;
@@ -127,11 +129,15 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
         recordGetTagDependencies();
 
+        recordCheckCachedResources(false);
+
         recordBehaviourForBundleCreation();
 
         recordBehaviourForClientSrcPathCreation();
 
         recordBehaviourForWritingScriptTag();
+
+        recordUpdateCache();
 
         replay();
 
@@ -144,6 +150,30 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
+    }
+
+    private void recordUpdateCache() throws NoSuchAlgorithmException {
+        final BundleScriptsTagCacheKeyBean keyBean = createCacheKey();
+        getMockBundleScriptsTagCache().put(keyBean, createExpectedOutputBundleClientPath());
+    }
+
+    private void recordCheckCachedResources(final boolean resourcesCached)
+            throws NoSuchAlgorithmException {
+        final BundleScriptsTagCacheKeyBean keyBean = createCacheKey();
+        EasyMock.expect(getMockBundleScriptsTagCache().contains(keyBean))
+                .andReturn(resourcesCached);
+
+        if (resourcesCached) {
+            EasyMock.expect(getMockBundleScriptsTagCache().get(keyBean)).andReturn(
+                    createExpectedOutputBundleClientPath());
+        }
+
+    }
+
+    private BundleScriptsTagCacheKeyBean createCacheKey() {
+        final BundleScriptsTagCacheKeyBean keyBean = new BundleScriptsTagCacheKeyBean(TAG_ID,
+                new Resource[] { getMockResource1(), getMockResource2() });
+        return keyBean;
     }
 
     private void assertBundleFileCorrect() throws NoSuchAlgorithmException, IOException {
@@ -193,11 +223,15 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
         recordGetTagDependencies();
 
+        recordCheckCachedResources(false);
+
         recordBehaviourForBundleCreation();
 
         recordBehaviourForClientSrcPathCreation();
 
         recordBehaviourForWritingScriptTag();
+
+        recordUpdateCache();
 
         replay();
 
@@ -220,11 +254,15 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
         recordGetTagDependencies();
 
+        recordCheckCachedResources(false);
+
         recordBehaviourForBundleCreation();
 
         recordBehaviourForClientSrcPathCreation();
 
         recordBehaviourForWritingScriptTag();
+
+        recordUpdateCache();
 
         replay();
 
@@ -237,6 +275,29 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 + createExpectedOutputBundleClientPath()
                 + "\" type=\"text/funkyscript\" " + "charset=\"utf-8\" ></script>",
                 getStringWriter().getBuffer().toString());
+
+        assertBundleFileCorrect();
+    }
+
+    @Test
+    public void testDoTagWhenResourcesToBundleAreCached() throws Exception {
+        getMockJspFragment().invoke(null);
+
+        recordGetTagDependencies();
+
+        recordCheckCachedResources(true);
+
+        recordBehaviourForWritingScriptTag();
+
+        replay();
+
+        getObjectUnderTest().addResourcesToBundle(
+                Arrays.asList(getMockResource1(), getMockResource2()));
+        getObjectUnderTest().doTag();
+
+        Assert.assertEquals("Script incorrectly written", "<script id=\"myId\" src=\""
+                + createExpectedOutputBundleClientPath() + "\" charset=\"utf-8\" "
+                + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
     }
@@ -272,7 +333,8 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         return new BundleScriptsTagDependencies(
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
-                getMockResolutionWarnLogger(), getAppBundlesRootDir());
+                getMockResolutionWarnLogger(), getMockBundleScriptsTagCache(),
+                getAppBundlesRootDir());
     }
 
     /**
@@ -514,5 +576,19 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     private void setBundleScriptsTagDependencies(
             final BundleScriptsTagDependencies bundleScriptsTagDependencies) {
         this.bundleScriptsTagDependencies = bundleScriptsTagDependencies;
+    }
+
+    /**
+     * @return the mockBundleScriptsTagCache
+     */
+    public BundleScriptsTagCache getMockBundleScriptsTagCache() {
+        return mockBundleScriptsTagCache;
+    }
+
+    /**
+     * @param mockBundleScriptsTagCache the mockBundleScriptsTagCache to set
+     */
+    public void setMockBundleScriptsTagCache(final BundleScriptsTagCache mockBundleScriptsTagCache) {
+        this.mockBundleScriptsTagCache = mockBundleScriptsTagCache;
     }
 }

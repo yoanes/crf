@@ -67,26 +67,62 @@ public class BundleScriptsTag extends AbstractTag {
         // mechanisms, then call addResourcesToBundle.
         getJspBody().invoke(null);
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Resources to bundle: " + getResourcesToBundle());
-        }
-
         if (!getResourcesToBundle().isEmpty()) {
-            bundleRegisteredResources();
+            bundleRegisteredResourcesAndWriteScriptToPage();
         }
     }
 
-    private void bundleRegisteredResources() throws IOException {
+    private void bundleRegisteredResourcesAndWriteScriptToPage() throws IOException {
+        final BundleScriptsTagCacheKey cacheKey = createCacheKey();
+
+        debugLogCheckingCache(cacheKey);
+        if (getCache().contains(cacheKey)) {
+            writeSingleScriptTagForCachedBundle(cacheKey);
+        } else {
+            writeSingleScriptTagForNonCachedBundle(cacheKey);
+        }
+    }
+
+    private void writeSingleScriptTagForCachedBundle(final BundleScriptsTagCacheKey cacheKey)
+            throws IOException {
+
+        final String cachedBundleClientPath = getCache().get(cacheKey);
+        debugLogCachedClientBundlePathFound(cachedBundleClientPath);
+        writeSingleScriptTag(cachedBundleClientPath);
+    }
+
+    private void writeSingleScriptTagForNonCachedBundle(final BundleScriptsTagCacheKey cacheKey)
+        throws IOException {
+
         final String outputBundleBasePath = createOutputBundleBasePath();
         createBundle(outputBundleBasePath);
-        writeSingleScriptTag(createOutputBundleClientPath(outputBundleBasePath));
+
+        final String outputBundleClientPath = createOutputBundleClientPath(outputBundleBasePath);
+        writeSingleScriptTag(outputBundleClientPath);
+
+        updateCache(cacheKey, outputBundleClientPath);
+    }
+
+    private void updateCache(final BundleScriptsTagCacheKey cacheKey,
+            final String outputBundleClientPath) {
+
+        debugLogUpdatingCache(cacheKey, outputBundleClientPath);
+
+        getCache().put(cacheKey, outputBundleClientPath);
+    }
+
+    private BundleScriptsTagCacheKey createCacheKey() {
+        return new BundleScriptsTagCacheKeyBean(getId(),
+                getResourcesToBundle().toArray(new Resource [] {}));
     }
 
     private void createBundle(final String outputBundleBasePath) throws IOException {
         final File outputBundleFile = new File(getTagDependencies().getRootResourcesDir(),
                 outputBundleBasePath);
-        createFileAndParentDirsIfNecessary(outputBundleFile);
 
+        debugLogCreatingBundle(outputBundleFile);
+
+        createFileAndParentDirsIfNecessary(outputBundleFile);
         final FileWriter outputBundleFileWriter = new FileWriter(outputBundleFile);
 
         try {
@@ -225,6 +261,37 @@ public class BundleScriptsTag extends AbstractTag {
                         .getServletContext());
         return (BundleScriptsTagDependencies) webApplicationContext
                 .getBean(BundleScriptsTagDependencies.BEAN_NAME);
+    }
+
+    private void debugLogCheckingCache(final BundleScriptsTagCacheKey cacheKey) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Checking cache for key='" + cacheKey + "'");
+        }
+    }
+
+    private void debugLogCachedClientBundlePathFound(final String cachedBundleClientPath) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Found cached bundle client path: '" + cachedBundleClientPath + "'");
+        }
+    }
+
+    private void debugLogCreatingBundle(final File outputBundleFile) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Creating bundle '" + outputBundleFile + "' from resources: '"
+                    + getResourcesToBundle() + "'");
+        }
+    }
+
+    private void debugLogUpdatingCache(final BundleScriptsTagCacheKey cacheKey,
+            final String outputBundleClientPath) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Updating cache with key='" + cacheKey + "' and value='"
+                    + outputBundleClientPath + "'");
+        }
+    }
+
+    private BundleScriptsTagCache getCache() {
+        return getTagDependencies().getBundleScriptsTagCache();
     }
 
     /**

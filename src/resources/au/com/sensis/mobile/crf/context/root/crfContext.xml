@@ -139,6 +139,7 @@
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg value="@{crf.env.resources.app.bundles.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+        <constructor-arg ref="crf.bundleScriptsTagCache" />
         <constructor-arg value="@{crf.env.resources.app.bundles.root.dir}" />
     </bean>
     
@@ -262,6 +263,22 @@
         <property name="cacheManagerName" value="crf.resourcesEhcacheManager" />
     </bean>
 
+    <bean id="crf.bundleScriptsTagCache" class="au.com.sensis.mobile.crf.presentation.tag.EhcacheBundleScriptsTagCacheBean">
+        <constructor-arg ref="crf.bundleScriptsTagEhcache" />
+        <constructor-arg value="@{crf.env.cache.resources}" />
+        <property name="enableStatistics" value="true" />
+    </bean>
+    
+    <bean id="crf.bundleScriptsTagEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager" ref="crf.bundleScriptsTagEhcacheManager" />
+        <property name="cacheName" value="bundleScriptsTagCache" />
+    </bean>
+    
+    <bean id="crf.bundleScriptsTagEhcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/au/com/sensis/mobile/crf/presentation/tag/bundleScriptsTag-ehcache.xml" />
+        <property name="cacheManagerName" value="crf.bundleScriptsTagEhcacheManager" />
+    </bean>
+
     <bean id="crf.groupsEhcacheManagerMBeanRegister" 
         class="net.sf.ehcache.management.ManagementService" init-method="init">
         <constructor-arg index="0" ref="crf.groupsEhcacheManager" />
@@ -276,6 +293,17 @@
     <bean id="crf.resourcesEhcacheManagerMBeanRegister" 
         class="net.sf.ehcache.management.ManagementService" init-method="init">
         <constructor-arg index="0" ref="crf.resourcesEhcacheManager" />
+        <constructor-arg index="1" ref="crf.mbeanServer" />
+        <constructor-arg index="2" value="true"/>
+        <constructor-arg index="3" value="true"/>
+        <constructor-arg index="4" value="true"/>
+        <constructor-arg index="5" value="true"/>
+        <constructor-arg index="6" value="true"/>
+    </bean>    
+    
+    <bean id="crf.bundleScriptsTagEhcacheManagerMBeanRegister" 
+        class="net.sf.ehcache.management.ManagementService" init-method="init">
+        <constructor-arg index="0" ref="crf.bundleScriptsTagEhcacheManager" />
         <constructor-arg index="1" ref="crf.mbeanServer" />
         <constructor-arg index="2" value="true"/>
         <constructor-arg index="3" value="true"/>
@@ -316,6 +344,15 @@
         <property name="targetMethod" value="logStats" />
     </bean>
     
+    <bean id="crf.bundleScriptsTagEhcacheStatsLogger" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+        <property name="targetObject">
+            <bean class="au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger">
+                <constructor-arg ref="crf.bundleScriptsTagEhcache" />
+            </bean>
+        </property>
+        <property name="targetMethod" value="logStats" />
+    </bean>
+    
     <bean id="crf.timerFactoryBean" class="org.springframework.scheduling.timer.TimerFactoryBean">
         <property name="scheduledTimerTasks">
             <list>
@@ -330,6 +367,12 @@
                     <!-- Run every M milliseconds. -->
                     <property name="period" value="@{crf.env.cache.stats.logging.period.milliseconds}" />
                     <property name="timerTask" ref="crf.resourcesEhcacheStatsLogger" />
+                </bean>
+                <bean id="crf.bundleScriptsTagEhcacheStatsLogger.scheduledTask" 
+                    class="org.springframework.scheduling.timer.ScheduledTimerTask">
+                    <!-- Run every M milliseconds. -->
+                    <property name="period" value="@{crf.env.cache.stats.logging.period.milliseconds}" />
+                    <property name="timerTask" ref="crf.bundleScriptsTagEhcacheStatsLogger" />
                 </bean>
             </list>
         </property>
