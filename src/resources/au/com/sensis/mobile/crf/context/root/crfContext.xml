@@ -372,6 +372,15 @@
         <property name="targetMethod" value="logStats" />
     </bean>
     
+    <bean id="crf.bundleLinksTagEhcacheStatsLogger" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+        <property name="targetObject">
+            <bean class="au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger">
+                <constructor-arg ref="crf.bundleLinksTagEhcache" />
+            </bean>
+        </property>
+        <property name="targetMethod" value="logStats" />
+    </bean>
+    
     <bean id="crf.timerFactoryBean" class="org.springframework.scheduling.timer.TimerFactoryBean">
         <property name="scheduledTimerTasks">
             <list>
@@ -392,6 +401,12 @@
                     <!-- Run every M milliseconds. -->
                     <property name="period" value="@{crf.env.cache.stats.logging.period.milliseconds}" />
                     <property name="timerTask" ref="crf.bundleScriptsTagEhcacheStatsLogger" />
+                </bean>
+                <bean id="crf.bundleLinksTagEhcacheStatsLogger.scheduledTask" 
+                    class="org.springframework.scheduling.timer.ScheduledTimerTask">
+                    <!-- Run every M milliseconds. -->
+                    <property name="period" value="@{crf.env.cache.stats.logging.period.milliseconds}" />
+                    <property name="timerTask" ref="crf.bundleLinksTagEhcacheStatsLogger" />
                 </bean>
             </list>
         </property>
