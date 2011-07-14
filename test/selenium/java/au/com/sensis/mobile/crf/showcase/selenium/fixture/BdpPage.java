@@ -40,8 +40,10 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertResourcePrefixes();
 
         assertGifImageWithPngFileExtension();
-
         assertSvgImageWhoseDimensionsCannotBeDetermined();
+
+        assertBundleScriptsTagOutputPresent();
+        assertBundleLinksTagOutputPresent();
 
         doAssertPageStructure();
 
@@ -73,9 +75,57 @@ public abstract class BdpPage extends AbstractPageFixture {
     }
 
     private void assertInlineScriptPresent() {
-        final String myScriptVariable = getBrowser().getEval("window.myScript");
-        assertEquals("myScriptVariable set by inline script has wrong value",
-                "I am here and you should see me only once", myScriptVariable);
+        assertBundleScriptsTagJavaScriptVariable("window.myScript",
+                "I am here and you should see me only once");
+    }
+
+    /**
+     * Assert expected out of the bundleScriptsTag.
+     */
+    protected void assertBundleScriptsTagOutputPresent() {
+        assertBundleScriptsTagJavaScriptVariable("showcaseAppBundleInlineScript", "true");
+
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File1", "true");
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File2", "true");
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File1", "true");
+        assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File2", "true");
+
+        assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File1",
+                "null");
+        assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File2",
+                "null");
+
+        assertAbsolutelyReferencedScript(
+                "BundleScriptsTag child sourced from absolute URL not found",
+                "http://localhost:8080/showcaseAppBundleAbsoluteUrl.js");
+    }
+
+    private void assertBundleLinksTagOutputPresent() {
+        assertTrue("showcaseAppCssBundle link not found", getBrowser().isElementPresent(
+                "//head/link["
+                + "@type=\"text/css\" "
+                + "and @id=\"showcaseAppCssBundle\" "
+                + "and @rel=\"stylesheet\" "
+                + "and starts-with(@href, "
+                    + "\"/uidev/crfshowcase/uiresources/" + getProjectVersion()
+                    + "/appBundles/showcaseAppCssBundle-\") "
+                + "and contains(@href, \"-package.css\")"
+                + "]"));
+        // We can't easily test the contents of the bundle but this should be okay if the
+        // JavaScript bundling works (which we can and do assert elsewhere)- it's shared code.
+    }
+
+    /**
+     * Assert that the page contains a JavaScript variable set to the given value.
+     *
+     * @param scriptVariableName Name of the variable to assert.
+     * @param expectedValue Expected value of the variable.
+     */
+    protected void assertBundleScriptsTagJavaScriptVariable(final String scriptVariableName,
+            final String expectedValue) {
+        final String scriptVariable = getBrowser().getEval("window." + scriptVariableName);
+        assertEquals(scriptVariableName + " set by BundleScriptsTag has wrong value",
+                expectedValue, scriptVariable);
     }
 
     /**
@@ -91,7 +141,14 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @return number of scripts expected by this abstract BdpPage.
      */
     protected final int getNumExpectedScripts() {
-        return 2;
+        return 5;
+    }
+
+    /**
+     * @return number of links expected by this abstract BdpPage.
+     */
+    protected final int getNumExpectedLinks() {
+        return 1;
     }
 
     /**

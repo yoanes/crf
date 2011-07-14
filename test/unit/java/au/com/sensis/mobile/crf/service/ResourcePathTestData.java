@@ -373,6 +373,10 @@ public class ResourcePathTestData {
         return "http://localhost:8080/wl-crf-component-showcase/uiresources/";
     }
 
+    public String getAppBundleClientPathPrefix() {
+        return "http://localhost:8080/wl-crf-component-showcase/uiresources/";
+    }
+
     public String getMappedDefaultGroupCssResourceHref() {
         return getCssClientPathPrefix() + getMappedDefaultGroupCssResourcePath().getNewPath();
     }

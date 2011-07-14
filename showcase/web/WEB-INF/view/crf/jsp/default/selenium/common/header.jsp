@@ -5,4 +5,5 @@
 
 <jsp:include page="styles.jsp"/>
 <jsp:include page="scripts.jsp"/>
+<jsp:include page="explicitBundling.jsp"/>
  

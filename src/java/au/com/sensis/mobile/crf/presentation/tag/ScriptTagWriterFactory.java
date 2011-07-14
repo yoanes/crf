@@ -47,7 +47,7 @@ public class ScriptTagWriterFactory {
     }
 
     /**
-     * Factory method for {@link LinkTagWriter}. This level of
+     * Factory method for {@link ScriptTagWriter}. This level of
      * indirection is only used to facilitate unit testing.
      *
      * @param device
@@ -61,14 +61,16 @@ public class ScriptTagWriterFactory {
      *            name attribute of the tag.
      * @param scriptTagDependencies
      *            Singleton collaborators.
+     * @param parentBundleScriptsTag Parent {@link BundleScriptsTag} of the calling tag.
      * @return a new {@link ScriptTagWriter}.
      */
     public TagWriter createScriptTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes,
             final String href, final String name,
-            final ScriptTagDependencies scriptTagDependencies) {
+            final ScriptTagDependencies scriptTagDependencies,
+            final BundleScriptsTag parentBundleScriptsTag) {
         return new ScriptTagWriter(device, dynamicAttributes, href, name,
-                scriptTagDependencies);
+                scriptTagDependencies, parentBundleScriptsTag);
     }
 }

@@ -62,8 +62,8 @@ public class ScriptTag extends AbstractDuplicatePreventingTag {
 
     private boolean bothBlankOrBothNotBlank(final String value1,
             final String value2) {
-        return (StringUtils.isBlank(value1) && StringUtils.isBlank(value2))
-                || (StringUtils.isNotBlank(value1) && StringUtils.isNotBlank(value2));
+        return StringUtils.isBlank(value1) && StringUtils.isBlank(value2)
+                || StringUtils.isNotBlank(value1) && StringUtils.isNotBlank(value2);
     }
 
     /**
@@ -71,11 +71,15 @@ public class ScriptTag extends AbstractDuplicatePreventingTag {
      */
     @Override
     protected TagWriter createTagWriter() {
+        final BundleScriptsTag parentBundleScriptsTag =
+            (BundleScriptsTag) findAncestorWithClass(this,
+                    BundleScriptsTag.class);
+
         return ScriptTagWriterFactory
             .getSingletonInstance()
                 .createScriptTagWriter(getDevice(),
                         getDynamicAttributes(), getSrc(), getName(),
-                        getTagDependencies());
+                        getTagDependencies(), parentBundleScriptsTag);
     }
 
     private ScriptTagDependencies getTagDependencies() {

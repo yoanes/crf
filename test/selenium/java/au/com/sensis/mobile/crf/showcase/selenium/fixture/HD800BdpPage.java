@@ -34,7 +34,7 @@ public class HD800BdpPage extends BdpPage {
     }
 
     private void assertHD800Css() {
-        assertNumCssLinks(2);
+        assertNumCssLinks(super.getNumExpectedLinks() + 2);
         assertOnlyDefaultGroupCssResolved();
     }
 

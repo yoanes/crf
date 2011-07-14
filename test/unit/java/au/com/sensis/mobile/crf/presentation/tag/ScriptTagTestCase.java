@@ -208,8 +208,8 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                                 createArbitraryDynamicAttribute()),
                                 getRequestedJavaScriptResourcePath(),
                                 null,
-                                getTagDependencies()))
-                                .andReturn(getMockScriptTagWriter());
+                                getTagDependencies(), null))
+                .andReturn(getMockScriptTagWriter());
     }
 
     private void recordCheckIfScriptTagWriterSeenBefore() {
@@ -261,7 +261,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                 getRequestedJavaScriptResourcePath(),
                 new ScriptTagWriter(getMockDevice(), null,
                         getRequestedJavaScriptResourcePath(), null,
-                        createTagDependencies()));
+                        createTagDependencies(), null));
     }
 
     /**

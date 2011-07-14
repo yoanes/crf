@@ -58,13 +58,16 @@ public class LinkTagWriterFactory {
      *            Href attribute of the tag to be written.
      * @param linkTagDependencies
      *            Singleton collaborators.
+     * @param parentBundleLinksTag {@link BundleLinksTag} that is the parent of the link tag.
+     *            Null if there is no parent.
      * @return a new {@link LinkTagWriter}.
      */
     public LinkTagWriter createLinkTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes,
-            final String href, final LinkTagDependencies linkTagDependencies) {
+            final String href, final LinkTagDependencies linkTagDependencies,
+            final BundleLinksTag parentBundleLinksTag) {
         return new LinkTagWriter(device, dynamicAttributes, href,
-                linkTagDependencies);
+                linkTagDependencies, parentBundleLinksTag);
     }
 }

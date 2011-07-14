@@ -34,11 +34,16 @@ public class LinkTag extends AbstractDuplicatePreventingTag {
      */
     @Override
     protected TagWriter createTagWriter() {
+        final BundleLinksTag parentBundleLinksTag =
+            (BundleLinksTag) findAncestorWithClass(this,
+                    BundleLinksTag.class);
+
+
         return LinkTagWriterFactory
                 .getSingletonInstance()
                 .createLinkTagWriter(
                         getDevice(), getDynamicAttributes(), getHref(),
-                        getTagDependencies());
+                        getTagDependencies(), parentBundleLinksTag);
     }
 
     private LinkTagDependencies getTagDependencies() {

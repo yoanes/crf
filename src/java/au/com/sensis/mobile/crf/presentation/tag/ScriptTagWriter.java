@@ -28,6 +28,7 @@ public class ScriptTagWriter implements TagWriter {
     private final List<DynamicTagAttribute> dynamicAttributes;
     private final String href;
     private final String name;
+    private final BundleScriptsTag parentBundleScriptsTag;
 
     private final ScriptTagDependencies scriptTagDependencies;
 
@@ -44,16 +45,20 @@ public class ScriptTagWriter implements TagWriter {
      * @param name
      *            name attribute of the tag.
      * @param scriptTagDependencies Singleton collaborators.
+     * @param parentBundleScriptsTag {@link BundleScriptsTag} that is the parent of the script tag.
+     *            Null if there is no parent.
      */
     public ScriptTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes, final String href,
-            final String name, final ScriptTagDependencies scriptTagDependencies) {
+            final String name, final ScriptTagDependencies scriptTagDependencies,
+            final BundleScriptsTag parentBundleScriptsTag) {
         this.device = device;
         this.dynamicAttributes = dynamicAttributes;
         this.href = href;
         this.name = name;
         this.scriptTagDependencies = scriptTagDependencies;
+        this.parentBundleScriptsTag = parentBundleScriptsTag;
     }
 
 
@@ -113,16 +118,23 @@ public class ScriptTagWriter implements TagWriter {
         }
     }
 
-
     private boolean isAbsoluteUrl(final String href) {
         return href.startsWith(ABSOLUTE_URL_PREFIX);
     }
 
-
     private void resolveResourceAndWriteTag(final JspWriter jspWriter) throws IOException {
 
-        writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
+        final List<Resource> allResourcePaths = getAllResourcePaths();
+        if (getParentBundleScriptsTag() != null) {
+            postponeWriteForBundleScriptsTag(allResourcePaths);
+        } else {
+            writeLinkTagForEachResource(jspWriter, allResourcePaths);
+        }
+    }
 
+
+    private void postponeWriteForBundleScriptsTag(final List<Resource> allResourcePaths) {
+        getParentBundleScriptsTag().addResourcesToBundle(allResourcePaths);
     }
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
@@ -255,6 +267,11 @@ public class ScriptTagWriter implements TagWriter {
      */
     private ScriptTagDependencies getTagDependencies() {
         return scriptTagDependencies;
+    }
+
+
+    private BundleScriptsTag getParentBundleScriptsTag() {
+        return parentBundleScriptsTag;
     }
 
 }
