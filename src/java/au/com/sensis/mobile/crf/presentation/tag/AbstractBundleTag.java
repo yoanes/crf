@@ -6,12 +6,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -163,7 +165,8 @@ public abstract class AbstractBundleTag extends AbstractTag {
     }
 
     private String createOutputBundleClientPath(final String outputBundleBasePath) {
-        return getTagDependencies().getClientPathPrefix() + outputBundleBasePath;
+        return getTagDependencies().getClientPathPrefix() + outputBundleBasePath
+            + getUniqueRequestParam();
 
     }
 
@@ -277,5 +280,18 @@ public abstract class AbstractBundleTag extends AbstractTag {
         getResourcesToBundle().addAll(resources);
     }
 
+    /**
+     * @return Get a unique request parameter. Only non-empty if downstream caching is disabled.
+     */
+    protected final String getUniqueRequestParam() {
+
+        String uniqueRequestParam = StringUtils.EMPTY;
+
+        if (!getTagDependencies().getDeploymentMetadata().isDownstreamCachingEnabled()) {
+            uniqueRequestParam = "?" + new Date().getTime();
+        }
+
+        return uniqueRequestParam;
+    }
 }
 
