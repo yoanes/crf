@@ -35,7 +35,7 @@ public class Nokia7600BdpPage extends BdpPage {
     }
 
     private void assertNokia7600Css() {
-        final int expectedNumNokia7600CssLinks = 2;
+        final int expectedNumNokia7600CssLinks = super.getNumExpectedLinks() + 2;
         assertNumCssLinks(expectedNumNokia7600CssLinks);
         assertOnlyDefaultGroupCssResolved();
     }

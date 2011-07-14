@@ -116,7 +116,7 @@ public abstract class IphoneBdpPage extends BdpPage {
     }
 
     protected int getExpectedNumIphoneCssLinks() {
-        return 10;
+        return super.getNumExpectedLinks() + 10;
     }
 
     private void assertCssLinksFoundInLeafGroupUptoDefaultGroup() {

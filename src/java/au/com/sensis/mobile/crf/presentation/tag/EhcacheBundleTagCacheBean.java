@@ -4,14 +4,13 @@ import net.sf.ehcache.Ehcache;
 import au.com.sensis.mobile.crf.util.EhcacheCacheBean;
 
 /**
- * Simple {@link BundleScriptsTagCache} implementation that stores all entries in memory
- * and does not replicate across a cluster.
+ * Simple {@link BundleTagCache} implementation that uses ehcache.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class EhcacheBundleScriptsTagCacheBean
-    extends EhcacheCacheBean<BundleScriptsTagCacheKey, String>
-    implements BundleScriptsTagCache {
+public class EhcacheBundleTagCacheBean
+    extends EhcacheCacheBean<BundleTagCacheKey, String>
+    implements BundleTagCache {
 
     /**
      * Constructor.
@@ -20,7 +19,7 @@ public class EhcacheBundleScriptsTagCacheBean
      * @param cacheEnabled
      *            True if the cache should be enabled.
      */
-    public EhcacheBundleScriptsTagCacheBean(final Ehcache ehcache, final boolean cacheEnabled) {
+    public EhcacheBundleTagCacheBean(final Ehcache ehcache, final boolean cacheEnabled) {
         super(ehcache, cacheEnabled);
     }
 }

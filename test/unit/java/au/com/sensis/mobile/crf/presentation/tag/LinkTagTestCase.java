@@ -166,13 +166,13 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordConstructNewLinkTagWriter() {
 
-        EasyMock.expect(getMockLinkTagWriterFactory()
-                .createLinkTagWriter(getMockDevice(),
+        EasyMock.expect(
+                getMockLinkTagWriterFactory().createLinkTagWriter(
+                        getMockDevice(),
                         Arrays.asList(createRelDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
-                                getRequestedCssResourcePath(),
-                                getTagDependencies()))
-                                .andReturn(getMockLinkTagWriter());
+                        getRequestedCssResourcePath(), getTagDependencies(), null))
+                .andReturn(getMockLinkTagWriter());
     }
 
     private void recordCheckIfLinkTagWriterSeenBefore() {
@@ -222,7 +222,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private void setupExistingSimpleLinkTagWriter() {
         getLinkTagWriterMap().put(getRequestedCssResourcePath(),
                 new LinkTagWriter(getMockDevice(),
-                        null, getRequestedCssResourcePath(), createTagDependencies()));
+                        null, getRequestedCssResourcePath(), createTagDependencies(), null));
     }
 
     /**

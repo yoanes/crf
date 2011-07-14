@@ -135,11 +135,20 @@
     </bean>
     
     <bean id="crf.bundleScriptsTagDependencies" 
-        class="au.com.sensis.mobile.crf.presentation.tag.BundleScriptsTagDependencies">
+        class="au.com.sensis.mobile.crf.presentation.tag.BundleTagDependencies">
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg value="@{crf.env.resources.app.bundles.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />
         <constructor-arg ref="crf.bundleScriptsTagCache" />
+        <constructor-arg value="@{crf.env.resources.app.bundles.root.dir}" />
+    </bean>
+    
+    <bean id="crf.bundleLinksTagDependencies" 
+        class="au.com.sensis.mobile.crf.presentation.tag.BundleTagDependencies">
+        <constructor-arg ref="crf.deploymentMetadata" />
+        <constructor-arg value="@{crf.env.resources.app.bundles.client.path.prefix}" />
+        <constructor-arg ref="crf.resourceResolutionWarnLogger" />
+        <constructor-arg ref="crf.bundleLinksTagCache" />
         <constructor-arg value="@{crf.env.resources.app.bundles.root.dir}" />
     </bean>
     
@@ -263,20 +272,31 @@
         <property name="cacheManagerName" value="crf.resourcesEhcacheManager" />
     </bean>
 
-    <bean id="crf.bundleScriptsTagCache" class="au.com.sensis.mobile.crf.presentation.tag.EhcacheBundleScriptsTagCacheBean">
+    <bean id="crf.bundleScriptsTagCache" class="au.com.sensis.mobile.crf.presentation.tag.EhcacheBundleTagCacheBean">
         <constructor-arg ref="crf.bundleScriptsTagEhcache" />
         <constructor-arg value="@{crf.env.cache.resources}" />
         <property name="enableStatistics" value="true" />
     </bean>
     
+    <bean id="crf.bundleLinksTagCache" class="au.com.sensis.mobile.crf.presentation.tag.EhcacheBundleTagCacheBean">
+        <constructor-arg ref="crf.bundleLinksTagEhcache" />
+        <constructor-arg value="@{crf.env.cache.resources}" />
+        <property name="enableStatistics" value="true" />
+    </bean>
+    
     <bean id="crf.bundleScriptsTagEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager" ref="crf.bundleScriptsTagEhcacheManager" />
+        <property name="cacheManager" ref="crf.bundleTagEhcacheManager" />
         <property name="cacheName" value="bundleScriptsTagCache" />
     </bean>
     
-    <bean id="crf.bundleScriptsTagEhcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:/au/com/sensis/mobile/crf/presentation/tag/bundleScriptsTag-ehcache.xml" />
-        <property name="cacheManagerName" value="crf.bundleScriptsTagEhcacheManager" />
+    <bean id="crf.bundleLinksTagEhcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager" ref="crf.bundleTagEhcacheManager" />
+        <property name="cacheName" value="bundleLinksTagCache" />
+    </bean>
+    
+    <bean id="crf.bundleTagEhcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/au/com/sensis/mobile/crf/presentation/tag/bundleTag-ehcache.xml" />
+        <property name="cacheManagerName" value="crf.bundleTagEhcacheManager" />
     </bean>
 
     <bean id="crf.groupsEhcacheManagerMBeanRegister" 
@@ -301,9 +321,9 @@
         <constructor-arg index="6" value="true"/>
     </bean>    
     
-    <bean id="crf.bundleScriptsTagEhcacheManagerMBeanRegister" 
+    <bean id="crf.bundleTagEhcacheManagerMBeanRegister" 
         class="net.sf.ehcache.management.ManagementService" init-method="init">
-        <constructor-arg index="0" ref="crf.bundleScriptsTagEhcacheManager" />
+        <constructor-arg index="0" ref="crf.bundleTagEhcacheManager" />
         <constructor-arg index="1" ref="crf.mbeanServer" />
         <constructor-arg index="2" value="true"/>
         <constructor-arg index="3" value="true"/>

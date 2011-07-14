@@ -22,14 +22,21 @@ CacheManager Configuration
     </defaultCache>
 
     <!-- 
-      - Cache for ([bundleId, resources], bundle client path) pairs.
+      - Caches for ([bundleId, resources], bundle client path) pairs.
       - This amounts to a size limited in memory map that will evict items if the limit is 
-      - reached. The limit is simply set to the same size as the resources cache, since the resources
-      - cache is relatively small and we can reasonably expect this cache to be about the same or 
-      - smaller.
+      - reached. The limits of both caches are simply set to the same size as the resources cache, 
+      - since the resources cache is relatively small and we can reasonably expect the combined
+      - bundle caches to be about the same size or smaller.
       -->
     <cache
            name="bundleScriptsTagCache"
+           maxElementsInMemory="6000"
+           eternal="true"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LRU">
+    </cache>
+    <cache
+           name="bundleLinksTagCache"
            maxElementsInMemory="6000"
            eternal="true"
            overflowToDisk="false"

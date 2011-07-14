@@ -7,7 +7,7 @@ import org.junit.Test;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link EhcacheBundleScriptsTagCacheBean}.
+ * Unit test {@link EhcacheBundleTagCacheBean}.
  *
  * @author w12495
  */
@@ -22,7 +22,7 @@ public class EhcacheBundleScriptsTagCacheBeanTestCase extends AbstractJUnit4Test
      */
     @Test
     public void testConstructor() throws Exception {
-        new EhcacheBundleScriptsTagCacheBean(getMockEhcache(), true);
+        new EhcacheBundleTagCacheBean(getMockEhcache(), true);
     }
 
     /**

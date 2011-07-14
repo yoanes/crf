@@ -74,6 +74,26 @@
         <dynamic-attributes>true</dynamic-attributes>
     </tag>
     <tag>
+        <name>bundleLinks</name>
+        <description>Bundle lnks from child tags and output a single link tag.</description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.BundleLinksTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>id</name>
+            <description>The id to associate with the link. Must be set.</description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>device</name>
+            <description>Device of current request.</description>
+            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+    <tag>
         <name>img</name>
         <description>Render an img tag.</description>
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.ImageTag</tag-class>

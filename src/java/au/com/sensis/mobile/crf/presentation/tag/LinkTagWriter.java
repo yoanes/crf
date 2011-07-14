@@ -27,6 +27,7 @@ public class LinkTagWriter implements TagWriter {
     private final String href;
 
     private final LinkTagDependencies linkTagDependencies;
+    private final BundleLinksTag parentBundleLinksTag;
 
     /**
      * Default constructor.
@@ -39,15 +40,19 @@ public class LinkTagWriter implements TagWriter {
      * @param href
      *            Href attribute of the tag to be written.
      * @param linkTagDependencies Singleton collaborators.
+     * @param parentBundleLinksTag {@link BundleLinksTag} that is the parent of the link tag.
+     *            Null if there is no parent.
      */
     public LinkTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes, final String href,
-            final LinkTagDependencies linkTagDependencies) {
+            final LinkTagDependencies linkTagDependencies,
+            final BundleLinksTag parentBundleLinksTag) {
         this.device = device;
         this.dynamicAttributes = dynamicAttributes;
         this.href = href;
         this.linkTagDependencies = linkTagDependencies;
+        this.parentBundleLinksTag = parentBundleLinksTag;
     }
 
     /**
@@ -77,7 +82,16 @@ public class LinkTagWriter implements TagWriter {
     public void writeTag(final JspWriter jspWriter, final JspFragment jspBody) throws IOException,
     JspException {
 
-        writeLinkTagForEachResource(jspWriter, getAllResourcePaths());
+        final List<Resource> allResourcePaths = getAllResourcePaths();
+        if (getParentBundleLinksTag() != null) {
+            postponeWriteForBundleLinksTag(allResourcePaths);
+        } else {
+            writeLinkTagForEachResource(jspWriter, allResourcePaths);
+        }
+    }
+
+    private void postponeWriteForBundleLinksTag(final List<Resource> allResourcePaths) {
+        getParentBundleLinksTag().addResourcesToBundle(allResourcePaths);
     }
 
     private void writeLinkTagForEachResource(final JspWriter jspWriter,
@@ -154,5 +168,12 @@ public class LinkTagWriter implements TagWriter {
      */
     private LinkTagDependencies getTagDependencies() {
         return linkTagDependencies;
+    }
+
+    /**
+     * @return the parentBundleLinksTag
+     */
+    private BundleLinksTag getParentBundleLinksTag() {
+        return parentBundleLinksTag;
     }
 }

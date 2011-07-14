@@ -5,41 +5,41 @@ import java.io.IOException;
 import javax.servlet.jsp.JspWriter;
 
 /**
- * Tag that bundles the output of any child {@link ScriptTag}s that register
+ * Tag that bundles the output of any child {@link LinkTag}s that register
  * {@link au.com.sensis.mobile.crf.service.Resource}s with
- * this {@link BundleScriptsTag} via the {@link #addResourcesToBundle(java.util.List)} method.
+ * this {@link BundleLinksTag} via the {@link #addResourcesToBundle(java.util.List)} method.
  *
  * @author w12495
  */
-public class BundleScriptsTag extends AbstractBundleTag {
+public class BundleLinksTag extends AbstractBundleTag {
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void writeTag(final String src) throws IOException {
-        getJspContext().getOut().print("<script id=\"");
+    protected void writeTag(final String href) throws IOException {
+        getJspContext().getOut().print("<link id=\"");
 
         getJspContext().getOut().print(getId());
 
-        getJspContext().getOut().print("\" src=\"");
-        getJspContext().getOut().print(src);
+        getJspContext().getOut().print("\" href=\"");
+        getJspContext().getOut().print(href);
         getJspContext().getOut().print("\" ");
 
         writeDynamicTagAttributes(getJspContext().getOut());
 
-        getJspContext().getOut().print("></script>");
+        getJspContext().getOut().print("></link>");
     }
 
 
     private void writeDynamicTagAttributes(final JspWriter jspWriter) throws IOException {
-        boolean charsetAttributeFound = false;
+        boolean relAttributeFound = false;
         boolean typeAttributeFound = false;
 
         for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
 
-            if ("charset".equals(attribute.getLocalName())) {
-                charsetAttributeFound = true;
+            if ("rel".equals(attribute.getLocalName())) {
+                relAttributeFound = true;
             }
 
             if ("type".equals(attribute.getLocalName())) {
@@ -52,7 +52,7 @@ public class BundleScriptsTag extends AbstractBundleTag {
             jspWriter.print("\" ");
         }
 
-        writeCharsetAttributeIfNotFound(jspWriter, charsetAttributeFound);
+        writeRelAttributeIfNotFound(jspWriter, relAttributeFound);
         writeTypeAttributeIfNotFound(jspWriter, typeAttributeFound);
     }
 
@@ -61,16 +61,16 @@ public class BundleScriptsTag extends AbstractBundleTag {
             throws IOException {
 
         if (!typeAttributeFound) {
-            jspWriter.print("type=\"text/javascript\" ");
+            jspWriter.print("type=\"text/css\" ");
         }
     }
 
 
-    private void writeCharsetAttributeIfNotFound(final JspWriter jspWriter,
+    private void writeRelAttributeIfNotFound(final JspWriter jspWriter,
             final boolean charsetAttributeFound) throws IOException {
 
         if (!charsetAttributeFound) {
-            jspWriter.print("charset=\"utf-8\" ");
+            jspWriter.print("rel=\"stylesheet\" ");
         }
     }
 
@@ -79,7 +79,7 @@ public class BundleScriptsTag extends AbstractBundleTag {
      */
     @Override
     protected String getBundleFileExtension() {
-        return "js";
+        return "css";
     }
 
     /**
@@ -87,7 +87,7 @@ public class BundleScriptsTag extends AbstractBundleTag {
      */
     @Override
     protected String getTagDependenciesBeanName() {
-        return "crf.bundleScriptsTagDependencies";
+        return "crf.bundleLinksTagDependencies";
     }
 }
 

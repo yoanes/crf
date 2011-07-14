@@ -1,1 +1,1 @@
-sourceBundle2
+jsSourceBundle2

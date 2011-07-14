@@ -30,16 +30,16 @@ import au.com.sensis.mobile.crf.util.MD5Builder;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
- * Unit test {@link BundleScriptsTag}.
+ * Unit test {@link BundleLinksTag}.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
+public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
 
     private static final String TAG_ID = "myId";
     private static final String DYN_ATTR_URI = "http://www.w3.org/2002/06/xhtml2";
 
-    private BundleScriptsTag objectUnderTest;
+    private BundleLinksTag objectUnderTest;
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
         = new DeploymentMetadataTestData();
@@ -57,7 +57,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     private MockServletContext springMockServletContext;
 
-    private BundleTagCache mockBundleScriptsTagCache;
+    private BundleTagCache mockBundleLinksTagCache;
 
     private File sourceBundle1NewFile;
     private String sourceBundle1NewPath;
@@ -73,7 +73,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
      */
     @Before
     public void setUp() throws Exception {
-        setObjectUnderTest(new BundleScriptsTag());
+        setObjectUnderTest(new BundleLinksTag());
 
         getObjectUnderTest().setId(TAG_ID);
         getObjectUnderTest().setJspBody(getMockJspFragment());
@@ -85,28 +85,28 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         setSpringMockServletContext(new MockServletContext());
 
         setSourceBundle1NewFile(new ClassPathResource(
-                "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle1.js").getFile());
+                "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle1.css").getFile());
         setSourceBundle1NewPath(
-                "default/core/util/bundle/c21f969b5f03d33d43e04f8f136e7682/utils.js");
+                "default/core/util/bundle/c21f969b5f03d33d43e04f8f136e7682/utils.css");
 
         setSourceBundle2NewFile(new ClassPathResource(
-                "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle2.js").getFile());
+                "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle2.css").getFile());
         setSourceBundle2NewPath(
-                "nonIEPC/comp/map/bundle/c0c80a0e534cf880884b00610da878aa/package.js");
+                "nonIEPC/comp/map/bundle/c0c80a0e534cf880884b00610da878aa/map.css");
 
         setAppBundlesRootDir(new ClassPathResource(
                 "/au/com/sensis/mobile/crf/presentation/tag/").getFile());
 
-        setBundleScriptsTagDependencies(createBundleScriptsTagDependencies());
+        setBundleLinksTagDependencies(createBundleLinksTagDependencies());
     }
 
     private String createExpectedOutputBundleClientPath() throws NoSuchAlgorithmException {
-        return getBundleScriptsTagDependencies().getClientPathPrefix()
+        return getBundleLinksTagDependencies().getClientPathPrefix()
                 + createExpectedOutputBundleBasePath();
     }
 
     private File createExpectedOutputBundleFile() throws NoSuchAlgorithmException {
-        return new File(getBundleScriptsTagDependencies().getRootResourcesDir(),
+        return new File(getBundleLinksTagDependencies().getRootResourcesDir(),
                 createExpectedOutputBundleBasePath());
     }
 
@@ -119,8 +119,8 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         md5Builder.add(getSourceBundle1NewPath());
         md5Builder.add(getSourceBundle2NewPath());
 
-        return getBundleScriptsTagDependencies().getDeploymentMetadata().getVersion()
-            + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.js";
+        return getBundleLinksTagDependencies().getDeploymentMetadata().getVersion()
+            + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.css";
     }
 
     @Test
@@ -145,26 +145,26 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(getMockResource1(), getMockResource2()));
         getObjectUnderTest().doTag();
 
-        Assert.assertEquals("Script incorrectly written", "<script id=\"myId\" src=\""
-                + createExpectedOutputBundleClientPath() + "\" charset=\"utf-8\" "
-                + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
+        Assert.assertEquals("Script incorrectly written", "<link id=\"myId\" href=\""
+                + createExpectedOutputBundleClientPath() + "\" rel=\"stylesheet\" "
+                + "type=\"text/css\" ></link>", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
     }
 
     private void recordUpdateCache() throws NoSuchAlgorithmException {
         final BundleTagCacheKeyBean keyBean = createCacheKey();
-        getMockBundleScriptsTagCache().put(keyBean, createExpectedOutputBundleClientPath());
+        getMockBundleLinksTagCache().put(keyBean, createExpectedOutputBundleClientPath());
     }
 
     private void recordCheckCachedResources(final boolean resourcesCached)
             throws NoSuchAlgorithmException {
         final BundleTagCacheKeyBean keyBean = createCacheKey();
-        EasyMock.expect(getMockBundleScriptsTagCache().contains(keyBean))
+        EasyMock.expect(getMockBundleLinksTagCache().contains(keyBean))
                 .andReturn(resourcesCached);
 
         if (resourcesCached) {
-            EasyMock.expect(getMockBundleScriptsTagCache().get(keyBean)).andReturn(
+            EasyMock.expect(getMockBundleLinksTagCache().get(keyBean)).andReturn(
                     createExpectedOutputBundleClientPath());
         }
 
@@ -192,9 +192,9 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         }
 
         Assert.assertTrue("Bundle content doesn't contain bundle 1", actualOutputBundleContents
-                .contains("jsSourceBundle1"));
+                .contains("cssSourceBundle1"));
         Assert.assertTrue("Bundle content doesn't contain bundle 2", actualOutputBundleContents
-                .contains("jsSourceBundle2"));
+                .contains("cssSourceBundle2"));
     }
 
     private void recordBehaviourForWritingScriptTag() {
@@ -218,7 +218,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAndCharsetDynamicTagAttribute() throws Exception {
+    public void testDoTagWhenResourcesToBundleAndRelDynamicTagAttribute() throws Exception {
         getMockJspFragment().invoke(null);
 
         recordGetTagDependencies();
@@ -237,12 +237,12 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().addResourcesToBundle(
                 Arrays.asList(getMockResource1(), getMockResource2()));
-        getObjectUnderTest().setDynamicAttribute(DYN_ATTR_URI, "charset", "ascii");
+        getObjectUnderTest().setDynamicAttribute(DYN_ATTR_URI, "rel", "Alternate StyleSheet");
         getObjectUnderTest().doTag();
 
-        Assert.assertEquals("Script incorrectly written", "<script id=\"myId\" src=\""
-                + createExpectedOutputBundleClientPath() + "\" charset=\"ascii\" "
-                + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
+        Assert.assertEquals("Script incorrectly written", "<link id=\"myId\" href=\""
+                + createExpectedOutputBundleClientPath() + "\" rel=\"Alternate StyleSheet\" "
+                + "type=\"text/css\" ></link>", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
 
@@ -268,12 +268,12 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().addResourcesToBundle(
                 Arrays.asList(getMockResource1(), getMockResource2()));
-        getObjectUnderTest().setDynamicAttribute(DYN_ATTR_URI, "type", "text/funkyscript");
+        getObjectUnderTest().setDynamicAttribute(DYN_ATTR_URI, "type", "text/funkycss");
         getObjectUnderTest().doTag();
 
-        Assert.assertEquals("Script incorrectly written", "<script id=\"myId\" src=\""
+        Assert.assertEquals("Script incorrectly written", "<link id=\"myId\" href=\""
                 + createExpectedOutputBundleClientPath()
-                + "\" type=\"text/funkyscript\" " + "charset=\"utf-8\" ></script>",
+                + "\" type=\"text/funkycss\" " + "rel=\"stylesheet\" ></link>",
                 getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
@@ -295,9 +295,9 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(getMockResource1(), getMockResource2()));
         getObjectUnderTest().doTag();
 
-        Assert.assertEquals("Script incorrectly written", "<script id=\"myId\" src=\""
-                + createExpectedOutputBundleClientPath() + "\" charset=\"utf-8\" "
-                + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
+        Assert.assertEquals("Script incorrectly written", "<link id=\"myId\" href=\""
+                + createExpectedOutputBundleClientPath() + "\" rel=\"stylesheet\" "
+                + "type=\"text/css\" ></link>", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
     }
@@ -324,30 +324,30 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 getMockWebApplicationContext());
 
         EasyMock.expect(
-                getMockWebApplicationContext().getBean("crf.bundleScriptsTagDependencies"))
-                .andReturn(getBundleScriptsTagDependencies())
+                getMockWebApplicationContext().getBean("crf.bundleLinksTagDependencies"))
+                .andReturn(getBundleLinksTagDependencies())
                 .atLeastOnce();
     }
 
-    private BundleTagDependencies createBundleScriptsTagDependencies() {
+    private BundleTagDependencies createBundleLinksTagDependencies() {
         return new BundleTagDependencies(
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
-                getMockResolutionWarnLogger(), getMockBundleScriptsTagCache(),
+                getMockResolutionWarnLogger(), getMockBundleLinksTagCache(),
                 getAppBundlesRootDir());
     }
 
     /**
      * @return the objectUnderTest
      */
-    private BundleScriptsTag getObjectUnderTest() {
+    private BundleLinksTag getObjectUnderTest() {
         return objectUnderTest;
     }
 
     /**
      * @param objectUnderTest the objectUnderTest to set
      */
-    private void setObjectUnderTest(final BundleScriptsTag objectUnderTest) {
+    private void setObjectUnderTest(final BundleLinksTag objectUnderTest) {
         this.objectUnderTest = objectUnderTest;
     }
 
@@ -568,29 +568,29 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     /**
      * @return the bundleScriptsTagDependencies
      */
-    private BundleTagDependencies getBundleScriptsTagDependencies() {
+    private BundleTagDependencies getBundleLinksTagDependencies() {
         return bundleScriptsTagDependencies;
     }
 
     /**
      * @param bundleScriptsTagDependencies the bundleScriptsTagDependencies to set
      */
-    private void setBundleScriptsTagDependencies(
+    private void setBundleLinksTagDependencies(
             final BundleTagDependencies bundleScriptsTagDependencies) {
         this.bundleScriptsTagDependencies = bundleScriptsTagDependencies;
     }
 
     /**
-     * @return the mockBundleScriptsTagCache
+     * @return the mockBundleLinksTagCache
      */
-    public BundleTagCache getMockBundleScriptsTagCache() {
-        return mockBundleScriptsTagCache;
+    public BundleTagCache getMockBundleLinksTagCache() {
+        return mockBundleLinksTagCache;
     }
 
     /**
-     * @param mockBundleScriptsTagCache the mockBundleScriptsTagCache to set
+     * @param mockBundleLinksTagCache the mockBundleLinksTagCache to set
      */
-    public void setMockBundleScriptsTagCache(final BundleTagCache mockBundleScriptsTagCache) {
-        this.mockBundleScriptsTagCache = mockBundleScriptsTagCache;
+    public void setMockBundleLinksTagCache(final BundleTagCache mockBundleLinksTagCache) {
+        this.mockBundleLinksTagCache = mockBundleLinksTagCache;
     }
 }

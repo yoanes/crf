@@ -55,19 +55,3 @@
   --%>
 <crf:script src="http://localhost:8080/something.js" 
     type="text/javascript" device="${context.device}"/>
-    
-<%--
-  - Explicit bundling of scripts for page authors.
-  --%>
-<crf:bundleScripts id="showcaseAppBundle" device="${context.device}">  
-    <crf:script src="selenium/showcaseAppBundlePackage1/package" type="text/javascript" device="${context.device}"/>
-    
-    <crf:script name="showcaseAppBundleInlineScript" type="text/javascript" device="${context.device}">
-        var showcaseAppBundleInlineScript = true
-    </crf:script>
-    
-    <crf:script src="selenium/showcaseAppBundlePackage2/package" type="text/javascript" device="${context.device}"/>
-    
-    <crf:script src="http://localhost:8080/showcaseAppBundleAbsoluteUrl.js" type="text/javascript" device="${context.device}"/>
-    
-</crf:bundleScripts>

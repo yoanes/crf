@@ -7,11 +7,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import au.com.sensis.mobile.crf.service.Resource;
 
 /**
- * Default {@link BundleScriptsTagCacheKey} implementation.
+ * Default {@link BundleTagCacheKey} implementation.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class BundleScriptsTagCacheKeyBean implements BundleScriptsTagCacheKey {
+public class BundleTagCacheKeyBean implements BundleTagCacheKey {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class BundleScriptsTagCacheKeyBean implements BundleScriptsTagCacheKey {
      * @param bundleId Id associated with the bundle.
      * @param resources {@link Resource}s to be included in the bundle.
      */
-    public BundleScriptsTagCacheKeyBean(final String bundleId, final Resource [] resources) {
+    public BundleTagCacheKeyBean(final String bundleId, final Resource [] resources) {
         this.bundleId = bundleId;
         this.resources = resources;
     }
@@ -42,7 +42,7 @@ public class BundleScriptsTagCacheKeyBean implements BundleScriptsTagCacheKey {
             return false;
         }
 
-        final BundleScriptsTagCacheKeyBean rhs = (BundleScriptsTagCacheKeyBean) obj;
+        final BundleTagCacheKeyBean rhs = (BundleTagCacheKeyBean) obj;
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
         equalsBuilder.append(bundleId, rhs.bundleId);

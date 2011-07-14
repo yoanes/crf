@@ -7,6 +7,6 @@ import java.io.Serializable;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public interface BundleScriptsTagCacheKey extends Serializable {
+public interface BundleTagCacheKey extends Serializable {
 
 }

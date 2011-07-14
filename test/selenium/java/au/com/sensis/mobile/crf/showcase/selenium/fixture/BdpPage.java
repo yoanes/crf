@@ -40,6 +40,8 @@ public abstract class BdpPage extends AbstractPageFixture {
 
         assertBundleScriptsTagOutputPresent();
 
+        assertBundleLinksTagOutputPresent();
+
         doAssertPageStructure();
     }
 
@@ -93,6 +95,21 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "http://localhost:8080/showcaseAppBundleAbsoluteUrl.js");
     }
 
+    private void assertBundleLinksTagOutputPresent() {
+        assertTrue("showcaseAppCssBundle link not found", getBrowser().isElementPresent(
+                "//head/link["
+                + "@type=\"text/css\" "
+                + "and @id=\"showcaseAppCssBundle\" "
+                + "and @rel=\"stylesheet\" "
+                + "and starts-with(@href, "
+                    + "\"/uidev/crfshowcase/uiresources/" + getProjectVersion()
+                    + "/appBundles/showcaseAppCssBundle-\") "
+                + "and contains(@href, \"-package.css\")"
+                + "]"));
+        // We can't easily test the contents of the bundle but this should be okay if the
+        // JavaScript bundling works (which we can and do assert elsewhere)- it's shared code.
+    }
+
     /**
      * Assert that the page contains a JavaScript variable set to the given value.
      *
@@ -120,6 +137,13 @@ public abstract class BdpPage extends AbstractPageFixture {
      */
     protected final int getNumExpectedScripts() {
         return 5;
+    }
+
+    /**
+     * @return number of links expected by this abstract BdpPage.
+     */
+    protected final int getNumExpectedLinks() {
+        return 1;
     }
 
     /**
