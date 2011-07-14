@@ -7,8 +7,8 @@
   - Explicit bundling of scripts and links for page authors. Also tests the fact that
   - we can nest the bundleScripts and bundleLinks tags.
   --%>
-<crf:bundleScripts id="showcaseAppJavaScriptBundle" device="${context.device}">  
-    <crf:bundleLinks id="showcaseAppCssBundle" device="${context.device}">  
+<crf:bundleScripts id="showcaseAppJavaScriptBundle">  
+    <crf:bundleLinks id="showcaseAppCssBundle">  
 	    <crf:script src="selenium/showcaseAppBundlePackage1/package" type="text/javascript" device="${context.device}"/>
 	    
 	    <crf:link type="text/css" rel="stylesheet" href="selenium/showcaseAppBundlePackage1/cssFileForExplicitBundling.css"

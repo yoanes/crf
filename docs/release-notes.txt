@@ -1,3 +1,63 @@
+==== Version PENDING (tag: PENDING) ====
+
+Fixes:
+- CRF-119: Client API to allow on demand CSS and JS bundling across components
+    - http://trackit.sensis.com.au/browse/CRF-119
+    - Page authors can now surround JavaScript and CSS with the following tags: 
+    
+    <crf:bundleScripts id="showcaseAppJavaScriptBundle">  
+        <crf:bundleLinks id="showcaseAppCssBundle">  
+        
+        <%-- Your page content goes here. You'd typically invoke your component setup tags here.--%>
+        
+        </crf:bundleLinks>    
+    </crf:bundleScripts>
+    
+    - id needs to be unique to the page (just like standard HTML ids).
+    
+    - bundleLinks and bundleScripts can be nested within each other (in any order).
+    
+    - the child tags of bundleScripts and bundleLinks can be any other JSP markup. bundleScripts
+      will only bundle any crf:script tags that point to crf resources. Similarly, bundleLinks
+      will only bundle any crf:link tags that point to crf resources.
+      
+    - if child crf:script or crf:link tags contain inline content or they point to absolute http:// urls,
+      they will be ignored by the bundle tags. This implies that the bundles will be output after
+      these other tags, irrespective of their original order. Beware of this. This is not a bug ;)
+      In general, it is best for inline JavaScript in the head to only be used for setting config
+      variables and nothing else.
+      
+    - The bundle tags will always perform the bundling but minification will only occur if the
+      following property in your crf-environment.properties file is set to true:
+       
+            # True if you want CSS and JavaScript resources to be bundled.
+            env.bundle.resources=true
+       
+    Examples of output bundles are:
+    1. <link id="showcaseAppCssBundle" 
+            href="/uidev/crfshowcase/uiresources/2.0.3/appBundles/showcaseAppCssBundle-59bd7ab964b528ae14ce37a4fa8552d5-package.css"
+            rel="stylesheet" type="text/css" />
+            
+    2. <script id="showcaseAppJavaScriptBundle" 
+            src="/uidev/crfshowcase/uiresources/2.0.3/appBundles/showcaseAppJavaScriptBundle-b9e182e265ae77829489ed34959298cc-package.js" 
+            charset="utf-8" type="text/javascript" ></script>
+            
+Upgrade steps
+- The technique exposed in 1.1.0 for "[CRF-91] - Add web app version number to the image paths in CSS files"
+  has been deprecated. If you use that technique and bundle your CSS using bundleLinks, your background images
+  are not guaranteed to work. This is because the bundle file may have a different relative path to the original
+  CSS file. Background CSS images must now be defined within inline CSS styles in your JSPs. For example:
+  
+    <crf:imgSrcPrefix var="imgSrcPrefix" />
+    <style type="text/css>
+        #mapControls {
+            background-image: url("${imgSrcPrefix}comp/map/controls/mc_bg.image");
+        }
+    </style>
+    
+  This is the same technique used for [CRF-107] "JavaScript that requests images directly, must handle 
+  new /uiresources/<version>/images/ structure".
+
 ==== Version 2.0.3 (tag: contentRenderingFramework_v2_0_3) ====
 
 Fixes:

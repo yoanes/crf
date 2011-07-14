@@ -147,7 +147,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("Script incorrectly written", "<link id=\"myId\" href=\""
                 + createExpectedOutputBundleClientPath() + "\" rel=\"stylesheet\" "
-                + "type=\"text/css\" ></link>", getStringWriter().getBuffer().toString());
+                + "type=\"text/css\" />", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
     }
@@ -242,7 +242,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("Script incorrectly written", "<link id=\"myId\" href=\""
                 + createExpectedOutputBundleClientPath() + "\" rel=\"Alternate StyleSheet\" "
-                + "type=\"text/css\" ></link>", getStringWriter().getBuffer().toString());
+                + "type=\"text/css\" />", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
 
@@ -273,7 +273,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("Script incorrectly written", "<link id=\"myId\" href=\""
                 + createExpectedOutputBundleClientPath()
-                + "\" type=\"text/funkycss\" " + "rel=\"stylesheet\" ></link>",
+                + "\" type=\"text/funkycss\" " + "rel=\"stylesheet\" />",
                 getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
@@ -297,7 +297,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("Script incorrectly written", "<link id=\"myId\" href=\""
                 + createExpectedOutputBundleClientPath() + "\" rel=\"stylesheet\" "
-                + "type=\"text/css\" ></link>", getStringWriter().getBuffer().toString());
+                + "type=\"text/css\" />", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
     }

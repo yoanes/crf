@@ -62,8 +62,8 @@ public class ScriptTag extends AbstractDuplicatePreventingTag {
 
     private boolean bothBlankOrBothNotBlank(final String value1,
             final String value2) {
-        return StringUtils.isBlank(value1) && StringUtils.isBlank(value2)
-                || StringUtils.isNotBlank(value1) && StringUtils.isNotBlank(value2);
+        return (StringUtils.isBlank(value1) && StringUtils.isBlank(value2))
+                || (StringUtils.isNotBlank(value1) && StringUtils.isNotBlank(value2));
     }
 
     /**

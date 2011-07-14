@@ -28,7 +28,7 @@ public class BundleLinksTag extends AbstractBundleTag {
 
         writeDynamicTagAttributes(getJspContext().getOut());
 
-        getJspContext().getOut().print("></link>");
+        getJspContext().getOut().print("/>");
     }
 
 
