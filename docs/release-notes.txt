@@ -24,14 +24,22 @@ Fixes:
     - if child crf:script or crf:link tags contain inline content or they point to absolute http:// urls,
       they will be ignored by the bundle tags. This implies that the bundles will be output after
       these other tags, irrespective of their original order. Beware of this. This is not a bug ;)
-      In general, it is best for inline JavaScript in the head to only be used for setting config
-      variables and nothing else.
+      
+      In general, it is best for any inline JavaScript in the head to only set config
+      variables that externally linked JavaScript may use. Any inline JavaScript
+      that depends on externally linked JavaScript is best placed separately, outside the bundle
+      tags, most preferably in the body of the page.
       
     - The bundle tags will always perform the bundling but minification will only occur if the
       following property in your crf-environment.properties file is set to true:
        
             # True if you want CSS and JavaScript resources to be bundled.
             env.bundle.resources=true
+            
+      This property will simply enable the old minification behaviour. The new bundle tags
+      simply concatenate the result together. Aside: actually, the bundle tag will insert a new
+      line between each minified block to cater to the case where minification is disabled
+      and the last line contains an inline comment. This adds neglible byte size overhead.
        
     Examples of output bundles are:
     1. <link id="showcaseAppCssBundle" 
