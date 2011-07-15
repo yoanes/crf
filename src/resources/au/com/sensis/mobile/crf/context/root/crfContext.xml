@@ -116,6 +116,7 @@
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg value="@{crf.env.resources.css.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
+        <constructor-arg ref="crf.bundleLinksTagStackBean" />
     </bean>
     
     <bean id="crf.imageTagDependencies" 
@@ -132,6 +133,7 @@
         <constructor-arg ref="crf.deploymentMetadata" />
         <constructor-arg value="@{crf.env.resources.javascript.client.path.prefix}" />
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />        
+        <constructor-arg ref="crf.bundleScriptsTagStackBean" />
     </bean>
     
     <bean id="crf.bundleScriptsTagDependencies" 
@@ -141,6 +143,11 @@
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />
         <constructor-arg ref="crf.bundleScriptsTagCache" />
         <constructor-arg value="@{crf.env.resources.app.bundles.root.dir}" />
+        <constructor-arg ref="crf.bundleScriptsTagStackBean" />
+    </bean>
+
+    <bean id="crf.bundleScriptsTagStackBean" class="au.com.sensis.mobile.crf.presentation.tag.JspContextBundleTagStackBean">
+        <constructor-arg value="au.com.sensis.mobile.crf.presentation.tag.bundleScriptsTagStack" />
     </bean>
     
     <bean id="crf.bundleLinksTagDependencies" 
@@ -150,6 +157,11 @@
         <constructor-arg ref="crf.resourceResolutionWarnLogger" />
         <constructor-arg ref="crf.bundleLinksTagCache" />
         <constructor-arg value="@{crf.env.resources.app.bundles.root.dir}" />
+        <constructor-arg ref="crf.bundleLinksTagStackBean" />
+    </bean>
+    
+    <bean id="crf.bundleLinksTagStackBean" class="au.com.sensis.mobile.crf.presentation.tag.JspContextBundleTagStackBean">
+        <constructor-arg value="au.com.sensis.mobile.crf.presentation.tag.bundleLinksTagStack" />
     </bean>
     
     <bean id="crf.imageServletDependencies" 

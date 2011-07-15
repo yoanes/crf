@@ -16,6 +16,8 @@ public class ScriptTagDependencies extends TagDependencies {
      */
     public static final String BEAN_NAME = "crf.scriptTagDependencies";
 
+    private final JspContextBundleTagStack jspContextBundleTagStack;
+
     /**
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to resolve {@link #getHref()} to
@@ -28,15 +30,27 @@ public class ScriptTagDependencies extends TagDependencies {
      * @param resourceResolutionWarnLogger
      *            Special {@link ResourceResolutionWarnLogger} for logging
      *            warnings.
+     * @param jspContextBundleTagStack {@link JspContextBundleTagStack} that stores
+     *            parent {@link AbstractBundleTag}s.
      */
     public ScriptTagDependencies(
             final ResourceResolverEngine resourceResolverEngine,
             final DeploymentMetadata deploymentMetadata,
             final String clientPathPrefix,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final JspContextBundleTagStack jspContextBundleTagStack) {
 
         super(resourceResolverEngine, deploymentMetadata, clientPathPrefix,
                 resourceResolutionWarnLogger);
+
+        this.jspContextBundleTagStack = jspContextBundleTagStack;
+    }
+
+    /**
+     * @return the jspContextBundleTagStack
+     */
+    public JspContextBundleTagStack getJspContextBundleTagStack() {
+        return jspContextBundleTagStack;
     }
 
 }

@@ -61,7 +61,7 @@ public class ScriptTagWriterFactory {
      *            name attribute of the tag.
      * @param scriptTagDependencies
      *            Singleton collaborators.
-     * @param parentBundleScriptsTag Parent {@link BundleScriptsTag} of the calling tag.
+     * @param parentBundleScriptsTag Parent {@link AbstractBundleTag} of the calling tag.
      * @return a new {@link ScriptTagWriter}.
      */
     public TagWriter createScriptTagWriter(
@@ -69,7 +69,7 @@ public class ScriptTagWriterFactory {
             final List<DynamicTagAttribute> dynamicAttributes,
             final String href, final String name,
             final ScriptTagDependencies scriptTagDependencies,
-            final BundleScriptsTag parentBundleScriptsTag) {
+            final AbstractBundleTag parentBundleScriptsTag) {
         return new ScriptTagWriter(device, dynamicAttributes, href, name,
                 scriptTagDependencies, parentBundleScriptsTag);
     }

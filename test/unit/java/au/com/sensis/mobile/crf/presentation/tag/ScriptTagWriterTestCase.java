@@ -311,14 +311,14 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
         return new ScriptTagDependencies(getMockResourceResolverEngine(),
                 testData.getDeploymentMetadata(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
-                getMockResolutionWarnLogger());
+                getMockResolutionWarnLogger(), null);
     }
 
     private ScriptTagDependencies createTagDependencies() {
         return new ScriptTagDependencies(getMockResourceResolverEngine(),
                 getDeploymentMetadataTestData().createProdDeploymentMetadata(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
-                getMockResolutionWarnLogger());
+                getMockResolutionWarnLogger(), null);
     }
 
     private void recordGetResource(

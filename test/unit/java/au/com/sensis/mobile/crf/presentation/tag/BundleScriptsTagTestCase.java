@@ -45,6 +45,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         = new DeploymentMetadataTestData();
     private BundleTagDependencies bundleScriptsTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
+    private JspContextBundleTagStack mockBundleTagStack;
 
     private JspWriter springMockJspWriter;
     private JspFragment mockJspFragment;
@@ -125,9 +126,13 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testDoTagWhenResourcesToBundleAndNoDynamicTagAttributes() throws Exception {
+        recordGetTagDependencies();
+
+        recordPushBundleTag();
+
         getMockJspFragment().invoke(null);
 
-        recordGetTagDependencies();
+        recordRemoveBundleTag();
 
         recordCheckCachedResources(false);
 
@@ -150,6 +155,10 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
+    }
+
+    private void recordPushBundleTag() {
+        getMockBundleTagStack().pushBundleTag(getMockPageContext(), getObjectUnderTest());
     }
 
     private void recordUpdateCache() throws NoSuchAlgorithmException {
@@ -219,9 +228,13 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testDoTagWhenResourcesToBundleAndCharsetDynamicTagAttribute() throws Exception {
+        recordGetTagDependencies();
+
+        recordPushBundleTag();
+
         getMockJspFragment().invoke(null);
 
-        recordGetTagDependencies();
+        recordRemoveBundleTag();
 
         recordCheckCachedResources(false);
 
@@ -250,9 +263,13 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testDoTagWhenResourcesToBundleAndTypeDynamicTagAttribute() throws Exception {
+        recordGetTagDependencies();
+
+        recordPushBundleTag();
+
         getMockJspFragment().invoke(null);
 
-        recordGetTagDependencies();
+        recordRemoveBundleTag();
 
         recordCheckCachedResources(false);
 
@@ -281,9 +298,13 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testDoTagWhenResourcesToBundleAreCached() throws Exception {
+        recordGetTagDependencies();
+
+        recordPushBundleTag();
+
         getMockJspFragment().invoke(null);
 
-        recordGetTagDependencies();
+        recordRemoveBundleTag();
 
         recordCheckCachedResources(true);
 
@@ -304,7 +325,13 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testDoTagWhenNoResourcesToBundle() throws Exception {
+        recordGetTagDependencies();
+
+        recordPushBundleTag();
+
         getMockJspFragment().invoke(null);
+
+        recordRemoveBundleTag();
 
         replay();
 
@@ -312,6 +339,10 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("Tag should not have written anything to the page", StringUtils.EMPTY,
                 getStringWriter().getBuffer().toString());
+    }
+
+    private void recordRemoveBundleTag() {
+        getMockBundleTagStack().removeBundleTag(getMockPageContext());
     }
 
     private void recordGetTagDependencies() {
@@ -334,7 +365,8 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
                 getMockResolutionWarnLogger(), getMockBundleScriptsTagCache(),
-                getAppBundlesRootDir());
+                getAppBundlesRootDir(),
+                getMockBundleTagStack());
     }
 
     /**
@@ -593,4 +625,19 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     public void setMockBundleScriptsTagCache(final BundleTagCache mockBundleScriptsTagCache) {
         this.mockBundleScriptsTagCache = mockBundleScriptsTagCache;
     }
+
+    /**
+     * @return the mockBundleTagStack
+     */
+    public JspContextBundleTagStack getMockBundleTagStack() {
+        return mockBundleTagStack;
+    }
+
+    /**
+     * @param mockBundleTagStack the mockBundleTagStack to set
+     */
+    public void setMockBundleTagStack(final JspContextBundleTagStack mockBundleTagStack) {
+        this.mockBundleTagStack = mockBundleTagStack;
+    }
+
 }

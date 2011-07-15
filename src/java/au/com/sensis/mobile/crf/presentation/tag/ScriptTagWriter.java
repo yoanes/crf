@@ -28,7 +28,7 @@ public class ScriptTagWriter implements TagWriter {
     private final List<DynamicTagAttribute> dynamicAttributes;
     private final String href;
     private final String name;
-    private final BundleScriptsTag parentBundleScriptsTag;
+    private final AbstractBundleTag parentBundleScriptsTag;
 
     private final ScriptTagDependencies scriptTagDependencies;
 
@@ -52,7 +52,7 @@ public class ScriptTagWriter implements TagWriter {
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes, final String href,
             final String name, final ScriptTagDependencies scriptTagDependencies,
-            final BundleScriptsTag parentBundleScriptsTag) {
+            final AbstractBundleTag parentBundleScriptsTag) {
         this.device = device;
         this.dynamicAttributes = dynamicAttributes;
         this.href = href;
@@ -270,7 +270,7 @@ public class ScriptTagWriter implements TagWriter {
     }
 
 
-    private BundleScriptsTag getParentBundleScriptsTag() {
+    private AbstractBundleTag getParentBundleScriptsTag() {
         return parentBundleScriptsTag;
     }
 
