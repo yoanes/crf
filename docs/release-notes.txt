@@ -1,4 +1,4 @@
-==== PENDING: Version 2.0.9 (tag: contentRenderingFramework_v2_0_9) ====
+==== Version 2.0.9 (tag: contentRenderingFramework_v2_0_9) ====
 
 Fixes:
 - CRF-119: Client API to allow on demand CSS and JS bundling across components
