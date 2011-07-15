@@ -16,6 +16,8 @@ public class LinkTagDependencies extends TagDependencies {
      */
     public static final String BEAN_NAME = "crf.linkTagDependencies";
 
+    private final JspContextBundleTagStack jspContextBundleTagStack;
+
     /**
      * @param resourceResolverEngine
      *            {@link ResourceResolverEngine} to use to resolve
@@ -28,14 +30,26 @@ public class LinkTagDependencies extends TagDependencies {
      * @param resourceResolutionWarnLogger
      *            Special {@link ResourceResolutionWarnLogger} for logging
      *            warnings.
+     * @param jspContextBundleTagStack {@link JspContextBundleTagStack} that stores
+     *            parent {@link BundleTag}s.
      */
     public LinkTagDependencies(
             final ResourceResolverEngine resourceResolverEngine,
             final DeploymentMetadata deploymentMetadata,
             final String clientPathPrefix,
-            final ResourceResolutionWarnLogger resourceResolutionWarnLogger) {
+            final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
+            final JspContextBundleTagStack jspContextBundleTagStack) {
         super(resourceResolverEngine, deploymentMetadata, clientPathPrefix,
                 resourceResolutionWarnLogger);
+
+        this.jspContextBundleTagStack = jspContextBundleTagStack;
+    }
+
+    /**
+     * @return the jspContextBundleTagStack
+     */
+    public JspContextBundleTagStack getJspContextBundleTagStack() {
+        return jspContextBundleTagStack;
     }
 
 }

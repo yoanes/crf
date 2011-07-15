@@ -22,19 +22,27 @@ import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.util.MD5Builder;
 
 /**
- * Tag that bundles the output of any child tags that register {@link Resource}s with
- * this {@link AbstractBundleTag} via the {@link #addResourcesToBundle(List)} method.
+ * Tag that bundles the output of any child tags that register {@link Resource}s with this
+ * {@link AbstractBundleTag} via the {@link #addResourcesToBundle(List)} method.
  *
  * <p>
- * This tag has no need need to inherit the complexity of {@link AbstractDuplicatePreventingTag}
- * because any child tags are assumed to already have this protection. So
- * if this {@link AbstractBundleTag} ends up with a non-empty {@link #getResourcesToBundle()},
- * this is because there was a child tag that has not occurred in the request before.
+ * This tag has no need to inherit the complexity of {@link AbstractDuplicatePreventingTag} because
+ * any child tags are assumed to already have this protection. So if this {@link AbstractBundleTag}
+ * ends up with a non-empty {@link #getResourcesToBundle()}, this is because there was a child tag
+ * that has not occurred in the request before.
+ * </p>
+ *
+ * <p>
+ * NOTE: the bundling performed by this tag is different to
+ * {@link au.com.sensis.mobile.crf.service.BundleFactory}. The latter occurs at a lower level and
+ * can be considered as built into the CRF engine. In contrast, the bundling performed by this tag
+ * is at the sole discretion of page authors. Yeah, the naming is a bit confusing. Not sure what
+ * naming would be less confusing though.
  * </p>
  *
  * @author w12495
  */
-public abstract class AbstractBundleTag extends AbstractTag {
+public abstract class AbstractBundleTag extends AbstractTag implements BundleTag {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractBundleTag.class);
 
@@ -67,14 +75,41 @@ public abstract class AbstractBundleTag extends AbstractTag {
 
     @Override
     public void doTag() throws JspException, IOException {
-        // Let any child tags do their thing. If they wish to have their external
-        // resources bundled by this tag, we expect them to find us using the standard JEE
-        // findAncestorWithClass method, then call addResourcesToBundle.
-        getJspBody().invoke(null);
+        makeUsAvailableToChildTags();
 
-        if (!getResourcesToBundle().isEmpty()) {
+        invokeBodyContent();
+
+        if (childTagsHaveRegisteredResourcesToBundle()) {
             bundleRegisteredResourcesAndWriteTagToPage();
         }
+    }
+
+    private void makeUsAvailableToChildTags() {
+        // We use a JspContextBundleTagStack instead of requiring child tags to rely on
+        // {@link javax.servlet.jsp.tagext.SimpleTagSupport#findAncestorWithClass(
+        // javax.servlet.jsp.tagext.JspTag, Class)}
+        // because the latter does not cater to the case that child tags are executed via a dynamic
+        // JSP include.
+        getTagDependencies().getJspContextBundleTagStack().pushBundleTag(getJspContext(), this);
+    }
+
+    private void invokeBodyContent() throws JspException, IOException {
+        try {
+            // Let any child tags do their thing. If they wish to have their external
+            // resources bundled by this tag, we expect them to find us using the
+            // JspContextBundleTagStack, then call addResourcesToBundle.
+            getJspBody().invoke(null);
+        } finally {
+            cleanUpJspContextBundleTagStack();
+        }
+    }
+
+    private void cleanUpJspContextBundleTagStack() {
+        getTagDependencies().getJspContextBundleTagStack().removeBundleTag(getJspContext());
+    }
+
+    private boolean childTagsHaveRegisteredResourcesToBundle() {
+        return !getResourcesToBundle().isEmpty();
     }
 
     private void bundleRegisteredResourcesAndWriteTagToPage() throws IOException {
@@ -272,11 +307,10 @@ public abstract class AbstractBundleTag extends AbstractTag {
     }
 
     /**
-     * @param resources
-     *            List of resources that a child tag wants to register with this
-     *            {@link AbstractBundleTag} to be bundled into a single script.
+     * {@inheritDoc}
      */
-    protected void addResourcesToBundle(final List<Resource> resources) {
+    @Override
+    public void addResourcesToBundle(final List<Resource> resources) {
         getResourcesToBundle().addAll(resources);
     }
 

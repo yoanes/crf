@@ -122,7 +122,7 @@ public class LinkHrefPrefixTagTestCase extends AbstractJUnit4TestCase {
                 getMockResourceResolverEngine(),
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getCssClientPathPrefix(),
-                getMockResolutionWarnLogger());
+                getMockResolutionWarnLogger(), null);
     }
 
 

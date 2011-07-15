@@ -157,7 +157,8 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMockResourceResolverEngine(),
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getCssClientPathPrefix(),
-                getMockResolutionWarnLogger());
+                getMockResolutionWarnLogger(),
+                null);
     }
 
     private void recordGetResource(

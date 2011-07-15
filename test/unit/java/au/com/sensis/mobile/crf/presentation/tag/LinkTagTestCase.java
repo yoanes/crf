@@ -48,9 +48,9 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     private LinkTagDependencies linkTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private LinkTagWriter mockLinkTagWriter;
-    private LinkTagWriterFactory
-    mockLinkTagWriterFactory;
+    private LinkTagWriterFactory mockLinkTagWriterFactory;
     private ResourceResolutionWarnLogger mockResolutionWarnLogger;
+    private JspContextBundleTagStack mockBundleTagStack;
 
     /**
      * Test setup.
@@ -102,7 +102,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                 getMockResourceResolverEngine(),
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getCssClientPathPrefix(),
-                getMockResolutionWarnLogger());
+                getMockResolutionWarnLogger(),
+                getMockBundleTagStack());
     }
 
     private void recordGetTagDependencies() {
@@ -165,6 +166,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     }
 
     private void recordConstructNewLinkTagWriter() {
+
+        EasyMock.expect(getMockBundleTagStack().getBundleTag(getMockPageContext())).andReturn(null);
 
         EasyMock.expect(
                 getMockLinkTagWriterFactory().createLinkTagWriter(
@@ -464,6 +467,20 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     public void setMockResolutionWarnLogger(
             final ResourceResolutionWarnLogger mockResolutionWarnLogger) {
         this.mockResolutionWarnLogger = mockResolutionWarnLogger;
+    }
+
+    /**
+     * @return the mockBundleTagStack
+     */
+    public JspContextBundleTagStack getMockBundleTagStack() {
+        return mockBundleTagStack;
+    }
+
+    /**
+     * @param mockBundleTagStack the mockBundleTagStack to set
+     */
+    public void setMockBundleTagStack(final JspContextBundleTagStack mockBundleTagStack) {
+        this.mockBundleTagStack = mockBundleTagStack;
     }
 }
 

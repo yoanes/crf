@@ -120,7 +120,7 @@ public class ScriptSrcPrefixTagTestCase extends AbstractJUnit4TestCase {
                 getMockResourceResolverEngine(),
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getScriptClientPathPrefix(),
-                getMockResolutionWarnLogger());
+                getMockResolutionWarnLogger(), null);
     }
 
 

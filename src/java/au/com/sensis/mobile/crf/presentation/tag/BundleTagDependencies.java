@@ -6,8 +6,8 @@ import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 
 /**
- * Simple encapsulation of the singleton collaborators of an {@link AbstractBundleTag}.
- * The {@link AbstractBundleTag} will retrieve this from the Spring context.
+ * Simple encapsulation of the singleton collaborators of a {@link BundleTag}.
+ * The {@link BundleTag} will retrieve this from the Spring context.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
@@ -24,6 +24,8 @@ public class BundleTagDependencies {
     private final ResourceResolutionWarnLogger resourceResolutionWarnLogger;
     private final BundleTagCache bundleTagCache;
     private final File rootResourcesDir;
+    private final JspContextBundleTagStack jspContextBundleTagStack;
+
 
     /**
      * @param deploymentMetadata
@@ -36,18 +38,23 @@ public class BundleTagDependencies {
      *            {@link BundleTagCache} to store the results of bundle creation.
      * @param rootResourcesDir
      *            Root directory where the bundles that this tag creates should be stored.
+     * @param jspContextBundleTagStack {@link JspContextBundleTagStack} used for storing
+     *            {@link BundleTag}s to be exposed to child tags.
      */
     public BundleTagDependencies(final DeploymentMetadata deploymentMetadata,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
             final BundleTagCache bundleTagCache,
-            final File rootResourcesDir) {
+            final File rootResourcesDir,
+            final JspContextBundleTagStack jspContextBundleTagStack) {
 
         this.deploymentMetadata = deploymentMetadata;
         this.clientPathPrefix = clientPathPrefix;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
         this.bundleTagCache = bundleTagCache;
         this.rootResourcesDir = rootResourcesDir;
+        this.jspContextBundleTagStack = jspContextBundleTagStack;
+
     }
 
     /**
@@ -83,6 +90,13 @@ public class BundleTagDependencies {
      */
     public BundleTagCache getBundleTagCache() {
         return bundleTagCache;
+    }
+
+    /**
+     * @return the jspContextBundleTagStack
+     */
+    public JspContextBundleTagStack getJspContextBundleTagStack() {
+        return jspContextBundleTagStack;
     }
 
 }
