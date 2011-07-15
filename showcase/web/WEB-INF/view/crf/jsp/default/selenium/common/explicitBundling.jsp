@@ -9,17 +9,10 @@
   --%>
 <crf:bundleScripts id="showcaseAppJavaScriptBundle">  
     <crf:bundleLinks id="showcaseAppCssBundle">  
-	    <crf:script src="selenium/showcaseAppBundlePackage1/package" type="text/javascript" device="${context.device}"/>
-	    
-	    <crf:link type="text/css" rel="stylesheet" href="selenium/showcaseAppBundlePackage1/cssFileForExplicitBundling.css"
-	       device="${context.device}" />
-	    
-	    <crf:script name="showcaseAppBundleInlineScript" type="text/javascript" device="${context.device}">
-	        var showcaseAppBundleInlineScript = true
-	    </crf:script>
-	    
-	    <crf:script src="selenium/showcaseAppBundlePackage2/package" type="text/javascript" device="${context.device}"/>
-	    
-	    <crf:script src="http://localhost:8080/showcaseAppBundleAbsoluteUrl.js" type="text/javascript" device="${context.device}"/>
+        <%--
+          - Include the scripts and links as a JSP include to make sure that the bundle tags
+          - will still be able to work.
+          --%>
+	    <jsp:include page="/WEB-INF/view/crf/jsp/selenium/common/explicitBundlingDelegate.crf" />
     </crf:bundleLinks>    
 </crf:bundleScripts>
