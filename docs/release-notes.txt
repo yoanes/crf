@@ -17,19 +17,8 @@ Fixes:
     
     - bundleLinks and bundleScripts can be nested within each other (in any order).
     
-    - the child tags of bundleScripts and bundleLinks can be any other JSP markup. bundleScripts
-      will only bundle any crf:script tags that point to crf resources. Similarly, bundleLinks
-      will only bundle any crf:link tags that point to crf resources.
-      
-    - if child crf:script or crf:link tags contain inline content or they point to absolute http:// urls,
-      they will be ignored by the bundle tags. This implies that the bundles will be output after
-      these other tags, irrespective of their original order. Beware of this. This is not a bug ;)
-      
-      In general, it is best for any inline JavaScript in the head to only set config
-      variables that externally linked JavaScript may use. Any inline JavaScript
-      that depends on externally linked JavaScript is best placed separately, outside the bundle
-      tags, most preferably in the body of the page.
-      
+    - note the upgrade steps below for bundling caveats. 
+          
     - The bundle tags will always perform the bundling but minification will only occur if the
       following property in your crf-environment.properties file is set to true:
        
@@ -55,21 +44,38 @@ Upgrade steps
 
     env.resources.app.bundles.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
     env.resources.app.bundles.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
-    
-- The technique exposed in 1.1.0 for "[CRF-91] - Add web app version number to the image paths in CSS files"
-  has been deprecated. If you use that technique and bundle your CSS using bundleLinks, your background images
-  are not guaranteed to work. This is because the bundle file may have a different relative path to the original
-  CSS file. Background CSS images must now be defined within inline CSS styles in your JSPs. For example:
+
+- the child tags of bundleScripts and bundleLinks can be any other JSP markup. bundleScripts
+  will only bundle any crf:script tags that point to crf resources. Similarly, bundleLinks
+  will only bundle any crf:link tags that point to crf resources.
   
-    <crf:imgSrcPrefix var="imgSrcPrefix" />
-    <style type="text/css>
-        #mapControls {
-            background-image: url("${imgSrcPrefix}comp/map/controls/mc_bg.image");
-        }
-    </style>
+  However, if child crf:script or crf:link tags contain inline content or they point to absolute http:// urls,
+  they will be ignored by the bundle tags. This implies that the bundles will be output after
+  these other tags, irrespective of their original order. Beware of this. This is not a bug ;)
+  
+  This means that existing JavaScript and CSS may need to be refactored before it can take part
+  in bundling. This applies to JavaScript and CSS in your webapp, as well as JavaScript and CSS
+  in components that you use:
+  
+    - In general, it is best for any inline JavaScript in the head to only set config
+      variables that externally linked JavaScript may use. Any inline JavaScript
+      that depends on externally linked JavaScript (ie. potentially bundled JavaScript) 
+      is best placed separately, outside the bundle tags, most preferably in the body of the page.
     
-  This is the same technique used for [CRF-107] "JavaScript that requests images directly, must handle 
-  new /uiresources/<version>/images/ structure".
+    - The technique promoted in 1.1.0 for "[CRF-91] - Add web app version number to the image paths in CSS files"
+      has been deprecated. If you use that technique and bundle your CSS using bundleLinks, your background images
+      are not guaranteed to work. This is because the bundle file may have a different relative path to the original
+      CSS file. Background CSS images must now be defined within inline CSS styles in your JSPs. For example:
+      
+        <crf:imgSrcPrefix var="imgSrcPrefix" />
+        <style type="text/css>
+            #mapControls {
+                background-image: url("${imgSrcPrefix}comp/map/controls/mc_bg.image");
+            }
+        </style>
+        
+      This is the same technique used for [CRF-107] "JavaScript that requests images directly, must handle 
+      new /uiresources/<version>/images/ structure".
 
 ==== Version 2.0.3 (tag: contentRenderingFramework_v2_0_3) ====
 
