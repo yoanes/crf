@@ -43,6 +43,11 @@ Fixes:
             charset="utf-8" type="text/javascript" ></script>
             
 Upgrade steps
+- You must define the following in crf-environment.properties. Change the values to suit your app.
+
+    env.resources.app.bundles.root.dir=@TOMCAT_HOME@/webapps/wl-crf-showcase/uiresources/
+    env.resources.app.bundles.client.path.prefix=@WEBAPP_CONTEXT_PATH@/uiresources/
+    
 - The technique exposed in 1.1.0 for "[CRF-91] - Add web app version number to the image paths in CSS files"
   has been deprecated. If you use that technique and bundle your CSS using bundleLinks, your background images
   are not guaranteed to work. This is because the bundle file may have a different relative path to the original
