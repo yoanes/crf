@@ -6,8 +6,8 @@ import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 
 /**
- * Simple encapsulation of the singleton collaborators of an {@link AbstractBundleTag}.
- * The {@link AbstractBundleTag} will retrieve this from the Spring context.
+ * Simple encapsulation of the singleton collaborators of a {@link BundleTag}.
+ * The {@link BundleTag} will retrieve this from the Spring context.
  *
  * @author Adrian.Koh2@sensis.com.au
  */
@@ -39,7 +39,7 @@ public class BundleTagDependencies {
      * @param rootResourcesDir
      *            Root directory where the bundles that this tag creates should be stored.
      * @param jspContextBundleTagStack {@link JspContextBundleTagStack} used for storing
-     *            {@link AbstractBundleTag}s to be exposed to child tags.
+     *            {@link BundleTag}s to be exposed to child tags.
      */
     public BundleTagDependencies(final DeploymentMetadata deploymentMetadata,
             final String clientPathPrefix,

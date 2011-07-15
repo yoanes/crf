@@ -27,7 +27,7 @@ public class LinkTagWriter implements TagWriter {
     private final String href;
 
     private final LinkTagDependencies linkTagDependencies;
-    private final AbstractBundleTag parentBundleLinksTag;
+    private final BundleTag parentBundleLinksTag;
 
     /**
      * Default constructor.
@@ -40,14 +40,14 @@ public class LinkTagWriter implements TagWriter {
      * @param href
      *            Href attribute of the tag to be written.
      * @param linkTagDependencies Singleton collaborators.
-     * @param parentBundleLinksTag {@link AbstractBundleTag} that is the parent of the link tag.
+     * @param parentBundleLinksTag {@link BundleTag} that is the parent of the link tag.
      *            Null if there is no parent.
      */
     public LinkTagWriter(
             final Device device,
             final List<DynamicTagAttribute> dynamicAttributes, final String href,
             final LinkTagDependencies linkTagDependencies,
-            final AbstractBundleTag parentBundleLinksTag) {
+            final BundleTag parentBundleLinksTag) {
         this.device = device;
         this.dynamicAttributes = dynamicAttributes;
         this.href = href;
@@ -173,7 +173,7 @@ public class LinkTagWriter implements TagWriter {
     /**
      * @return the parentBundleLinksTag
      */
-    private AbstractBundleTag getParentBundleLinksTag() {
+    private BundleTag getParentBundleLinksTag() {
         return parentBundleLinksTag;
     }
 }

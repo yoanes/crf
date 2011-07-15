@@ -16,14 +16,14 @@ import org.easymock.IArgumentMatcher;
 public class BundleTagStackArgumentMatcher
         implements IArgumentMatcher {
 
-    private final Deque<? extends AbstractBundleTag> expectedStack;
+    private final Deque<? extends BundleTag> expectedStack;
 
     /**
      * @param expectedStack
      *            the {@link Deque} expected to have been passed in the test.
      */
     public BundleTagStackArgumentMatcher(
-            final Deque<? extends AbstractBundleTag> expectedStack) {
+            final Deque<? extends BundleTag> expectedStack) {
 
         this.expectedStack = expectedStack;
     }
@@ -88,8 +88,8 @@ public class BundleTagStackArgumentMatcher
      *
      * @return same as passed in arg.
      */
-    public static Deque<? extends AbstractBundleTag> sameStackObjects(
-            final Deque<? extends AbstractBundleTag> in) {
+    public static Deque<? extends BundleTag> sameStackObjects(
+            final Deque<? extends BundleTag> in) {
 
         EasyMock.reportMatcher(new BundleTagStackArgumentMatcher(in));
         return null;
@@ -98,7 +98,7 @@ public class BundleTagStackArgumentMatcher
     /**
      * @return  the expectedStack.
      */
-    public Deque<? extends AbstractBundleTag> getExpectedStack() {
+    public Deque<? extends BundleTag> getExpectedStack() {
 
         return expectedStack;
     }

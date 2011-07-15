@@ -71,7 +71,7 @@ public class ScriptTag extends AbstractDuplicatePreventingTag {
      */
     @Override
     protected TagWriter createTagWriter() {
-        final AbstractBundleTag parentBundleScriptsTag =
+        final BundleTag parentBundleScriptsTag =
             getTagDependencies().getJspContextBundleTagStack().getBundleTag(getJspContext());
 
         return ScriptTagWriterFactory

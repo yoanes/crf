@@ -42,7 +42,7 @@ import au.com.sensis.mobile.crf.util.MD5Builder;
  *
  * @author w12495
  */
-public abstract class AbstractBundleTag extends AbstractTag {
+public abstract class AbstractBundleTag extends AbstractTag implements BundleTag {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractBundleTag.class);
 
@@ -307,11 +307,10 @@ public abstract class AbstractBundleTag extends AbstractTag {
     }
 
     /**
-     * @param resources
-     *            List of resources that a child tag wants to register with this
-     *            {@link AbstractBundleTag} to be bundled into a single script.
+     * {@inheritDoc}
      */
-    protected void addResourcesToBundle(final List<Resource> resources) {
+    @Override
+    public void addResourcesToBundle(final List<Resource> resources) {
         getResourcesToBundle().addAll(resources);
     }
 

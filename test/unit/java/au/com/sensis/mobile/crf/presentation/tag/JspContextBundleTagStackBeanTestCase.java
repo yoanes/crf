@@ -13,16 +13,22 @@ import org.junit.Test;
 
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
+/**
+ * Unit test {@link JspContextBundleTagStackBean}.
+ *
+ * @author w12495
+ *
+ */
 public class JspContextBundleTagStackBeanTestCase extends AbstractJUnit4TestCase {
 
     private static final String BUNDLE_TAG_REQUEST_ATTRIBUTE_NAME = "parentBundleScriptsTag";
 
     private JspContextBundleTagStackBean objectUnderTest;
 
-    private Deque<AbstractBundleTag> bundleScriptsTagDeque;
+    private Deque<BundleTag> bundleScriptsTagDeque;
 
     private JspContext mockJspContext;
-    private AbstractBundleTag mockBundleTag;
+    private BundleTag mockBundleTag;
 
     /**
      * Setup test data.
@@ -32,7 +38,7 @@ public class JspContextBundleTagStackBeanTestCase extends AbstractJUnit4TestCase
     @Before
     public void setUp() throws Exception {
         setObjectUnderTest(new JspContextBundleTagStackBean(BUNDLE_TAG_REQUEST_ATTRIBUTE_NAME));
-        setBundleScriptsTagDeque(new ArrayDeque<AbstractBundleTag>());
+        setBundleScriptsTagDeque(new ArrayDeque<BundleTag>());
     }
 
     @Test
@@ -57,7 +63,7 @@ public class JspContextBundleTagStackBeanTestCase extends AbstractJUnit4TestCase
     @Test
     public void testPushBundleTagWhenDequeAttributeSet() throws Exception {
 
-        recordGetBundleTagDeque(new ArrayDeque<AbstractBundleTag>());
+        recordGetBundleTagDeque(new ArrayDeque<BundleTag>());
 
         getBundleScriptsTagDeque().addFirst(getMockBundleTag());
         recordGetBundleTagDeque(getBundleScriptsTagDeque());
@@ -89,11 +95,11 @@ public class JspContextBundleTagStackBeanTestCase extends AbstractJUnit4TestCase
     private void recordSetNewDequeIntoJspContext() {
         getMockJspContext().setAttribute(
                 EasyMock.eq(BUNDLE_TAG_REQUEST_ATTRIBUTE_NAME),
-                BundleTagStackArgumentMatcher.sameStackObjects(new ArrayDeque<AbstractBundleTag>()),
+                BundleTagStackArgumentMatcher.sameStackObjects(new ArrayDeque<BundleTag>()),
                 EasyMock.eq(PageContext.REQUEST_SCOPE));
     }
 
-    private void recordGetBundleTagDeque(final Deque<AbstractBundleTag> deque) {
+    private void recordGetBundleTagDeque(final Deque<BundleTag> deque) {
         EasyMock.expect(
                 getMockJspContext().getAttribute(BUNDLE_TAG_REQUEST_ATTRIBUTE_NAME,
                         PageContext.REQUEST_SCOPE)).andReturn(deque);
@@ -131,28 +137,28 @@ public class JspContextBundleTagStackBeanTestCase extends AbstractJUnit4TestCase
     /**
      * @return the mockBundleTag
      */
-    public AbstractBundleTag getMockBundleTag() {
+    public BundleTag getMockBundleTag() {
         return mockBundleTag;
     }
 
     /**
      * @param mockBundleTag the mockBundleTag to set
      */
-    public void setMockBundleTag(final AbstractBundleTag mockBundleTag) {
+    public void setMockBundleTag(final BundleTag mockBundleTag) {
         this.mockBundleTag = mockBundleTag;
     }
 
     /**
      * @return the bundleScriptsTagDeque
      */
-    private Deque<AbstractBundleTag> getBundleScriptsTagDeque() {
+    private Deque<BundleTag> getBundleScriptsTagDeque() {
         return bundleScriptsTagDeque;
     }
 
     /**
      * @param bundleScriptsTagDeque the bundleScriptsTagDeque to set
      */
-    private void setBundleScriptsTagDeque(final Deque<AbstractBundleTag> bundleScriptsTagDeque) {
+    private void setBundleScriptsTagDeque(final Deque<BundleTag> bundleScriptsTagDeque) {
         this.bundleScriptsTagDeque = bundleScriptsTagDeque;
     }
 

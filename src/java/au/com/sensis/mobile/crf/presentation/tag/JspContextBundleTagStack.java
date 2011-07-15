@@ -3,7 +3,7 @@ package au.com.sensis.mobile.crf.presentation.tag;
 import javax.servlet.jsp.JspContext;
 
 /**
- * Provides access to a stack of {@link AbstractBundleTag}s stored in a {@link JspContext}.
+ * Provides access to a stack of {@link BundleTag}s stored in a {@link JspContext}.
  * We use this structure instead of relying on
  * {@link javax.servlet.jsp.tagext.SimpleTagSupport#findAncestorWithClass(
  * javax.servlet.jsp.tagext.JspTag, Class)}
@@ -21,24 +21,24 @@ import javax.servlet.jsp.JspContext;
 public interface JspContextBundleTagStack {
 
     /**
-     * Push an {@link AbstractBundleTag} onto the stack.
+     * Push a {@link BundleTag} onto the stack.
      *
      * @param jspContext {@link JspContext} to store the stack.
-     * @param bundleTag {@link AbstractBundleTag} to push onto the stack.
+     * @param bundleTag {@link BundleTag} to push onto the stack.
      */
-    void pushBundleTag(JspContext jspContext, AbstractBundleTag bundleTag);
+    void pushBundleTag(JspContext jspContext, BundleTag bundleTag);
 
     /**
-     * Returns the {@link AbstractBundleTag} stored at the top of the stack but does not remove
+     * Returns the {@link BundleTag} stored at the top of the stack but does not remove
      * it from the stack.
      *
      * @param jspContext {@link JspContext} storing the stack.
-     * @return {@link AbstractBundleTag} stored at the top of the stack. Null if there is none.
+     * @return {@link BundleTag} stored at the top of the stack. Null if there is none.
      */
-    AbstractBundleTag getBundleTag(JspContext jspContext);
+    BundleTag getBundleTag(JspContext jspContext);
 
     /**
-     * Remove the {@link AbstractBundleTag} stored at the top of the stack.
+     * Remove the {@link BundleTag} stored at the top of the stack.
      *
      * @param jspContext {@link JspContext} storing the stack.
      */

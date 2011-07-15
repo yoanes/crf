@@ -26,7 +26,7 @@ public class JspContextBundleTagStackBean implements JspContextBundleTagStack {
     }
 
     @Override
-    public AbstractBundleTag getBundleTag(final JspContext jspContext) {
+    public BundleTag getBundleTag(final JspContext jspContext) {
         return getBundleTagDeque(jspContext).peekFirst();
     }
 
@@ -36,24 +36,24 @@ public class JspContextBundleTagStackBean implements JspContextBundleTagStack {
     }
 
     @Override
-    public void pushBundleTag(final JspContext jspContext, final AbstractBundleTag bundleTag) {
+    public void pushBundleTag(final JspContext jspContext, final BundleTag bundleTag) {
         getBundleTagDeque(jspContext).addFirst(bundleTag);
     }
 
     @SuppressWarnings("unchecked")
     private void setBundleTagDeque(final JspContext jspContext,
-            final Deque<AbstractBundleTag> deque) {
+            final Deque<BundleTag> deque) {
         jspContext.setAttribute(getBundleTagRequestAttributeName(), deque,
                 PageContext.REQUEST_SCOPE);
 
     }
 
     @SuppressWarnings("unchecked")
-    private Deque<AbstractBundleTag> getBundleTagDeque(final JspContext jspContext) {
-        Deque<AbstractBundleTag> deque = (Deque) jspContext.getAttribute(
+    private Deque<BundleTag> getBundleTagDeque(final JspContext jspContext) {
+        Deque<BundleTag> deque = (Deque) jspContext.getAttribute(
                 getBundleTagRequestAttributeName(), PageContext.REQUEST_SCOPE);
         if (deque == null) {
-            deque = new ArrayDeque<AbstractBundleTag>();
+            deque = new ArrayDeque<BundleTag>();
             setBundleTagDeque(jspContext, deque);
         }
 

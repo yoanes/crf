@@ -31,7 +31,7 @@ public class LinkTagDependencies extends TagDependencies {
      *            Special {@link ResourceResolutionWarnLogger} for logging
      *            warnings.
      * @param jspContextBundleTagStack {@link JspContextBundleTagStack} that stores
-     *            parent {@link AbstractBundleTag}s.
+     *            parent {@link BundleTag}s.
      */
     public LinkTagDependencies(
             final ResourceResolverEngine resourceResolverEngine,

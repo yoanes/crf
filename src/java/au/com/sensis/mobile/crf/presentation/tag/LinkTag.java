@@ -34,7 +34,7 @@ public class LinkTag extends AbstractDuplicatePreventingTag {
      */
     @Override
     protected TagWriter createTagWriter() {
-        final AbstractBundleTag parentBundleLinksTag =
+        final BundleTag parentBundleLinksTag =
             getTagDependencies().getJspContextBundleTagStack().getBundleTag(getJspContext());
 
         return LinkTagWriterFactory
