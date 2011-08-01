@@ -1,14 +1,46 @@
 ==== (PENDING) Version 2.0.10 (tag: contentRenderingFramework_v2_0_10) ====
 
-Minor fix to verify-gimages.sh. Changed 
+Changes:
+- Minor fix to verify-gimages.sh. Changed 
     
     scriptDir=`dirname "$0" 
 
-to 
+  to 
     
-    scriptDir=`dirname "$0"|tr -d "\r"`
+      scriptDir=`dirname "$0"|tr -d "\r"`
 
-for better Windows compatibility.
+  for better Windows compatibility.
+- CRF-128: Update AdminServlet to allow emptying of the caches used by the bundleScripts and bundleLinks tags
+    - http://trackit.sensis.com.au/browse/CRF-128
+
+Upgrade steps:
+- when ivy retrieves the crf artifacts, there will be a  
+  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
+  verify-gimages.sh into a new top level directory called "scripts" in your project.
+- in your web.xml, change your AdminServlet definition to:
+
+    <!-- CRF Admin Servlet. -->
+    <servlet>
+        <servlet-name>crfAdminServlet</servlet-name>
+        <servlet-class>au.com.sensis.mobile.crf.presentation.AdminServlet</servlet-class>
+        <init-param>
+            <param-name>resourceCacheBeanName</param-name>
+            <param-value>crf.resourceCache</param-value>
+        </init-param>
+        <init-param>
+            <param-name>bundleScriptsTagCacheBeanName</param-name>
+            <param-value>crf.bundleScriptsTagCache</param-value>
+        </init-param>
+        <init-param>
+            <param-name>bundleLinksTagCacheBeanName</param-name>
+            <param-value>crf.bundleLinksTagCache</param-value>
+        </init-param>
+        <init-param>
+            <param-name>emptyResourceCacheAction</param-name>
+            <param-value>/resourcecache/empty</param-value>
+        </init-param>
+    </servlet>
+ 
 
 ==== Version 2.0.9 (tag: contentRenderingFramework_v2_0_9) ====
 

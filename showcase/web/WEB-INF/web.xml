@@ -258,7 +258,33 @@
         <url-pattern>*.image</url-pattern>
     </servlet-mapping>
 
-    
+    <!-- CRF Admin Servlet. -->
+    <servlet>
+        <servlet-name>crfAdminServlet</servlet-name>
+        <servlet-class>au.com.sensis.mobile.crf.presentation.AdminServlet</servlet-class>
+        <init-param>
+            <param-name>resourceCacheBeanName</param-name>
+            <param-value>crf.resourceCache</param-value>
+        </init-param>
+        <init-param>
+            <param-name>bundleScriptsTagCacheBeanName</param-name>
+            <param-value>crf.bundleScriptsTagCache</param-value>
+        </init-param>
+        <init-param>
+            <param-name>bundleLinksTagCacheBeanName</param-name>
+            <param-value>crf.bundleLinksTagCache</param-value>
+        </init-param>
+        <init-param>
+            <param-name>emptyResourceCacheAction</param-name>
+            <param-value>/resourcecache/empty</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>crfAdminServlet</servlet-name>
+        <url-pattern>/healthcheck/crf/*</url-pattern>
+    </servlet-mapping>
+
     <!--=============
      - MIME TYPES 
      ==============-->    
