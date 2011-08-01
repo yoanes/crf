@@ -20,7 +20,7 @@ trap "echo -e \"\n\nCleanup ...removing temporary files ... \" && rm -f $$.tmp*"
 # ==============================================================================
 # Source includes.
 
-scriptDir=`dirname "$0"`
+scriptDir=`dirname "$0"|tr -d "\r"`
 source "$scriptDir/common.sh"
 
 # ==============================================================================

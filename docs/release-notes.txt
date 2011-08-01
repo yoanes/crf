@@ -1,3 +1,15 @@
+==== (PENDING) Version 2.0.10 (tag: contentRenderingFramework_v2_0_10) ====
+
+Minor fix to verify-gimages.sh. Changed 
+    
+    scriptDir=`dirname "$0" 
+
+to 
+    
+    scriptDir=`dirname "$0"|tr -d "\r"`
+
+for better Windows compatibility.
+
 ==== Version 2.0.9 (tag: contentRenderingFramework_v2_0_9) ====
 
 Fixes:
