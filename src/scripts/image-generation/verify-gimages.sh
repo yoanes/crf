@@ -76,7 +76,7 @@ function verifyImageMd5Sums {
             computeMd5 "$currImage" > "$tempMd5File"
 
             $echoCmd "Comparing computed checksum to $currImageMd5File ..."
-            if $diffCmd "$tempMd5File" "$currImageMd5File"
+            if $diffCmd -w "$tempMd5File" "$currImageMd5File"
             then
                 $echoCmd "... OK"
                 :
