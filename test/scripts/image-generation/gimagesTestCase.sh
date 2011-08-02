@@ -102,8 +102,8 @@ function assertExpectedFilePaths {
     local expectedResourcePathsFile="$workDir/expectedResources.txt"
 
     # Find all workDir/expectedOutputDir relative paths so that we can compare them.
-    (cd "$workDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > "$actualResourcePathsFile"
-    (cd "$expectedOutputDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > "$expectedResourcePathsFile"
+    (cd "$workDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-1" "{}" ";"|sort) > "$actualResourcePathsFile"
+    (cd "$expectedOutputDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-1" "{}" ";"|sort) > "$expectedResourcePathsFile"
 
     if $diffCmd "$expectedResourcePathsFile" "$actualResourcePathsFile"
     then
