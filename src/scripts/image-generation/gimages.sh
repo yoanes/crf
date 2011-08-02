@@ -19,7 +19,7 @@ trap "echo -e \"\n\nCleanup ...removing temporary files ... \" && rm -f $$.tmp*"
 # ==============================================================================
 # Source includes.
 
-scriptDir=`dirname "$0"`
+scriptDir=`dirname "$0"|tr -d "\r"`
 source "$scriptDir/common.sh"
 
 # ==============================================================================
@@ -117,6 +117,11 @@ function scaleImages {
 
     for currImage in $sourceImages
     do
+        if skipImageScaling $currImage
+        then
+            continue
+        fi
+        
         local imageBaseName=`basename $currImage |tr -d "\r"`
         local imageDimensions=`getImageDimensions $currImage`
         local imageWidth=`getWidthFromImageDimensions $imageDimensions`
@@ -171,6 +176,27 @@ function scaleImages {
         #read blah
     done
  
+}
+
+function skipImageScaling {
+    local currImage="$1"
+    
+    local currImageMd5File="${currImage}.md5"
+    local tempMd5File="$$.tmp.md5"
+    
+    if [ -e "$currImageMd5File" ]
+    then
+        # Compute actual md5.
+        computeMd5 "$currImage" > "$tempMd5File"
+        
+        if $diffCmd -w "$tempMd5File" "$currImageMd5File" 2>&1 > /dev/null
+        then
+            $echoCmd "Skipping scaling of $currImage because it is consistent with the last run."
+            return 0
+        fi
+    fi
+    
+    return 1
 }
 
 function scaleSingleImage {

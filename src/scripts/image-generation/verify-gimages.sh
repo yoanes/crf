@@ -65,18 +65,18 @@ function verifyImageMd5Sums {
     for currImage in $sourceImages
     do
         local currImageMd5File="${currImage}.md5"
-        local uiResourcesDirRelativeImageMd5File="${currImageMd5File#$uiResourcesDir}"
         $echoCmd
         $echoCmd -n "Checking if $currImageMd5File exists ..."
         if [ -e "$currImageMd5File" ]
         then
             $echoCmd "OK"
 
+            $echoCmd "Comparing computed checksum to $currImageMd5File ..."
+            
             # Compute actual md5.
             computeMd5 "$currImage" > "$tempMd5File"
-
-            $echoCmd "Comparing computed checksum to $currImageMd5File ..."
-            if $diffCmd "$tempMd5File" "$currImageMd5File"
+            
+            if $diffCmd -w "$tempMd5File" "$currImageMd5File"
             then
                 $echoCmd "... OK"
                 :

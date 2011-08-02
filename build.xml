@@ -177,11 +177,17 @@
 	    <delete dir="${build.dir}/work/image-generation-tests" />
 	    <mkdir dir="${build.dir}/work/image-generation-tests" />
 	
-        <exec executable="chmod" failonerror="true" >
-        	<arg value="u+x" />
-        	<arg value="test/scripts/image-generation/*.sh" />	
-        </exec>		
-
+        <exec executable="chmod" failonerror="true">
+		   <arg value="u+x" />	
+		   <arg value="build-fix-shell-script-permissions.sh" />	
+        </exec>
+	
+        <exec executable="bash" 
+            failonerror="true" resolveexecutable="true">
+		   <arg value="-c" />	
+		   <arg value="./build-fix-shell-script-permissions.sh" />	
+        </exec>
+		
         <exec executable="bash" 
             failonerror="true" resolveexecutable="true">
 		   <arg value="-c" />	

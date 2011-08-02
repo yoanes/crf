@@ -27,6 +27,7 @@ identifyCmd="identify"
 debug=1
 
 inputTestData="test/scripts/image-generation/test-data/input/gimages"
+skippedInputTestData="test/scripts/image-generation/test-data/input/gimagesWhenImageScalingSkipped"
 baseExpectedOutputData="test/scripts/image-generation/test-data/expected-output"
 baseWorkDir="build/work/image-generation-tests/gimagesTestCase"
 testFailedFile="$baseWorkDir/testFailed.txt"
@@ -51,16 +52,18 @@ gimagesScript="src/scripts/image-generation/gimages.sh"
 
 function setup {
     local workDir="$1"
+    local testDataToCopyDir="$2"
 
-    copyInputTestDataToWorkDir "$workDir"
+    copyInputTestDataToWorkDir "$workDir" "$testDataToCopyDir"
 }
 
 function copyInputTestDataToWorkDir {
     local workDir="$1"
+    local testDataToCopyDir="$2"
 
-    $echoCmd "Copying $inputTestData/images to $workDir."
+    $echoCmd "Copying $testDataToCopyDir/images to $workDir."
     $mkdirCmd -p "$workDir"
-    $cpCmd -r "$inputTestData/images" "$workDir"
+    $cpCmd -r "$testDataToCopyDir/images" "$workDir"
 }
 
 function invokeGimagesForAllImages {
@@ -102,8 +105,8 @@ function assertExpectedFilePaths {
     local expectedResourcePathsFile="$workDir/expectedResources.txt"
 
     # Find all workDir/expectedOutputDir relative paths so that we can compare them.
-    (cd "$workDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > "$actualResourcePathsFile"
-    (cd "$expectedOutputDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > "$expectedResourcePathsFile"
+    (cd "$workDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-1" "{}" ";"|sort) > "$actualResourcePathsFile"
+    (cd "$expectedOutputDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-1" "{}" ";"|sort) > "$expectedResourcePathsFile"
 
     if $diffCmd "$expectedResourcePathsFile" "$actualResourcePathsFile"
     then
@@ -233,7 +236,7 @@ function findAllImagesRelativeToDir {
 function testGenerateAllImages {
     $echoCmd "testGenerateAllImages start"
 
-    setup "$baseWorkDir/testGenerateAllImages"
+    setup "$baseWorkDir/testGenerateAllImages" "$inputTestData"
     invokeGimagesForAllImages "$baseWorkDir/testGenerateAllImages"
     assertExpectedOutput "$baseExpectedOutputData/generateAllImages" "$baseWorkDir/testGenerateAllImages" 
 
@@ -243,11 +246,34 @@ function testGenerateAllImages {
 function testGenerateImagesFromBasepath {
     $echoCmd "testGenerateImagesFromBasepath start"
 
-    setup "$baseWorkDir/testGenerateImagesFromBasepath"
+    setup "$baseWorkDir/testGenerateImagesFromBasepath" "$inputTestData"
     invokeGimagesForBasepath "$baseWorkDir/testGenerateImagesFromBasepath" "common/search"
     assertExpectedOutput "$baseExpectedOutputData/generateImagesFromBasepath" "$baseWorkDir/testGenerateImagesFromBasepath" 
 
     $echoCmd "testGenerateImagesFromBasepath end"
+}
+
+function testGenerateAllImagesWhenImageScalingSkipped {
+    $echoCmd "testGenerateAllImagesWhenImageScalingSkipped start"
+
+    setup "$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped" "$skippedInputTestData"
+    
+    # Create a dummy file to keep track of the current time, then sleep for a couple of seconds
+    # to protect against small time differences.
+    local timeControlFile="$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped/timeControlFile"
+    $echoCmd "" > "$timeControlFile"
+    sleep 2
+    
+    invokeGimagesForAllImages "$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped"
+    
+    # Use the timeControlFile created above to detect if any new images were generated.
+    local newlyGeneratedFiles=`$findCmd "$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped" -type f -newer "$timeControlFile" ! -name "gimages-last-run.properties"`
+    if [ -n "$newlyGeneratedFiles" ]
+    then
+        failTestCase "TEST FAILED. Images generated when they shouldn't have been. Test output stored in $baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped."
+    fi
+
+    $echoCmd "testGenerateAllImagesWhenImageScalingSkipped end"
 }
 
 
@@ -256,3 +282,4 @@ function testGenerateImagesFromBasepath {
 
 testGenerateAllImages
 testGenerateImagesFromBasepath
+testGenerateAllImagesWhenImageScalingSkipped
