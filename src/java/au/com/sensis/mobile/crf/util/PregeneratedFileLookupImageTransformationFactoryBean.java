@@ -2,13 +2,9 @@ package au.com.sensis.mobile.crf.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 /**
  * {@link ImageTransformationFactory} that lookups the transformed image from the pre-generated
@@ -19,10 +15,6 @@ import org.apache.log4j.Logger;
  */
 public class PregeneratedFileLookupImageTransformationFactoryBean
     extends AbstractImageTransformationFactoryBean {
-
-    // Not final so that we can inject a mock during testing.
-    private static Logger logger =
-            Logger.getLogger(PregeneratedFileLookupImageTransformationFactoryBean.class);
 
     /**
      * @param imageReader
@@ -37,97 +29,85 @@ public class PregeneratedFileLookupImageTransformationFactoryBean
             final ImageAttributes sourceImageAttributes, final File baseTargetImageDir,
             final ImageTransformationParameters imageTransformationParameters) throws IOException {
 
-        final int outputImageWidth =
-                findNearestPregeneratedImageWidth(baseTargetImageDir, sourceImageAttributes,
+        final FileAndWidthPair pregeneratedImageAndWidth =
+                findNearestPregeneratedImage(baseTargetImageDir, sourceImageAttributes,
                         imageTransformationParameters);
 
-        final File outputImageWidthDir = new File(baseTargetImageDir, "w" + outputImageWidth);
+        validateImageFound(pregeneratedImageAndWidth, baseTargetImageDir, sourceImageFile);
 
-        final String outputImageFilename =
-                createOutputImageFilename(imageTransformationParameters, sourceImageFile);
-        final File[] foundPregeneratedImages =
-                FileIoFacadeFactory.getFileIoFacadeSingleton().list(outputImageWidthDir,
-                        outputImageFilename, "h*");
+        final int outputImageHeight = getPregeneratedImageHeight(
+                pregeneratedImageAndWidth.getFile());
 
-        validateImageFound(foundPregeneratedImages, outputImageWidthDir, sourceImageFile);
-
-        logWarnIfMultipleImagesFound(foundPregeneratedImages);
-
-        final File outputImage = foundPregeneratedImages[0];
-        final int outputImageHeight = getPregeneratedImageHeight(outputImage);
-
-        return createTransformedImageAttributes(sourceImageAttributes, foundPregeneratedImages[0],
-                outputImageWidth, outputImageHeight);
+        return createTransformedImageAttributes(sourceImageAttributes,
+                pregeneratedImageAndWidth.getFile(), pregeneratedImageAndWidth.getWidth(),
+                outputImageHeight);
 
     }
 
-    private void logWarnIfMultipleImagesFound(final File[] foundPregeneratedImages) {
-        if (foundPregeneratedImages.length > 1 && logger.isEnabledFor(Level.WARN)) {
-            logger.warn("Multiple images found with the same width: "
-                    + ArrayUtils.toString(foundPregeneratedImages) + ". Returning the first one. ");
-        }
-    }
-
-    private void validateImageFound(final File[] foundPregeneratedImages, final File baseOutputDir,
+    private void validateImageFound(final FileAndWidthPair foundImage, final File baseOutputDir,
             final File sourceImageFile) {
-        if (foundPregeneratedImages.length == 0) {
+        if (foundImage == null) {
             throw new ImageCreationException(sourceImageFile.getName()
-                    + " could not be found under " + baseOutputDir);
+                    + " could not be found under any width directory below " + baseOutputDir);
         }
     }
 
-    private int findNearestPregeneratedImageWidth(final File baseTargetImageDir,
+    private FileAndWidthPair findNearestPregeneratedImage(final File baseTargetImageDir,
             final ImageAttributes sourceImageAttributes,
             final ImageTransformationParameters imageTransformationParameters) {
 
-        final int outputImageWidthRequested = calculateRequestedOutputImageWidth(
+        final int requestedOutputImageWidth = calculateRequestedOutputImageWidth(
                 imageTransformationParameters, sourceImageAttributes);
 
-        final File[] availableOutputImageWidthDirs = getAllAvailableImageWidthDirs(
-                baseTargetImageDir);
+        final File[] foundPregeneratedImages =
+            FileIoFacadeFactory.getFileIoFacadeSingleton().listByFilenameAndDirnameWildcardPatterns(
+                    baseTargetImageDir,
+                    new String [] { sourceImageAttributes.getFile().getName() },
+                    new String [] { "w*", "h*" });
 
-        final TreeSet<Integer> availableOutputImageWidths =
-            buildTreeSetFromFoundWidths(availableOutputImageWidthDirs);
 
-        final NavigableSet<Integer> widthsLessThanOrEqualToRequested = availableOutputImageWidths
-                .headSet(new Integer(outputImageWidthRequested), true);
-        final Integer greatestLowerBoundWidth = widthsLessThanOrEqualToRequested.pollLast();
+        final TreeSet<FileAndWidthPair> availableImagesAndWidths =
+            buildTreeSetFromFoundPregeneratedImages(baseTargetImageDir, foundPregeneratedImages);
 
-        if (greatestLowerBoundWidth != null) {
-            return greatestLowerBoundWidth;
+        final FileAndWidthPair imageWithGreatestLowerBoundWidth = availableImagesAndWidths
+                .floor(new FileAndWidthPair(requestedOutputImageWidth));
+
+        if (imageWithGreatestLowerBoundWidth != null) {
+            return imageWithGreatestLowerBoundWidth;
         } else {
-            // The requested image width is smallest than the smallest output image found so
+            // The requested image width is smaller than the smallest output image found so
             // just return the smallest we found.
-            return availableOutputImageWidths.pollFirst();
+            return firstOrNull(availableImagesAndWidths);
         }
 
     }
 
-    private TreeSet<Integer> buildTreeSetFromFoundWidths(
-            final File[] availableOutputImageWidthDirs) {
+    private FileAndWidthPair firstOrNull(final TreeSet<FileAndWidthPair> fileAndWidthPairs) {
+        if (!fileAndWidthPairs.isEmpty()) {
+            return fileAndWidthPairs.first();
+        } else {
+            return null;
+        }
+    }
 
-        final TreeSet<Integer> availableOutputImageWidths = new TreeSet<Integer>();
-        for (final File imageWidthDir : availableOutputImageWidthDirs) {
-            final String availableWidth = StringUtils.stripStart(imageWidthDir.getName(), "w");
+    private TreeSet<FileAndWidthPair> buildTreeSetFromFoundPregeneratedImages(
+            final File baseTargetImageDir, final File[] foundPregeneratedImages) {
+        final TreeSet<FileAndWidthPair> availableImagesAndWidths = new TreeSet<FileAndWidthPair>();
+        for (final File foundImage : foundPregeneratedImages) {
+            // foundImage.getParentFile().getParentFile().getName() is guaranteed not to throw null
+            // pointer exceptions along the way due to the method that generated the
+            // foundPregeneratedImages.
+            final String availableWidth = StringUtils.stripStart(
+                    foundImage.getParentFile().getParentFile().getName(), "w");
             try {
-                availableOutputImageWidths.add(Integer.parseInt(availableWidth));
+                availableImagesAndWidths.add(
+                        new FileAndWidthPair(Integer.valueOf(availableWidth), foundImage));
             } catch (final NumberFormatException e) {
-                throw new ImageCreationException("The found image width directory '"
-                        + imageWidthDir + "' has an invalid width specified in its path.");
+                throw new ImageCreationException("The found image '"
+                        + foundImage + "' has an invalid width specified in its path.");
             }
         }
-        return availableOutputImageWidths;
-    }
-
-    private File[] getAllAvailableImageWidthDirs(final File baseTargetImageDir) {
-        final File[] availableOutputImageWidthDirs = FileIoFacadeFactory.getFileIoFacadeSingleton()
-                .list(baseTargetImageDir, new String[] { "w*" });
-
-        if (availableOutputImageWidthDirs.length == 0) {
-            throw new ImageCreationException("No pregenerated image directories found under "
-                    + baseTargetImageDir);
-        }
-        return availableOutputImageWidthDirs;
+        return availableImagesAndWidths;
     }
 
     private int getPregeneratedImageHeight(final File outputImage) {
@@ -138,6 +118,33 @@ public class PregeneratedFileLookupImageTransformationFactoryBean
         } catch (final NumberFormatException e) {
             throw new ImageCreationException("The found image '" + outputImage
                     + "' has an invalid height specified in its path.", e);
+        }
+    }
+
+    private class FileAndWidthPair implements Comparable<FileAndWidthPair>{
+        private final Integer width;
+        private File file;
+
+        private FileAndWidthPair(final Integer width, final File file) {
+            this.width = width;
+            this.file = file;
+        }
+
+        private FileAndWidthPair(final int width) {
+            this.width = width;
+        }
+
+        private Integer getWidth() {
+            return width;
+        }
+
+        private File getFile() {
+            return file;
+        }
+
+        @Override
+        public int compareTo(final FileAndWidthPair other) {
+            return getWidth().compareTo(other.getWidth());
         }
     }
 }

@@ -118,20 +118,21 @@ public interface FileIoFacade {
 
     /**
      *
-     * Returns a list of files in the given directory that match the given
-     * filenameWildcardPattern. Sub-directories will optionally be recursed into as well
-     * if dirnameWildcardPattern is not blank.
+     * Returns a list of files in the given directory that match any of the given
+     * filenameWildcardPatterns. Sub-directories will optionally be recursed into as well
+     * if dirnameWildcardPatterns is not empty.
      *
      * @param directory
      *            Directory in which to find the files.
-     * @param filenameWildcardPattern
-     *            Wildcard pattern to use for matching files.
-     * @param dirnameWildcardPattern
-     *            Wildcard pattren to use for recursing into directories.
+     * @param filenameWildcardPatterns
+     *            Wildcard patterns to use for matching files.
+     * @param dirnameWildcardPatterns
+     *            Wildcard pattrens to use for recursing into directories.
      * @return a list of files in the given directory that match the given
      *         patterns. May not be null.
      */
-    File[] list(File directory, String filenameWildcardPattern, String dirnameWildcardPattern);
+    File[] listByFilenameAndDirnameWildcardPatterns(File directory,
+            String [] filenameWildcardPatterns, String [] dirnameWildcardPatterns);
 
     /**
      * Writes the given inputFile to the outputStream, then closes the outputStream.
