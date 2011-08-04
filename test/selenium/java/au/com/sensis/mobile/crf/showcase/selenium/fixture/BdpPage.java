@@ -40,7 +40,8 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertResourcePrefixes();
 
         assertGifImageWithPngFileExtension();
-        assertSvgImageWhoseDimensionsCannotBeDetermined();
+        assertImageWhoseDimensionsCannotBeDetermined();
+        assertImagesDifferentiatedWhenClosestWidthFolderContainsADifferentImage();
 
         assertBundleScriptsTagOutputPresent();
         assertBundleLinksTagOutputPresent();
@@ -155,7 +156,7 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @return number of scripts expected by this abstract BdpPage.
      */
     protected final int getNumExpectedImages() {
-        return 2;
+        return 4;
     }
 
     /**
@@ -168,12 +169,27 @@ public abstract class BdpPage extends AbstractPageFixture {
     }
 
     /**
-     * Assert that a gif image with an incorrect file extension of png is still handled correctly.
+     * Assert that an image whose dimensions cannot be determined will not be output.
      */
-    protected void assertSvgImageWhoseDimensionsCannotBeDetermined() {
+    protected void assertImageWhoseDimensionsCannotBeDetermined() {
         assertImgWithoutDimensions("anSvgImage img not found", "anSvgImage",
                 "anSvgImage", "anSvgImage",
                 "default/selenium/common/an_svg_image.svg");
+    }
+
+    /**
+     * Assert images are correctly differentiated even when the folder having a width closest
+     * to the requested width contains a different image.
+     */
+    protected void assertImagesDifferentiatedWhenClosestWidthFolderContainsADifferentImage() {
+        assertImg("32pxSourceImage img not found", "32pxSourceImage",
+                "32pxSourceImage", "32pxSourceImage",
+                "default/selenium/common/w22/h22/32px-source-image." + getScaledImageFormat(),
+                22, 22);
+        assertImg("44pxSourceImage img not found", "44pxSourceImage",
+                "44pxSourceImage", "44pxSourceImage",
+                "default/selenium/common/w29/h29/44px-source-image." + getScaledImageFormat(),
+                29, 29);
     }
 
     /**
@@ -441,5 +457,12 @@ public abstract class BdpPage extends AbstractPageFixture {
                 "/uidev/crfshowcase/uiresources/" + getProjectVersion()
                         + "/images/default/selenium/common/w" + width + "/h" + height
                         + "/yellow-pages." + extension));
+    }
+
+    /**
+     * @return image format expected for scaled images.
+     */
+    protected String getScaledImageFormat() {
+        return "gif";
     }
 }

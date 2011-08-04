@@ -173,12 +173,13 @@ public class FileIoFacadeBean implements FileIoFacade {
      * {@inheritDoc}
      */
     @Override
-    public File[] list(final File directory, final String filenameWildcardPattern,
-            final String dirnameWildcardPattern) {
+    public File[] listByFilenameAndDirnameWildcardPatterns(final File directory,
+            final String [] filenameWildcardPatterns,
+            final String [] dirnameWildcardPatterns) {
         @SuppressWarnings("unchecked")
         final Collection<File> foundFiles =
-                FileUtils.listFiles(directory, new WildcardFileFilter(filenameWildcardPattern),
-                        new WildcardFileFilter(dirnameWildcardPattern));
+                FileUtils.listFiles(directory, new WildcardFileFilter(filenameWildcardPatterns),
+                        new WildcardFileFilter(dirnameWildcardPatterns));
         if (foundFiles.isEmpty()) {
             return new File[] {};
         } else {

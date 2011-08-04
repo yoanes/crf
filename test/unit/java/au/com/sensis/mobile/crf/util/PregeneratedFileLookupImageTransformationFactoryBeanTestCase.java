@@ -2,11 +2,8 @@ package au.com.sensis.mobile.crf.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.log4j.Level;
+import org.apache.commons.io.FilenameUtils;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assert;
@@ -27,7 +24,6 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
 
     private static final int DEVICE_PIXEL_WIDTH = 468;
     private static final int SMALL_DEVICE_PIXEL_WIDTH = 210;
-    private static final int VERY_LARGE_DEVICE_PIXEL_WIDTH = 4200;
 
     private static final int REQUESTED_DEVICE_PERCENT_SCALED_WIDTH = 20;
     private static final int DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_WIDTH = 92;
@@ -48,13 +44,10 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
     private File sourceImage;
     private File outputImageBaseDir;
 
-    private File devicePercentWidthScalingOutputImageDir;
     private File devicePercentWidthScalingOutputImage;
 
-    private File absolutePixelWidthScalingOutputImageDir;
     private File absolutePixelWidthScalingOutputImage;
 
-    private File noScalingOutputImageWidthDir;
     private File noScalingOutputImage;
 
     private FileIoFacade mockFileIoFacade;
@@ -79,26 +72,18 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
 
         setOutputImageBaseDir(getPackageDirOfCurrentClass());
 
-        setDevicePercentWidthScalingOutputImageDir(
-                new File(getOutputImageBaseDir(),
-                        "w" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_WIDTH));
-
         setDevicePercentWidthScalingOutputImage(
-                new File(getDevicePercentWidthScalingOutputImageDir(),
-                    "/h" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT + "/myInputImage.png"));
+                new File(getOutputImageBaseDir(), "w" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_WIDTH
+                    + "/h" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT + "/myInputImage.png"));
 
-        setAbsolutePixelWidthScalingOutputImageDir(new File(getOutputImageBaseDir(),
-                "w"+ ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_WIDTH));
         setAbsolutePixelWidthScalingOutputImage(
-                new File(getAbsolutePixelWidthScalingOutputImageDir(),
-                        "/h" + ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_HEIGHT + "/myInputImage.png"));
+                new File(getOutputImageBaseDir(),
+                        "w"+ ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_WIDTH
+                        + "/h" + ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_HEIGHT + "/myInputImage.png"));
 
-
-        setNoScalingOutputImageWidthDir(new File(getOutputImageBaseDir(),
-                "w" + SOURCE_IMAGE_PIXEL_WIDTH));
-
-        setNoScalingOutputImage(new File(getNoScalingOutputImageWidthDir(),
-                "/h" + SOURCE_IMAGE_PIXEL_HEIGHT + "/myInputImage.gif"));
+        setNoScalingOutputImage(new File(getOutputImageBaseDir(),
+                "w" + SOURCE_IMAGE_PIXEL_WIDTH
+                + "/h" + SOURCE_IMAGE_PIXEL_HEIGHT + "/myInputImage.gif"));
 
     }
 
@@ -135,17 +120,31 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
 
         recordReadSourceImageAttributes();
 
-        recordListScaledImageWidthDirs();
+        final File[] foundFiles = {
+                getDevicePercentWidthScalingOutputImage(),
+                new File(getOutputImageBaseDir(),
+                        "w" + (DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_WIDTH - 5)
+                        + "/h" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT
+                        + "/myInputImage.png"),
+                getSourceImage(),
+                new File(getOutputImageBaseDir(),
+                        "w" + SMALLEST_SCALED_IMAGE_WIDTH
+                        + "/h" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT
+                        + "/myInputImage.png")
 
-        final File[] foundFiles = { getDevicePercentWidthScalingOutputImage() };
-        recordListScaledImagesUnderWidthDir(getDevicePercentWidthScalingOutputImageDir(),
-                getSourceImage().getName(), foundFiles);
+        };
+
+        final ImageTransformationParameters imageTransformationParameters
+            = createPercentWidthImageTransformationParameters();
+        recordListScaledImages(
+                imageTransformationParameters.getOutputImageFormat().getFileExtension(),
+                foundFiles);
 
         replay();
 
         final TransformedImageAttributes actualImage =
                 getObjectUnderTest().transformImage(getSourceImage(), getOutputImageBaseDir(),
-                        createPercentWidthImageTransformationParameters());
+                        imageTransformationParameters);
 
         Assert.assertEquals("actualImage is wrong", createExpectedTransformedImageAttributes(
                 getDevicePercentWidthScalingOutputImage(),
@@ -153,28 +152,24 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
                 DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT), actualImage);
     }
 
-    private File[] createScaledImagesWidthDirList() {
-        return new File [] {
-                new File("/uiresources/images/default/furniture/w103"),
-                new File("/uiresources/images/default/furniture/w98"),
-                new File("/uiresources/images/default/furniture/w92"),
-                new File("/uiresources/images/default/furniture/w87"),
-                new File("/uiresources/images/default/furniture/w"
-                        + SMALLEST_SCALED_IMAGE_WIDTH) };
-    }
-
     @Test
-    public void testTransformImageWhenHeightDirectoryValueInvalid() throws Throwable {
-        setDevicePercentWidthScalingOutputImage(new File(getDevicePercentWidthScalingOutputImageDir(),
-                "/h100trailing text/myInputImage.png"));
-
+    public void testTransformImageWhenWidthDirectoryValueInvalid() throws Throwable {
         recordReadSourceImageAttributes();
 
-        recordListScaledImageWidthDirs();
+        final File foundImage = new File(getOutputImageBaseDir(),
+                "w" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_WIDTH
+                + "trailing text after height/h" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT
+                + "/myInputImage.png");
+        final File[] foundFiles = {
+                foundImage,
+                getSourceImage()
+        };
 
-        final File[] foundFiles = { getDevicePercentWidthScalingOutputImage() };
-        recordListScaledImagesUnderWidthDir(getDevicePercentWidthScalingOutputImageDir(),
-                        getSourceImage().getName(), foundFiles);
+        final ImageTransformationParameters imageTransformationParameters
+            = createPercentWidthImageTransformationParameters();
+        recordListScaledImages(
+                imageTransformationParameters.getOutputImageFormat().getFileExtension(),
+                foundFiles);
 
         replay();
 
@@ -186,7 +181,41 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
         } catch (final ImageCreationException e) {
 
             Assert.assertEquals("ImageCreationException has wrong message", "The found image '"
-                    + getDevicePercentWidthScalingOutputImage()
+                    + foundImage
+                    + "' has an invalid width specified in its path.", e.getMessage());
+        }
+
+    }
+    @Test
+    public void testTransformImageWhenHeightDirectoryValueInvalid() throws Throwable {
+        recordReadSourceImageAttributes();
+
+        final File foundImage = new File(getOutputImageBaseDir(),
+                "w" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_WIDTH
+                + "/h" + DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT
+                + "trailing text after height/myInputImage.png");
+        final File[] foundFiles = {
+                foundImage,
+                getSourceImage()
+        };
+
+        final ImageTransformationParameters imageTransformationParameters
+            = createPercentWidthImageTransformationParameters();
+        recordListScaledImages(
+                imageTransformationParameters.getOutputImageFormat().getFileExtension(),
+                foundFiles);
+
+        replay();
+
+        try {
+            getObjectUnderTest().transformImage(getSourceImage(), getOutputImageBaseDir(),
+                    createPercentWidthImageTransformationParameters());
+
+            Assert.fail("ImageCreationException expected");
+        } catch (final ImageCreationException e) {
+
+            Assert.assertEquals("ImageCreationException has wrong message", "The found image '"
+                    + foundImage
                     + "' has an invalid height specified in its path.", e.getMessage());
         }
 
@@ -197,11 +226,25 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
 
         recordReadSourceImageAttributes();
 
-        recordListScaledImageWidthDirs();
+        final File[] foundFiles = {
+                getAbsolutePixelWidthScalingOutputImage(),
+                new File(getOutputImageBaseDir(),
+                        "w" + (ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_WIDTH - 5)
+                        + "/h" + ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_HEIGHT
+                        + "/myInputImage.png"),
+                new File(getOutputImageBaseDir(),
+                        "w" + SMALLEST_SCALED_IMAGE_WIDTH
+                        + "/h" + ABSOLUTE_WIDTH_SCALING_OUTPUT_PIXEL_HEIGHT
+                        + "/myInputImage.png"),
+                getSourceImage()
 
-        final File[] foundFiles = { getAbsolutePixelWidthScalingOutputImage() };
-        recordListScaledImagesUnderWidthDir(getAbsolutePixelWidthScalingOutputImageDir(),
-                getSourceImage().getName(), foundFiles);
+        };
+
+        final ImageTransformationParameters imageTransformationParameters
+            = createAbsolutePixelWidthImageTransformationParameters();
+        recordListScaledImages(
+                imageTransformationParameters.getOutputImageFormat().getFileExtension(),
+                foundFiles);
 
         replay();
 
@@ -220,11 +263,20 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
 
         recordReadSourceImageAttributes();
 
-        recordListScaledImageWidthDirs();
+        final File[] foundFiles = {
+                getNoScalingOutputImage(),
+                new File(getOutputImageBaseDir(),
+                        "w" + (SOURCE_IMAGE_PIXEL_WIDTH - 5)
+                        + "/h" + SOURCE_IMAGE_PIXEL_HEIGHT
+                        + "/myInputImage.gif"),
+                getSourceImage()
+        };
 
-        final File[] foundFiles = { getNoScalingOutputImage() };
-        recordListScaledImagesUnderWidthDir(getNoScalingOutputImageWidthDir(),
-                getNoScalingOutputImage().getName(), foundFiles);
+        final ImageTransformationParameters imageTransformationParameters
+            = createNoScalingImageTransformationParameters();
+        recordListScaledImages(
+                imageTransformationParameters.getOutputImageFormat().getFileExtension(),
+                foundFiles);
 
         replay();
 
@@ -237,26 +289,18 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
                 actualImage);
     }
 
-    private void recordListScaledImagesUnderWidthDir(final File imageWidthDir, final String imageName,
+    private void recordListScaledImages(final String imageFormatExtension,
             final File [] foundFiles) {
 
         EasyMock.expect(
-                getMockFileIoFacade().list(imageWidthDir, imageName,"h*"))
-                    .andReturn(foundFiles);
+                getMockFileIoFacade().listByFilenameAndDirnameWildcardPatterns(
+                        EasyMock.eq(getOutputImageBaseDir()),
+                        EasyMock.aryEq(new String [] {
+                                FilenameUtils.getBaseName(getSourceImage().getName())
+                                    + "." + imageFormatExtension}),
+                        EasyMock.aryEq(new String [] { "w*", "h*" }))
+                    ).andReturn(foundFiles);
 
-    }
-
-    private void recordListScaledImageWidthDirs() {
-        recordListScaledImageWidthDirs(createScaledImagesWidthDirList());
-    }
-
-    private void recordListScaledImageWidthDirs(final File [] dirs) {
-        final String[] widthDirWildcardPattern = new String [] { "w*" };
-
-        EasyMock.expect(getMockFileIoFacade().list(
-                EasyMock.eq(getOutputImageBaseDir()),
-                EasyMock.aryEq(widthDirWildcardPattern))
-        ).andReturn(dirs);
     }
 
     @Test
@@ -276,45 +320,22 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
     }
 
     @Test
-    public void testTransformImageWhenScalingUpLimitedToOriginalSize() throws Throwable {
-
-        recordReadSourceImageAttributes();
-
-        recordListScaledImageWidthDirs();
-
-        final File outputImageDir = getNoScalingOutputImageWidthDir();
-
-        final File[] foundFiles = { getNoScalingOutputImage() };
-        recordListScaledImagesUnderWidthDir(outputImageDir, getSourceImage().getName(), foundFiles);
-
-        replay();
-
-        final TransformedImageAttributes actualImage =
-                getObjectUnderTest().transformImage(getSourceImage(), getOutputImageBaseDir(),
-                        createImageTransformationParametersWhenCalculatedWidthExceedsSource());
-
-        Assert.assertEquals("actualImage is wrong", createExpectedTransformedImageAttributes(
-                getNoScalingOutputImage(),
-                SOURCE_IMAGE_PIXEL_WIDTH,
-                SOURCE_IMAGE_PIXEL_HEIGHT), actualImage);
-    }
-
-    @Test
     public void testTransformImageWhenRequestedImageWidthLessThanSmallestScaledImage() throws Throwable {
 
-        final File expectedScaledImageWidthDir =
-            new File(getOutputImageBaseDir(), "w" + SMALLEST_SCALED_IMAGE_WIDTH);
-
-        final File expectedScaledImage = new File(expectedScaledImageWidthDir,
-                "/h" + SMALLEST_SCALED_IMAGE_HEIGHT + "/myInputImage.gif");
-
         recordReadSourceImageAttributes();
 
-        recordListScaledImageWidthDirs();
+        final File[] foundFiles = {
+                new File(getOutputImageBaseDir(),
+                        "w" + SMALLEST_SCALED_IMAGE_WIDTH
+                        + "/h" + SMALLEST_SCALED_IMAGE_HEIGHT
+                        + "/myInputImage.png"),
+                getSourceImage()
+        };
 
-        final File[] foundFiles = { expectedScaledImage };
-
-        recordListScaledImagesUnderWidthDir(expectedScaledImageWidthDir, getSourceImage().getName(),
+        final ImageTransformationParameters imageTransformationParameters
+            = createImageTransformationParametersWhenCalculatedWidthLessThanSmallestScaledImage();
+        recordListScaledImages(
+                imageTransformationParameters.getOutputImageFormat().getFileExtension(),
                 foundFiles);
 
         replay();
@@ -323,54 +344,25 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
             getObjectUnderTest().transformImage(getSourceImage(), getOutputImageBaseDir(),
                     createImageTransformationParametersWhenCalculatedWidthLessThanSmallestScaledImage());
 
+        final File expectedScaledImage = new File(getOutputImageBaseDir(),
+                "w" + SMALLEST_SCALED_IMAGE_WIDTH
+                + "/h" + SMALLEST_SCALED_IMAGE_HEIGHT
+                + "/myInputImage.png");
+
         Assert.assertEquals("actualImage is wrong", createExpectedTransformedImageAttributes(
                 expectedScaledImage, SMALLEST_SCALED_IMAGE_WIDTH, SMALLEST_SCALED_IMAGE_HEIGHT),
                     actualImage);
     }
 
     @Test
-    public void testTransformImageWhenMultiplePregeneratedImagesFound() throws Throwable {
-
-        swapOutRealLoggerForMock(PregeneratedFileLookupImageTransformationFactoryBean.class);
-
+    public void testTransformImageWhenNoPregeneratedImagesFound() throws Throwable {
         recordReadSourceImageAttributes();
 
-        recordListScaledImageWidthDirs();
-
-        final List<File> foundFilesList = new ArrayList<File>();
-        foundFilesList.add(getDevicePercentWidthScalingOutputImage());
-        foundFilesList.add(new File(getDevicePercentWidthScalingOutputImageDir(),
-                "/h"+ (DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT + 1) + "/myInputImage.png"));
-        final File[] foundFiles = foundFilesList.toArray(new File [] {});
-
-        recordListScaledImagesUnderWidthDir(getDevicePercentWidthScalingOutputImageDir(),
-                getSourceImage().getName(), foundFiles);
-
-        EasyMock.expect(
-                getMockLogger(PregeneratedFileLookupImageTransformationFactoryBean.class)
-                        .isEnabledFor(Level.WARN)).andReturn(Boolean.TRUE);
-
-        getMockLogger(PregeneratedFileLookupImageTransformationFactoryBean.class).warn(
-                "Multiple images found with the same width: " + ArrayUtils.toString(foundFiles)
-                        + ". Returning the first one. ");
-
-        replay();
-
-        final TransformedImageAttributes actualImage =
-                getObjectUnderTest().transformImage(getSourceImage(), getOutputImageBaseDir(),
-                        createPercentWidthImageTransformationParameters());
-
-        Assert.assertEquals("actualImage is wrong", createExpectedTransformedImageAttributes(
-                getDevicePercentWidthScalingOutputImage(),
-                DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_WIDTH,
-                DEVICE_PERCENT_SCALING_OUTPUT_IMAGE_PIXEL_HEIGHT), actualImage);
-    }
-
-    @Test
-    public void testTransformImageWhenPregeneratedImageWidthDirectoriesNotFound() throws Throwable {
-        recordReadSourceImageAttributes();
-
-        recordListScaledImageWidthDirs(new File [] {});
+        final ImageTransformationParameters imageTransformationParameters
+            = createPercentWidthImageTransformationParameters();
+        recordListScaledImages(
+                imageTransformationParameters.getOutputImageFormat().getFileExtension(),
+                new File [] {});
 
         replay();
 
@@ -382,33 +374,9 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
         } catch (final ImageCreationException e) {
 
             Assert.assertEquals("ImageCreationException has wrong message",
-                    "No pregenerated image directories found under " + getOutputImageBaseDir(),
-                        e.getMessage());
-        }
-    }
-
-    @Test
-    public void testTransformImageWhenPregeneratedImageNotFound() throws Throwable {
-        recordReadSourceImageAttributes();
-
-        recordListScaledImageWidthDirs();
-
-        final File[] foundFiles = new File[] {};
-        recordListScaledImagesUnderWidthDir(getDevicePercentWidthScalingOutputImageDir(),
-                getSourceImage().getName(), foundFiles);
-
-        replay();
-
-        try {
-            getObjectUnderTest().transformImage(getSourceImage(), getOutputImageBaseDir(),
-                    createPercentWidthImageTransformationParameters());
-
-            Assert.fail("ImageCreationException expected");
-        } catch (final ImageCreationException e) {
-
-            Assert.assertEquals("ImageCreationException has wrong message",
-                    getSourceImage().getName() + " could not be found under "
-                        + getDevicePercentWidthScalingOutputImageDir(), e.getMessage());
+                    getSourceImage().getName()
+                    + " could not be found under any width directory below "
+                    + getOutputImageBaseDir(), e.getMessage());
         }
     }
 
@@ -423,18 +391,6 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
 
         parametersBean.setDeviceImagePercentWidth(REQUESTED_DEVICE_PERCENT_SCALED_WIDTH);
         parametersBean.setDevicePixelWidth(DEVICE_PIXEL_WIDTH);
-        parametersBean.setOutputImageFormat(ImageFormat.PNG);
-        return parametersBean;
-    }
-
-    private ImageTransformationParameters
-        createImageTransformationParametersWhenCalculatedWidthExceedsSource() {
-
-        final ImageTransformationParametersBean parametersBean =
-            new ImageTransformationParametersBean();
-
-        parametersBean.setDeviceImagePercentWidth(REQUESTED_DEVICE_PERCENT_SCALED_WIDTH);
-        parametersBean.setDevicePixelWidth(VERY_LARGE_DEVICE_PIXEL_WIDTH);
         parametersBean.setOutputImageFormat(ImageFormat.PNG);
         return parametersBean;
     }
@@ -688,29 +644,4 @@ public class PregeneratedFileLookupImageTransformationFactoryBeanTestCase extend
     private void setNoScalingOutputImage(final File noScalingOutputImage) {
         this.noScalingOutputImage = noScalingOutputImage;
     }
-
-    private File getNoScalingOutputImageWidthDir() {
-        return noScalingOutputImageWidthDir;
-    }
-
-    private void setNoScalingOutputImageWidthDir(final File noScalingOutputImageWidthDir) {
-        this.noScalingOutputImageWidthDir = noScalingOutputImageWidthDir;
-    }
-
-    private File getDevicePercentWidthScalingOutputImageDir() {
-        return devicePercentWidthScalingOutputImageDir;
-    }
-
-    private void setDevicePercentWidthScalingOutputImageDir(final File devicePercentWidthScalingOutputImageDir) {
-        this.devicePercentWidthScalingOutputImageDir = devicePercentWidthScalingOutputImageDir;
-    }
-
-    private File getAbsolutePixelWidthScalingOutputImageDir() {
-        return absolutePixelWidthScalingOutputImageDir;
-    }
-
-    private void setAbsolutePixelWidthScalingOutputImageDir(final File absolutePixelWidthScalingOutputImageDir) {
-        this.absolutePixelWidthScalingOutputImageDir = absolutePixelWidthScalingOutputImageDir;
-    }
-
 }
