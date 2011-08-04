@@ -4,7 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.TreeSet;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 
 /**
  * {@link ImageTransformationFactory} that lookups the transformed image from the pre-generated
@@ -59,17 +64,20 @@ public class PregeneratedFileLookupImageTransformationFactoryBean
         final int requestedOutputImageWidth = calculateRequestedOutputImageWidth(
                 imageTransformationParameters, sourceImageAttributes);
 
-        final File[] foundPregeneratedImages =
-            FileIoFacadeFactory.getFileIoFacadeSingleton().listByFilenameAndDirnameWildcardPatterns(
-                    baseTargetImageDir,
-                    new String [] { sourceImageAttributes.getFile().getName() },
-                    new String [] { "w*", "h*" });
+        final TreeSet<FileAndWidthPair> imagesSortedByWidth =
+            findPregeneratedImagesSortedByWidth(sourceImageAttributes.getFile(),
+                    baseTargetImageDir, imageTransformationParameters.getOutputImageFormat());
 
+        return getSmallestImageClosestToRequestedWidth(requestedOutputImageWidth,
+                imagesSortedByWidth);
 
-        final TreeSet<FileAndWidthPair> availableImagesAndWidths =
-            buildTreeSetFromFoundPregeneratedImages(baseTargetImageDir, foundPregeneratedImages);
+    }
 
-        final FileAndWidthPair imageWithGreatestLowerBoundWidth = availableImagesAndWidths
+    private FileAndWidthPair getSmallestImageClosestToRequestedWidth(
+            final int requestedOutputImageWidth,
+            final TreeSet<FileAndWidthPair> imagesSortedByWidth) {
+
+        final FileAndWidthPair imageWithGreatestLowerBoundWidth = imagesSortedByWidth
                 .floor(new FileAndWidthPair(requestedOutputImageWidth));
 
         if (imageWithGreatestLowerBoundWidth != null) {
@@ -77,7 +85,7 @@ public class PregeneratedFileLookupImageTransformationFactoryBean
         } else {
             // The requested image width is smaller than the smallest output image found so
             // just return the smallest we found.
-            return firstOrNull(availableImagesAndWidths);
+            return firstOrNull(imagesSortedByWidth);
         }
 
     }
@@ -90,24 +98,46 @@ public class PregeneratedFileLookupImageTransformationFactoryBean
         }
     }
 
-    private TreeSet<FileAndWidthPair> buildTreeSetFromFoundPregeneratedImages(
-            final File baseTargetImageDir, final File[] foundPregeneratedImages) {
-        final TreeSet<FileAndWidthPair> availableImagesAndWidths = new TreeSet<FileAndWidthPair>();
+    private TreeSet<FileAndWidthPair> findPregeneratedImagesSortedByWidth(
+            final File sourceImage, final File baseTargetImageDir,
+            final ImageFormat requestedImageFormat) {
+
+        final String nameOfImageToFind = computePregeneratedImageName(
+                sourceImage, requestedImageFormat);
+        final File[] foundPregeneratedImages =
+            FileIoFacadeFactory.getFileIoFacadeSingleton().listByFilenameAndDirnameWildcardPatterns(
+                    baseTargetImageDir,
+                    new String [] { nameOfImageToFind },
+                    new String [] { "w*", "h*" });
+
+        final TreeSet<FileAndWidthPair> imagesSortedByWidth = new TreeSet<FileAndWidthPair>();
         for (final File foundImage : foundPregeneratedImages) {
+
+            if (sourceImage.equals(foundImage)) {
+                // The directory listing may also contain the source image so skip it.
+                continue;
+            }
+
             // foundImage.getParentFile().getParentFile().getName() is guaranteed not to throw null
-            // pointer exceptions along the way due to the method that generated the
-            // foundPregeneratedImages.
-            final String availableWidth = StringUtils.stripStart(
+            // pointer exceptions along the way due to the way we obtained the
+            // foundPregeneratedImages above.
+            final String imageWidth = StringUtils.stripStart(
                     foundImage.getParentFile().getParentFile().getName(), "w");
             try {
-                availableImagesAndWidths.add(
-                        new FileAndWidthPair(Integer.valueOf(availableWidth), foundImage));
+                imagesSortedByWidth.add(
+                        new FileAndWidthPair(Integer.valueOf(imageWidth), foundImage));
             } catch (final NumberFormatException e) {
                 throw new ImageCreationException("The found image '"
                         + foundImage + "' has an invalid width specified in its path.");
             }
         }
-        return availableImagesAndWidths;
+        return imagesSortedByWidth;
+    }
+
+    private String computePregeneratedImageName(final File sourceImage,
+            final ImageFormat requestedImageFormat) {
+        return FilenameUtils.getBaseName(sourceImage.getName())
+            + "." + requestedImageFormat.getFileExtension();
     }
 
     private int getPregeneratedImageHeight(final File outputImage) {
@@ -142,9 +172,61 @@ public class PregeneratedFileLookupImageTransformationFactoryBean
             return file;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int compareTo(final FileAndWidthPair other) {
+            // Only consider the width because this is what we wish to order by.
             return getWidth().compareTo(other.getWidth());
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+
+            if (obj == null || !this.getClass().equals(obj.getClass())) {
+                return false;
+            }
+
+            final FileAndWidthPair rhs = (FileAndWidthPair) obj;
+            final EqualsBuilder equalsBuilder = new EqualsBuilder();
+
+            // Only consider the width in order to be consistent with the compareTo method.
+            equalsBuilder.append(this.width, rhs.width);
+
+            return equalsBuilder.isEquals();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int hashCode() {
+            final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+
+            // Only consider the width in order to be consistent with the compareTo method.
+            hashCodeBuilder.append(this.width);
+
+            return hashCodeBuilder.toHashCode();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return new ToStringBuilder(this)
+                .append("file", this.file)
+                .append("width", this.width)
+                .toString();
+        }
+
+
     }
 }

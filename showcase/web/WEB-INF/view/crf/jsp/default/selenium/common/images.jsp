@@ -24,3 +24,11 @@
 <div><crf:img src="selenium/common/an_svg_image.image" id="anSvgImage" 
     alt="anSvgImage" title="anSvgImage"
     device="${context.device}">Search</crf:img></div>
+    
+<div><crf:img src="selenium/common/44px-source-image.image" id="44pxSourceImage" 
+    alt="44pxSourceImage" title="44pxSourceImage"
+    device="${context.device}">44pxSourceImage</crf:img></div>
+    
+<div><crf:img src="selenium/common/32px-source-image.image" id="32pxSourceImage" 
+    alt="32pxSourceImage" title="32pxSourceImage"
+    device="${context.device}">32pxSourceImage</crf:img></div>

@@ -28,10 +28,10 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
         assertImgFoundInDefaultGroupPngFormat();
         assertImgFoundInIntermediateGroupPngFormat();
 
-        assertScaledYellowPagesImage(640, 256, "png");
-        assertScaledYellowPagesImagePath(640, 256, "png");
+        assertScaledYellowPagesImage(640, 256, getScaledImageFormat());
+        assertScaledYellowPagesImagePath(640, 256, getScaledImageFormat());
 
-        assertScaledSearchImage(225, 268, "png", "default");
+        assertScaledSearchImage(225, 268, getScaledImageFormat(), "default");
     }
 
     /**
@@ -86,5 +86,20 @@ public class IphoneOS4xBdpPage extends IphoneOS3xBdpPage {
     protected void assertImageCategoryText() {
         assertTrue("imageCategory is wrong",
                 getBrowser().isTextPresent("'custom.imageCategory': HD640"));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void assertImagesDifferentiatedWhenClosestWidthFolderContainsADifferentImage() {
+        assertImg("32pxSourceImage img not found", "32pxSourceImage",
+                "32pxSourceImage", "32pxSourceImage",
+                "default/selenium/common/w32/h32/32px-source-image." + getScaledImageFormat(),
+                16, 16);
+        assertImg("44pxSourceImage img not found", "44pxSourceImage",
+                "44pxSourceImage", "44pxSourceImage",
+                "default/selenium/common/w44/h44/44px-source-image." + getScaledImageFormat(),
+                22, 22);
     }
 }
