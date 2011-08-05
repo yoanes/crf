@@ -112,28 +112,41 @@ public class AdminServlet extends HttpServletBean {
 
     private void validateInitParams() {
 
-        if (StringUtils.isBlank(getResourceCacheBeanName())) {
-            throw new IllegalStateException(
-                    "resourceCacheBeanName must be set as a non-blank Servlet init-param "
-                    + "in your web.xml. Was: '" + getResourceCacheBeanName() + "'");
-        }
+        validateResourceCacheBeanName();
+        validateBundleScriptsTagCacheBeanName();
+        validateBundleLinksTagCacheBeanName();
+        validateEmptyResourceCacheAction();
+    }
 
-        if (StringUtils.isBlank(getBundleScriptsTagCacheBeanName())) {
+    private void validateEmptyResourceCacheAction() {
+        if (StringUtils.isBlank(getEmptyResourceCacheAction())) {
             throw new IllegalStateException(
-                    "bundleScriptsTagCacheBeanName must be set as a non-blank Servlet init-param "
-                    + "in your web.xml. Was: '" + getBundleScriptsTagCacheBeanName() + "'");
+                    "emptyResourceCacheActionName must be set as a non-blank Servlet init-param "
+                    + "in your web.xml. Was: '" + getEmptyResourceCacheAction() + "'");
         }
+    }
 
+    private void validateBundleLinksTagCacheBeanName() {
         if (StringUtils.isBlank(getBundleLinksTagCacheBeanName())) {
             throw new IllegalStateException(
                     "bundleLinksTagCacheBeanName must be set as a non-blank Servlet init-param "
                     + "in your web.xml. Was: '" + getBundleLinksTagCacheBeanName() + "'");
         }
+    }
 
-        if (StringUtils.isBlank(getEmptyResourceCacheAction())) {
+    private void validateBundleScriptsTagCacheBeanName() {
+        if (StringUtils.isBlank(getBundleScriptsTagCacheBeanName())) {
             throw new IllegalStateException(
-                    "emptyResourceCacheActionName must be set as a non-blank Servlet init-param "
-                    + "in your web.xml. Was: '" + getEmptyResourceCacheAction() + "'");
+                    "bundleScriptsTagCacheBeanName must be set as a non-blank Servlet init-param "
+                    + "in your web.xml. Was: '" + getBundleScriptsTagCacheBeanName() + "'");
+        }
+    }
+
+    private void validateResourceCacheBeanName() {
+        if (StringUtils.isBlank(getResourceCacheBeanName())) {
+            throw new IllegalStateException(
+                    "resourceCacheBeanName must be set as a non-blank Servlet init-param "
+                    + "in your web.xml. Was: '" + getResourceCacheBeanName() + "'");
         }
     }
 
