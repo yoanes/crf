@@ -199,5 +199,24 @@
 		   <arg value="-c" />	
 		   <arg value="test/scripts/image-generation/verifyGimagesTestCase.sh" />	
         </exec>
+		
+        <exec executable="bash" 
+            failonerror="true" resolveexecutable="true">
+           <arg value="-c" />   
+           <arg value="test/scripts/image-generation/clobberGimagesTestCase.sh" /> 
+        </exec>
+		
     </target>
+	
+    <!--
+      - Override imported target: add extra steps to standard library step. 
+      -->
+    <target name="-do-hudson" 
+        depends="build-standard-hudson.-do-hudson, -do-hudson-override-message, run-image-generation-tests">
+    </target>
+    
+    <target name="-do-hudson-override-message">
+        <echo message="crf: Overriding standard -do-hudson target to add additional steps." />
+    </target>
+	
 </project>

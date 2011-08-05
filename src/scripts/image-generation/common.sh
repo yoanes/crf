@@ -23,6 +23,22 @@ identifyCmd="identify"
 convertCmd="convert" 
 opensslCmd="openssl dgst -md5 -hex"
 diffCmd="diff"
+rmCmd="rm"
+rmDirCmd="rmdir"
+teeCmd="tee"
+wcCmd="wc"
+cutCmd="cut"
+trCmd="tr"
+grepCmd="grep"
+
+# ==============================================================================
+# Define default vars.
+
+# Remember that 1 in shell is false. So debugging is disabled by default.
+debug=1
+debugFile=$$.tmp.debug
+defaultUiResourcesDir="src/web/uiresources"
+uiResourcesDir="$defaultUiResourcesDir"
 
 # ==============================================================================
 # Functions.
@@ -37,6 +53,10 @@ function displayUsedVariable {
     else 
         $echoCmd "    $variableLabel: '$variableValue'"
     fi
+}
+
+function initDerivedVariables {
+    lastRunPropertiesFile="$uiResourcesDir/images/gimages-last-run.properties"
 }
 
 function computeMd5 {
@@ -125,6 +145,70 @@ function findSourceImagesForPropertyFiles {
     local findOptions="${findOptions} \\)"
 
     eval $findCmd $findOptions
+}
+
+function clobberGeneratedImagesAndDirs {
+    local forceClobber="$1"
+
+    local generatedImageDirRegex=".*[/\\\\]w[0-9]+"
+    local generatedImageFileRegex="${generatedImageDirRegex}[/\\\\]h[0-9]+[/\\\\].*"
+    local imagesResourcesDir="$uiResourcesDir/images"
+
+    clobberingPerformed=1
+
+    $echoCmd "Images to be clobbered: "
+    $findCmd $imagesResourcesDir -regex $generatedImageFileRegex -o -name "*.md5"|$teeCmd $$.tmp.foundImages
+    local numFoundImages=`$wcCmd -l $$.tmp.foundImages`
+    local numFoundImages=`$echoCmd $numFoundImages|$cutCmd -f 1 -d" "|$trCmd -d "\r"`
+    if [ "$numFoundImages" -gt 0 ]
+    then
+        $echoCmd ""
+        if [ ! "$forceClobber" ]
+        then
+            read -p "Confirm delete? [y/n]" confirmation
+        fi
+        if [ "$forceClobber" -o "$confirmation" = "y" -o "$confirmation" = "Y" ]
+        then
+            $echoCmd ""
+            $echoCmd "Clobbering images ..."
+            $rmCmd `$catCmd $$.tmp.foundImages|$trCmd -d " "`
+            $echoCmd "Done"
+            clobberingPerformed=0
+        else
+            $echoCmd ""
+            $echoCmd "Aborting clobber at user request."
+        fi
+    else 
+        $echoCmd "none"
+    fi
+
+    $echoCmd ""
+    $echoCmd "Dirs to be clobbered: "
+    $findCmd $imagesResourcesDir -regex "$generatedImageDirRegex" |$teeCmd $$.tmp.foundImageDirs
+    $echoCmd ""
+    if [ ! "$forceClobber" ]
+    then
+        read -p "Confirm delete? [y/n]" confirmation
+    fi
+    if [ "$forceClobber" -o "$confirmation" = "y" -o "$confirmation" = "Y" ]
+    then
+        $echoCmd ""
+        $echoCmd "Clobbering dirs ..."
+        $rmCmd -rf `$catCmd $$.tmp.foundImageDirs|$trCmd -d " "`
+        $echoCmd "Done"
+        clobberingPerformed=0
+    else
+        $echoCmd ""
+        $echoCmd "Aborting clobber at user request."
+    fi
+
+    if [ -e "$lastRunPropertiesFile" ]
+    then
+        $echoCmd ""
+        $echoCmd "Clobbering $lastRunPropertiesFile ..."
+        $rmCmd "$lastRunPropertiesFile"
+        $echoCmd "Done"
+    fi
 }
 
 # ==============================================================================

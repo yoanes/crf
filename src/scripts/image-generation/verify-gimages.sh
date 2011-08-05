@@ -24,15 +24,6 @@ scriptDir=`dirname "$0"|tr -d "\r"`
 source "$scriptDir/common.sh"
 
 # ==============================================================================
-# Define default vars.
-debug=1
-debugFile=$$.tmp.debug
-
-defaultUiResourcesDir="src/web/uiresources"
-uiResourcesDir="$defaultUiResourcesDir"
-lastRunPropertiesFile="gimages-last-run.properties"
-
-# ==============================================================================
 # Functions.
 
 function echoUsedVariables {
@@ -46,7 +37,7 @@ function usage {
 }
 
 function verifyLastRunPropertiesFile {
-    local expectedFile="$uiResourcesDir/images/$lastRunPropertiesFile"
+    local expectedFile="$lastRunPropertiesFile"
 
     if [ ! -e $expectedFile ]
     then
@@ -111,7 +102,7 @@ function failVerification {
 # ==============================================================================
 # Processing
 
-while getopts ":r:i:m:p:ohd" option 
+while getopts ":r:hd" option 
 do  case "$option" in
         r) uiResourcesDir=$OPTARG
            ;;
@@ -124,6 +115,7 @@ do  case "$option" in
 done
 
 echoUsedVariables
+initDerivedVariables
 verifyLastRunPropertiesFile
 verifyImageMd5Sums
 
