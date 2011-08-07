@@ -1,22 +1,16 @@
 ==== (PENDING) Version 2.0.10 (tag: contentRenderingFramework_v2_0_10) ====
 
 Changes:
-- Minor fix to verify-gimages.sh. Changed 
-    
-    scriptDir=`dirname "$0" 
-
-  to 
-    
-      scriptDir=`dirname "$0"|tr -d "\r"`
-
-  for better Windows compatibility.
+- CRF-127: Speedup image generation (only generate images that you have to)
+    - also retested that scripts work under windows, including generating images under Linux
+      but verifying them under Windows.   
 - CRF-128: Update AdminServlet to allow emptying of the caches used by the bundleScripts and bundleLinks tags
-    - http://trackit.sensis.com.au/browse/CRF-128
+- CRF-129: Resolution of pregenerated images failing
 
 Upgrade steps:
 - when ivy retrieves the crf artifacts, there will be a  
   lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
-  verify-gimages.sh into a new top level directory called "scripts" in your project.
+  all the *.sh files into a new top level directory called "scripts" in your project.
 - in your web.xml, change your AdminServlet definition to:
 
     <!-- CRF Admin Servlet. -->
