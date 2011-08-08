@@ -335,4 +335,12 @@ public abstract class IphoneBdpPage extends BdpPage {
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File1", "true");
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File2", "true");
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getScaledImageFormat() {
+        return "png";
+    }
 }

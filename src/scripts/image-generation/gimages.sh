@@ -19,19 +19,11 @@ trap "echo -e \"\n\nCleanup ...removing temporary files ... \" && rm -f $$.tmp*"
 # ==============================================================================
 # Source includes.
 
-scriptDir=`dirname "$0"`
+scriptDir=`dirname "$0"|tr -d "\r"`
 source "$scriptDir/common.sh"
 
 # ==============================================================================
 # Define default vars.
-debug=1
-debugFile=$$.tmp.debug
-
-lastRunPropertiesFile="gimages-last-run.properties"
-
-defaultUiResourcesDir="src/web/uiresources"
-uiResourcesDir="$defaultUiResourcesDir"
-
 defaultPixelsIncrement=5
 pixelsIncrement="$defaultPixelsIncrement"
 
@@ -43,6 +35,8 @@ overwriteWithoutPrompting="$defaultOverwriteWithoutPrompting"
 
 defaultImageBasepath=""
 imageBasepath="$defaultImageBasepath"
+
+paramsChangedSinceLastRun=1
 
 # ==============================================================================
 # Functions.
@@ -58,7 +52,7 @@ function echoUsedVariables {
 }
 
 function writeLastRunPropertiesFile {
-    $catCmd <<END > $uiResourcesDir/images/$lastRunPropertiesFile
+    $catCmd <<END > "$lastRunPropertiesFile"
 date=`date +"%d/%m/%Y %k:%M:%S"`
 uiResourcesDir=$uiResourcesDir
 pixelsIncrement=$pixelsIncrement
@@ -66,7 +60,7 @@ minimumPixels=$minimumPixels
 overwriteWithoutPrompting=$overwriteWithoutPrompting
 END
     $echoCmd ""
-    $echoCmd "Generated $uiResourcesDir/images/$lastRunPropertiesFile"
+    $echoCmd "Generated $lastRunPropertiesFile"
 }
 
 function getImageDimensions {
@@ -117,6 +111,11 @@ function scaleImages {
 
     for currImage in $sourceImages
     do
+        if skipImageScaling $currImage
+        then
+            continue
+        fi
+        
         local imageBaseName=`basename $currImage |tr -d "\r"`
         local imageDimensions=`getImageDimensions $currImage`
         local imageWidth=`getWidthFromImageDimensions $imageDimensions`
@@ -171,6 +170,27 @@ function scaleImages {
         #read blah
     done
  
+}
+
+function skipImageScaling {
+    local currImage="$1"
+    
+    local currImageMd5File="${currImage}.md5"
+    local tempMd5File="$$.tmp.md5"
+    
+    if [ -e "$currImageMd5File" ]
+    then
+        # Compute actual md5.
+        computeMd5 "$currImage" > "$tempMd5File"
+        
+        if $diffCmd -w "$tempMd5File" "$currImageMd5File" 2>&1 > /dev/null
+        then
+            $echoCmd "Skipping scaling of $currImage because it is consistent with the last run."
+            return 0
+        fi
+    fi
+    
+    return 1
 }
 
 function scaleSingleImage {
@@ -235,6 +255,35 @@ function scaleSingleImage {
     $echoCmd "Generated image \"$outputImagePath\""
 }
 
+
+function clobberImagesIfParamsChanged {
+    if [ -e "$lastRunPropertiesFile" ]
+    then
+        local previousPixelsIncrement=`$grepCmd "pixelsIncrement" "$lastRunPropertiesFile" | $cutCmd -d "=" -f 2`
+        local previousMinimumPixels=`$grepCmd "minimumPixels" "$lastRunPropertiesFile" | $cutCmd -d "=" -f 2`
+
+        if [ "$previousPixelsIncrement" != "$pixelsIncrement" -o "$previousMinimumPixels" != "$minimumPixels" ]
+        then
+            $echoCmd "Variables have changed since the last run. Previous values:"
+            $echoCmd ""
+            $catCmd "$lastRunPropertiesFile"
+            $echoCmd ""
+            $echoCmd "Will delete all generated images to account for the new pixelsIncrement and minimumPixels values above ..."
+
+            read -p "...continue with deletion? [y/n]" confirmation
+            if [ "$confirmation" = "y" -o "$confirmation" = "Y" ]
+            then
+                local forceClobber=0
+                clobberGeneratedImagesAndDirs $forceClobber
+            else
+                $echoCmd ""
+                $echoCmd "Aborting at user request."
+                exit 1
+            fi
+        fi
+    fi
+}
+
 # ==============================================================================
 # Processing
 
@@ -259,5 +308,7 @@ do  case "$option" in
 done
 
 echoUsedVariables
+initDerivedVariables
+clobberImagesIfParamsChanged
 scaleImages "$imageBasepath"
 writeLastRunPropertiesFile

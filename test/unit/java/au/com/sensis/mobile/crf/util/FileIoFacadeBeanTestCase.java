@@ -37,7 +37,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     private File expectedAnotherFindMePngFile;
     private File expectedAnotherFindMeGifFile;
 
-    private File withExtensionsParentDirectory;
+    private File testDataRootDir;
     private File listByWildcardsTestDataDirectory;
 
     /**
@@ -57,7 +57,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
         setExpectedAnotherFindMeGifFile(new File(this.getClass().getResource(
                 EXPECTED_ANOTHER_FIND_ME_GIF_FILE_ON_CLASSPATH).toURI()));
 
-        setWithExtensionsParentDirectory(
+        setTestDataRootDir(
                 new File(this.getClass().getResource(
                     "/au/com/sensis/mobile/crf/util/fileIoFacadeBeanTestData").toURI()));
         setListByWildcardsTestDataDirectory(
@@ -110,7 +110,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testListByExtensionsWithSpecificExtension() throws Throwable {
         final File[] listings =
-                getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+                getObjectUnderTest().list(getTestDataRootDir(),
                         "level1/level2/findMe",
                         new String[] { "png" });
 
@@ -122,7 +122,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testListByExtensionsWithSpecificExtensionsMultipleMatches() throws Throwable {
         final File[] listings =
-            getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+            getObjectUnderTest().list(getTestDataRootDir(),
                     "level1/level2/anotherFindMe",
                     new String[] { "png", "gif" });
 
@@ -137,7 +137,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testListByExtensionsWithWildcardExtension() throws Throwable {
         final File [] listings =
-            getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+            getObjectUnderTest().list(getTestDataRootDir(),
                     "level1/level2/findMe", new String[] { "*" });
 
         Assert.assertNotNull("listings should not be null", listings);
@@ -148,7 +148,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testListByExtensionsWithWildcardExtensionMultipleMatches() throws Throwable {
         final File[] listings =
-            getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+            getObjectUnderTest().list(getTestDataRootDir(),
                     "level1/level2/anotherFindMe",
                     new String[] { "*" });
 
@@ -163,7 +163,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testListByExtensionsWithSpecificExtensionAndWildcardExtension() throws Throwable {
         final File [] listings =
-                getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+                getObjectUnderTest().list(getTestDataRootDir(),
                         "level1/level2/findMe",
                         new String[] { "blah", "*" });
 
@@ -175,7 +175,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testListByExtensionsWithPartialWildcardExtension() throws Throwable {
         final File [] listings =
-            getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+            getObjectUnderTest().list(getTestDataRootDir(),
                     "level1/level2/findMe",
                     new String[] { "p*" });
 
@@ -187,7 +187,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testListByExtensionsWhenNoFilesFound() throws Throwable {
         final File [] listings =
-            getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+            getObjectUnderTest().list(getTestDataRootDir(),
                     "level1/level2/findMe",
                     new String[] { "blah*" });
 
@@ -209,7 +209,7 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testListByMatchedAndExcludedExtensions() throws Throwable {
         final File[] listings =
-                getObjectUnderTest().list(getWithExtensionsParentDirectory(),
+                getObjectUnderTest().list(getTestDataRootDir(),
                         "level1/level2/anotherFindMe", new String[] { "*" },
                         new String[] { "gif" });
 
@@ -284,6 +284,26 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
+    public void testListByFilenameAndDirectoryWildcardsWhenFilesFound() throws Throwable {
+        final File[] listings =
+            getObjectUnderTest().listByFilenameAndDirnameWildcardPatterns(
+                    getTestDataRootDir(),
+                    new String [] { "anotherFindMe*", "findMe*" },
+                    new String[] { "*1", "*2" });
+
+        Assert.assertNotNull("listings should not be null", listings);
+        Assert.assertEquals("incorrect number of listings", 3, listings.length);
+
+        final List<File> foundListings = Arrays.asList(listings);
+        Assert.assertTrue("listings does not contain anotherFindMeGifFile",
+                foundListings.contains(getExpectedAnotherFindMeGifFile()));
+        Assert.assertTrue("listings does not contain anotherFindMePngFile",
+                foundListings.contains(getExpectedAnotherFindMePngFile()));
+        Assert.assertTrue("listings does not contain findMeFile",
+                foundListings.contains(getExpectedFindMeFile()));
+    }
+
+    @Test
     public void testWriteFileAndCloseStream() throws Throwable {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
@@ -316,13 +336,13 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
         return expectedFindMeFile;
     }
 
-    private void setWithExtensionsParentDirectory(
-            final File withExtensionsParentDirectory) {
-        this.withExtensionsParentDirectory = withExtensionsParentDirectory;
+    private void setTestDataRootDir(
+            final File testDataRootDir) {
+        this.testDataRootDir = testDataRootDir;
     }
 
-    private File getWithExtensionsParentDirectory() {
-        return withExtensionsParentDirectory;
+    private File getTestDataRootDir() {
+        return testDataRootDir;
     }
 
     private File getExpectedAnotherFindMePngFile() {
@@ -350,7 +370,4 @@ public class FileIoFacadeBeanTestCase extends AbstractJUnit4TestCase {
             final File listByWildcardsTestDataDirectory) {
         this.listByWildcardsTestDataDirectory = listByWildcardsTestDataDirectory;
     }
-
-
-
 }

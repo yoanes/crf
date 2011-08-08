@@ -20,17 +20,8 @@ trap "echo -e \"\n\nCleanup ...removing temporary files ... \" && rm -f $$.tmp*"
 # ==============================================================================
 # Source includes.
 
-scriptDir=`dirname "$0"`
+scriptDir=`dirname "$0"|tr -d "\r"`
 source "$scriptDir/common.sh"
-
-# ==============================================================================
-# Define default vars.
-debug=1
-debugFile=$$.tmp.debug
-
-defaultUiResourcesDir="src/web/uiresources"
-uiResourcesDir="$defaultUiResourcesDir"
-lastRunPropertiesFile="gimages-last-run.properties"
 
 # ==============================================================================
 # Functions.
@@ -46,7 +37,7 @@ function usage {
 }
 
 function verifyLastRunPropertiesFile {
-    local expectedFile="$uiResourcesDir/images/$lastRunPropertiesFile"
+    local expectedFile="$lastRunPropertiesFile"
 
     if [ ! -e $expectedFile ]
     then
@@ -65,18 +56,18 @@ function verifyImageMd5Sums {
     for currImage in $sourceImages
     do
         local currImageMd5File="${currImage}.md5"
-        local uiResourcesDirRelativeImageMd5File="${currImageMd5File#$uiResourcesDir}"
         $echoCmd
         $echoCmd -n "Checking if $currImageMd5File exists ..."
         if [ -e "$currImageMd5File" ]
         then
             $echoCmd "OK"
 
+            $echoCmd "Comparing computed checksum to $currImageMd5File ..."
+            
             # Compute actual md5.
             computeMd5 "$currImage" > "$tempMd5File"
-
-            $echoCmd "Comparing computed checksum to $currImageMd5File ..."
-            if $diffCmd "$tempMd5File" "$currImageMd5File"
+            
+            if $diffCmd -w "$tempMd5File" "$currImageMd5File"
             then
                 $echoCmd "... OK"
                 :
@@ -111,7 +102,7 @@ function failVerification {
 # ==============================================================================
 # Processing
 
-while getopts ":r:i:m:p:ohd" option 
+while getopts ":r:hd" option 
 do  case "$option" in
         r) uiResourcesDir=$OPTARG
            ;;
@@ -124,6 +115,7 @@ do  case "$option" in
 done
 
 echoUsedVariables
+initDerivedVariables
 verifyLastRunPropertiesFile
 verifyImageMd5Sums
 

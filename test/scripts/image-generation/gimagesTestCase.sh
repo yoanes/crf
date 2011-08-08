@@ -21,12 +21,14 @@ findCmd="find"
 teeCmd="tee"
 rmCmd="rm"
 identifyCmd="identify"
+grepCmd="grep"
 
 # ==============================================================================
 # Define default vars.
 debug=1
 
 inputTestData="test/scripts/image-generation/test-data/input/gimages"
+existingRunInputData="test/scripts/image-generation/test-data/input/gimagesExistingRun"
 baseExpectedOutputData="test/scripts/image-generation/test-data/expected-output"
 baseWorkDir="build/work/image-generation-tests/gimagesTestCase"
 testFailedFile="$baseWorkDir/testFailed.txt"
@@ -51,24 +53,34 @@ gimagesScript="src/scripts/image-generation/gimages.sh"
 
 function setup {
     local workDir="$1"
+    local testDataToCopyDir="$2"
 
-    copyInputTestDataToWorkDir "$workDir"
+    copyInputTestDataToWorkDir "$workDir" "$testDataToCopyDir"
 }
 
 function copyInputTestDataToWorkDir {
     local workDir="$1"
+    local testDataToCopyDir="$2"
 
-    $echoCmd "Copying $inputTestData/images to $workDir."
+    $echoCmd "Copying $testDataToCopyDir/images to $workDir."
     $mkdirCmd -p "$workDir"
-    $cpCmd -r "$inputTestData/images" "$workDir"
+    $cpCmd -r "$testDataToCopyDir/images" "$workDir"
 }
 
 function invokeGimagesForAllImages {
     local workDir="$1"
 
-    $echoCmd "Running invokeGimagesForAllImages against work directory $workDir."
-    $gimagesScript -r "$workDir" -i50 -m5
+    invokeGimagesForAllImagesWithPixelsIncrement "$workDir" 50
 }
+
+function invokeGimagesForAllImagesWithPixelsIncrement {
+    local workDir="$1"
+    local pixelsIncrement="$2"
+
+    $echoCmd "Running invokeGimagesForAllImages against work directory $workDir using pixelsIncrement of $pixelsIncrement."
+    $gimagesScript -r "$workDir" "-i$pixelsIncrement" -m5
+}
+
 
 function invokeGimagesForBasepath {
     local workDir="$1"
@@ -102,8 +114,8 @@ function assertExpectedFilePaths {
     local expectedResourcePathsFile="$workDir/expectedResources.txt"
 
     # Find all workDir/expectedOutputDir relative paths so that we can compare them.
-    (cd "$workDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > "$actualResourcePathsFile"
-    (cd "$expectedOutputDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-l" "{}" ";"| tr -s " "|cut -f 9 -d " "|sort) > "$expectedResourcePathsFile"
+    (cd "$workDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-1" "{}" ";"|sort) > "$actualResourcePathsFile"
+    (cd "$expectedOutputDir/images" ; $findCmd . -type f -a '!' -path '*CVS*' -exec "ls" "-1" "{}" ";"|sort) > "$expectedResourcePathsFile"
 
     if $diffCmd "$expectedResourcePathsFile" "$actualResourcePathsFile"
     then
@@ -233,21 +245,89 @@ function findAllImagesRelativeToDir {
 function testGenerateAllImages {
     $echoCmd "testGenerateAllImages start"
 
-    setup "$baseWorkDir/testGenerateAllImages"
+    setup "$baseWorkDir/testGenerateAllImages" "$inputTestData"
     invokeGimagesForAllImages "$baseWorkDir/testGenerateAllImages"
     assertExpectedOutput "$baseExpectedOutputData/generateAllImages" "$baseWorkDir/testGenerateAllImages" 
 
-    $echoCmd "testGenerateAllImages end"
+    $echoCmd "testGenerateAllImages PASSED"
 }
 
 function testGenerateImagesFromBasepath {
     $echoCmd "testGenerateImagesFromBasepath start"
 
-    setup "$baseWorkDir/testGenerateImagesFromBasepath"
+    setup "$baseWorkDir/testGenerateImagesFromBasepath" "$inputTestData"
     invokeGimagesForBasepath "$baseWorkDir/testGenerateImagesFromBasepath" "common/search"
     assertExpectedOutput "$baseExpectedOutputData/generateImagesFromBasepath" "$baseWorkDir/testGenerateImagesFromBasepath" 
 
-    $echoCmd "testGenerateImagesFromBasepath end"
+    $echoCmd "testGenerateImagesFromBasepath PASSED"
+}
+
+function testGenerateAllImagesWhenImageScalingSkipped {
+    $echoCmd "testGenerateAllImagesWhenImageScalingSkipped start"
+
+    setup "$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped" "$existingRunInputData"
+    
+    # Create a dummy file to keep track of the current time, then sleep for a couple of seconds
+    # to protect against small time differences.
+    local timeControlFile="$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped/timeControlFile"
+    $echoCmd "" > "$timeControlFile"
+    sleep 2
+
+    local logFile="$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped/testGenerateAllImagesWhenImageScalingSkipped.log"
+    invokeGimagesForAllImages "$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped" |$teeCmd "$logFile"
+    
+    # Use the timeControlFile created above to detect if any new images were generated.
+    local newlyGeneratedFiles=`$findCmd "$baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped/images" -type f -newer "$timeControlFile" ! -name "gimages-last-run.properties"`
+    if [ -n "$newlyGeneratedFiles" ]
+    then
+        failTestCase "TEST FAILED. Images generated when they shouldn't have been. Test output stored in $baseWorkDir/testGenerateAllImagesWhenImageScalingSkipped."
+    fi
+
+    assertLogContains "$logFile" "Skipping scaling of build/work/image-generation-tests/gimagesTestCase/testGenerateAllImagesWhenImageScalingSkipped/images/default/yellow-pages.png because it is consistent with the last run."
+    assertLogContains "$logFile" "Skipping scaling of build/work/image-generation-tests/gimagesTestCase/testGenerateAllImagesWhenImageScalingSkipped/images/default/search.png because it is consistent with the last run."
+    assertLogContains "$logFile" "Skipping scaling of build/work/image-generation-tests/gimagesTestCase/testGenerateAllImagesWhenImageScalingSkipped/images/S/selenium/common/search.gif because it is consistent with the last run."
+
+    $echoCmd "testGenerateAllImagesWhenImageScalingSkipped PASSED"
+}
+
+function testGenerateAllImagesWhenChangedVariablesDetected {
+    $echoCmd "testGenerateAllImagesWhenChangedVariablesDetected start"
+
+    setup "$baseWorkDir/testGenerateAllImagesWhenChangedVariablesDetected" "$existingRunInputData"
+    
+    # Create a dummy file to keep track of the current time, then sleep for a couple of seconds
+    # to protect against small time differences.
+    local timeControlFile="$baseWorkDir/testGenerateAllImagesWhenChangedVariablesDetected/timeControlFile"
+    $echoCmd "" > "$timeControlFile"
+    sleep 2
+
+    local logFile="$baseWorkDir/testGenerateAllImagesWhenChangedVariablesDetected/testGenerateAllImagesWhenChangedVariablesDetected.log"
+    invokeGimagesForAllImagesWithPixelsIncrement "$baseWorkDir/testGenerateAllImagesWhenChangedVariablesDetected" 100 |$teeCmd "$logFile"
+    
+    # Use the timeControlFile created above to detect if any new images were generated.
+    local newlyGeneratedFiles=`$findCmd "$baseWorkDir/testGenerateAllImagesWhenChangedVariablesDetected/images" -type f -newer "$timeControlFile" ! -name "gimages-last-run.properties"`
+    if [ -n "$newlyGeneratedFiles" ]
+    then
+        failTestCase "TEST FAILED. Images generated when they shouldn't have been. Test output stored in $baseWorkDir/testGenerateAllImagesWhenChangedVariablesDetected."
+    fi
+
+    assertLogContains "$logFile" "Variables have changed since the last run."
+    assertLogContains "$logFile" "Will delete all generated images to account for the new pixelsIncrement and minimumPixels values above ..."
+    assertLogContains "$logFile" "Aborting at user request."
+
+    $echoCmd "testGenerateAllImagesWhenChangedVariablesDetected PASSED"
+}
+
+function assertLogContains {
+    local logFile="$1"
+    local searchString="$2"
+
+    if $grepCmd "$searchString" "$logFile" 2>&1 > /dev/null
+    then
+        :
+    else
+        failTestCase "TEST FAILED. Output does not contain: '$searchString'"
+    fi
 }
 
 
@@ -256,3 +336,5 @@ function testGenerateImagesFromBasepath {
 
 testGenerateAllImages
 testGenerateImagesFromBasepath
+testGenerateAllImagesWhenImageScalingSkipped
+testGenerateAllImagesWhenChangedVariablesDetected
