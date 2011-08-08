@@ -103,11 +103,14 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
                 createResourceCacheKey(requestedResourcePath, device);
         final ResourceCacheEntry cachedResources = getCachedResources(resourceCacheKey);
         if (cachedEntryIsValid(cachedResources)) {
+
             addResourcesToResourceResolutionTreeIfEnabled(cachedResources.getResourcesAsList());
             logWarningIfEmptyCachedResources(requestedResourcePath, device, cachedResources);
             return cachedResources.getResourcesAsList();
+
         } else if (cachedEntryHasEmptyResources(cachedResources)
                 && !cachedResources.maxRefreshCountReached()) {
+
             logWarningIfEmptyCachedResourcesToBeRefreshed(requestedResourcePath, device,
                     cachedResources);
         }
@@ -174,8 +177,8 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
 
     private boolean cachedEntryIsValid(final ResourceCacheEntry cachedResources) {
         return cachedEntryHasNonEmptyResources(cachedResources)
-                || cachedEntryHasEmptyResources(cachedResources) && cachedResources
-                        .maxRefreshCountReached();
+                || (cachedEntryHasEmptyResources(cachedResources) && cachedResources
+                        .maxRefreshCountReached());
     }
 
     private boolean cachedEntryHasNonEmptyResources(final ResourceCacheEntry cachedResources) {
