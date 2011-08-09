@@ -1,3 +1,13 @@
+==== Version 2.0.11 (tag: contentRenderingFramework_v2_0_11) ====
+
+Fixed regex in image generation/verification scripts so that it works under Mac OS X 10.x. 
+Thanks to Leo for finding this bug, since I don't have a Mac to test on.
+
+Upgrade steps:
+- when ivy retrieves the crf artifacts, there will be a  
+  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
+  all the *.sh files into a new/existing top level directory called "scripts" in your project.
+
 ==== Version 2.0.10 (tag: contentRenderingFramework_v2_0_10) ====
 
 Changes:

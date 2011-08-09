@@ -103,7 +103,9 @@ function findSourceImagesToScaleFromBasePath {
 function findSourceImagesForPropertyFiles {
     local propertyFiles="$1"
     local imagesResourcesDir="$uiResourcesDir/images"
-    local generatedImageDirRegex=".*[/\\\\]w[0-9]+[/\\\\]h[0-9]+[/\\\\].*"
+    # Use [0-9][0-9]* instead of [0-9]+ in the following pattern since the latter doesn't seem 
+    # to work correctly under Mac OS X 10.x.
+    local generatedImageDirRegex=".*[/\\\\]w[0-9][0-9]*[/\\\\]h[0-9][0-9]*[/\\\\].*"
     local dotNullImageNamePattern="*.null"
     local propertyFileNamePattern="*.properties"
     local md5FileNamePattern="*.md5"
