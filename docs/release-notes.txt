@@ -3,7 +3,9 @@
 Fixed image generation scripts to protect against 1. the images directory not existing and 2. no image properties files found.
 
 Upgrade steps:
-- should be transparent.
+- when ivy retrieves the crf artifacts, there will be a  
+  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
+  all the *.sh files into a new/existing top level directory called "scripts" in your project.
 
 ==== Version 2.0.11 (tag: contentRenderingFramework_v2_0_11) ====
 
