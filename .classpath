@@ -8,7 +8,7 @@
 	<classpathentry kind="src" path="showcase/java"/>
 	<classpathentry kind="src" path="src/resources"/>
 	<classpathentry kind="src" path="src/java"/>
-	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?ivyXmlPath=ivy-settings%2Fivy.xml&amp;confs=*&amp;ivySettingsPath=%24%7Bproject_loc%7D%2Fivy-settings%2Fivysettings.xml&amp;loadSettingsOnDemand=false&amp;propertyFiles=user.%24%7Benv_var%3AUSERNAME%7D.properties"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?ivyXmlPath=ivy-settings%2Fivy.xml&amp;confs=*"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="shared-build-scripts/lib/java/tools/jsp-api.jar"/>
 	<classpathentry kind="lib" path="shared-build-scripts/lib/java/tools/servlet-api.jar"/>

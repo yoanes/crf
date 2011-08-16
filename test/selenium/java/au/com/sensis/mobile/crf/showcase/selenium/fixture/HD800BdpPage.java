@@ -33,6 +33,15 @@ public class HD800BdpPage extends BdpPage {
         assertDeviceProperties();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getScaledImageFormat() {
+
+        return "png";
+    }
+
     private void assertHD800Css() {
         assertNumCssLinks(super.getNumExpectedLinks() + 2);
         assertOnlyDefaultGroupCssResolved();
