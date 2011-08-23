@@ -237,13 +237,14 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
                 createTitleDynamicAttribute(), createIdDynamicAttribute()), ABSOLUTE_HREF, null,
                 createTagDependencies(), getMockBundleScriptsTag()));
 
+        getMockBundleScriptsTag().rememberAbsoluteHref(ABSOLUTE_HREF);
+
         replay();
 
         getObjectUnderTest().writeTag(getMockJspWriter(), getMockJspFragment());
 
-        Assert.assertEquals("incorrect output", "<script src=\"" + ABSOLUTE_HREF
-                + "\" title=\"My Image\" id=\"myJavaScript\" charset=\"utf-8\" "
-                + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
+        // the href is remembered and written out by the parent bundle scripts tag.
+        Assert.assertEquals("incorrect output", "", getStringWriter().getBuffer().toString());
     }
 
     @Test

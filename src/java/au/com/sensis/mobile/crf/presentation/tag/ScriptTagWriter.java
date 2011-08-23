@@ -112,7 +112,7 @@ public class ScriptTagWriter implements TagWriter {
 
     private void writeTagWithHref(final JspWriter jspWriter) throws IOException {
         if (isAbsoluteUrl(getHref())) {
-            writeSingleLinkTag(jspWriter, getHref());
+            handleAbsoluteHref(jspWriter, getHref());
         } else {
             resolveResourceAndWriteTag(jspWriter);
         }
@@ -120,6 +120,16 @@ public class ScriptTagWriter implements TagWriter {
 
     private boolean isAbsoluteUrl(final String href) {
         return href.startsWith(ABSOLUTE_URL_PREFIX);
+    }
+
+    private void handleAbsoluteHref(final JspWriter jspWriter, final String href)
+            throws IOException {
+
+        if (getParentBundleScriptsTag() != null) {
+            postponeWriteForAbsoluteHref(href);
+        } else {
+            writeSingleLinkTag(jspWriter, href);
+        }
     }
 
     private void resolveResourceAndWriteTag(final JspWriter jspWriter) throws IOException {
@@ -132,6 +142,9 @@ public class ScriptTagWriter implements TagWriter {
         }
     }
 
+    private void postponeWriteForAbsoluteHref(final String href) {
+        getParentBundleScriptsTag().rememberAbsoluteHref(href);
+    }
 
     private void postponeWriteForBundleScriptsTag(final List<Resource> allResourcePaths) {
         getParentBundleScriptsTag().addResourcesToBundle(allResourcePaths);

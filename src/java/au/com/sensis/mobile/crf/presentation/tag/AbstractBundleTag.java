@@ -59,6 +59,12 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
     private final List<Resource> resourcesToBundle = new ArrayList<Resource>();
 
     /**
+     * List of absoulte hrefs that child tags have registered with this {@link AbstractBundleTag}
+     * to be be written out before the bundle. (Note, not actually included in the bundle).
+     */
+    private final List<String> absoluteHrefsToRemember = new ArrayList<String>();
+
+    /**
      * @return the id
      */
     public String getId() {
@@ -79,6 +85,9 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
 
         invokeBodyContent();
 
+        if (childTagsHaveRegisteredAbsoluteHrefs()) {
+            writeTagsForRegisteredHrefsToPage();
+        }
         if (childTagsHaveRegisteredResourcesToBundle()) {
             bundleRegisteredResourcesAndWriteTagToPage();
         }
@@ -110,6 +119,18 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
 
     private boolean childTagsHaveRegisteredResourcesToBundle() {
         return !getResourcesToBundle().isEmpty();
+    }
+
+    private boolean childTagsHaveRegisteredAbsoluteHrefs() {
+        return !getAbsoluteHrefsToRemember().isEmpty();
+    }
+
+    private void writeTagsForRegisteredHrefsToPage() throws IOException {
+
+        for (final String absoluteHref : getAbsoluteHrefsToRemember()) {
+
+            writeAbsoluteHrefTag(absoluteHref);
+        }
     }
 
     private void bundleRegisteredResourcesAndWriteTagToPage() throws IOException {
@@ -251,6 +272,14 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
      */
     protected abstract void writeTag(final String path) throws IOException;
 
+    /**
+     * Write out the tag to the page.
+     *
+     * @param path absolute href.
+     * @throws IOException Thrown if any error occurs.
+     */
+    protected abstract void writeAbsoluteHrefTag(final String path) throws IOException;
+
     private BundleTagDependencies getTagDependencies() {
         final PageContext pc = (PageContext) getJspContext();
 
@@ -312,6 +341,23 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
     @Override
     public void addResourcesToBundle(final List<Resource> resources) {
         getResourcesToBundle().addAll(resources);
+    }
+
+    /**
+     * @return  the absoluteHrefsToRemember.
+     */
+    private List<String> getAbsoluteHrefsToRemember() {
+
+        return absoluteHrefsToRemember;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void rememberAbsoluteHref(final String href) {
+
+        getAbsoluteHrefsToRemember().add(href);
     }
 
     /**

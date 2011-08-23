@@ -31,6 +31,15 @@ public class BundleLinksTag extends AbstractBundleTag {
         getJspContext().getOut().print("/>");
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void writeAbsoluteHrefTag(@SuppressWarnings("unused") final String path) {
+
+        throw new UnsupportedOperationException("Absolute hrefs not supported for links as it is"
+                + " not expected absolute css will be required.");
+    }
 
     private void writeDynamicTagAttributes(final JspWriter jspWriter) throws IOException {
         boolean relAttributeFound = false;

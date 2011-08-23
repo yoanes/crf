@@ -66,6 +66,9 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     private String sourceBundle2NewPath;
     private File appBundlesRootDir;
 
+    private static final String ABSOLUTE_HREF_1 = "http://www.url.com/externalJavascript1.js";
+    private static final String ABSOLUTE_HREF_2 = "http://www.url.com/externalJavascript2.js";
+
     /**
      * Setup test data.
      *
@@ -153,6 +156,52 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         Assert.assertEquals("Script incorrectly written", "<script id=\"myId\" src=\""
                 + createExpectedOutputBundleClientPath() + "\" charset=\"utf-8\" "
                 + "type=\"text/javascript\" ></script>", getStringWriter().getBuffer().toString());
+
+        assertBundleFileCorrect();
+    }
+
+    @Test
+    public void testDoTagWhenResourcesToBundleAndAbsoluteHrefsAndNoDynamicTagAttributes()
+            throws Exception {
+
+        recordGetTagDependencies();
+
+        recordPushBundleTag();
+
+        getMockJspFragment().invoke(null);
+
+        recordRemoveBundleTag();
+
+        recordCheckCachedResources(false);
+
+        recordBehaviourForBundleCreation();
+
+        recordBehaviourForClientSrcPathCreation();
+
+        recordBehaviourForWritingScriptTag();
+
+        recordUpdateCache();
+
+        replay();
+
+        getObjectUnderTest().addResourcesToBundle(
+                Arrays.asList(getMockResource1(), getMockResource2()));
+        getObjectUnderTest().rememberAbsoluteHref(ABSOLUTE_HREF_1);
+        getObjectUnderTest().rememberAbsoluteHref(ABSOLUTE_HREF_2);
+        getObjectUnderTest().doTag();
+
+        final String absoluteHrefScriptTag1 = "<script src=\"" + ABSOLUTE_HREF_1
+                + "\" charset=\"utf-8\" type=\"text/javascript\" ></script>";
+        final String absoluteHrefScriptTag2 = "<script src=\"" + ABSOLUTE_HREF_2
+                + "\" charset=\"utf-8\" type=\"text/javascript\" ></script>";
+        final String bundeledScriptTag = "<script id=\"myId\" src=\""
+                    + createExpectedOutputBundleClientPath() + "\" charset=\"utf-8\" "
+                    + "type=\"text/javascript\" ></script>";
+        final String expectedOutput = absoluteHrefScriptTag1 + absoluteHrefScriptTag2
+                + bundeledScriptTag;
+
+        Assert.assertEquals("Script incorrectly written", expectedOutput,
+                getStringWriter().getBuffer().toString());
 
         assertBundleFileCorrect();
     }
@@ -436,7 +485,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
      * @param mockResource the mockResource to set
      */
     public void setMockResource1(final Resource mockResource) {
-        this.mockResource1 = mockResource;
+        mockResource1 = mockResource;
     }
 
     /**

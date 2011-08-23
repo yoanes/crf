@@ -31,6 +31,25 @@ public class BundleScriptsTag extends AbstractBundleTag {
         getJspContext().getOut().print("></script>");
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void writeAbsoluteHrefTag(final String path)
+            throws IOException {
+
+        // same as writeTag above, but we don't want the id.
+
+        getJspContext().getOut().print("<script");
+
+        getJspContext().getOut().print(" src=\"");
+        getJspContext().getOut().print(path);
+        getJspContext().getOut().print("\" ");
+
+        writeDynamicTagAttributes(getJspContext().getOut());
+
+        getJspContext().getOut().print("></script>");
+    }
 
     private void writeDynamicTagAttributes(final JspWriter jspWriter) throws IOException {
         boolean charsetAttributeFound = false;
