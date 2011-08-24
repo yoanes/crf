@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,16 +52,14 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
     private String id;
 
     /**
-     * List of resources that child tags have registered with this {@link AbstractBundleTag}
-     * to be bundled into a single script.
+     * optional var to write the output to.
      */
-    private final List<Resource> resourcesToBundle = new ArrayList<Resource>();
+    private String var;
 
     /**
-     * List of absoulte hrefs that child tags have registered with this {@link AbstractBundleTag}
-     * to be be written out before the bundle. (Note, not actually included in the bundle).
+     * Data that child tags have registered with this {@link AbstractBundleTag}.
      */
-    private final List<String> absoluteHrefsToRemember = new ArrayList<String>();
+    private final BundleTagData bundleTagData = new BundleTagData();
 
     /**
      * @return the id
@@ -79,17 +76,43 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
         this.id = id;
     }
 
+    /**
+     * @return  the var.
+     */
+    protected String getVar() {
+
+        return var;
+    }
+
+    /**
+     * @param var   the var to set.
+     */
+    public void setVar(final String var) {
+
+        this.var = var;
+    }
+
     @Override
     public void doTag() throws JspException, IOException {
         makeUsAvailableToChildTags();
 
         invokeBodyContent();
 
-        if (childTagsHaveRegisteredAbsoluteHrefs()) {
-            writeTagsForRegisteredHrefsToPage();
-        }
-        if (childTagsHaveRegisteredResourcesToBundle()) {
-            bundleRegisteredResourcesAndWriteTagToPage();
+        if (StringUtils.isNotBlank(getVar())) {
+
+            getJspContext().setAttribute(getVar(), bundleTagData);
+
+        } else {
+
+            if (childTagsHaveRegisteredAbsoluteHrefs()) {
+
+                writeTagsForRegisteredHrefsToPage();
+            }
+
+            if (childTagsHaveRegisteredResourcesToBundle()) {
+
+                bundleRegisteredResourcesAndWriteTagToPage();
+            }
         }
     }
 
@@ -332,7 +355,7 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
      *         {@link AbstractBundleTag} to be bundled into a single script.
      */
     private List<Resource> getResourcesToBundle() {
-        return resourcesToBundle;
+        return bundleTagData.getResourcesToBundle();
     }
 
     /**
@@ -348,7 +371,7 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
      */
     private List<String> getAbsoluteHrefsToRemember() {
 
-        return absoluteHrefsToRemember;
+        return bundleTagData.getAbsoluteHrefsToRemember();
     }
 
     /**

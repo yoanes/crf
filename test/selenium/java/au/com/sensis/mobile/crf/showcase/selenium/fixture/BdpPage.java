@@ -46,6 +46,8 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertBundleScriptsTagOutputPresent();
         assertBundleLinksTagOutputPresent();
 
+        assertBundleLinksWithinBundleScriptsWithDeferredRenderingTagOutputPresent();
+
         doAssertPageStructure();
 
         assertMapAddons();
@@ -117,6 +119,52 @@ public abstract class BdpPage extends AbstractPageFixture {
     }
 
     /**
+     * Assert expected out of the bundleScriptsTag.
+     */
+    protected void assertBundleScriptsWithDeferredRenderingTagOutputPresent() {
+
+        assertBundleScriptsTagJavaScriptVariable(
+                "showcaseAppBundleInlineScriptWithDelayedRendering", "true");
+
+        // TODO: uncomment these when the deferred rendering for the bundleScripts tag is finished
+
+//        assertBundleScriptsTagJavaScriptVariable(
+//                "defaultShowcaseAppBundleWithDelayedRenderingPackage1File1", "true");
+//        assertBundleScriptsTagJavaScriptVariable(
+//                "defaultShowcaseAppBundleWithDelayedRenderingPackage1File2", "true");
+//        assertBundleScriptsTagJavaScriptVariable(
+//                "defaultShowcaseAppBundleWithDelayedRenderingPackage2File1", "true");
+//        assertBundleScriptsTagJavaScriptVariable(
+//                "defaultShowcaseAppBundleWithDelayedRenderingPackage2File2", "true");
+
+//        assertBundleScriptsTagJavaScriptVariable(
+//                "iphoneIpodShowcaseAppBundleWithDelayedRenderingPackage1File1", "null");
+//        assertBundleScriptsTagJavaScriptVariable(
+//                "iphoneIpodShowcaseAppBundleWithDelayedRenderingPackage1File2", "null");
+
+//        assertAbsolutelyReferencedScript(
+//                "BundleScriptsTag child sourced from absolute URL not found",
+//                "http://localhost:8080/showcaseAppBundleWithDelayedRenderingAbsoluteUrl.js");
+    }
+
+    private void assertBundleLinksWithinBundleScriptsWithDeferredRenderingTagOutputPresent() {
+
+        assertTrue("showcaseAppBundleInlineScriptWithDelayedRendering link not found",
+                getBrowser().isElementPresent(
+                        "//head/link["
+                        + "@type=\"text/css\" "
+                        + "and @id=\"showcaseAppCssBundleWithinBundleScriptsWithDelayedRendering\" "
+                        + "and @rel=\"stylesheet\" "
+                        + "and starts-with(@href, "
+                            + "\"/uidev/crfshowcase/uiresources/" + getProjectVersion()
+                            + "/appBundles"
+                            + "/showcaseAppCssBundleWithinBundleScriptsWithDelayedRendering-\") "
+                        + "and contains(@href, \"-package.css\")"
+                        + "]"));
+        // We can't easily test the contents of the bundle but this should be okay if the
+        // JavaScript bundling works (which we can and do assert elsewhere)- it's shared code.
+    }
+    /**
      * Assert that the page contains a JavaScript variable set to the given value.
      *
      * @param scriptVariableName Name of the variable to assert.
@@ -142,14 +190,15 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @return number of scripts expected by this abstract BdpPage.
      */
     protected final int getNumExpectedScripts() {
-        return 5;
+        // TODO: this will need to be updated when the deferred bundle scripts tag is finished.
+        return 6;
     }
 
     /**
      * @return number of links expected by this abstract BdpPage.
      */
     protected final int getNumExpectedLinks() {
-        return 1;
+        return 2;
     }
 
     /**

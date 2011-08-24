@@ -206,6 +206,42 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         assertBundleFileCorrect();
     }
 
+    @Test
+    public void testDoTagWithVar()
+            throws Exception {
+
+        final String var = "var";
+        getObjectUnderTest().setVar(var);
+
+        recordGetTagDependencies();
+
+        recordPushBundleTag();
+
+        getMockJspFragment().invoke(null);
+
+        recordRemoveBundleTag();
+
+        final BundleTagData expectedBundleTagData = new BundleTagData();
+        expectedBundleTagData.getResourcesToBundle().add(getMockResource1());
+        expectedBundleTagData.getResourcesToBundle().add(getMockResource2());
+        expectedBundleTagData.getAbsoluteHrefsToRemember().add(ABSOLUTE_HREF_1);
+        expectedBundleTagData.getAbsoluteHrefsToRemember().add(ABSOLUTE_HREF_2);
+        getMockPageContext().setAttribute(var, expectedBundleTagData);
+
+        replay();
+
+        getObjectUnderTest().addResourcesToBundle(
+                Arrays.asList(getMockResource1(), getMockResource2()));
+        getObjectUnderTest().rememberAbsoluteHref(ABSOLUTE_HREF_1);
+        getObjectUnderTest().rememberAbsoluteHref(ABSOLUTE_HREF_2);
+        getObjectUnderTest().doTag();
+
+        Assert.assertEquals("Script incorrectly written", StringUtils.EMPTY,
+                getStringWriter().getBuffer().toString());
+
+        assertBundleFileCorrect();
+    }
+
     private void recordPushBundleTag() {
         getMockBundleTagStack().pushBundleTag(getMockPageContext(), getObjectUnderTest());
     }
