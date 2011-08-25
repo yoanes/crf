@@ -9,5 +9,13 @@
     <wb-module deploy-name="template-component-showcase">
         <wb-resource deploy-path="/" source-path="/showcase/web"/>
         <wb-resource deploy-path="/" source-path="/lib/zip/wl.webapp.testbed-exploded/web"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test/unit/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test/unit/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test/selenium/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/web"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/showcase/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/showcase/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/java"/>
     </wb-module>
 </project-modules>

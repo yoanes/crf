@@ -22,16 +22,17 @@ import au.com.sensis.wireless.test.selenium.UserAgent;
 public class BdpPageIntegrationTestCase extends AbstractSeleniumIntegrationTestCase {
 
     protected final void openBdp() {
-        openUrl("http://localhost:8080/uidev/crfshowcase/crf/bdp.action");
+        openUrl("http://" + getServerHostAndPort() + "/uidev/crfshowcase/crf/bdp.action");
     }
 
     protected final void openBdpWithUserAgent(final String userAgent) {
-        openUrlWithUserAgent("http://localhost:8080/uidev/crfshowcase/crf/bdp.action", userAgent);
+        openUrlWithUserAgent("http://" + getServerHostAndPort()
+                + "/uidev/crfshowcase/crf/bdp.action", userAgent);
     }
 
     protected final void openIphoneClientAppBdpWithUserAgent(final String userAgent) {
-        openUrlWithUserAgent("http://localhost:8080/uidev/crfshowcase/crf/bdp.action?client=iphone",
-                userAgent);
+        openUrlWithUserAgent("http://" + getServerHostAndPort()
+                + "/uidev/crfshowcase/crf/bdp.action?client=iphone", userAgent);
     }
 
     /**
