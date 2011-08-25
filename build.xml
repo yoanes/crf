@@ -219,4 +219,9 @@
         <echo message="crf: Overriding standard -do-hudson target to add additional steps." />
     </target>
 	
+    <target name="hudson-with-system-tests" description="Same as the hudson target but also executes system tests" 
+        depends="-do-hudson, run-system-tests">
+    </target>
+
+	
 </project>
