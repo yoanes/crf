@@ -49,12 +49,13 @@
         <artifact name="wl-crf" type="jar" ext="jar" conf="default"/>
         <artifact name="wl-crf-test" type="jar" ext="jar" conf="test"/>
         <artifact name="wl-crf-image-scripts" type="zip" ext="zip" conf="default"/>
+        <artifact name="wl-crf-src" type="source" ext="zip" conf="default"/>
     </publications>
 
     <dependencies>
 
         <!-- Shared build scripts required by this project. -->    
-        <dependency org="com.sensis" name="wl-build-scripts" rev="2.5.4" conf="buildBootstrap->default" />
+        <dependency org="com.sensis" name="wl-build-scripts" rev="2.5.6" conf="buildBootstrap->default" />
 
         <!-- Commons -->
         <dependency org="apache" name="commons-lang" rev="2.4" conf="default" />

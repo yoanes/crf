@@ -1,3 +1,14 @@
+==== Version 2.0.13 (tag: contentRenderingFramework_v2_0_13) ====
+
+Changes:
+- CRF-141 Modify hudson build target to also create publishable build artifacts
+  - Now depends on wl-build-scripts 2.5.6, which allows the hudson build
+    target to automatically pulbish to the buildbox. 
+- Source code is now published to ivy.
+
+Upgrade steps:
+- should be transparent.
+
 ==== Version 2.0.12 (tag: contentRenderingFramework_v2_0_12) ====
 
 Fixed image generation scripts to protect against 1. the images directory not existing and 2. no image properties files found.
