@@ -55,7 +55,7 @@
     <dependencies>
 
         <!-- Shared build scripts required by this project. -->    
-        <dependency org="com.sensis" name="wl-build-scripts" rev="2.5.7" conf="buildBootstrap->default" />
+        <dependency org="com.sensis" name="wl-build-scripts" rev="2.5.8" conf="buildBootstrap->default" />
 
         <!-- Commons -->
         <dependency org="apache" name="commons-lang" rev="2.4" conf="default" />
