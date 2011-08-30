@@ -131,4 +131,3 @@ public class BundleScriptsTagDelegate
         return "crf.bundleScriptsTagDependencies";
     }
 }
-

@@ -2,8 +2,8 @@ package au.com.sensis.mobile.crf.presentation.tag;
 
 /**
  * Tag that bundles the output of any child {@link ScriptTag}s that register
- * {@link au.com.sensis.mobile.crf.service.Resource}s with
- * this {@link BundleScriptsTag} via the {@link #addResourcesToBundle(java.util.List)} method.
+ * {@link au.com.sensis.mobile.crf.service.Resource}s with this {@link BundleScriptsTag} via the
+ * {@link #addResourcesToBundle(java.util.List)} method.
  *
  * @author w12495
  */
