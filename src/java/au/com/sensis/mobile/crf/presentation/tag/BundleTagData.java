@@ -17,6 +17,12 @@ import au.com.sensis.mobile.crf.service.Resource;
 public class BundleTagData {
 
     /**
+     * id to associate with the script. Should be unique to the page, just like any HTML id. The tag
+     * does not enforce this uniqueness.
+     */
+    private String id;
+
+    /**
      * List of resources that child tags have registered with this {@link AbstractBundleTag}
      * to be bundled into a single script.
      */
@@ -27,6 +33,30 @@ public class BundleTagData {
      * to be be written out before the bundle. (Note, not actually included in the bundle).
      */
     private List<String> absoluteHrefsToRemember = new ArrayList<String>();
+
+    /**
+     * @return  the id.
+     */
+    public String getId() {
+
+        return id;
+    }
+
+    /**
+     * @param id    the id to set.
+     */
+    public void setId(final String id) {
+
+        this.id = id;
+    }
+    /**
+     * @param resources {@link List} of {@link Resource}s that a child tag wants to register with
+     *                  the {@link BundleTag} to be bundled into a single file.
+     */
+    public void addResourcesToBundle(final List<Resource> resources) {
+
+        getResourcesToBundle().addAll(resources);
+    }
 
     /**
      * @return  the resourcesToBundle.
@@ -47,6 +77,15 @@ public class BundleTagData {
     }
 
     /**
+     * @param href  absolute href that a child tag wants to register with the {@link BundleTag} to
+     *              be written out before the bundle. (Note, not actually included in the bundle).
+     */
+    public void rememberAbsoluteHref(final String href) {
+
+        getAbsoluteHrefsToRemember().add(href);
+    }
+
+    /**
      * @return  the absoluteHrefsToRemember.
      */
     public List<String> getAbsoluteHrefsToRemember() {
@@ -56,7 +95,7 @@ public class BundleTagData {
     }
 
     /**
-     * @param absoluteHrefsToRemember the absoluteHrefsToRemember to set.
+     * @param absoluteHrefsToRemember   the absoluteHrefsToRemember to set.
      */
     public void setAbsoluteHrefsToRemember(final List<String> absoluteHrefsToRemember) {
 
@@ -83,6 +122,7 @@ public class BundleTagData {
         final BundleTagData rhs = (BundleTagData) obj;
         final EqualsBuilder equalsBuilder = new EqualsBuilder();
 
+        equalsBuilder.append(getId(), rhs.getId());
         equalsBuilder.append(getResourcesToBundle(), rhs.getResourcesToBundle());
         equalsBuilder.append(getAbsoluteHrefsToRemember(), rhs.getAbsoluteHrefsToRemember());
 
@@ -97,6 +137,7 @@ public class BundleTagData {
 
         final HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
 
+        hashCodeBuilder.append(getId());
         hashCodeBuilder.append(getResourcesToBundle());
         hashCodeBuilder.append(getAbsoluteHrefsToRemember());
 

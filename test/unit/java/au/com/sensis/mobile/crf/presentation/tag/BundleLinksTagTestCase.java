@@ -125,8 +125,12 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAndNoDynamicTagAttributes() throws Exception {
+    public void testDoTagWhenResourcesToBundleAndNoDynamicTagAttributes()
+            throws Exception {
+
+        recordGetWebApplicationContext();
         recordGetTagDependencies();
+        recordGetTagStackBean();
 
         recordPushBundleTag();
 
@@ -227,8 +231,12 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAndRelDynamicTagAttribute() throws Exception {
+    public void testDoTagWhenResourcesToBundleAndRelDynamicTagAttribute()
+            throws Exception {
+
+        recordGetWebApplicationContext();
         recordGetTagDependencies();
+        recordGetTagStackBean();
 
         recordPushBundleTag();
 
@@ -262,8 +270,12 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAndTypeDynamicTagAttribute() throws Exception {
+    public void testDoTagWhenResourcesToBundleAndTypeDynamicTagAttribute()
+            throws Exception {
+
+        recordGetWebApplicationContext();
         recordGetTagDependencies();
+        recordGetTagStackBean();
 
         recordPushBundleTag();
 
@@ -297,8 +309,12 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAreCached() throws Exception {
+    public void testDoTagWhenResourcesToBundleAreCached()
+            throws Exception {
+
+        recordGetWebApplicationContext();
         recordGetTagDependencies();
+        recordGetTagStackBean();
 
         recordPushBundleTag();
 
@@ -324,14 +340,19 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenNoResourcesToBundle() throws Exception {
-        recordGetTagDependencies();
+    public void testDoTagWhenNoResourcesToBundle()
+            throws Exception {
+
+        recordGetWebApplicationContext();
+        recordGetTagStackBean();
 
         recordPushBundleTag();
 
         getMockJspFragment().invoke(null);
 
         recordRemoveBundleTag();
+
+        EasyMock.expect(getMockPageContext().getOut()).andReturn(getSpringMockJspWriter());
 
         replay();
 
@@ -345,7 +366,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
         getMockBundleTagStack().removeBundleTag(getMockPageContext());
     }
 
-    private void recordGetTagDependencies() {
+    private void recordGetWebApplicationContext() {
 
         EasyMock.expect(getMockPageContext().getServletContext()).andReturn(
                 getSpringMockServletContext()).atLeastOnce();
@@ -353,10 +374,21 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
         getSpringMockServletContext().setAttribute(
                 WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
                 getMockWebApplicationContext());
+    }
+
+    private void recordGetTagDependencies() {
 
         EasyMock.expect(
                 getMockWebApplicationContext().getBean("crf.bundleLinksTagDependencies"))
                 .andReturn(getBundleLinksTagDependencies())
+                .atLeastOnce();
+    }
+
+    private void recordGetTagStackBean() {
+
+        EasyMock.expect(
+                getMockWebApplicationContext().getBean("crf.bundleLinksTagStackBean"))
+                .andReturn(getMockBundleTagStack())
                 .atLeastOnce();
     }
 
@@ -435,7 +467,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
      * @param mockResource the mockResource to set
      */
     public void setMockResource1(final Resource mockResource) {
-        this.mockResource1 = mockResource;
+        mockResource1 = mockResource;
     }
 
     /**
