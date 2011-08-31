@@ -6,7 +6,7 @@
 
     <description>Builds the crf-component.</description>
 
-    <!-- Modify the following for local only configuration  -->
+    <!-- Modify the following for local only configuration   -->
     <property file="build.properties"/>
     
     <!-- ==================================================================================== -->
