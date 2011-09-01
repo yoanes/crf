@@ -7,11 +7,10 @@ import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspWriter;
 
 /**
- * Tag that bundles the output of any child {@link LinkTag}s that register
- * {@link au.com.sensis.mobile.crf.service.Resource}s with
- * this {@link BundleLinksTagDelegate} via the {@link #addResourcesToBundle(java.util.List)} method.
+ * Delegate which implements the writing of output for {@link BundleLinksTag}.
  *
- * @author w12495
+ * @author w12495 (author of original BundleLinksTag)
+ * @author Brendan Doyle
  */
 public class BundleLinksTagDelegate
         extends BundleTagDelegate {

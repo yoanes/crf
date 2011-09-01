@@ -22,25 +22,11 @@ import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.util.MD5Builder;
 
 /**
- * Tag that bundles the output of any child tags that register {@link Resource}s with this
- * {@link BundleTagDelegate} via the {@link #addResourcesToBundle(List)} method.
+ * Delegate which implements the writing of output for classes inheriting from
+ * {@link AbstractBundleTag}.
  *
- * <p>
- * This tag has no need to inherit the complexity of {@link AbstractDuplicatePreventingTag} because
- * any child tags are assumed to already have this protection. So if this {@link BundleTagDelegate}
- * ends up with a non-empty {@link #getResourcesToBundle()}, this is because there was a child tag
- * that has not occurred in the request before.
- * </p>
- *
- * <p>
- * NOTE: the bundling performed by this tag is different to
- * {@link au.com.sensis.mobile.crf.service.BundleFactory}. The latter occurs at a lower level and
- * can be considered as built into the CRF engine. In contrast, the bundling performed by this tag
- * is at the sole discretion of page authors. Yeah, the naming is a bit confusing. Not sure what
- * naming would be less confusing though.
- * </p>
- *
- * @author w12495
+ * @author w12495 (author of original AbstractBundleTag)
+ * @author Brendan Doyle
  */
 public abstract class BundleTagDelegate {
 
@@ -68,6 +54,14 @@ public abstract class BundleTagDelegate {
         return getBundleTagData().getId();
     }
 
+    /**
+     * Write out the tags to the page.
+     *
+     * @param jspWriter             the {@link JspWriter} to print output to.
+     * @param dynamicTagAttributes  the {@link List} of {@link DynamicTagAttribute}s.
+     *
+     * @throws IOException  if any error occurs.
+     */
     public void writeTags(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes)
             throws IOException {
@@ -110,7 +104,7 @@ public abstract class BundleTagDelegate {
             throws IOException;
 
     /**
-     * @return File extension (without the ".") to be used for the created bundle.
+     * @return  the file extension (without the ".") to be used for the created bundle.
      */
     protected abstract String getBundleFileExtension();
 
@@ -232,9 +226,9 @@ public abstract class BundleTagDelegate {
 
                 IOUtils.copy(resourceReader, outputBundleFileWriter);
 
-                // Preserve newlines in case minification was disabled for each resource
-                // and there are single-line comments in the file. This is unnecessary if
-                // minification is enabled but does not add any significant overhead.
+                // Preserve newlines in case minification was disabled for each resource and there
+                // are single-line comments in the file. This is unnecessary if minification is
+                // enabled but does not add any significant overhead.
                 outputBundleFileWriter.write("\n");
 
             } finally {
@@ -332,8 +326,8 @@ public abstract class BundleTagDelegate {
     }
 
     /**
-     * @return List of resources that a child tag wants to register with this
-     *         {@link BundleTagDelegate} to be bundled into a single script.
+     * @return  a {@link List} of {@link Resource}s that a child tag wants to register with this
+     *          {@link BundleTagDelegate} to be bundled into a single script.
      */
     private List<Resource> getResourcesToBundle() {
 
@@ -370,8 +364,8 @@ public abstract class BundleTagDelegate {
     }
 
     /**
-     * @return Name of the {@link BundleTagDependencies} bean to be obtained from the Spring
-     *         context.
+     * @return  the name of the {@link BundleTagDependencies} bean to be obtained from the Spring
+     *          context.
      */
     protected abstract String getTagDependenciesBeanName();
 

@@ -239,7 +239,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         expectedBundleTagData.getResourcesToBundle().add(getMockResource2());
         expectedBundleTagData.getAbsoluteHrefsToRemember().add(ABSOLUTE_HREF_1);
         expectedBundleTagData.getAbsoluteHrefsToRemember().add(ABSOLUTE_HREF_2);
-        getMockPageContext().setAttribute(var, expectedBundleTagData);
+        getMockPageContext().setAttribute(var, expectedBundleTagData, PageContext.REQUEST_SCOPE);
 
         replay();
 
@@ -498,8 +498,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
                 getMockResolutionWarnLogger(), getMockBundleScriptsTagCache(),
-                getAppBundlesRootDir(),
-                getMockBundleTagStack());
+                getAppBundlesRootDir());
     }
 
     /**

@@ -7,11 +7,10 @@ import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspWriter;
 
 /**
- * Tag that bundles the output of any child {@link ScriptTag}s that register
- * {@link au.com.sensis.mobile.crf.service.Resource}s with
- * this {@link BundleScriptsTagDelegate} via the {@link #addResourcesToBundle(java.util.List)} method.
+ * Delegate which implements the writing of output for {@link BundleScriptsTag}.
  *
- * @author w12495
+ * @author w12495 (author of original BundleLinksTag)
+ * @author Brendan Doyle
  */
 public class BundleScriptsTagDelegate
         extends BundleTagDelegate {
@@ -119,6 +118,7 @@ public class BundleScriptsTagDelegate
      */
     @Override
     protected String getBundleFileExtension() {
+
         return "js";
     }
 
@@ -127,6 +127,7 @@ public class BundleScriptsTagDelegate
      */
     @Override
     protected String getTagDependenciesBeanName() {
+
         return "crf.bundleScriptsTagDependencies";
     }
 }

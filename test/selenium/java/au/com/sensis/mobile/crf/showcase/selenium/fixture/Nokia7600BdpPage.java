@@ -53,8 +53,12 @@ public class Nokia7600BdpPage extends BdpPage {
     }
 
     private void assertNokia7600Scripts() {
-        final int expectedNumNokia7600Scripts = 9;
-        assertNumScripts(expectedNumNokia7600Scripts + super.getNumExpectedScripts());
+
+        final int expectedNumNokia7600HeadScripts = 9;
+        assertNumHeadScripts(expectedNumNokia7600HeadScripts + super.getNumExpectedHeadScripts());
+
+        final int expectedNumNokia7600BodyScripts = 0;
+        assertNumBodyScripts(expectedNumNokia7600BodyScripts + super.getNumExpectedBodyScripts());
 
         assertNokia7600ScriptByName();
         assertNokia7600ScriptByPackageNoBundling();

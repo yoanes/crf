@@ -38,7 +38,10 @@ public abstract class AbstractBundleTag<T extends BundleTagDelegate>
         implements BundleTag {
 
     /**
-     * optional var to write the output to.
+     * Optional var to save the output to. If this is set, the tag will save it's state to an
+     * attribute with the name of this var (using a {@link BundleTagData}) and will not write
+     * anything to the page output. The {@link RenderBundledScriptsTag} can be used to write the
+     * output of this attribute.
      */
     private String var;
 
@@ -86,7 +89,11 @@ public abstract class AbstractBundleTag<T extends BundleTagDelegate>
 
         if (StringUtils.isNotBlank(getVar())) {
 
-            getJspContext().setAttribute(getVar(), getBundleTagData());
+            // We set the attribute into the request scope as this will probably be what will be
+            // wanted. We could recognise a scope attribute and use page scope as the default (to
+            // mimic the behaviour of c:set), but haven't bothered to at the moment.
+            // We would need to change this for both AbstractBundleTag and RenderBundledScriptsTag.
+            getJspContext().setAttribute(getVar(), getBundleTagData(), PageContext.REQUEST_SCOPE);
 
         } else {
 
@@ -95,21 +102,26 @@ public abstract class AbstractBundleTag<T extends BundleTagDelegate>
     }
 
     private void makeUsAvailableToChildTags() {
+
         // We use a JspContextBundleTagStack instead of requiring child tags to rely on
         // {@link javax.servlet.jsp.tagext.SimpleTagSupport#findAncestorWithClass(
-        // javax.servlet.jsp.tagext.JspTag, Class)}
-        // because the latter does not cater to the case that child tags are executed via a dynamic
-        // JSP include.
+        // javax.servlet.jsp.tagext.JspTag, Class)} because the latter does not cater to the case
+        // that child tags are executed via a dynamic JSP include.
         getBundleTagStack().pushBundleTag(getJspContext(), this);
     }
 
-    private void invokeBodyContent() throws JspException, IOException {
+    private void invokeBodyContent()
+            throws JspException, IOException {
+
         try {
-            // Let any child tags do their thing. If they wish to have their external
-            // resources bundled by this tag, we expect them to find us using the
-            // JspContextBundleTagStack, then call addResourcesToBundle.
+
+            // Let any child tags do their thing. If they wish to have their external resources
+            // bundled by this tag, we expect them to find us using the JspContextBundleTagStack,
+            // then call addResourcesToBundle.
             getJspBody().invoke(null);
+
         } finally {
+
             cleanUpJspContextBundleTagStack();
         }
     }

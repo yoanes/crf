@@ -73,6 +73,19 @@
         <dynamic-attributes>true</dynamic-attributes>
     </tag>
     <tag>
+        <name>renderBundledScripts</name>
+        <description>Output the scripts previously bundled by a matching bundleScripts tag.</description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.RenderBundledScriptsTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>var</name>
+            <description>The name of the variable to read the results from. Must be set.</description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+    <tag>
         <name>bundleLinks</name>
         <description>Bundle lnks from child tags and output a single link tag.</description>
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.BundleLinksTag</tag-class>

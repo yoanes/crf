@@ -126,25 +126,23 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertBundleScriptsTagJavaScriptVariable(
                 "showcaseAppBundleInlineScriptWithDelayedRendering", "true");
 
-        // TODO: uncomment these when the deferred rendering for the bundleScripts tag is finished
+        assertBundleScriptsTagJavaScriptVariable(
+                "defaultShowcaseAppBundleWithDelayedRenderingPackage1File1", "true");
+        assertBundleScriptsTagJavaScriptVariable(
+                "defaultShowcaseAppBundleWithDelayedRenderingPackage1File2", "true");
+        assertBundleScriptsTagJavaScriptVariable(
+                "defaultShowcaseAppBundleWithDelayedRenderingPackage2File1", "true");
+        assertBundleScriptsTagJavaScriptVariable(
+                "defaultShowcaseAppBundleWithDelayedRenderingPackage2File2", "true");
 
-//        assertBundleScriptsTagJavaScriptVariable(
-//                "defaultShowcaseAppBundleWithDelayedRenderingPackage1File1", "true");
-//        assertBundleScriptsTagJavaScriptVariable(
-//                "defaultShowcaseAppBundleWithDelayedRenderingPackage1File2", "true");
-//        assertBundleScriptsTagJavaScriptVariable(
-//                "defaultShowcaseAppBundleWithDelayedRenderingPackage2File1", "true");
-//        assertBundleScriptsTagJavaScriptVariable(
-//                "defaultShowcaseAppBundleWithDelayedRenderingPackage2File2", "true");
+        assertBundleScriptsTagJavaScriptVariable(
+                "iphoneIpodShowcaseAppBundleWithDelayedRenderingPackage1File1", "null");
+        assertBundleScriptsTagJavaScriptVariable(
+                "iphoneIpodShowcaseAppBundleWithDelayedRenderingPackage1File2", "null");
 
-//        assertBundleScriptsTagJavaScriptVariable(
-//                "iphoneIpodShowcaseAppBundleWithDelayedRenderingPackage1File1", "null");
-//        assertBundleScriptsTagJavaScriptVariable(
-//                "iphoneIpodShowcaseAppBundleWithDelayedRenderingPackage1File2", "null");
-
-//        assertAbsolutelyReferencedScript(
-//                "BundleScriptsTag child sourced from absolute URL not found",
-//                "http://localhost:8080/showcaseAppBundleWithDelayedRenderingAbsoluteUrl.js");
+        assertAbsolutelyReferencedScript(
+                "BundleScriptsTag child sourced from absolute URL not found",
+                "http://localhost:8080/showcaseAppBundleWithDelayedRenderingAbsoluteUrl.js");
     }
 
     private void assertBundleLinksWithinBundleScriptsWithDeferredRenderingTagOutputPresent() {
@@ -187,11 +185,19 @@ public abstract class BdpPage extends AbstractPageFixture {
     }
 
     /**
-     * @return number of scripts expected by this abstract BdpPage.
+     * @return  the number of scripts expected in the head by this abstract BdpPage.
      */
-    protected final int getNumExpectedScripts() {
-        // TODO: this will need to be updated when the deferred bundle scripts tag is finished.
+    protected final int getNumExpectedHeadScripts() {
+
         return 6;
+    }
+
+    /**
+     * @return  the number of scripts expected in the body by this abstract BdpPage.
+     */
+    protected final int getNumExpectedBodyScripts() {
+
+        return 2;
     }
 
     /**
@@ -264,13 +270,25 @@ public abstract class BdpPage extends AbstractPageFixture {
     }
 
     /**
-     * Helper method for asserting the number of CSS links present.
+     * Helper method for asserting the number of scripts present in the head.
      *
-     * @param expectedNumLinks Expected number of link elements present.
+     * @param expectedNumScripts    expected number of script elements present in the head.
      */
-    protected final void assertNumScripts(final int expectedNumLinks) {
-        assertEquals("Incorrect number of script elements", expectedNumLinks,
+    protected final void assertNumHeadScripts(final int expectedNumScripts) {
+
+        assertEquals("Incorrect number of script elements", expectedNumScripts,
                 getBrowser().getXpathCount("//head/script"));
+    }
+
+    /**
+     * Helper method for asserting the number of scripts present in the body.
+     *
+     * @param expectedNumScripts    expected number of script elements present in the body.
+     */
+    protected final void assertNumBodyScripts(final int expectedNumScripts) {
+
+        assertEquals("Incorrect number of script elements", expectedNumScripts,
+                getBrowser().getXpathCount("//body/script"));
     }
 
     /**

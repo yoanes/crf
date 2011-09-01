@@ -60,8 +60,12 @@ public class HD800BdpPage extends BdpPage {
     }
 
     private void assertHD800Scripts() {
-        final int expectedNumHD800Scripts = 9;
-        assertNumScripts(expectedNumHD800Scripts + super.getNumExpectedScripts());
+
+        final int expectedNumHD800HeadScripts = 9;
+        assertNumHeadScripts(expectedNumHD800HeadScripts + super.getNumExpectedHeadScripts());
+
+        final int expectedNumHD800BodyScripts = 0;
+        assertNumBodyScripts(expectedNumHD800BodyScripts + super.getNumExpectedBodyScripts());
 
         assertHD800ScriptsByName();
         assertHD800ScriptsByPackageNoBundling();
