@@ -83,11 +83,24 @@ public class LinkTagWriter implements TagWriter {
     JspException {
 
         final List<Resource> allResourcePaths = getAllResourcePaths();
-        if (getParentBundleLinksTag() != null) {
+        if (bundlingEnabled()) {
             postponeWriteForBundleLinksTag(allResourcePaths);
         } else {
             writeLinkTagForEachResource(jspWriter, allResourcePaths);
         }
+    }
+
+    /**
+     * Should bundling occur?
+     * - We must be inside a parent bundle scripts tag.
+     * - The configuration must have bundling set to true.
+     *
+     * @return boolean - true when bundling should occur.
+     */
+    protected boolean bundlingEnabled() {
+
+        return (getParentBundleLinksTag() != null)
+        && (getParentBundleLinksTag().hasBundlingEnabled());
     }
 
     private void postponeWriteForBundleLinksTag(final List<Resource> allResourcePaths) {

@@ -144,6 +144,7 @@
         <constructor-arg ref="crf.bundleScriptsTagCache" />
         <constructor-arg value="@{crf.env.resources.app.bundles.root.dir}" />
         <constructor-arg ref="crf.bundleScriptsTagStackBean" />
+        <constructor-arg value="@{crf.env.bundle.resources}" />
     </bean>
 
     <bean id="crf.bundleScriptsTagStackBean" class="au.com.sensis.mobile.crf.presentation.tag.JspContextBundleTagStackBean">
@@ -158,6 +159,7 @@
         <constructor-arg ref="crf.bundleLinksTagCache" />
         <constructor-arg value="@{crf.env.resources.app.bundles.root.dir}" />
         <constructor-arg ref="crf.bundleLinksTagStackBean" />
+        <constructor-arg value="@{crf.env.bundle.resources}" />
     </bean>
     
     <bean id="crf.bundleLinksTagStackBean" class="au.com.sensis.mobile.crf.presentation.tag.JspContextBundleTagStackBean">

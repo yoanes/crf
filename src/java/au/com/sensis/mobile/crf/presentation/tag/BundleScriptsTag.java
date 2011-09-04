@@ -57,8 +57,7 @@ public class BundleScriptsTag extends AbstractBundleTag {
     }
 
     private void writeTypeAttributeIfNotFound(final JspWriter jspWriter,
-            final boolean typeAttributeFound)
-            throws IOException {
+            final boolean typeAttributeFound) throws IOException {
 
         if (!typeAttributeFound) {
             jspWriter.print("type=\"text/javascript\" ");

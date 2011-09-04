@@ -42,7 +42,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
     private BundleLinksTag objectUnderTest;
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private BundleTagDependencies bundleScriptsTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private JspContextBundleTagStack mockBundleTagStack;
@@ -86,24 +86,24 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
         setSpringMockServletContext(new MockServletContext());
 
         setSourceBundle1NewFile(new ClassPathResource(
-                "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle1.css").getFile());
+        "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle1.css").getFile());
         setSourceBundle1NewPath(
-                "default/core/util/bundle/c21f969b5f03d33d43e04f8f136e7682/utils.css");
+        "default/core/util/bundle/c21f969b5f03d33d43e04f8f136e7682/utils.css");
 
         setSourceBundle2NewFile(new ClassPathResource(
-                "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle2.css").getFile());
+        "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle2.css").getFile());
         setSourceBundle2NewPath(
-                "nonIEPC/comp/map/bundle/c0c80a0e534cf880884b00610da878aa/map.css");
+        "nonIEPC/comp/map/bundle/c0c80a0e534cf880884b00610da878aa/map.css");
 
         setAppBundlesRootDir(new ClassPathResource(
-                "/au/com/sensis/mobile/crf/presentation/tag/").getFile());
+        "/au/com/sensis/mobile/crf/presentation/tag/").getFile());
 
         setBundleLinksTagDependencies(createBundleLinksTagDependencies());
     }
 
     private String createExpectedOutputBundleClientPath() throws NoSuchAlgorithmException {
         return getBundleLinksTagDependencies().getClientPathPrefix()
-                + createExpectedOutputBundleBasePath();
+        + createExpectedOutputBundleBasePath();
     }
 
     private File createExpectedOutputBundleFile() throws NoSuchAlgorithmException {
@@ -121,7 +121,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
         md5Builder.add(getSourceBundle2NewPath());
 
         return getBundleLinksTagDependencies().getDeploymentMetadata().getVersion()
-            + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.css";
+        + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.css";
     }
 
     @Test
@@ -167,10 +167,10 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
     }
 
     private void recordCheckCachedResources(final boolean resourcesCached)
-            throws NoSuchAlgorithmException {
+    throws NoSuchAlgorithmException {
         final BundleTagCacheKeyBean keyBean = createCacheKey();
         EasyMock.expect(getMockBundleLinksTagCache().contains(keyBean))
-                .andReturn(resourcesCached);
+        .andReturn(resourcesCached);
 
         if (resourcesCached) {
             EasyMock.expect(getMockBundleLinksTagCache().get(keyBean)).andReturn(
@@ -208,15 +208,15 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordBehaviourForWritingScriptTag() {
         EasyMock.expect(getMockPageContext().getOut())
-            .andReturn(getSpringMockJspWriter())
-            .atLeastOnce();
+        .andReturn(getSpringMockJspWriter())
+        .atLeastOnce();
     }
 
     private void recordBehaviourForClientSrcPathCreation() {
         EasyMock.expect(getMockResource1().getNewPath()).andReturn(getSourceBundle1NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
         EasyMock.expect(getMockResource2().getNewPath()).andReturn(getSourceBundle2NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
 
     }
 
@@ -365,7 +365,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
                 getMockResolutionWarnLogger(), getMockBundleLinksTagCache(),
-                getAppBundlesRootDir(), getMockBundleTagStack());
+                getAppBundlesRootDir(), getMockBundleTagStack(), true);
     }
 
     /**
@@ -435,7 +435,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
      * @param mockResource the mockResource to set
      */
     public void setMockResource1(final Resource mockResource) {
-        this.mockResource1 = mockResource;
+        mockResource1 = mockResource;
     }
 
     /**

@@ -33,7 +33,7 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertInlineScriptPresent();
 
         assertAbsolutelyReferencedScript("external, absolutely referenced script not found",
-                "http://localhost:8080/something.js");
+        "http://localhost:8080/something.js");
 
         assertAppProperty1LoadedFromMainPropertiesFile();
 
@@ -53,21 +53,21 @@ public abstract class BdpPage extends AbstractPageFixture {
 
     private void assertResourcePrefixes() {
         final String expectedImgSrcPrefix =
-                "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/images/'";
+            "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/images/'";
         assertTrue("imgSrcPrefix via direct render not found", getBrowser().isTextPresent(
                 "imgSrcPrefix (direct render): " + expectedImgSrcPrefix));
         assertTrue("imgSrcPrefix via var not found", getBrowser().isTextPresent(
                 "imgSrcPrefix (via var): " + expectedImgSrcPrefix));
 
         final String expectedLinkHrefPrefix =
-                "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/css/'";
+            "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/css/'";
         assertTrue("linkHrefPrefix via direct render not found", getBrowser().isTextPresent(
                 "linkHrefPrefix (direct render): " + expectedLinkHrefPrefix));
         assertTrue("linkHrefPrefix via var not found", getBrowser().isTextPresent(
                 "linkHrefPrefix (via var): " + expectedLinkHrefPrefix));
 
         final String expectedScriptSrcPrefix =
-                "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/javascript/'";
+            "'/uidev/crfshowcase/uiresources/" + getProjectVersion() + "/javascript/'";
         assertTrue("scriptSrcPrefix via direct render not found", getBrowser().isTextPresent(
                 "scriptSrcPrefix (direct render): " + expectedScriptSrcPrefix));
         assertTrue("scriptSrcPrefix via var not found", getBrowser().isTextPresent(
@@ -77,13 +77,24 @@ public abstract class BdpPage extends AbstractPageFixture {
 
     private void assertInlineScriptPresent() {
         assertBundleScriptsTagJavaScriptVariable("window.myScript",
-                "I am here and you should see me only once");
+        "I am here and you should see me only once");
     }
 
     /**
      * Assert expected out of the bundleScriptsTag.
      */
     protected void assertBundleScriptsTagOutputPresent() {
+        // Default is bundling disabled...
+        assertBundleScriptsTagOutputPresentWhenBundlingDisabled();
+    }
+
+    protected void assertBundleLinksTagOutputPresent() {
+        // Default is bundling disabled...
+        assertBundleLinksTagOutputPresentWhenBundlingDisabled();
+    }
+
+    protected void assertBundleScriptsTagOutputPresentWhenBundlingEnabled() {
+
         assertBundleScriptsTagJavaScriptVariable("showcaseAppBundleInlineScript", "true");
 
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File1", "true");
@@ -92,28 +103,51 @@ public abstract class BdpPage extends AbstractPageFixture {
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage2File2", "true");
 
         assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File1",
-                "null");
+        "null");
         assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File2",
-                "null");
+        "null");
 
         assertAbsolutelyReferencedScript(
                 "BundleScriptsTag child sourced from absolute URL not found",
-                "http://localhost:8080/showcaseAppBundleAbsoluteUrl.js");
+        "http://localhost:8080/showcaseAppBundleAbsoluteUrl.js");
     }
 
-    private void assertBundleLinksTagOutputPresent() {
+    private void assertBundleScriptsTagOutputPresentWhenBundlingDisabled() {
+
+        assertBundleScriptsTagJavaScriptVariable("showcaseAppBundleInlineScript", "true");
+        assertScript("Missing non bundled script",
+                "default/selenium/showcaseAppBundlePackage1/showcaseAppBundlePackage1File1.js");
+        assertScript("Missing non bundled script",
+                "default/selenium/showcaseAppBundlePackage1/showcaseAppBundlePackage1File2.js");
+        assertScript("Missing non bundled script",
+                "default/selenium/showcaseAppBundlePackage2/showcaseAppBundlePackage2File1.js");
+        assertScript("Missing non bundled script",
+                "default/selenium/showcaseAppBundlePackage2/showcaseAppBundlePackage2File2.js");
+
+        assertAbsolutelyReferencedScript(
+                "BundleScriptsTag child sourced from absolute URL not found",
+        "http://localhost:8080/showcaseAppBundleAbsoluteUrl.js");
+    }
+
+    protected void assertBundleLinksTagOutputPresentWhenBundlingEnabled() {
         assertTrue("showcaseAppCssBundle link not found", getBrowser().isElementPresent(
                 "//head/link["
                 + "@type=\"text/css\" "
                 + "and @id=\"showcaseAppCssBundle\" "
                 + "and @rel=\"stylesheet\" "
                 + "and starts-with(@href, "
-                    + "\"/uidev/crfshowcase/uiresources/" + getProjectVersion()
-                    + "/appBundles/showcaseAppCssBundle-\") "
+                + "\"/uidev/crfshowcase/uiresources/" + getProjectVersion()
+                + "/appBundles/showcaseAppCssBundle-\") "
                 + "and contains(@href, \"-package.css\")"
                 + "]"));
         // We can't easily test the contents of the bundle but this should be okay if the
         // JavaScript bundling works (which we can and do assert elsewhere)- it's shared code.
+    }
+
+    private void assertBundleLinksTagOutputPresentWhenBundlingDisabled() {
+
+        assertCssLink("Missing non bundled CSS",
+                "default/selenium/showcaseAppBundlePackage1/cssFileForExplicitBundling.css");
     }
 
     /**
@@ -142,7 +176,7 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @return number of scripts expected by this abstract BdpPage.
      */
     protected final int getNumExpectedScripts() {
-        return 5;
+        return 8;
     }
 
     /**
@@ -174,7 +208,7 @@ public abstract class BdpPage extends AbstractPageFixture {
     protected void assertImageWhoseDimensionsCannotBeDetermined() {
         assertImgWithoutDimensions("anSvgImage img not found", "anSvgImage",
                 "anSvgImage", "anSvgImage",
-                "default/selenium/common/an_svg_image.svg");
+        "default/selenium/common/an_svg_image.svg");
     }
 
     /**
@@ -262,7 +296,7 @@ public abstract class BdpPage extends AbstractPageFixture {
      */
     // TODO: this just doesn't seem to work
     protected final void assertCssLinkNotPresent(final String message,
-        final String expectedHrefRegex) {
+            final String expectedHrefRegex) {
         getBrowser().allowNativeXpath("false");
         Assert.assertFalse(message, getBrowser().isElementPresent(
                 "//head/link["
@@ -404,7 +438,7 @@ public abstract class BdpPage extends AbstractPageFixture {
             final String extension) {
         assertImg("Yellow Pages img not found", "yellowPagesLogoImg", "Yellow Pages",
                 "Yellow Pages", "default/selenium/common/w" + width + "/h" + height
-                        + "/yellow-pages." + extension, width, height);
+                + "/yellow-pages." + extension, width, height);
     }
 
     /**
@@ -437,8 +471,8 @@ public abstract class BdpPage extends AbstractPageFixture {
      */
     protected final void assertImgPath(final String message, final String expectedSrc) {
         assertTrue(message, getBrowser().isTextPresent(
-                        "/uidev/crfshowcase/uiresources/" + getProjectVersion()
-                        + "/images/" + expectedSrc));
+                "/uidev/crfshowcase/uiresources/" + getProjectVersion()
+                + "/images/" + expectedSrc));
 
     }
 
@@ -455,8 +489,8 @@ public abstract class BdpPage extends AbstractPageFixture {
             final String extension) {
         assertTrue("Yellow Pages img not found", getBrowser().isTextPresent(
                 "/uidev/crfshowcase/uiresources/" + getProjectVersion()
-                        + "/images/default/selenium/common/w" + width + "/h" + height
-                        + "/yellow-pages." + extension));
+                + "/images/default/selenium/common/w" + width + "/h" + height
+                + "/yellow-pages." + extension));
     }
 
     /**

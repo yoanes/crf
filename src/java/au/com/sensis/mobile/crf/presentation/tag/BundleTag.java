@@ -20,4 +20,9 @@ public interface BundleTag {
      */
     void addResourcesToBundle(final List<Resource> resources);
 
+    /**
+     * @return boolean, configuration parameter - true if bundling should occur.
+     */
+    boolean hasBundlingEnabled();
+
 }

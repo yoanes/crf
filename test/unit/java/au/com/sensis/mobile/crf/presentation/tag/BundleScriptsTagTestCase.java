@@ -42,7 +42,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     private BundleScriptsTag objectUnderTest;
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private BundleTagDependencies bundleScriptsTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private JspContextBundleTagStack mockBundleTagStack;
@@ -86,24 +86,24 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         setSpringMockServletContext(new MockServletContext());
 
         setSourceBundle1NewFile(new ClassPathResource(
-                "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle1.js").getFile());
+        "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle1.js").getFile());
         setSourceBundle1NewPath(
-                "default/core/util/bundle/c21f969b5f03d33d43e04f8f136e7682/utils.js");
+        "default/core/util/bundle/c21f969b5f03d33d43e04f8f136e7682/utils.js");
 
         setSourceBundle2NewFile(new ClassPathResource(
-                "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle2.js").getFile());
+        "/au/com/sensis/mobile/crf/presentation/tag/sourceBundle2.js").getFile());
         setSourceBundle2NewPath(
-                "nonIEPC/comp/map/bundle/c0c80a0e534cf880884b00610da878aa/package.js");
+        "nonIEPC/comp/map/bundle/c0c80a0e534cf880884b00610da878aa/package.js");
 
         setAppBundlesRootDir(new ClassPathResource(
-                "/au/com/sensis/mobile/crf/presentation/tag/").getFile());
+        "/au/com/sensis/mobile/crf/presentation/tag/").getFile());
 
         setBundleScriptsTagDependencies(createBundleScriptsTagDependencies());
     }
 
     private String createExpectedOutputBundleClientPath() throws NoSuchAlgorithmException {
         return getBundleScriptsTagDependencies().getClientPathPrefix()
-                + createExpectedOutputBundleBasePath();
+        + createExpectedOutputBundleBasePath();
     }
 
     private File createExpectedOutputBundleFile() throws NoSuchAlgorithmException {
@@ -121,7 +121,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         md5Builder.add(getSourceBundle2NewPath());
 
         return getBundleScriptsTagDependencies().getDeploymentMetadata().getVersion()
-            + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.js";
+        + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.js";
     }
 
     @Test
@@ -167,10 +167,10 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     }
 
     private void recordCheckCachedResources(final boolean resourcesCached)
-            throws NoSuchAlgorithmException {
+    throws NoSuchAlgorithmException {
         final BundleTagCacheKeyBean keyBean = createCacheKey();
         EasyMock.expect(getMockBundleScriptsTagCache().contains(keyBean))
-                .andReturn(resourcesCached);
+        .andReturn(resourcesCached);
 
         if (resourcesCached) {
             EasyMock.expect(getMockBundleScriptsTagCache().get(keyBean)).andReturn(
@@ -208,15 +208,15 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordBehaviourForWritingScriptTag() {
         EasyMock.expect(getMockPageContext().getOut())
-            .andReturn(getSpringMockJspWriter())
-            .atLeastOnce();
+        .andReturn(getSpringMockJspWriter())
+        .atLeastOnce();
     }
 
     private void recordBehaviourForClientSrcPathCreation() {
         EasyMock.expect(getMockResource1().getNewPath()).andReturn(getSourceBundle1NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
         EasyMock.expect(getMockResource2().getNewPath()).andReturn(getSourceBundle2NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
 
     }
 
@@ -366,7 +366,8 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
                 getMockResolutionWarnLogger(), getMockBundleScriptsTagCache(),
                 getAppBundlesRootDir(),
-                getMockBundleTagStack());
+                getMockBundleTagStack(),
+                true);
     }
 
     /**
@@ -436,7 +437,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
      * @param mockResource the mockResource to set
      */
     public void setMockResource1(final Resource mockResource) {
-        this.mockResource1 = mockResource;
+        mockResource1 = mockResource;
     }
 
     /**

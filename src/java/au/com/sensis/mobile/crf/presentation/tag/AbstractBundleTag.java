@@ -124,7 +124,8 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
     }
 
     private void writeTagForCachedBundle(final BundleTagCacheKey cacheKey)
-            throws IOException {
+    throws IOException,
+    RuntimeException {
 
         final String cachedBundleClientPath = getCache().get(cacheKey);
         debugLogCachedClientBundlePathFound(cachedBundleClientPath);
@@ -132,7 +133,7 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
     }
 
     private void writeTagForNonCachedBundle(final BundleTagCacheKey cacheKey)
-        throws IOException {
+    throws IOException {
 
         final String outputBundleBasePath = createOutputBundleBasePath();
         createBundle(outputBundleBasePath);
@@ -173,7 +174,7 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
     }
 
     private void createFileAndParentDirsIfNecessary(final File outputBundleFile)
-        throws IOException {
+    throws IOException {
 
         if (!outputBundleFile.getParentFile().exists()
                 && !outputBundleFile.getParentFile().mkdirs()) {
@@ -183,7 +184,7 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
     }
 
     private void concatenateResources(final FileWriter outputBundleFileWriter)
-            throws IOException {
+    throws IOException {
         for (final Resource resource : getResourcesToBundle()) {
             final FileReader resourceReader = new FileReader(resource.getNewFile());
             try {
@@ -201,7 +202,7 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
 
     private String createOutputBundleClientPath(final String outputBundleBasePath) {
         return getTagDependencies().getClientPathPrefix() + outputBundleBasePath
-            + getUniqueRequestParam();
+        + getUniqueRequestParam();
 
     }
 
@@ -255,10 +256,10 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
         final PageContext pc = (PageContext) getJspContext();
 
         final WebApplicationContext webApplicationContext =
-                WebApplicationContextUtils.getRequiredWebApplicationContext(pc
-                        .getServletContext());
+            WebApplicationContextUtils.getRequiredWebApplicationContext(pc
+                    .getServletContext());
         return (BundleTagDependencies) webApplicationContext
-                .getBean(getTagDependenciesBeanName());
+        .getBean(getTagDependenciesBeanName());
     }
 
     /**
@@ -326,6 +327,15 @@ public abstract class AbstractBundleTag extends AbstractTag implements BundleTag
         }
 
         return uniqueRequestParam;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasBundlingEnabled() {
+
+        return getTagDependencies().getBundlingEnabled();
     }
 }
 

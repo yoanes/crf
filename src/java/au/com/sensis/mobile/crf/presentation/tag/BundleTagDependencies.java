@@ -25,6 +25,7 @@ public class BundleTagDependencies {
     private final BundleTagCache bundleTagCache;
     private final File rootResourcesDir;
     private final JspContextBundleTagStack jspContextBundleTagStack;
+    private boolean bundlingEnabled;
 
 
     /**
@@ -40,13 +41,16 @@ public class BundleTagDependencies {
      *            Root directory where the bundles that this tag creates should be stored.
      * @param jspContextBundleTagStack {@link JspContextBundleTagStack} used for storing
      *            {@link BundleTag}s to be exposed to child tags.
+     * @param bundlingEnabled
+     *          Simple configuration flag to decide if bundling should occur or not.
      */
     public BundleTagDependencies(final DeploymentMetadata deploymentMetadata,
             final String clientPathPrefix,
             final ResourceResolutionWarnLogger resourceResolutionWarnLogger,
             final BundleTagCache bundleTagCache,
             final File rootResourcesDir,
-            final JspContextBundleTagStack jspContextBundleTagStack) {
+            final JspContextBundleTagStack jspContextBundleTagStack,
+            final boolean bundlingEnabled) {
 
         this.deploymentMetadata = deploymentMetadata;
         this.clientPathPrefix = clientPathPrefix;
@@ -54,7 +58,7 @@ public class BundleTagDependencies {
         this.bundleTagCache = bundleTagCache;
         this.rootResourcesDir = rootResourcesDir;
         this.jspContextBundleTagStack = jspContextBundleTagStack;
-
+        this.bundlingEnabled = bundlingEnabled;
     }
 
     /**
@@ -97,6 +101,22 @@ public class BundleTagDependencies {
      */
     public JspContextBundleTagStack getJspContextBundleTagStack() {
         return jspContextBundleTagStack;
+    }
+
+    /**
+     * @return the bundlingEnabled flag.
+     */
+    public boolean getBundlingEnabled() {
+
+        return bundlingEnabled;
+    }
+
+    /**
+     * @param bundlingEnabled The bundlingEnabled flag.
+     */
+    public void setBundlingEnabled(final boolean bundlingEnabled) {
+
+        this.bundlingEnabled = bundlingEnabled;
     }
 
 }

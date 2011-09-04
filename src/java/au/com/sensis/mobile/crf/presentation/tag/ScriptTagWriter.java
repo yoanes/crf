@@ -125,11 +125,24 @@ public class ScriptTagWriter implements TagWriter {
     private void resolveResourceAndWriteTag(final JspWriter jspWriter) throws IOException {
 
         final List<Resource> allResourcePaths = getAllResourcePaths();
-        if (getParentBundleScriptsTag() != null) {
+        if (bundlingEnabled()) {
             postponeWriteForBundleScriptsTag(allResourcePaths);
         } else {
             writeLinkTagForEachResource(jspWriter, allResourcePaths);
         }
+    }
+
+    /**
+     * Should bundling occur?
+     * - We must be inside a parent bundle scripts tag.
+     * - The configuration must have bundling set to true.
+     *
+     * @return boolean - true when bundling should occur.
+     */
+    protected boolean bundlingEnabled() {
+
+        return (getParentBundleScriptsTag() != null)
+        && (getParentBundleScriptsTag().hasBundlingEnabled());
     }
 
 
@@ -190,7 +203,7 @@ public class ScriptTagWriter implements TagWriter {
 
     private void writeTypeAttributeIfNotFound(final JspWriter jspWriter,
             final boolean typeAttributeFound)
-            throws IOException {
+    throws IOException {
 
         if (!typeAttributeFound) {
             jspWriter.print("type=\"text/javascript\" ");
