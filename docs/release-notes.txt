@@ -1,9 +1,18 @@
+==== Version 2.0.14 (tag: contentRenderingFramework_v2_0_14) ====
+
+Changes:
+- WIM-351 CRF: ImageServlet throwing NullPointerException and redirecting to WelcomeAction.
+  - Changed to return 404 when context and therefore device not available instead of throwing a NPE.
+
+Upgrade steps:
+- should be transparent.
+
 ==== Version 2.0.13 (tag: contentRenderingFramework_v2_0_13) ====
 
 Changes:
 - CRF-141 Modify hudson build target to also create publishable build artifacts
   - Now depends on wl-build-scripts 2.5.6, which allows the hudson build
-    target to automatically pulbish to the buildbox. 
+    target to automatically pulbish to the buildbox.
 - Source code is now published to ivy.
 
 Upgrade steps:
@@ -14,18 +23,18 @@ Upgrade steps:
 Fixed image generation scripts to protect against 1. the images directory not existing and 2. no image properties files found.
 
 Upgrade steps:
-- when ivy retrieves the crf artifacts, there will be a  
-  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
+- when ivy retrieves the crf artifacts, there will be a
+  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy
   all the *.sh files into a new/existing top level directory called "scripts" in your project.
 
 ==== Version 2.0.11 (tag: contentRenderingFramework_v2_0_11) ====
 
-Fixed regex in image generation/verification scripts so that it works under Mac OS X 10.x. 
+Fixed regex in image generation/verification scripts so that it works under Mac OS X 10.x.
 Thanks to Leo for finding this bug, since I don't have a Mac to test on.
 
 Upgrade steps:
-- when ivy retrieves the crf artifacts, there will be a  
-  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
+- when ivy retrieves the crf artifacts, there will be a
+  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy
   all the *.sh files into a new/existing top level directory called "scripts" in your project.
 
 ==== Version 2.0.10 (tag: contentRenderingFramework_v2_0_10) ====
@@ -33,13 +42,13 @@ Upgrade steps:
 Changes:
 - CRF-127: Speedup image generation (only generate images that you have to)
     - also retested that scripts work under windows, including generating images under Linux
-      but verifying them under Windows.   
+      but verifying them under Windows.
 - CRF-128: Update AdminServlet to allow emptying of the caches used by the bundleScripts and bundleLinks tags
 - CRF-129: Resolution of pregenerated images failing
 
 Upgrade steps:
-- when ivy retrieves the crf artifacts, there will be a  
-  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
+- when ivy retrieves the crf artifacts, there will be a
+  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy
   all the *.sh files into a new top level directory called "scripts" in your project.
 - in your web.xml, change your AdminServlet definition to:
 
@@ -64,49 +73,49 @@ Upgrade steps:
             <param-value>/resourcecache/empty</param-value>
         </init-param>
     </servlet>
- 
+
 
 ==== Version 2.0.9 (tag: contentRenderingFramework_v2_0_9) ====
 
 Fixes:
 - CRF-119: Client API to allow on demand CSS and JS bundling across components
     - http://trackit.sensis.com.au/browse/CRF-119
-    - Page authors can now surround JavaScript and CSS with the following tags: 
-    
-    <crf:bundleScripts id="showcaseAppJavaScriptBundle">  
-        <crf:bundleLinks id="showcaseAppCssBundle">  
-        
+    - Page authors can now surround JavaScript and CSS with the following tags:
+
+    <crf:bundleScripts id="showcaseAppJavaScriptBundle">
+        <crf:bundleLinks id="showcaseAppCssBundle">
+
         <%-- Your page content goes here. You'd typically invoke your component setup tags here.--%>
-        
-        </crf:bundleLinks>    
+
+        </crf:bundleLinks>
     </crf:bundleScripts>
-    
+
     - id needs to be unique to the page (just like standard HTML ids).
-    
+
     - bundleLinks and bundleScripts can be nested within each other (in any order).
-    
-    - note the upgrade steps below for bundling caveats. 
-          
+
+    - note the upgrade steps below for bundling caveats.
+
     - The bundle tags will always perform the bundling but minification will only occur if the
       following property in your crf-environment.properties file is set to true:
-       
+
             # True if you want CSS and JavaScript resources to be bundled.
             env.bundle.resources=true
-            
+
       This property will simply enable the old minification behaviour. The new bundle tags
       simply concatenate the result together. Aside: actually, the bundle tag will insert a new
       line between each minified block to cater to the case where minification is disabled
       and the last line contains an inline comment. This adds neglible byte size overhead.
-       
+
     Examples of output bundles are:
-    1. <link id="showcaseAppCssBundle" 
+    1. <link id="showcaseAppCssBundle"
             href="/uidev/crfshowcase/uiresources/2.0.3/appBundles/showcaseAppCssBundle-59bd7ab964b528ae14ce37a4fa8552d5-package.css"
             rel="stylesheet" type="text/css" />
-            
-    2. <script id="showcaseAppJavaScriptBundle" 
-            src="/uidev/crfshowcase/uiresources/2.0.3/appBundles/showcaseAppJavaScriptBundle-b9e182e265ae77829489ed34959298cc-package.js" 
+
+    2. <script id="showcaseAppJavaScriptBundle"
+            src="/uidev/crfshowcase/uiresources/2.0.3/appBundles/showcaseAppJavaScriptBundle-b9e182e265ae77829489ed34959298cc-package.js"
             charset="utf-8" type="text/javascript" ></script>
-            
+
 Upgrade steps
 - You must define the following in crf-environment.properties. Change the values to suit your app.
 
@@ -116,33 +125,33 @@ Upgrade steps
 - the child tags of bundleScripts and bundleLinks can be any other JSP markup. bundleScripts
   will only bundle any crf:script tags that point to crf resources. Similarly, bundleLinks
   will only bundle any crf:link tags that point to crf resources.
-  
+
   However, if child crf:script or crf:link tags contain inline content or they point to absolute http:// urls,
   they will be ignored by the bundle tags. This implies that the bundles will be output after
   these other tags, irrespective of their original order. Beware of this. This is not a bug ;)
-  
+
   This means that existing JavaScript and CSS may need to be refactored before it can take part
   in bundling. This applies to JavaScript and CSS in your webapp, as well as JavaScript and CSS
   in components that you use:
-  
+
     - In general, it is best for any inline JavaScript in the head to only set config
       variables that externally linked JavaScript may use. Any inline JavaScript
-      that depends on externally linked JavaScript (ie. potentially bundled JavaScript) 
+      that depends on externally linked JavaScript (ie. potentially bundled JavaScript)
       is best placed separately, outside the bundle tags, most preferably in the body of the page.
-    
+
     - The technique promoted in 1.1.0 for "[CRF-91] - Add web app version number to the image paths in CSS files"
       has been deprecated. If you use that technique and bundle your CSS using bundleLinks, your background images
       are not guaranteed to work. This is because the bundle file may have a different relative path to the original
       CSS file. Background CSS images must now be defined within inline CSS styles in your JSPs. For example:
-      
+
         <crf:imgSrcPrefix var="imgSrcPrefix" />
         <style type="text/css>
             #mapControls {
                 background-image: url("${imgSrcPrefix}comp/map/controls/mc_bg.image");
             }
         </style>
-        
-      This is the same technique used for [CRF-107] "JavaScript that requests images directly, must handle 
+
+      This is the same technique used for [CRF-107] "JavaScript that requests images directly, must handle
       new /uiresources/<version>/images/ structure".
 
 ==== Version 2.0.8 (tag: contentRenderingFramework_v2_0_8) ====
@@ -150,33 +159,33 @@ Upgrade steps
 Fixes:
 - CRF-126: Import groups from non-global config files
     - You can now import a group from any other config file, as long as it is not an import itself.
-        - the import element in group config files now takes three attributes: 
+        - the import element in group config files now takes three attributes:
           'name', 'fromConfigPath', 'fromName'. A fragment of the XSD that describes them is:
-                  
+
             <xs:complexType name="Import">
                 <xs:annotation>
                     <xs:documentation>
                         Imports a group(s) from other files. At least one of "name", "fromName"
-                        or "fromConfigPath" must be set. 
+                        or "fromConfigPath" must be set.
                     </xs:documentation>
                 </xs:annotation>
-        
+
                 <xs:attribute name="name" type="xs:string" use="optional">
                     <xs:annotation>
                         <xs:documentation>
-                            Name that the (single) imported group will be given in this config file. 
-                            If only one of "name" and "fromName" is given, the other will automatically 
+                            Name that the (single) imported group will be given in this config file.
+                            If only one of "name" and "fromName" is given, the other will automatically
                             use the same value.
                         </xs:documentation>
                     </xs:annotation>
-                </xs:attribute>        
-                <xs:attribute name="fromConfigPath" type="xs:string" use="optional">        
+                </xs:attribute>
+                <xs:attribute name="fromConfigPath" type="xs:string" use="optional">
                     <xs:annotation>
                         <xs:documentation>
                             Config path (ie. namespace) of the file from which to import a group(s).
-                            If neither "name" or "fromName" is specified, all groups will be imported. 
+                            If neither "name" or "fromName" is specified, all groups will be imported.
                             If config path is not specified, it defaults to "global/devices" but note that
-                            at least one of "name", "fromName" or "fromConfigPath" must be explicitly set. 
+                            at least one of "name", "fromName" or "fromConfigPath" must be explicitly set.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
@@ -189,21 +198,21 @@ Fixes:
                     </xs:annotation>
                 </xs:attribute>
             </xs:complexType>
-            
+
         - If you import a group by name and that group is also an import, it is treated the same
           way as the group not being found. An exception will be thrown to indicate the error.
-          
+
         - If you import all groups from another config file and at least one of them is an import,
           an exception will be thrown to indicate the error.
-          
+
         - If you import a group that uses either the "inAnyGroup" or "inAllGroups" functions, then
           these functions are evaluated in the context of the config file containing the original
           group.
 
 Upgrade steps:
-- should be transparent. However, when writing new import elements in your group config files, you 
+- should be transparent. However, when writing new import elements in your group config files, you
   should take careful note of the difference between the 'name' and 'fromName' attributes above
-  and what happens if you only specify one of them.  
+  and what happens if you only specify one of them.
 
 ==== Version 2.0.7 (tag: contentRenderingFramework_v2_0_7) ====
 
@@ -212,8 +221,8 @@ Fixes:
   InstanceAlreadyExistsException for the ehcache MBeans
     - http://trackit.sensis.com.au/browse/CRF-94
 - CRF-125: CRF runtime calculation to find nearest pre-generated scaled image is incorrect
-    - http://trackit.sensis.com.au/browse/CRF-125    
-    
+    - http://trackit.sensis.com.au/browse/CRF-125
+
 Upgrade steps:
 - Define a new property in your crf-environment.properties file, replacing the example value
   with an appropriate name for your app::
@@ -221,9 +230,9 @@ Upgrade steps:
     # Prefix to use for Ehcache MBean names. Set this to a unique prefix that identifies your
     # application. If you leave the default value unchanged and deploy another app that does the same,
     # the apps will interfere with each other at start up time (only one will succeed).
-    env.ehcache.mbean.name.prefix=unknownApp 
-    
-  As a reminder, a template properties file exists in 
+    env.ehcache.mbean.name.prefix=unknownApp
+
+  As a reminder, a template properties file exists in
   au/com/sensis/mobile/crf/crf-environment-template.properties in the crf JAR.
 
 ==== Version 2.0.6 (tag: contentRenderingFramework_v2_0_6) ====
@@ -247,7 +256,7 @@ Fixes:
       output the image tag without width or height attributes, as per CRF 1.x behaviour.
     - Image extension is no longer considered when determining the dimensions of an image. The
       image header is used instead. So incorrectly named images should be handled better now.
-      
+
 Upgrade steps:
 - should be transparent.
 
@@ -255,10 +264,10 @@ Upgrade steps:
 
 Fixes:
 - (Reopened) CRF-121: Relative URLs for background CSS images break when switching from bundled to non-bundled CSS files
-    - When BundleFactory is asked to create a bundle, it will filter out any files that are already 
+    - When BundleFactory is asked to create a bundle, it will filter out any files that are already
       bundles. Prior to 2.0.3, this was "automatically" done due to the bundles existing in
-      subdirectories, which a non-recursive pattern of *.js  would ignore.  
-      
+      subdirectories, which a non-recursive pattern of *.js  would ignore.
+
 Upgrade steps:
 - should be transparent.
 
@@ -266,10 +275,10 @@ Upgrade steps:
 
 Fixes:
 - CRF-121: Relative URLs for background CSS images break when switching from bundled to non-bundled CSS files
-    - Bundle paths have been changed from paths like so (ie. bundle and md5sum dirs): 
-    
+    - Bundle paths have been changed from paths like so (ie. bundle and md5sum dirs):
+
         /uiresources/2.0.3/css/mapComponent-advanced/selenium/component/map/bundle/4c73c57bcd04d4b722133ba7a659ffc0/map.css
-    
+
     to (ie. bundle and md5sum are part of the bundle basename):
 
         /uiresources/2.0.3/css/mapComponent-advanced/selenium/component/map/bundle-4c73c57bcd04d4b722133ba7a659ffc0-map.css
@@ -287,7 +296,7 @@ Upgrade steps:
 Merged changes in from old CVS repository, version contentRenderingFramework_v1_0_10.$
 
 Default environment property files are no longer shipped with the crf jar. This is due to the Mobiles team restructure.
-There is no longer anything common between the environments of each app and hence crf can no longer predict 
+There is no longer anything common between the environments of each app and hence crf can no longer predict
 sensible defaults.
 
 Upgrade steps:
@@ -306,47 +315,47 @@ Upgrade steps:
 
     au/com/sensis/mobile/crf/crf-environment-template.properties
 
-==== Version 2.0.1 (tag: contentRenderingFramework_v2_0_1) ==== 
+==== Version 2.0.1 (tag: contentRenderingFramework_v2_0_1) ====
 
 Jiras:
 * CRF-117 Migrate CVS repository to GIT
 * CRF-118 Modifications to support Linux (ubuntu) development
-    * build-bootstrap.xml now loads user.<your w login number>.properties to ensure that developers can override the default ivy cache dir 
+    * build-bootstrap.xml now loads user.<your w login number>.properties to ensure that developers can override the default ivy cache dir
       location.
-    * crf-verify-images.sh now ensures that the delegate script is executable before attempting to execute it. 
+    * crf-verify-images.sh now ensures that the delegate script is executable before attempting to execute it.
     * crf-environment.properties.desk is now parameterised with the following tokens:
         * TOMCAT_HOME (replaced with tomcat.home)
         * WEBAPP_CONTEXT_PATH (replaced with showcase.context.path)
     * mcs.properties.desk now contains the following to allow developers to configure these for their own desktops:
-    
+
         # Set these from your user.<your w number login>.properties file in the root of the project.
         #mcs.devicerepository.filepath=
         #mcs.policies.filepath=
     * Fixed bug in TransformedImageResourceResolverBean which is platform dependent. *.md5 files are now correctly ignored when searching
       for image files.
-        
+
 
 Upgrade notes:
 * Now depends on:
 
-	<dependency org="com.sensis" name="wl-build-scripts" rev="2.3.2" conf="buildBootstrap->default" />
-	<dependency org="com.thoughtworks" name="selenium-server-standalone" rev="2.0b3" conf="test->default"/>
+    <dependency org="com.sensis" name="wl-build-scripts" rev="2.3.2" conf="buildBootstrap->default" />
+    <dependency org="com.thoughtworks" name="selenium-server-standalone" rev="2.0b3" conf="test->default"/>
 
-==== Version 2.0.0 (tag: contentRenderingFramework_v2_0_0) ==== 
+==== Version 2.0.0 (tag: contentRenderingFramework_v2_0_0) ====
 
 Incremented version number to mark official version 2 release.
 No code changes since 1.1.0 but I did fix up the release notes which previously missed a few
 pertinent aspects. I won't bother re-publishing 1.1.1 since no one should be depending on that
-version (they should be using 2.0.0 instead). 
+version (they should be using 2.0.0 instead).
 
-==== Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ==== 
+==== Version 1.1.0 (tag: contentRenderingFramework_v1_1_0) ====
 
 Bugs:
 * [CRF-93] - NEW - duplicate group names and config paths should be illegal in group config files
 * [CRF-100] - NEW - ImagePathTag should write empty string instead of a .image path when a .null image is found
 
 Improvements:
-* [CRF-48] - NEW: crf:link, crf:script, crf:image - obtain device from threadlocal 
+* [CRF-48] - NEW: crf:link, crf:script, crf:image - obtain device from threadlocal
 * [CRF-91] - Add web app version number to the image paths in CSS files
 * [CRF-101] - NEW - crf:script tag should default charset to utf-8 and type to text/javascript
 * [CRF-102] - NEW - refactor ImageTag to use device repository attribute to control width/height division instead of hard coded iphone4 detection
@@ -369,35 +378,35 @@ Task:
 Upgrade Notes
 - This version depends on sdpCommon-web 2.0-006. The way in which device recognition is performed
   by MobileContextSetUpFilter was changed in version 2.0-001. In particular, it calls:
-  
+
       getDeviceRecognition().identifyDevice(userAgent);
-    
+
   instead of:
-  
+
       getDeviceRecognition().identifyDevice(userAgent, getServletContext());
-  
-  This was a result of eliminating the dependency on the Volantis MCSFilter. In brief, this means 
+
+  This was a result of eliminating the dependency on the Volantis MCSFilter. In brief, this means
   that you must ensure that the deviceRepositoryLocation property
   is injected into your VolantisDeviceRecognition bean in your Spring context:
-            
+
     <bean id="volantisDeviceRecognition"
             class="au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceRecognition"
             init-method="initialise">
 
         <property name="deviceRepositoryLocation" value="${env.mcs.devicerepository.filepath}"/>
     </bean>
-    
+
   and then define env.mcs.devicerepository.filepath in your environment.properties.* files.
   Refer to the sdpCommon-web release notes for, hopefully, further details.
-  
-- As per CRF-102 "NEW - refactor ImageTag to use device repository attribute to control width/height 
-  division instead of hard coded iphone4 detection", CRF now depends on devices.mdpr version 1.283 or later, 
+
+- As per CRF-102 "NEW - refactor ImageTag to use device repository attribute to control width/height
+  division instead of hard coded iphone4 detection", CRF now depends on devices.mdpr version 1.283 or later,
   as this sets the custom.crf.image.ratio property for iphone 4.
-  
-- As per CRF-91 "Add web app version number to the image paths in CSS files", the location in which 
-  the project version number is inserted when uiassets/uiresources are packaged has changed. The 
+
+- As per CRF-91 "Add web app version number to the image paths in CSS files", the location in which
+  the project version number is inserted when uiassets/uiresources are packaged has changed. The
   structure used for packaging and deployment used to be:
-      
+
           uiresources/
               css/
                   <version>/
@@ -405,7 +414,7 @@ Upgrade Notes
                   <version>/
               javascript/
                   <version>/
-           
+
       It is now:
 
           uiresources/
@@ -413,18 +422,18 @@ Upgrade Notes
                   css/
                   images/
                   javascript/
-                  
+
   In your existing crf-environment.properties.* files, you must make the following changes:
-  1. You must omit the "css/" from the end of the env.resources.css.root.dir property.  
+  1. You must omit the "css/" from the end of the env.resources.css.root.dir property.
   2. You must omit the "javascript/" from the end of the env.resources.javascript.root.dir property.
   3. You must omit the "images/" from the end of the env.resources.images.root.dir property.
-  4. You must omit the "css/" from the end of the env.resources.css.client.path.prefix property.  
+  4. You must omit the "css/" from the end of the env.resources.css.client.path.prefix property.
   5. You must omit the "javascript/" from the end of the env.resources.javascript.client.path.prefix property.
   6. You must omit the "images/" from the end of the env.resources.images.client.path.prefix property.
-  
-  The above structure change means that background images in CSS files that used absolute URLs 
+
+  The above structure change means that background images in CSS files that used absolute URLs
   _must_ now use relative URLs. eg. Suppose your project had:
-  
+
       /src/web/uiresources/
           images/
               default/
@@ -432,95 +441,95 @@ Upgrade Notes
                       map/
                           tile_bg.gif
           css/
-              default/ 
+              default/
                   component/
                       map/
-                          map.css                          
-                          
+                          map.css
+
   and map.css had:
-  
-      background-image: url("/uiresources/images/component/map/tile_bg.image");  
-      
+
+      background-image: url("/uiresources/images/component/map/tile_bg.image");
+
   then map.css must now have:
-  
+
       background-image: url("../../../../images/component/map/tile_bg.image");
-      
-  Note that this relative URL is relative to the CSS file, not the page. So the way to work out how 
+
+  Note that this relative URL is relative to the CSS file, not the page. So the way to work out how
   many "../" to use is to:
-  1. Start at the location of the CSS file in your project and walk up the directory structure 
+  1. Start at the location of the CSS file in your project and walk up the directory structure
      until you get to the "uiresources/" directory. In this case, this is "../../../../".
   2. Then append "images/" to the path.
   3. Then append the abstract image path that has the same semantics as what you pass into the
      <crf:image /> JSP tag.
-     
+
   The above usage of relative URLs ensures that the path seen by the client device will contain
   the version number. This is due to the fact that the CSS file path already contains a version
   number.
-  
-- As per CRF-93 "NEW - duplicate group names and config paths should be illegal in group 
+
+- As per CRF-93 "NEW - duplicate group names and config paths should be illegal in group
   config files", duplicate group names within the same CRF config file are now illegal. So are
-  having multiple CRF config files that have the same <config-path />. If either condition is 
+  having multiple CRF config files that have the same <config-path />. If either condition is
   violated, an exception will be thrown on app startup.
-  
-- As per CRF-88 "Support Grouping by Client", apps can import client app groups into their CRF 
+
+- As per CRF-88 "Support Grouping by Client", apps can import client app groups into their CRF
   group config file like so:
-      
-        <import from="global/clientapps" />      
-        
-- As per [CRF-107] "JavaScript that requests images directly, must handle 
-  new /uiresources/<version>/images/ structure", component tag files that used to require an 
-  attribute set to the images source prefix, should now use <crf:imgSrcPrefix /> directly. 
-  This will work out the correct image source prefix, including the version number. 
-  
-- As per [CRF-111] "Development time pre-generation of scaled images" and 
-  [CRF-112] "PregeneratedFileLookupImageTransformationFactoryBean", CRf 2.x transparently handles 
+
+        <import from="global/clientapps" />
+
+- As per [CRF-107] "JavaScript that requests images directly, must handle
+  new /uiresources/<version>/images/ structure", component tag files that used to require an
+  attribute set to the images source prefix, should now use <crf:imgSrcPrefix /> directly.
+  This will work out the correct image source prefix, including the version number.
+
+- As per [CRF-111] "Development time pre-generation of scaled images" and
+  [CRF-112] "PregeneratedFileLookupImageTransformationFactoryBean", CRf 2.x transparently handles
   both the CRF 1.x style of images (ie. no image scaling) and the new CRF 2.x image scaling.
   Only images that have a corresponding properties file are candidates/requests for image scaling.
-        
-- As per [CRF-114] "Build scripts for pregenerated images - script distribution", when ivy retrieves 
-  the crf artifacts, there will be a new 
-  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy 
+
+- As per [CRF-114] "Build scripts for pregenerated images - script distribution", when ivy retrieves
+  the crf artifacts, there will be a new
+  lib/zip/default/wl-crf-image-scripts-*.zip artifact pulled in. Unzip this manually and copy
   all *.sh scripts into a new top level directory called "scripts" in your project. Then manually create
-  a wrapper script for gimages.sh in the root directory of your project. Example for YPM would be 
+  a wrapper script for gimages.sh in the root directory of your project. Example for YPM would be
   ypmimages.sh:
-  
+
 #!/bin/bash
 
 ./scripts/gimages.sh -r src/web/uiresources -i5 -m5 -p "$1"
 
   ypmimages.sh can then be executed in two ways:
-  1. ./ypmimages.sh: Pre-generate scaled images for CRF 2 to have access to at runtime. This 
+  1. ./ypmimages.sh: Pre-generate scaled images for CRF 2 to have access to at runtime. This
      must be run prior to your first CRF 2 deployment, even if none of your images are candidates
      for pre-generated scaling. This is because a properties file is recorded that CRF-113 below
-     will check for. 
+     will check for.
   2. ./ypmimages.sh <group relative image stem>: Like the previous invocation but only
      pre-generate scaled images for files matching the given group relative image stem. eg.
      "./ypmimages.sh common/logo" would look for common/logo.properties in your group directories
      and if found, generate scaled versions for each common/logo.* image.
   Only images with a corresponding properties file anywhere under your uiresources/images directory
   are candidates for scaling.
-  See "./scripts/gimages.sh -h" for more info on the -i and -m options. 
-  
-- As per [CRF-113] "Build time verification of pre-generated scaled images", you should now depend 
+  See "./scripts/gimages.sh -h" for more info on the -i and -m options.
+
+- As per [CRF-113] "Build time verification of pre-generated scaled images", you should now depend
   on wl-build-scripts 2.3.1 to ensure that your build scripts will invoke
-  verify-image-generation. See the wl-build-scripts release notes.  
-  
+  verify-image-generation. See the wl-build-scripts release notes.
+
 Other notes
 - The following are requirements for [CRF-25] GraphicsMagickImageTransformationFactoryBean. However,
-  it was decided that this bean would not be configured by default (we went with 
-  [CRF-111] "Development time pre-generation of scaled images" instead) and is not yet recommended for a 
-  production environment. Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ ) 
-  installed, which we use for image scaling. The path to this is configured via the 
-  env.image.transformation.graphics.magick.path property in the 
+  it was decided that this bean would not be configured by default (we went with
+  [CRF-111] "Development time pre-generation of scaled images" instead) and is not yet recommended for a
+  production environment. Your environment needs Graphics Magick ( http://www.graphicsmagick.org/ )
+  installed, which we use for image scaling. The path to this is configured via the
+  env.image.transformation.graphics.magick.path property in the
   crf-environment.properties.* files that are shipped with CRF. However, at the moment, the property
   is just set to "gm" since none of the environments have it installed. Having "gm" on your path
   is advisable for desktop development to aid portability but for other environments, it would
-  be better to have an absolute path.     
+  be better to have an absolute path.
 
-==== Version 1.0.10 (CVS tag: contentRenderingFramework_v1_0_10, CVS branch: branch_contentRenderingFramework_v1_0_7 ) ==== 
+==== Version 1.0.10 (CVS tag: contentRenderingFramework_v1_0_10, CVS branch: branch_contentRenderingFramework_v1_0_7 ) ====
 
 Default environment property files are no longer shipped with the crf jar. This is due to the Mobiles team restructure.
-There is no longer anything common between the environments of each app and hence crf can no longer predict 
+There is no longer anything common between the environments of each app and hence crf can no longer predict
 sensible defaults.
 
 Upgrade steps:
@@ -528,7 +537,7 @@ Upgrade steps:
     from the crf jar file and place them in a temporary directory:
 
     au/com/sensis/mobile/crf/crf-environment.properties.<platform>
-    
+
 2. In your project, you should already have property files that match the above for each platform. Append
    the contents of the above files to each of the files that you already have.
 
@@ -539,54 +548,54 @@ Upgrade steps:
 
     au/com/sensis/mobile/crf/crf-environment-template.properties
 
-==== Version 1.0.9 (CVS tag: contentRenderingFramework_v1_0_9, CVS branch: branch_contentRenderingFramework_v1_0_7 ) ==== 
+==== Version 1.0.9 (CVS tag: contentRenderingFramework_v1_0_9, CVS branch: branch_contentRenderingFramework_v1_0_7 ) ====
 
-Selectively backpatched some changes from the 2.x series in the Git repository to get project development working reasonably well on a 
-Unix box. 
+Selectively backpatched some changes from the 2.x series in the Git repository to get project development working reasonably well on a
+Unix box.
 Note that you need:
 1. To create your own user.<login name>.properties file in the root of the project like my user.w12495.properties.
 2. You need the imageserver project checked out of CVS.
 3. You need the devices.mdpr device repository checked out of either CVS or GIT and the device.repository.path property set
-   in user.<login name>.propertie. 
-   
+   in user.<login name>.propertie.
+
 NOTE !!!!! Due to the very selective backpatching and because I accidentally created the branch_contentRenderingFramework_v1_0_7 branch
 as a sub branch of the branch_contentRenderingFramework_v1_0_4 branch, it is inadvisable to incrementally import any of these changes
-from CVS to GIT using git cvsimport - it won't work out correctly/easily.  
+from CVS to GIT using git cvsimport - it won't work out correctly/easily.
 
-==== Version 1.0.8 (tag: contentRenderingFramework_v1_0_8, branch: branch_contentRenderingFramework_v1_0_7) ==== 
+==== Version 1.0.8 (tag: contentRenderingFramework_v1_0_8, branch: branch_contentRenderingFramework_v1_0_7) ====
 
 Fixes:
 - CRF-116 Resolved JSP paths mangled if webapp contextPath is "/".
 
-==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
+==== Version 1.0.7 (tag: contentRenderingFramework_v1_0_7, branch: branch_contentRenderingFramework_v1_0_4 ) ====
 
 Fixes:
 - CRF-106: CSS3 @media queries minimised incorrectly
-    - Added yuicompressor source as top level directory, copied from version 2.4.2. Applied patch 
-      from http://yuilibrary.com/projects/yuicompressor/ticket/2527986 and published 
-      version 2.4.2-sensis1. We apply the patch ourselves prior to the stable 2.4.3 release. 
+    - Added yuicompressor source as top level directory, copied from version 2.4.2. Applied patch
+      from http://yuilibrary.com/projects/yuicompressor/ticket/2527986 and published
+      version 2.4.2-sensis1. We apply the patch ourselves prior to the stable 2.4.3 release.
       The fix ensures that CSS3 media queries like:
-      
+
           @media all and (orientation:landscape) { ... }
-      
+
       will be minimised correctly.
-      
+
 Upgrade steps:
 - Now depends on:
-    
+
     <dependency org="com.yahoo" name="yuicompressor" rev="2.4.2-sensis1" conf="default"/>
 
-==== Version 1.0.6 (tag: contentRenderingFramework_v1_0_6, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
+==== Version 1.0.6 (tag: contentRenderingFramework_v1_0_6, branch: branch_contentRenderingFramework_v1_0_4 ) ====
 
 Fixes:
 - CRF-105: JavaScript and CSS minification - race condition may possibly result in 0 length file
-    - minification is now performed in memory without first writing the unminified bundle to disk. 
+    - minification is now performed in memory without first writing the unminified bundle to disk.
       Bundle file is only written out after minification is performed.
-      
+
 Upgrades steps:
 - none. Should be transparent.
 
-==== Version 1.0.5 (tag: contentRenderingFramework_v1_0_5, branch: branch_contentRenderingFramework_v1_0_4 ) ==== 
+==== Version 1.0.5 (tag: contentRenderingFramework_v1_0_5, branch: branch_contentRenderingFramework_v1_0_4 ) ====
 
 Fixes:
 - CRF-99 NEW - bundle paths need to contain all matched groups, not just the first one
@@ -598,13 +607,13 @@ Other changes:
 Upgrade steps:
 - none. Should be transparent.
 
-==== Version 1.0.4 (tag: contentRenderingFramework_v1_0_4) ==== 
+==== Version 1.0.4 (tag: contentRenderingFramework_v1_0_4) ====
 
 - CRF-95 Create Admin servlet for emptying the resource cache
 
-    * Usage: 
+    * Usage:
         * Add the following servlet to your app:
-    
+
             <!-- CRF Admin Servlet. -->
             <servlet>
                 <servlet-name>crfAdminServlet</servlet-name>
@@ -618,165 +627,165 @@ Upgrade steps:
                     <param-value>/resourcecache/empty</param-value>
                 </init-param>
             </servlet>
-        
+
             <servlet-mapping>
                 <servlet-name>crfAdminServlet</servlet-name>
                 <url-pattern>/healthcheck/crf/*</url-pattern>
             </servlet-mapping>
-            
+
         * Then hit the URL /healthcheck/crf/resourcecache/empty to clear the resource cache.
-        * (optional) check the output of the log4j 
-          au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger logger to verify that the cache 
-          was cleared. The frequency of these log entries is configured by 
-          env.cache.stats.logging.period.milliseconds, which has default values defined by CRF. 
-    
+        * (optional) check the output of the log4j
+          au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger logger to verify that the cache
+          was cleared. The frequency of these log entries is configured by
+          env.cache.stats.logging.period.milliseconds, which has default values defined by CRF.
+
 - CRF-97 NEW - retry resolution if request resulted in empty resources
-    * CRF ships with new environment properties that have defaults set. You shouldn't have to 
+    * CRF ships with new environment properties that have defaults set. You shouldn't have to
       modify them:
-    
+
         # If a resource cache entry corresponds to no resources found, this is the maximum number of times
-        # that attempts will be made to refresh the entry (and thus conclude that the resources really, 
+        # that attempts will be made to refresh the entry (and thus conclude that the resources really,
         # really cannot be found). This allows for some level of recovery if the original request could not
         # be resolved due to a transient file system error.
         # env.cache.resources.not.found.refresh.count.update.milliseconds will limit the rate at which
         # the refresh count is updated.
         env.cache.resources.not.found.max.refresh.count=5
-        
+
         # Used in conjunction with env.cache.resources.not.found.max.refresh.count, this value is
-        # the minimum time delay to wait before updating the refresh count. For example, if this is 
-        # set to 60000 milliseconds, we effectively allow a maximum of one refresh to be counted every 
-        # 60 seconds, regardless of how many attempts were truly made. This ensures that the recovery 
+        # the minimum time delay to wait before updating the refresh count. For example, if this is
+        # set to 60000 milliseconds, we effectively allow a maximum of one refresh to be counted every
+        # 60 seconds, regardless of how many attempts were truly made. This ensures that the recovery
         # attempts will span a non-trivial amount of time.
         env.cache.resources.not.found.refresh.count.update.milliseconds=120000
-    
-    * Log entries like the following indicate that an attempt to resolve the resource was really 
-      made but no results found.  
-    
-        216093 [2011-01-24 16:41:08,718] [http-8080-1] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {} 
-        - No resource was found for requested resource 'selenium/common/columns.css' and device 
-        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6] 
-        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true] 
-        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false] 
-        [navigatorBrowser - false] [navigatorBrowserName - NONE] [navigatorDownload - false] [navigatorLaunchConvention - NONE] 
+
+    * Log entries like the following indicate that an attempt to resolve the resource was really
+      made but no results found.
+
+        216093 [2011-01-24 16:41:08,718] [http-8080-1] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {}
+        - No resource was found for requested resource 'selenium/common/columns.css' and device
+        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6]
+        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true]
+        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false]
+        [navigatorBrowser - false] [navigatorBrowserName - NONE] [navigatorDownload - false] [navigatorLaunchConvention - NONE]
         [custom.web2.0 - false]
 
-    * Log entries like the following indicate that we previously cached empty resources but the 
+    * Log entries like the following indicate that we previously cached empty resources but the
       refreshCount has not reached the max yet so we will attempt to refresh the cache entry.
-            
-        233031 [2011-01-24 16:41:25,656] [http-8080-1] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {} 
-        - Empty cached resources found for requested resource 'selenium/common/columns.css' and device 
-        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6] 
-        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true] 
-        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false] 
-        [navigatorBrowser - false] [navigatorBrowserName - NONE] [navigatorDownload - false] [navigatorLaunchConvention - NONE] 
+
+        233031 [2011-01-24 16:41:25,656] [http-8080-1] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {}
+        - Empty cached resources found for requested resource 'selenium/common/columns.css' and device
+        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6]
+        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true]
+        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false]
+        [navigatorBrowser - false] [navigatorBrowserName - NONE] [navigatorDownload - false] [navigatorLaunchConvention - NONE]
         [custom.web2.0 - false] but refreshCount is 1. Will refresh the entry.
 
-    * Log entries like the following indicate that the refreshCount has reached its max so the 
-      empty resources will be returned from the cache. 
-    
-        433859 [2011-01-24 16:44:46,484] [http-8080-6] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {} 
-        - Cached empty resources found and returned for requested resource 'selenium/common/columns.css' and device 
-        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6] 
-        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true] 
-        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false] 
+    * Log entries like the following indicate that the refreshCount has reached its max so the
+      empty resources will be returned from the cache.
+
+        433859 [2011-01-24 16:44:46,484] [http-8080-6] WARN  au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger {}
+        - Cached empty resources found and returned for requested resource 'selenium/common/columns.css' and device
+        au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceAdaptor [name - PC-Win32-Firefox-3_6]
+        [pixelsX - 780] [pixelsY - 550] [custom.callfwdsup - none] [jscriptversion - 1.1] [postype - none] [cookies - true]
+        [meta-refreash - true] [wtai - false] [tel - false] [imageCategory - HD800] [saveToContacts - false] [navigator - false]
         [navigatorBrowser - false] [navigatorBrowserName - NONE] [navigatorDownload - false] [navigatorLaunchConvention - NONE]
          [custom.web2.0 - false]. refreshCount is 3
-    
-    
-- Upgrade steps:
-    - Configure the crfAdminServlet as described above.     
 
-==== Version 1.0.3 (tag: contentRenderingFramework_v1_0_3) ==== 
+
+- Upgrade steps:
+    - Configure the crfAdminServlet as described above.
+
+==== Version 1.0.3 (tag: contentRenderingFramework_v1_0_3) ====
 
 - CRF-89: Created a new tag for use in JSPs to only output a resolved image path without
   any other markup; This is suitable for use within a form submit button tag.
-  
+
   * Usage: <crf:imgPath device="${device}" src="header/logo.image" />
 
 - CRF-90: Added the option to 'disable' downstream caching of UI resource files.
   By default normal downstream caching is disabled for DESK, DEV, SANDPIT and enabled for
   all other platforms.
-  
+
   * Usage: To override the defaults add the following property to your crf-environment.properties
     file: env.downstream.caching.enabled=<false/true>. No change required to accept the defaults.
-    
+
   * Note: When downstream caching is enabled (i.e. = true) there will be no change to existing
     behaviour. When it is disabled (false) a timestamp value will be appended to the end of each
     UI resource file URI.
 
-==== Version 1.0.2 (tag: contentRenderingFramework_v1_0_2) ==== 
+==== Version 1.0.2 (tag: contentRenderingFramework_v1_0_2) ====
 
 Switched off caching of configuration and resources for dev environment.
 
-==== Version 1.0.1 (tag: contentRenderingFramework_v1_0_1) ==== 
+==== Version 1.0.1 (tag: contentRenderingFramework_v1_0_1) ====
 
 Jiras:
-- CRF-85: NEW - cache returns incorrect bundle results for map component when populated for 
+- CRF-85: NEW - cache returns incorrect bundle results for map component when populated for
   HTC-Magic, then an Iphone OS 3.1.x
-    - The key into the resources cache for bundles now includes all matching groups for the 
-      current device instead of just the first matching group. This is because, in practice, 
-      the first matching group is not guaranteed to be the most specific group. eg. in the 
-      map component, all image category groups were placed first in the group config file, 
+    - The key into the resources cache for bundles now includes all matching groups for the
+      current device instead of just the first matching group. This is because, in practice,
+      the first matching group is not guaranteed to be the most specific group. eg. in the
+      map component, all image category groups were placed first in the group config file,
       before the iphone groups.
-      
+
 Upgrade notes:
 - Mostly transparent but now depends on:
 
-        <dependency org="com.sensis" name="sdpCommon-web" rev="1.6-022" conf="default"/>      
+        <dependency org="com.sensis" name="sdpCommon-web" rev="1.6-022" conf="default"/>
 
-==== Version 1.0.0 (tag: contentRenderingFramework_v1_0_0) ==== 
+==== Version 1.0.0 (tag: contentRenderingFramework_v1_0_0) ====
 
 Incremented version to 1.0.0 to mark first official release. No changes since 0.1.4.
 
-==== Version 0.1.4 (tag: contentRenderingFramework_v0_1_4) ==== 
+==== Version 0.1.4 (tag: contentRenderingFramework_v0_1_4) ====
 
 Jiras:
-- CRF-21, CRF-32: Added CSS and Javascript file bundling. This can be enabled/disabled via the 
-	  property env.bundle.resources
+- CRF-21, CRF-32: Added CSS and Javascript file bundling. This can be enabled/disabled via the
+    property env.bundle.resources
 
 - CRF-84: Added support for favicons. favicon.ico and apple-touch-icon.png images should be placed
-	  under uiresources/images so that they are included in the uiresources tar file.	  
+    under uiresources/images so that they are included in the uiresources tar file.
 
 - CRF-3: ContentRenderingPlatformConfigurationFactory - validate config
     - if one or more groups do not exist as a directory(ies) in any of the resource directory roots,
       a warning is logged using ResourceResolutionWarnLogger.
-    - if a directory(ies) exist in one of the resource directory roots but no corresponding group 
+    - if a directory(ies) exist in one of the resource directory roots but no corresponding group
       is found in any UiConfiguration, a warning is logged using ResourceResolutionWarnLogger.
-      
+
 - CRF-14: Debug page composition
-    - if env.debug.resource.graph=true in crf-environment.properties, plain text graph of resolved 
-      resources output as a comment directly under the html element of the output stream. 
-      Also logged at DEBUG level if log4j debug is enabled. 
-      
+    - if env.debug.resource.graph=true in crf-environment.properties, plain text graph of resolved
+      resources output as a comment directly under the html element of the output stream.
+      Also logged at DEBUG level if log4j debug is enabled.
+
 - CRF-69: Cache for Groups resolution
     - UiConfiguration.matchingGroupIterator now uses a cache.
 
 - CRF-33: Cache for Resource resolution
-    
-- CRF-77: Caching - modify to use ehcache 
+
+- CRF-77: Caching - modify to use ehcache
     - Caching of of the following utilises Ehcache now:
         - (String userAgent, String uiConfigurationPath) -> Group []
         - (String requestedResourcePath, Group group) -> Resource []
     - Caching of loaded groups still uses simple hold for memory caching upon loading of group
       config files (there is no need to change this due to the small memory footprint).
-    - ehcache monitoring MBeans are now registered with the platform's MBeanServer. 
+    - ehcache monitoring MBeans are now registered with the platform's MBeanServer.
       If none is found, an MBeanServer will be created.
     - ehcache statistics are also logged via log4j at regular intervals. The interval is
-      controlled by a new env.cache.stats.logging.period.milliseconds property 
+      controlled by a new env.cache.stats.logging.period.milliseconds property
       configured in crf-environment.properties.*. The logging
-      is performed via a log4j logger with name of 
+      is performed via a log4j logger with name of
       au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger.
-    - MBeans GroupsCacheFillerBean and ResourceCacheFillerBean are now registered with the platform 
-      MBeanServer but they are only enabled if the env.cache.resources.fillers.enabled property in 
-      crf-environment.properties.* is true. These MBeans allow you to fill the caches with 
-      arbitrary numbers of elements. Useful for analysing memory consumption during development.   
-      
+    - MBeans GroupsCacheFillerBean and ResourceCacheFillerBean are now registered with the platform
+      MBeanServer but they are only enabled if the env.cache.resources.fillers.enabled property in
+      crf-environment.properties.* is true. These MBeans allow you to fill the caches with
+      arbitrary numbers of elements. Useful for analysing memory consumption during development.
+
 - CRF-82 NEW: crf:contentType JSP tag - change to determine content type from device repository
 - CRF-83: NEW - crf:img path for broken images should direct to *.image with correct prefix
-                
+
 Now depends on:
-- <dependency org="apache" name="commons-io" rev="1.3" conf="default"/>      
-- <dependency org="org.ehcache" name="ehcache-core" rev="2.3.0" conf="default"/>        
+- <dependency org="apache" name="commons-io" rev="1.3" conf="default"/>
+- <dependency org="org.ehcache" name="ehcache-core" rev="2.3.0" conf="default"/>
 - <dependency org="com.yahoo" name="yuicompressor" rev="2.4.2" conf="default"/>
 - <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-013" conf="default"/>
 
@@ -786,31 +795,31 @@ Upgrade notes:
     <crf:html device="${context.device}">
     ...
     </crf:html>
-    
+
   Furthermore, when using this tag, webapps should not specify either:
-  - the content type and character encoding of responses containing markup. 
-  - the doctype of the response. 
-- Your application must be using at least version 1.263 of the devices.mdpr Volantis Device 
+  - the content type and character encoding of responses containing markup.
+  - the doctype of the response.
+- Your application must be using at least version 1.263 of the devices.mdpr Volantis Device
   Repository.
 - It is advised that you modify your log4j config to direct INFO level messages
-  from au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger to a dedicated cache statistics 
+  from au.com.sensis.mobile.crf.util.EhcacheStatisticsLogger to a dedicated cache statistics
   log file.
-- Your ivy.xml file will need an explicit line to ignore old versions of ehcache (which had a 
+- Your ivy.xml file will need an explicit line to ignore old versions of ehcache (which had a
   different org and module name:
-    
+
     <dependencies>
-        ...        
-        
-        <!-- 
-          - Exclude old versions of ehcache which were from a different org and had a different 
-          - module name. 
+        ...
+
+        <!--
+          - Exclude old versions of ehcache which were from a different org and had a different
+          - module name.
           -->
         <exclude org="ehcache" module="ehcache" />
-        
+
         ...
     </dependencies>
 
-==== Version 0.1.2-106 (tag: contentRenderingFramework_v0_1_2-106) ==== 
+==== Version 0.1.2-106 (tag: contentRenderingFramework_v0_1_2-106) ====
 
 Jiras:
 - CRF-81: NEW - crf:empty tag
@@ -820,7 +829,7 @@ Upgrade notes:
 - Any uses of the crf:empty tag introduced in the previous version should be removed from your
   code.
 
-==== Version 0.1.2-105 (tag: contentRenderingFramework_v0_1_2-105) ==== 
+==== Version 0.1.2-105 (tag: contentRenderingFramework_v0_1_2-105) ====
 
 Jiras:
 - CRF-80: NEW - crf:contentType JSP tag
@@ -829,49 +838,49 @@ Jiras:
 Upgrade notes:
 - Should be transparent.
 
-==== Version 0.1.2-104 (tag: contentRenderingFramework_v0_1_2-104) ==== 
+==== Version 0.1.2-104 (tag: contentRenderingFramework_v0_1_2-104) ====
 
 Jiras:
 - CRF-75: NEW - Runtime reloading of crp-config.xml appears to be broken
     - Modified src/resources/au/com/sensis/mobile/crf/crf-environment.properties.desk to
       disable caching:
-      
+
         env.cache.ui.configuration=false
         env.cache.resources=false
-      
-      Removed now redundant setting of the same properties in 
+
+      Removed now redundant setting of the same properties in
       showcase/resources/crf-environment.properties.desk.
 
 Upgrade notes:
 - Should be transparent.
 
-==== Version 0.1.2-103 (tag: contentRenderingFramework_v0_1_2-103) ==== 
+==== Version 0.1.2-103 (tag: contentRenderingFramework_v0_1_2-103) ====
 
-Merged changes between contentRenderingFramework_v0_1_2-003 and 
-contentRenderingFramework_v0_1_2-004 (from branch_contentRenderingFramework_v0_1_2-002) 
+Merged changes between contentRenderingFramework_v0_1_2-003 and
+contentRenderingFramework_v0_1_2-004 (from branch_contentRenderingFramework_v0_1_2-002)
 onto HEAD.
 
-==== Version 0.1.2-102 (tag: contentRenderingFramework_v0_1_2-102) ==== 
+==== Version 0.1.2-102 (tag: contentRenderingFramework_v0_1_2-102) ====
 
 Jiras:
 * CRF-70: Fixed include order for Javascript packages.
 
-==== Version 0.1.2-101 (tag: contentRenderingFramework_v0_1_2-101) ==== 
+==== Version 0.1.2-101 (tag: contentRenderingFramework_v0_1_2-101) ====
 
 Jiras:
 * CRF-65: Change 'resources' to 'uiresources'
 
 Additional Changes:
 * Changed the Resource caching to use the Device user-agent as the key instead of Device name.
- 
-Upgrade Notes:
-* The 'resources' directory (containing CSS, images, Javascript) should be renamed to 'uiresources'.  
 
-    
-==== Version 0.1.2-100 (tag: contentRenderingFramework_v0_1_2-100) ==== 
+Upgrade Notes:
+* The 'resources' directory (containing CSS, images, Javascript) should be renamed to 'uiresources'.
+
+
+==== Version 0.1.2-100 (tag: contentRenderingFramework_v0_1_2-100) ====
 
 Jiras:
-* CRF-13: ResourceResolverEngineBean caching 
+* CRF-13: ResourceResolverEngineBean caching
 * CRF-62: NEW: modify crf:script to make JS files override inherited files with the same name
 * CRF-67: NEW: properties file resolution
 
@@ -879,49 +888,49 @@ Upgrade Notes:
 * JavaScript inheritance: previously, files with the same name will be included from later groups.
   This will no longer occur. eg. if a device matches both the apple and iphone groups and they
   both have a map.js file:
-  
+
       iphone/comp/map/map.js
       apple/comp/map/map.js
-      
-  only iphone/comp/map/map.js will be resolved (ie. the most specific file).  
+
+  only iphone/comp/map/map.js will be resolved (ie. the most specific file).
   Beware of this in case you were relying on the previous behaviour.
 * The standard crf-environment.properties.* files now define the "env.cache.resources" property
   with a sensible default value for each environment. You may override this if you wish
   by defining the property in a crf-environment.properties.* file in your classpath root.
 
-==== Version 0.1.2-004 (tag: contentRenderingFramework_v0_1_2-004, branch: branch_contentRenderingFramework_v0_1_2-002) ==== 
+==== Version 0.1.2-004 (tag: contentRenderingFramework_v0_1_2-004, branch: branch_contentRenderingFramework_v0_1_2-002) ====
 
 Jiras:
 * CRF-68: NEW: crf:img should output body content if the source image is not found
 
-==== Version 0.1.2-003 (tag: contentRenderingFramework_v0_1_2-003, branch: branch_contentRenderingFramework_v0_1_2-002) ==== 
+==== Version 0.1.2-003 (tag: contentRenderingFramework_v0_1_2-003, branch: branch_contentRenderingFramework_v0_1_2-002) ====
 
-Released from branch branch_contentRenderingFramework_v0_1_2-002. 
+Released from branch branch_contentRenderingFramework_v0_1_2-002.
 
 Jiras:
-* CRF-72 NEW - {{crf:img}}, {{crf:link}} and {{crf:script}} should not write a "\n" character to response 
+* CRF-72 NEW - {{crf:img}}, {{crf:link}} and {{crf:script}} should not write a "\n" character to response
 
-==== Version 0.1.2-002 (tag: contentRenderingFramework_v0_1_2-002) ==== 
+==== Version 0.1.2-002 (tag: contentRenderingFramework_v0_1_2-002) ====
 
 Jiras:
 * CRF-67 NEW: properties file resolution
-    * Added au.com.sensis.mobile.crf.service.PropertiesLoader and PropertiesLoaderBean 
+    * Added au.com.sensis.mobile.crf.service.PropertiesLoader and PropertiesLoaderBean
       implementation.
-    * Added PropertiesResourceResolverBean and wired up DelegatingResourceResolverBean in 
-      crfContext.xml to include this. 
-    * crf.propertiesLoader bean now exposed in crfContext.xml so that apps can use it if required. 
-    
-Upgrade notes:
-* Any webapp that uses crf now requires an extra property in crf-environment.properties.*. The 
-  following example is for a desktop environment:
-    * env.resources.properties.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-map-component-showcase/WEB-INF/properties    
+    * Added PropertiesResourceResolverBean and wired up DelegatingResourceResolverBean in
+      crfContext.xml to include this.
+    * crf.propertiesLoader bean now exposed in crfContext.xml so that apps can use it if required.
 
-==== Version 0.1.2-001 (tag: contentRenderingFramework_v0_1_2-001) ==== 
+Upgrade notes:
+* Any webapp that uses crf now requires an extra property in crf-environment.properties.*. The
+  following example is for a desktop environment:
+    * env.resources.properties.root.dir=D:/Software/apache-tomcat-hotdeploy/webapps/wl-map-component-showcase/WEB-INF/properties
+
+==== Version 0.1.2-001 (tag: contentRenderingFramework_v0_1_2-001) ====
 
 Removed dependency:
     <dependency org="com.sensis" name="ems-cxf-client" rev="1.6" conf="showcase->default"/>
 
-==== Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ==== 
+==== Version 0.1.2 (tag: contentRenderingFramework_v0_1_2) ====
 
 Closing off iteration 0.1.2. Jira issues:
 ** Improvement
@@ -930,96 +939,96 @@ Closing off iteration 0.1.2. Jira issues:
 ** Task
     * [CRF-12] - Support multiple, independent crf-config.xml files
     * [CRF-35] - Deploy CRF Showcase to Dev
-    * [CRF-38] - Perf Testing: Create CRF test pages 
-    * [CRF-39] - Perf Testing: Create MCS test pages 
+    * [CRF-38] - Perf Testing: Create CRF test pages
+    * [CRF-39] - Perf Testing: Create MCS test pages
     * [CRF-40] - Perf Testing: Create static HTML pages
     * [CRF-42] - NEW: ContentRenderingPlatformConfigurationFactory - allow runtime reloading of crp-config.xml
     * [CRF-43] - NEW: Version numbers in JavaScript, image and CSS paths
     * [CRF-49] - NEW: remove dependency on wl-core-component
     * [CRF-57] - Perf Testing: Setup and Run Performance Tests
-    * [CRF-58] - NEW: Move PathPrefixRestrictedResourceResolverEngineBean, DelegatingPathRestrictedResourceResolverEngineBean 
+    * [CRF-58] - NEW: Move PathPrefixRestrictedResourceResolverEngineBean, DelegatingPathRestrictedResourceResolverEngineBean
       capabilities into ConfigurationFactoryBean
     * [CRF-59] - NEW: crf:deviceProperty tag
     * [CRF-60] - NEW: modify crf:script tag to support scripts in body content
     * [CRF-61] - NEW: modify crf:script tag to support absolute (http://) URLs
 
-==== Version 0.1.1-006 (tag: contentRenderingFramework_v0_1_1-006) ==== 
+==== Version 0.1.1-006 (tag: contentRenderingFramework_v0_1_1-006) ====
 
 Jiras:
-- CRF-38 Perf Testing: Create CRF test pages 
-- CRF-39 Perf Testing: Create MCS test pages 
-- CRF-40 Perf Testing: Create static HTML pages 
+- CRF-38 Perf Testing: Create CRF test pages
+- CRF-39 Perf Testing: Create MCS test pages
+- CRF-40 Perf Testing: Create static HTML pages
 - CRF-12 Support multiple, independent crf-config.xml files
-    -  additional fix for this reopened Jira. Given a group config file with a config path 
-       of "component/map", JSP URLs like "../../../selenium/component/map/map.crf" will now be 
-       correctly resolved. ie. UiConfiguration.appliesToPath now uses String.contains instead of 
-       String.startsWith. Also fixed URL in map.css which was broken from previous commits 
+    -  additional fix for this reopened Jira. Given a group config file with a config path
+       of "component/map", JSP URLs like "../../../selenium/component/map/map.crf" will now be
+       correctly resolved. ie. UiConfiguration.appliesToPath now uses String.contains instead of
+       String.startsWith. Also fixed URL in map.css which was broken from previous commits
        (can't easily assert for this in the selenium tests, I think).
 
-==== Version 0.1.1-005 (tag: contentRenderingFramework_v0_1_1-005) ==== 
+==== Version 0.1.1-005 (tag: contentRenderingFramework_v0_1_1-005) ====
 
 Added crf-environment.properties.sandpit-uidev.
 
-==== Version 0.1.1-004 (tag: contentRenderingFramework_v0_1_1-004) ==== 
+==== Version 0.1.1-004 (tag: contentRenderingFramework_v0_1_1-004) ====
 
 Jiras:
 * [CRF-60] - NEW: modify crf:script tag to support scripts in body content
 * [CRF-61] -  NEW: modify crf:script tag to support absolute (http://) URLs
 
-==== Version 0.1.1-003 (tag: contentRenderingFramework_v0_1_1-003) ==== 
+==== Version 0.1.1-003 (tag: contentRenderingFramework_v0_1_1-003) ====
 
 crf.properties updated so that all XML resources under /WEB-INF/crf-config will be picked up
 by the engine:
-  
+
 resources.config.path.patterns=/WEB-INF/crf-config/**/*.xml
 
-==== Version 0.1.1-002 (tag: contentRenderingFramework_v0_1_1-002) ==== 
+==== Version 0.1.1-002 (tag: contentRenderingFramework_v0_1_1-002) ====
 
 Jiras:
 * [CRF-59] - NEW: crf:deviceProperty tag
 
-==== Version 0.1.1-001 (tag: contentRenderingFramework_v0_1_1-001) ==== 
+==== Version 0.1.1-001 (tag: contentRenderingFramework_v0_1_1-001) ====
 
 Jiras:
 * [CRF-55] - Change "href" attribute of crf:image and crf:script tag to "src"
 * [CRF-4] - EIS Engagement for Content Rendering Framework requirements
-* [CRF-38] - Perf Testing: Create CRF test pages 
-* [CRF-39] - Perf Testing: Create MCS test pages 
+* [CRF-38] - Perf Testing: Create CRF test pages
+* [CRF-39] - Perf Testing: Create MCS test pages
 * [CRF-40] - Perf Testing: Create static HTML pages
 * [CRF-42] - NEW: ContentRenderingPlatformConfigurationFactory - allow runtime reloading of crp-config.xml
 * [CRF-43] - NEW: Version numbers in JavaScript, image and CSS paths
 * [CRF-49] - NEW: remove dependency on wl-core-component
 * [CRF-57] - Perf Testing: Setup and Run Performance Tests
-* [CRF-58] - NEW: Move PathPrefixRestrictedResourceResolverEngineBean, DelegatingPathRestrictedResourceResolverEngineBean 
+* [CRF-58] - NEW: Move PathPrefixRestrictedResourceResolverEngineBean, DelegatingPathRestrictedResourceResolverEngineBean
              capabilities into ConfigurationFactoryBean
 
 Upgrade notes:
-- The core component needs to remove the following bean definition from coreComponentPropertiesContext.xml 
+- The core component needs to remove the following bean definition from coreComponentPropertiesContext.xml
   as this is now provided by crf:
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="placeholderPrefix" value="@{global."/>
-        
-        <!-- 
+
+        <!--
           - Ensure that this PropertyPlaceholderConfigurer is applied before any other PropertyPlaceholderConfigurer.
           - Particularly important for the following scenario:
-          - 1. A PropertiesFactoryBean is configured to load a platform specific properties file 
+          - 1. A PropertiesFactoryBean is configured to load a platform specific properties file
           -    (ie. the file name is parameterised by the @{global.platform} placeholder.
-          - 2. Another PropertyPlaceholderConfigurer depends on the aforementioned properties file. 
+          - 2. Another PropertyPlaceholderConfigurer depends on the aforementioned properties file.
           -->
         <property name="order" value="0" />
-        
+
         <property name="location">
             <!--
-              - Load the host application's gloabl-version.properties so that we have access to the 
-              - build version information. 
+              - Load the host application's gloabl-version.properties so that we have access to the
+              - build version information.
               -->
             <value>classpath:/global-version.properties</value>
         </property>
     </bean>
 
 
-==== Version 0.1.1 (tag: contentRenderingFramework_v0_1_1) ==== 
+==== Version 0.1.1 (tag: contentRenderingFramework_v0_1_1) ====
 
 Closing off iteration 0.1.1. Jira issues:
 * [CRF-1] - Dir structure and build scripts
@@ -1042,20 +1051,20 @@ Closing off iteration 0.1.1. Jira issues:
 * [CRF-51] - NEW: Image Resolution - showcase selenium test
 * [CRF-52] - NEW: selenium tests - update to spoof user agents
 * [CRF-56] - NEW: Refactor ResourceSelectorBean, ResourcePathMapper and MappedResourcePath responsibilities
- 
-==== Version 0.0.3 (tag: contentRenderingFramework_v0_0_3) ==== 
+
+==== Version 0.0.3 (tag: contentRenderingFramework_v0_0_3) ====
 
 Tagging initial commit under contentRenderingFramework. This was copied from the previous, temporary CVS
 home of mcs/crp.
 
-Code base should be ready for component integration (albeit possibly with a few rough edges). 
+Code base should be ready for component integration (albeit possibly with a few rough edges).
 Basic JavaScript resolution now works (<name>.js and *.js forms but with no bundling).
 
-==== Version 0.0.2 (tag: crp_v0_0_2) (in old mcs/crp CVS home) ==== 
+==== Version 0.0.2 (tag: crp_v0_0_2) (in old mcs/crp CVS home) ====
 
 JSP resolution, basic CSS and basic image resolution done (except for img tag width and height output).
 
-==== Version 0.0.1 (tag: crp_v0_0_1) (in old mcs/crp CVS home) ==== 
+==== Version 0.0.1 (tag: crp_v0_0_1) (in old mcs/crp CVS home) ====
 
 JSP routing via (configurable) .crp extension implemented. Show case demonstrates JSP routing
 via both forwards and includes.
