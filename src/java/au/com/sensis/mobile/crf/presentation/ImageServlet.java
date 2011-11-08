@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
@@ -28,9 +29,13 @@ import au.com.sensis.wireless.web.mobile.MobileContext;
  *
  * @author Adrian.Koh2@sensis.com.au
  */
-public class ImageServlet extends HttpServletBean {
+public class ImageServlet
+        extends HttpServletBean {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = Logger.getLogger(ImageServlet.class);
+
     private String imageServletDependenciesBeanName;
     private ImageServletDependencies imageServletDependencies;
     private String expectedRequestedResourcePathPrefix;
@@ -67,26 +72,38 @@ public class ImageServlet extends HttpServletBean {
 
         if (requestedResourcePathHasCorrectPrefix(request)) {
 
-            final Resource resource =
-                    getImageServletDependencies().getResourceResolverEngine()
-                            .getResource(getDevice(request),
-                                    getRequestedResourcePath(request));
+            Resource resource = null;
+
+            final Device device = getDevice(request);
+            if (device == null) {
+
+                LOGGER.warn("No device found in ImageServlet when requesting '"
+                        + getRequestedResourcePath(request) + "'.");
+
+            } else {
+
+                resource = getImageServletDependencies().getResourceResolverEngine().getResource(
+                        device, getRequestedResourcePath(request));
+            }
 
             if (resource != null) {
+
                 setResponseHeaders(response, resource);
                 writeImageToResponse(response, resource);
+
             } else {
+
                 setFileNotFoundResponseStatus(response);
             }
 
         } else {
+
             throw new ServletException(
                     "Requests for abstract images should have a requestUri starting with '"
                     + getExpectedRequestedResourcePathPrefix()
                     + "'. However, requestUri is '" + request.getRequestURI()
                     + "'");
         }
-
     }
 
     private boolean requestedResourcePathHasCorrectPrefix(final HttpServletRequest req) {
@@ -126,9 +143,18 @@ public class ImageServlet extends HttpServletBean {
     }
 
     private Device getDevice(final HttpServletRequest req) {
-        final MobileContext context =
-                (MobileContext) req.getSession().getAttribute(
-                        MobileContext.MOBILE_CONTEXT_KEY);
+
+        final MobileContext context
+                = (MobileContext) req.getSession().getAttribute(MobileContext.MOBILE_CONTEXT_KEY);
+
+        if (context == null) {
+
+            // if we don't have a session (e.g. cookies are turned off) we won't have a context.
+            // TODO: look into the possibility of using URL rewriting.
+
+            return null;
+        }
+
         return context.getDevice();
     }
 
