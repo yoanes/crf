@@ -146,8 +146,8 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         recordGetRequestUri(getRequestedResourcePath());
 
-        recordGetResource(getResourcePathTestData()
-                .getMapComponentRequestedImageResourcePath(), null);
+        recordGetResource(getResourcePathTestData().getMapComponentRequestedImageResourcePath(),
+                null);
 
         recordSetHttp404ErrorResponse();
 
@@ -155,9 +155,26 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         getObjectUnderTest().init(getSpringMockServletConfig());
 
-        getObjectUnderTest().doGet(getMockHttpServletRequest(),
-                getMockHttpServletResponse());
+        getObjectUnderTest().doGet(getMockHttpServletRequest(), getMockHttpServletResponse());
+    }
 
+    @Test
+    public void testDoGetWhenRequestStartsWithExpectedPrefixAndMobileContextNotInSession()
+            throws Throwable {
+
+        recordGetImageServletDependencies();
+
+        recordGetDeviceUnsuccessful();
+
+        recordGetRequestUri(getRequestedResourcePath());
+
+        recordSetHttp404ErrorResponse();
+
+        replay();
+
+        getObjectUnderTest().init(getSpringMockServletConfig());
+
+        getObjectUnderTest().doGet(getMockHttpServletRequest(), getMockHttpServletResponse());
     }
 
     @Test
@@ -231,6 +248,12 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
         EasyMock.expect(getMockMobileContext().getDevice()).andReturn(
                 getMockDevice()).atLeastOnce();
+    }
+
+    private void recordGetDeviceUnsuccessful() {
+
+        getMockHttpServletRequest().getSession();
+        EasyMock.expectLastCall().andReturn(getSpringMockHttpSession()).atLeastOnce();
     }
 
     private void recordWriteMappedFileToOutputStream() throws IOException {
