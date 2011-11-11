@@ -42,7 +42,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
     private BundleLinksTag objectUnderTest;
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private BundleTagDependencies bundleScriptsTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private JspContextBundleTagStack mockBundleTagStack;
@@ -121,7 +121,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
         md5Builder.add(getSourceBundle2NewPath());
 
         return getBundleLinksTagDependencies().getDeploymentMetadata().getVersion()
-            + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.css";
+                + "/appBundles/css/bundle/myId-" + md5Builder.getSumAsHex() + "-package.css";
     }
 
     @Test
@@ -174,7 +174,7 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
             throws NoSuchAlgorithmException {
         final BundleTagCacheKeyBean keyBean = createCacheKey();
         EasyMock.expect(getMockBundleLinksTagCache().contains(keyBean))
-                .andReturn(resourcesCached);
+        .andReturn(resourcesCached);
 
         if (resourcesCached) {
             EasyMock.expect(getMockBundleLinksTagCache().get(keyBean)).andReturn(
@@ -212,15 +212,15 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordBehaviourForWritingScriptTag() {
         EasyMock.expect(getMockPageContext().getOut())
-            .andReturn(getSpringMockJspWriter())
-            .atLeastOnce();
+        .andReturn(getSpringMockJspWriter())
+        .atLeastOnce();
     }
 
     private void recordBehaviourForClientSrcPathCreation() {
         EasyMock.expect(getMockResource1().getNewPath()).andReturn(getSourceBundle1NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
         EasyMock.expect(getMockResource2().getNewPath()).andReturn(getSourceBundle2NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
 
     }
 

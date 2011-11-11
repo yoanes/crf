@@ -34,7 +34,7 @@ import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
  * @author Brendan Doyle
  */
 public class RenderBundledScriptsTagTestCase
-        extends AbstractJUnit4TestCase {
+extends AbstractJUnit4TestCase {
 
     private static final String TAG_ID = "myId";
 
@@ -43,7 +43,7 @@ public class RenderBundledScriptsTagTestCase
     private RenderBundledScriptsTag objectUnderTest;
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
-            = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private BundleTagDependencies bundleScriptsTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
 
@@ -426,7 +426,7 @@ public class RenderBundledScriptsTagTestCase
         md5Builder.add(getSourceBundle2NewPath());
 
         return getBundleScriptsTagDependencies().getDeploymentMetadata().getVersion()
-                + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.js";
+                + "/appBundles/javascript/bundle/myId-" + md5Builder.getSumAsHex() + "-package.js";
     }
 
     private void recordUpdateCache()

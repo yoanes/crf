@@ -64,7 +64,7 @@ public abstract class BundleTagDelegate {
      */
     public void writeTags(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes)
-            throws IOException {
+                    throws IOException {
 
         if (childTagsHaveRegisteredAbsoluteHrefs()) {
 
@@ -88,7 +88,7 @@ public abstract class BundleTagDelegate {
      */
     protected abstract void writeTag(JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes, final String path)
-            throws IOException;
+                    throws IOException;
 
     /**
      * Write out the tag to the page.
@@ -101,7 +101,7 @@ public abstract class BundleTagDelegate {
      */
     protected abstract void writeAbsoluteHrefTag(JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes, final String path)
-            throws IOException;
+                    throws IOException;
 
     /**
      * @return  the file extension (without the ".") to be used for the created bundle.
@@ -115,7 +115,7 @@ public abstract class BundleTagDelegate {
 
     private void writeTagsForRegisteredHrefsToPage(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes)
-            throws IOException {
+                    throws IOException {
 
         for (final String absoluteHref : getAbsoluteHrefsToRemember()) {
 
@@ -130,7 +130,7 @@ public abstract class BundleTagDelegate {
 
     private void bundleRegisteredResourcesAndWriteTagToPage(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes)
-            throws IOException {
+                    throws IOException {
 
         final BundleTagCacheKey cacheKey = createCacheKey();
 
@@ -148,7 +148,7 @@ public abstract class BundleTagDelegate {
 
     private void writeTagForCachedBundle(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes, final BundleTagCacheKey cacheKey)
-            throws IOException {
+                    throws IOException {
 
         final String cachedBundleClientPath = getCache().get(cacheKey);
         debugLogCachedClientBundlePathFound(cachedBundleClientPath);
@@ -157,7 +157,7 @@ public abstract class BundleTagDelegate {
 
     private void writeTagForNonCachedBundle(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes, final BundleTagCacheKey cacheKey)
-            throws IOException {
+                    throws IOException {
 
         final String outputBundleBasePath = createOutputBundleBasePath(getBundleFileExtension());
         createBundle(outputBundleBasePath);
@@ -255,9 +255,17 @@ public abstract class BundleTagDelegate {
         }
 
         return concatStrings(getBundleTagDependencies().getDeploymentMetadata().getVersion(),
-                "/appBundles/", getId(), "-", md5Builder.getSumAsHex(), "-package.",
+                "/appBundles/", getBundleSubDirectoryName(), "/bundle/",
+                getId(), "-", md5Builder.getSumAsHex(), "-package.",
                 bundleFileExtension);
     }
+
+    /**
+     * Provides a name of the subdirectory that identifies the type of resource.
+     *
+     * @return A String "css" or "javascript"
+     */
+    protected abstract String getBundleSubDirectoryName();
 
     private String concatStrings(final String ... stringsToConcat) {
 

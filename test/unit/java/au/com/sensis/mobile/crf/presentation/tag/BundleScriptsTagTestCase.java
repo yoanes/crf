@@ -42,7 +42,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     private BundleScriptsTag objectUnderTest;
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private BundleTagDependencies bundleScriptsTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private JspContextBundleTagStack mockBundleTagStack;
@@ -124,7 +124,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         md5Builder.add(getSourceBundle2NewPath());
 
         return getBundleScriptsTagDependencies().getDeploymentMetadata().getVersion()
-            + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.js";
+                + "/appBundles/javascript/bundle/myId-" + md5Builder.getSumAsHex() + "-package.js";
     }
 
     @Test
@@ -205,8 +205,8 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         final String absoluteHrefScriptTag2 = "<script src=\"" + ABSOLUTE_HREF_2
                 + "\" charset=\"utf-8\" type=\"text/javascript\" ></script>";
         final String bundeledScriptTag = "<script id=\"myId\" src=\""
-                    + createExpectedOutputBundleClientPath() + "\" charset=\"utf-8\" "
-                    + "type=\"text/javascript\" ></script>";
+                + createExpectedOutputBundleClientPath() + "\" charset=\"utf-8\" "
+                + "type=\"text/javascript\" ></script>";
         final String expectedOutput = absoluteHrefScriptTag1 + absoluteHrefScriptTag2
                 + bundeledScriptTag;
 
@@ -268,7 +268,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
             throws NoSuchAlgorithmException {
         final BundleTagCacheKeyBean keyBean = createCacheKey();
         EasyMock.expect(getMockBundleScriptsTagCache().contains(keyBean))
-                .andReturn(resourcesCached);
+        .andReturn(resourcesCached);
 
         if (resourcesCached) {
             EasyMock.expect(getMockBundleScriptsTagCache().get(keyBean)).andReturn(
@@ -306,15 +306,15 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordBehaviourForWritingScriptTag() {
         EasyMock.expect(getMockPageContext().getOut())
-            .andReturn(getSpringMockJspWriter())
-            .atLeastOnce();
+        .andReturn(getSpringMockJspWriter())
+        .atLeastOnce();
     }
 
     private void recordBehaviourForClientSrcPathCreation() {
         EasyMock.expect(getMockResource1().getNewPath()).andReturn(getSourceBundle1NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
         EasyMock.expect(getMockResource2().getNewPath()).andReturn(getSourceBundle2NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
 
     }
 

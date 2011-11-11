@@ -13,7 +13,7 @@ import javax.servlet.jsp.JspWriter;
  * @author Brendan Doyle
  */
 public class BundleScriptsTagDelegate
-        extends BundleTagDelegate {
+extends BundleTagDelegate {
 
     public BundleScriptsTagDelegate(final JspContext jspContext,
             final BundleTagData bundleTagData) {
@@ -27,7 +27,7 @@ public class BundleScriptsTagDelegate
     @Override
     protected void writeTag(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes, final String src)
-            throws IOException {
+                    throws IOException {
 
         jspWriter.print("<script id=\"");
 
@@ -48,7 +48,7 @@ public class BundleScriptsTagDelegate
     @Override
     protected void writeAbsoluteHrefTag(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes, final String path)
-            throws IOException {
+                    throws IOException {
 
         // same as writeTag above, but we don't want the id.
 
@@ -65,7 +65,7 @@ public class BundleScriptsTagDelegate
 
     private void writeDynamicTagAttributes(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes)
-            throws IOException {
+                    throws IOException {
 
         boolean charsetAttributeFound = false;
         boolean typeAttributeFound = false;
@@ -94,7 +94,7 @@ public class BundleScriptsTagDelegate
 
     private void writeTypeAttributeIfNotFound(final JspWriter jspWriter,
             final boolean typeAttributeFound)
-            throws IOException {
+                    throws IOException {
 
         if (!typeAttributeFound) {
 
@@ -105,7 +105,7 @@ public class BundleScriptsTagDelegate
 
     private void writeCharsetAttributeIfNotFound(final JspWriter jspWriter,
             final boolean charsetAttributeFound)
-            throws IOException {
+                    throws IOException {
 
         if (!charsetAttributeFound) {
 
@@ -129,5 +129,13 @@ public class BundleScriptsTagDelegate
     protected String getTagDependenciesBeanName() {
 
         return "crf.bundleScriptsTagDependencies";
+    }
+
+    /**
+     * @return Always returns "javascript".
+     */
+    @Override
+    protected String getBundleSubDirectoryName() {
+        return "javascript";
     }
 }

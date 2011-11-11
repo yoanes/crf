@@ -13,7 +13,7 @@ import javax.servlet.jsp.JspWriter;
  * @author Brendan Doyle
  */
 public class BundleLinksTagDelegate
-        extends BundleTagDelegate {
+extends BundleTagDelegate {
 
     public BundleLinksTagDelegate(final JspContext jspContext, final BundleTagData bundleTagData) {
 
@@ -26,7 +26,7 @@ public class BundleLinksTagDelegate
     @Override
     protected void writeTag(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes, final String path)
-            throws IOException {
+                    throws IOException {
 
         jspWriter.print("<link id=\"");
 
@@ -55,7 +55,7 @@ public class BundleLinksTagDelegate
 
     private void writeDynamicTagAttributes(final JspWriter jspWriter,
             final List<DynamicTagAttribute> dynamicTagAttributes)
-            throws IOException {
+                    throws IOException {
 
         boolean relAttributeFound = false;
         boolean typeAttributeFound = false;
@@ -84,7 +84,7 @@ public class BundleLinksTagDelegate
 
     private void writeTypeAttributeIfNotFound(final JspWriter jspWriter,
             final boolean typeAttributeFound)
-            throws IOException {
+                    throws IOException {
 
         if (!typeAttributeFound) {
 
@@ -118,6 +118,14 @@ public class BundleLinksTagDelegate
     protected String getTagDependenciesBeanName() {
 
         return "crf.bundleLinksTagDependencies";
+    }
+
+    /**
+     * @return Always returns "css"
+     */
+    @Override
+    protected String getBundleSubDirectoryName() {
+        return "css";
     }
 }
 
