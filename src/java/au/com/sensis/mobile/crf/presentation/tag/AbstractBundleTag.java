@@ -34,8 +34,8 @@ import au.com.sensis.mobile.crf.service.Resource;
  * @author w12495
  */
 public abstract class AbstractBundleTag<T extends BundleTagDelegate>
-        extends AbstractTag
-        implements BundleTag {
+extends AbstractTag
+implements BundleTag {
 
     /**
      * Optional var to save the output to. If this is set, the tag will save it's state to an
@@ -186,6 +186,11 @@ public abstract class AbstractBundleTag<T extends BundleTagDelegate>
         }
 
         return bundleTagDelegate;
+    }
+
+    public boolean hasBundlingEnabled() {
+
+        return getBundleTagDelegate().hasBundlingEnabled();
     }
 }
 

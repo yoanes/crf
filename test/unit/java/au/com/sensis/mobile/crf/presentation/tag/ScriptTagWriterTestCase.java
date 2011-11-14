@@ -84,17 +84,17 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
 
     private DynamicTagAttribute createIdDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "id",
-            "myJavaScript");
+                "myJavaScript");
     }
 
     private DynamicTagAttribute createTitleDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "title",
-        "My Image");
+                "My Image");
     }
 
     private DynamicTagAttribute createTypeDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "type",
-            "text/perl");
+                "text/perl");
     }
 
     private DynamicTagAttribute createCharsetDynamicAttribute() {
@@ -146,14 +146,14 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("incorrect output",
                 "<script charset=\"utf-8\" type=\"text/javascript\" ></script>", getStringWriter()
-                        .getBuffer().toString());
+                .getBuffer().toString());
     }
 
     @Test
     public void testWriteTagWhenHrefIsBlankAndOneDynamicAttribute() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays
                 .asList(createTitleDynamicAttribute()), null, SCRIPT_NAME,
-                    createTagDependencies(), null));
+                createTagDependencies(), null));
 
         getMockJspFragment().invoke(getMockJspWriter());
 
@@ -188,7 +188,7 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
     public void testWriteTagWhenHrefIsAbsoluteAndNoDynamicAttributes() throws Throwable {
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(),
                 new ArrayList<DynamicTagAttribute>(), ABSOLUTE_HREF, null,
-                    createTagDependencies(), null));
+                createTagDependencies(), null));
 
         replay();
 
@@ -231,11 +231,13 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
 
     @Test
     public void testWriteTagWhenHrefIsAbsoluteAndTwoDynamicAttributesAndParentBundleScriptsTag()
-        throws Throwable {
+            throws Throwable {
 
         setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays.asList(
                 createTitleDynamicAttribute(), createIdDynamicAttribute()), ABSOLUTE_HREF, null,
                 createTagDependencies(), getMockBundleScriptsTag()));
+
+        recordBundlingEnabled();
 
         getMockBundleScriptsTag().rememberAbsoluteHref(ABSOLUTE_HREF);
 
@@ -289,6 +291,8 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
                         getMappediPhoneGroupScriptResourcePath());
         recordGetResource(foundResources);
 
+        recordBundlingEnabled();
+
         getMockBundleScriptsTag().addResourcesToBundle(foundResources);
 
         replay();
@@ -297,6 +301,24 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("output to page should be empty",
                 StringUtils.EMPTY, getStringWriter().getBuffer().toString());
+    }
+
+    @Test
+    public void testBundlingDisabledByConfiguration() {
+
+        setObjectUnderTest(new ScriptTagWriter(getMockDevice(), Arrays.asList(
+                createTitleDynamicAttribute(), createIdDynamicAttribute()),
+                getRequestedScriptResourcePath(), null, createTagDependencies(),
+                getMockBundleScriptsTag()));
+
+
+        recordBundlingDisabled();
+
+        replay();
+
+        final boolean result = getObjectUnderTest().bundlingEnabled();
+
+        Assert.assertFalse("Bunding should not be enabled", result);
     }
 
     private ScriptTagWriter createObjectUnderTestWhenSrcNotBlank(
@@ -349,6 +371,14 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
 
     private String getRequestedScriptResourcePath() {
         return getResourcePathTestData().getRequestedNamedScriptResourcePath();
+    }
+
+    private void recordBundlingEnabled() {
+        EasyMock.expect(getMockBundleScriptsTag().hasBundlingEnabled()).andStubReturn(true);
+    }
+
+    private void recordBundlingDisabled() {
+        EasyMock.expect(getMockBundleScriptsTag().hasBundlingEnabled()).andStubReturn(false);
     }
 
     /**
@@ -432,7 +462,6 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
     public Device getMockDevice() {
         return mockDevice;
     }
-
     /**
      * @param mockDevice the mockDevice to set
      */
@@ -487,36 +516,34 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
     }
 
     private TestData createTestDataTwoDynamicAttributesMultipleMappedResources() {
-        return new TestData(Arrays.asList(createTitleDynamicAttribute(),
-                createIdDynamicAttribute()), Arrays
+        return new TestData(Arrays.asList(createTitleDynamicAttribute(), createIdDynamicAttribute()), Arrays
                 .asList(getMappedDefaultGroupScriptResourcePath(),
                         getMappediPhoneGroupScriptResourcePath()), "<script src=\""
-                + getMappedDefaultGroupScriptResourceHref()
-                + "\" title=\"My Image\" id=\"myJavaScript\" charset=\"utf-8\" "
-                + "type=\"text/javascript\" ></script>" + "<script src=\""
-                + getMappediPhoneGroupScriptResourceHref()
-                + "\" title=\"My Image\" id=\"myJavaScript\" charset=\"utf-8\" "
-                + "type=\"text/javascript\" ></script>", getDeploymentMetadataTestData()
-                .createDevDeploymentMetadata());
+                                + getMappedDefaultGroupScriptResourceHref()
+                                + "\" title=\"My Image\" id=\"myJavaScript\" charset=\"utf-8\" "
+                                + "type=\"text/javascript\" ></script>" + "<script src=\""
+                                + getMappediPhoneGroupScriptResourceHref()
+                                + "\" title=\"My Image\" id=\"myJavaScript\" charset=\"utf-8\" "
+                                + "type=\"text/javascript\" ></script>", getDeploymentMetadataTestData()
+                                .createDevDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeMultipleMappedResources() {
         return new TestData(Arrays.asList(createTitleDynamicAttribute()), Arrays
                 .asList(getMappedDefaultGroupScriptResourcePath(),
                         getMappediPhoneGroupScriptResourcePath()), "<script src=\""
-                + getMappedDefaultGroupScriptResourceHref()
-                + "\" title=\"My Image\" charset=\"utf-8\" "
-                + "type=\"text/javascript\" ></script>" + "<script src=\""
-                + getMappediPhoneGroupScriptResourceHref()
-                + "\" title=\"My Image\" charset=\"utf-8\" "
-                + "type=\"text/javascript\" ></script>", getDeploymentMetadataTestData()
-                .createDevDeploymentMetadata());
+                                + getMappedDefaultGroupScriptResourceHref()
+                                + "\" title=\"My Image\" charset=\"utf-8\" "
+                                + "type=\"text/javascript\" ></script>" + "<script src=\""
+                                + getMappediPhoneGroupScriptResourceHref()
+                                + "\" title=\"My Image\" charset=\"utf-8\" "
+                                + "type=\"text/javascript\" ></script>", getDeploymentMetadataTestData()
+                                .createDevDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesMultipleMappedResources() {
         return new TestData(
-                new ArrayList<DynamicTagAttribute>(),
-                Arrays.asList(getMappedDefaultGroupScriptResourcePath(),
+                new ArrayList<DynamicTagAttribute>(), Arrays.asList(getMappedDefaultGroupScriptResourcePath(),
                         getMappediPhoneGroupScriptResourcePath()),
                         "<script src=\"" + getMappedDefaultGroupScriptResourceHref()
                         + "\" charset=\"utf-8\" type=\"text/javascript\" ></script>"
@@ -529,10 +556,10 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
         return new TestData(Arrays
                 .asList(createTitleDynamicAttribute(), createIdDynamicAttribute()), Arrays
                 .asList(getMappedDefaultGroupScriptResourcePath()), "<script src=\""
-                + getMappedDefaultGroupScriptResourceHref()
-                + "\" title=\"My Image\" id=\"myJavaScript\" charset=\"utf-8\" "
-                + "type=\"text/javascript\" ></script>", getDeploymentMetadataTestData()
-                .createDevDeploymentMetadata());
+                        + getMappedDefaultGroupScriptResourceHref()
+                        + "\" title=\"My Image\" id=\"myJavaScript\" charset=\"utf-8\" "
+                        + "type=\"text/javascript\" ></script>", getDeploymentMetadataTestData()
+                        .createDevDeploymentMetadata());
     }
 
     private TestData createTestDataOneDynamicAttributeSingleMappedResource() {
@@ -540,9 +567,9 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(createTitleDynamicAttribute()),
                 Arrays.asList(getMappedDefaultGroupScriptResourcePath()),
                 "<script src=\""
-                + getMappedDefaultGroupScriptResourceHref()
-                + "\" title=\"My Image\" charset=\"utf-8\" type=\"text/javascript\" ></script>",
-                getDeploymentMetadataTestData().createDevDeploymentMetadata());
+                        + getMappedDefaultGroupScriptResourceHref()
+                        + "\" title=\"My Image\" charset=\"utf-8\" type=\"text/javascript\" ></script>",
+                        getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResource() {
@@ -567,20 +594,20 @@ public class ScriptTagWriterTestCase extends AbstractJUnit4TestCase {
                 createTypeDynamicAttribute()), Arrays
                 .asList(getMappedDefaultGroupScriptResourcePath(),
                         getMappediPhoneGroupScriptResourcePath()), "<script src=\""
-                + getMappedDefaultGroupScriptResourceHref()
-                + "\" charset=\"latin1\" type=\"text/perl\" ></script>" + "<script src=\""
-                + getMappediPhoneGroupScriptResourceHref()
-                + "\" charset=\"latin1\" type=\"text/perl\" ></script>",
-                getDeploymentMetadataTestData().createDevDeploymentMetadata());
+                                + getMappedDefaultGroupScriptResourceHref()
+                                + "\" charset=\"latin1\" type=\"text/perl\" ></script>" + "<script src=\""
+                                + getMappediPhoneGroupScriptResourceHref()
+                                + "\" charset=\"latin1\" type=\"text/perl\" ></script>",
+                                getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private TestData createTestDataCharsetAndTypeDynamicAttributesSingleMappedResources() {
         return new TestData(Arrays.asList(createCharsetDynamicAttribute(),
                 createTypeDynamicAttribute()), Arrays
                 .asList(getMappedDefaultGroupScriptResourcePath()), "<script src=\""
-                + getMappedDefaultGroupScriptResourceHref()
-                + "\" charset=\"latin1\" type=\"text/perl\" ></script>",
-                getDeploymentMetadataTestData().createDevDeploymentMetadata());
+                        + getMappedDefaultGroupScriptResourceHref()
+                        + "\" charset=\"latin1\" type=\"text/perl\" ></script>",
+                        getDeploymentMetadataTestData().createDevDeploymentMetadata());
     }
 
     private static class TestData {

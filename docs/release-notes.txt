@@ -1,3 +1,15 @@
+
+Changes:
+- CRF-138 Change directory for bundled javascript / css
+  An extra 2 directories were inserted into the location for css / javascript 
+  bundled using the explicit crf:bundleLinks & crf:bundleScripts
+- CRF-139 Support an override to ignore the bundleScripts / bundleCss tags
+  The env.bundle.resources property will now additionally apply to the crf:bundleLinks
+  and crf:bundleScripts tags. 
+
+Upgrade steps:
+- should be transparent.
+
 ==== Version 2.0.13 (tag: contentRenderingFramework_v2_0_13) ====
 
 Changes:

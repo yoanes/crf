@@ -384,6 +384,11 @@ public abstract class BundleTagDelegate {
         return WebApplicationContextUtils.getRequiredWebApplicationContext(pc.getServletContext());
     }
 
+    public boolean hasBundlingEnabled() {
+
+        return getBundleTagDependencies().getBundlingEnabled();
+    }
+
     /**
      * @return  the jspContext.
      */

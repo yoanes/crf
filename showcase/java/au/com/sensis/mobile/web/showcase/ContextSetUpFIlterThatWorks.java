@@ -3,8 +3,14 @@
  */
 package au.com.sensis.mobile.web.showcase;
 
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import au.com.sensis.wireless.common.volantis.devicerepository.api.DeviceRecognition;
 import au.com.sensis.wireless.web.filter.MobileContextSetUpFilter;
@@ -17,6 +23,8 @@ import au.com.sensis.wireless.web.mobile.HeaderInterpreter;
 public class ContextSetUpFIlterThatWorks extends MobileContextSetUpFilter {
 
     private HeaderInterpreter headerInterpreter;
+
+    private final DebugConfigurationManager configurationManager = new DebugConfigurationManager();
 
     /**
      * This method is called by the server before the filter goes into service.
@@ -34,6 +42,16 @@ public class ContextSetUpFIlterThatWorks extends MobileContextSetUpFilter {
 
         // setDeviceRecognition(new VolantisDeviceRecognition());
         setHeaderInterpreter(newHeaderInterpreter());
+    }
+
+    @Override
+    public void doFilter(final ServletRequest request, final ServletResponse response,
+            final FilterChain chain) throws ServletException, IOException {
+
+        configurationManager.applyDebugConfigurationIfRequired((HttpServletRequest) request,
+                getServletContext());
+
+        super.doFilter(request, response, chain);
     }
 
     /**

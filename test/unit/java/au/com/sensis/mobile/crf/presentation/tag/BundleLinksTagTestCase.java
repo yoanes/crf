@@ -397,7 +397,9 @@ public class BundleLinksTagTestCase extends AbstractJUnit4TestCase {
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
                 getMockResolutionWarnLogger(), getMockBundleLinksTagCache(),
-                getAppBundlesRootDir());
+                getAppBundlesRootDir(),
+                getMockBundleTagStack(),
+                true);
     }
 
     /**

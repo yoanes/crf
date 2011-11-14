@@ -57,6 +57,7 @@ extends AbstractJUnit4TestCase {
     private WebApplicationContext mockWebApplicationContext;
     private MockServletContext springMockServletContext;
     private BundleTagCache mockBundleScriptsTagCache;
+    private JspContextBundleTagStack mockBundleTagStack;
 
     private File sourceBundle1NewFile;
     private String sourceBundle1NewPath;
@@ -529,7 +530,7 @@ extends AbstractJUnit4TestCase {
                 getDeploymentMetadataTestData().createDevDeploymentMetadata(),
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
                 getMockResolutionWarnLogger(), getMockBundleScriptsTagCache(),
-                getAppBundlesRootDir());
+                getAppBundlesRootDir(), getMockBundleTagStack(), true);
     }
 
     /**
@@ -805,5 +806,13 @@ extends AbstractJUnit4TestCase {
     public void setMockBundleScriptsTagCache(final BundleTagCache mockBundleScriptsTagCache) {
 
         this.mockBundleScriptsTagCache = mockBundleScriptsTagCache;
+    }
+
+    public JspContextBundleTagStack getMockBundleTagStack() {
+        return mockBundleTagStack;
+    }
+
+    public void setMockBundleTagStack(final JspContextBundleTagStack mockBundleTagStack) {
+        this.mockBundleTagStack = mockBundleTagStack;
     }
 }

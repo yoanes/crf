@@ -42,7 +42,7 @@ public class HD800BdpPage extends BdpPage {
         return "png";
     }
 
-    private void assertHD800Css() {
+    protected void assertHD800Css() {
         assertNumCssLinks(super.getNumExpectedLinks() + 2);
         assertOnlyDefaultGroupCssResolved();
     }
@@ -59,7 +59,7 @@ public class HD800BdpPage extends BdpPage {
          */
     }
 
-    private void assertHD800Scripts() {
+    protected void assertHD800Scripts() {
 
         final int expectedNumHD800HeadScripts = 9;
         assertNumHeadScripts(expectedNumHD800HeadScripts + super.getNumExpectedHeadScripts());
@@ -83,27 +83,27 @@ public class HD800BdpPage extends BdpPage {
 
     private void assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithArbitraryOrder() {
         assertScript("default/selenium/reporting/default-reporting1.js script not found",
-        "default/selenium/reporting/default-reporting1.js");
+                "default/selenium/reporting/default-reporting1.js");
         assertScript("default/selenium/reporting/default-reporting2.js script not found",
-        "default/selenium/reporting/default-reporting2.js");
+                "default/selenium/reporting/default-reporting2.js");
     }
 
     private void
     assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrder() {
 
         assertScript("default/selenium/fielddecorators/decorator2.js script not found",
-        "default/selenium/fielddecorators/decorator2.js");
+                "default/selenium/fielddecorators/decorator2.js");
         assertScript("default/selenium/fielddecorators/decorator1.js script not found",
-        "default/selenium/fielddecorators/decorator1.js");
+                "default/selenium/fielddecorators/decorator1.js");
         assertScript("default/selenium/fielddecorators/decorator3.js script not found",
-        "default/selenium/fielddecorators/decorator3.js");
+                "default/selenium/fielddecorators/decorator3.js");
     }
 
     private void assertMapComponentScriptsResolvedByPackageNoBundlingWithArbitraryOrder() {
         assertScript("default/selenium/component/map/map1.js script not found",
-        "default/selenium/component/map/map1.js");
+                "default/selenium/component/map/map1.js");
         assertScript("default/selenium/component/map/map2.js script not found",
-        "default/selenium/component/map/map2.js");
+                "default/selenium/component/map/map2.js");
     }
 
     private void assertOnlyDefaultGroupScriptsResolvedByNameNoBundilng() {
@@ -140,7 +140,7 @@ public class HD800BdpPage extends BdpPage {
     private void assertBrokenImgWhenNoImageFound() {
         assertBrokenImg("App Store (broken) img not found",
                 "appStoreImg", "App Store", "App Store",
-        "selenium/common/app_store.image");
+                "selenium/common/app_store.image");
     }
 
     private void assertBodyContentIgnoredWhenImgFound() {

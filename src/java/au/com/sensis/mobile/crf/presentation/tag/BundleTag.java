@@ -27,4 +27,10 @@ public interface BundleTag {
      *            included in the bundle).
      */
     void rememberAbsoluteHref(String href);
+
+    /**
+     * @return boolean, configuration parameter - true if bundling should occur.
+     */
+    boolean hasBundlingEnabled();
+
 }

@@ -133,6 +133,8 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 getMappediPhoneGroupCssResourcePath());
         recordGetResource(foundResources);
 
+        recordBundlingEnabled();
+
         getMockBundleLinksTag().addResourcesToBundle(foundResources);
 
         replay();
@@ -141,6 +143,25 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
         Assert.assertEquals("output to page should be empty",
                 StringUtils.EMPTY, getStringWriter().getBuffer().toString());
+    }
+
+    @Test
+    public void testBundlingDisabledByConfiguration() {
+
+        setObjectUnderTest(new LinkTagWriter(getMockDevice(),
+                new ArrayList<DynamicTagAttribute>(),
+                getRequestedCssResourcePath(),
+                createTagDependencies(),
+                getMockBundleLinksTag()));
+
+
+        recordBundlingDisabled();
+
+        replay();
+
+        final boolean result = getObjectUnderTest().bundlingEnabled();
+
+        Assert.assertFalse("Bunding should not be enabled", result);
     }
 
     private LinkTagWriter createObjectUnderTest(
@@ -187,6 +208,14 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
     private String getRequestedCssResourcePath() {
         return getResourcePathTestData().getRequestedCssResourcePath();
+    }
+
+    private void recordBundlingEnabled() {
+        EasyMock.expect(getMockBundleLinksTag().hasBundlingEnabled()).andStubReturn(true);
+    }
+
+    private void recordBundlingDisabled() {
+        EasyMock.expect(getMockBundleLinksTag().hasBundlingEnabled()).andStubReturn(false);
     }
 
     /**
