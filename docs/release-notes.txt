@@ -1,5 +1,10 @@
 
 Changes:
+- CRF-137 Support delayed rendering of bundled javascript.
+  crf:bundleScripts now supports an optional parameter for crf:bundleScripts - "var"
+  ie <crf:bundleScripts id="showcaseAppJavaScriptBundleWithDelayedRendering" var="bundleScriptsDelayedRenderingVar">
+  This allows the bundled scripts to be captured into that var and then written out via a new tag crf:renderBundledScripts.
+  <crf:renderBundledScripts var="bundleScriptsDelayedRenderingVar" />
 - CRF-138 Change directory for bundled javascript / css
   An extra 2 directories were inserted into the location for css / javascript 
   bundled using the explicit crf:bundleLinks & crf:bundleScripts
