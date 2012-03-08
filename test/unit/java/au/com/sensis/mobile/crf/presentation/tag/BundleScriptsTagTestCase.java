@@ -42,7 +42,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     private BundleScriptsTag objectUnderTest;
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
     private BundleTagDependencies bundleScriptsTagDependencies;
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
     private JspContextBundleTagStack mockBundleTagStack;
@@ -65,6 +65,9 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     private File sourceBundle2NewFile;
     private String sourceBundle2NewPath;
     private File appBundlesRootDir;
+
+    private static final String ABSOLUTE_HREF_1 = "http://www.url.com/externalJavascript1.js";
+    private static final String ABSOLUTE_HREF_2 = "http://www.url.com/externalJavascript2.js";
 
     /**
      * Setup test data.
@@ -121,11 +124,17 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         md5Builder.add(getSourceBundle2NewPath());
 
         return getBundleScriptsTagDependencies().getDeploymentMetadata().getVersion()
-            + "/appBundles/myId-" + md5Builder.getSumAsHex() + "-package.js";
+                + "/appBundles/javascript/bundle/myId-" + md5Builder.getSumAsHex() + "-package.js";
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAndNoDynamicTagAttributes() throws Exception {
+    public void testDoTagWhenResourcesToBundleAndNoDynamicTagAttributes()
+            throws Exception {
+
+        recordGetWebApplicationContext();
+
+        recordGetTagStackBean();
+
         recordGetTagDependencies();
 
         recordPushBundleTag();
@@ -157,6 +166,95 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         assertBundleFileCorrect();
     }
 
+    @Test
+    public void testDoTagWhenResourcesToBundleAndAbsoluteHrefsAndNoDynamicTagAttributes()
+            throws Exception {
+
+        recordGetWebApplicationContext();
+
+        recordGetTagStackBean();
+
+        recordGetTagDependencies();
+
+        recordPushBundleTag();
+
+        getMockJspFragment().invoke(null);
+
+        recordRemoveBundleTag();
+
+        recordCheckCachedResources(false);
+
+        recordBehaviourForBundleCreation();
+
+        recordBehaviourForClientSrcPathCreation();
+
+        recordBehaviourForWritingScriptTag();
+
+        recordUpdateCache();
+
+        replay();
+
+        getObjectUnderTest().addResourcesToBundle(
+                Arrays.asList(getMockResource1(), getMockResource2()));
+        getObjectUnderTest().rememberAbsoluteHref(ABSOLUTE_HREF_1);
+        getObjectUnderTest().rememberAbsoluteHref(ABSOLUTE_HREF_2);
+        getObjectUnderTest().doTag();
+
+        final String absoluteHrefScriptTag1 = "<script src=\"" + ABSOLUTE_HREF_1
+                + "\" charset=\"utf-8\" type=\"text/javascript\" ></script>";
+        final String absoluteHrefScriptTag2 = "<script src=\"" + ABSOLUTE_HREF_2
+                + "\" charset=\"utf-8\" type=\"text/javascript\" ></script>";
+        final String bundeledScriptTag = "<script id=\"myId\" src=\""
+                + createExpectedOutputBundleClientPath() + "\" charset=\"utf-8\" "
+                + "type=\"text/javascript\" ></script>";
+        final String expectedOutput = absoluteHrefScriptTag1 + absoluteHrefScriptTag2
+                + bundeledScriptTag;
+
+        Assert.assertEquals("Script incorrectly written", expectedOutput,
+                getStringWriter().getBuffer().toString());
+
+        assertBundleFileCorrect();
+    }
+
+    @Test
+    public void testDoTagWithVar()
+            throws Exception {
+
+        final String var = "var";
+        getObjectUnderTest().setVar(var);
+
+        recordGetWebApplicationContext();
+
+        recordGetTagStackBean();
+
+        recordPushBundleTag();
+
+        getMockJspFragment().invoke(null);
+
+        recordRemoveBundleTag();
+
+        final BundleTagData expectedBundleTagData = new BundleTagData();
+        expectedBundleTagData.setId(TAG_ID);
+        expectedBundleTagData.getResourcesToBundle().add(getMockResource1());
+        expectedBundleTagData.getResourcesToBundle().add(getMockResource2());
+        expectedBundleTagData.getAbsoluteHrefsToRemember().add(ABSOLUTE_HREF_1);
+        expectedBundleTagData.getAbsoluteHrefsToRemember().add(ABSOLUTE_HREF_2);
+        getMockPageContext().setAttribute(var, expectedBundleTagData, PageContext.REQUEST_SCOPE);
+
+        replay();
+
+        getObjectUnderTest().addResourcesToBundle(
+                Arrays.asList(getMockResource1(), getMockResource2()));
+        getObjectUnderTest().rememberAbsoluteHref(ABSOLUTE_HREF_1);
+        getObjectUnderTest().rememberAbsoluteHref(ABSOLUTE_HREF_2);
+        getObjectUnderTest().doTag();
+
+        Assert.assertEquals("Script incorrectly written", StringUtils.EMPTY,
+                getStringWriter().getBuffer().toString());
+
+        assertBundleFileCorrect();
+    }
+
     private void recordPushBundleTag() {
         getMockBundleTagStack().pushBundleTag(getMockPageContext(), getObjectUnderTest());
     }
@@ -170,7 +268,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
             throws NoSuchAlgorithmException {
         final BundleTagCacheKeyBean keyBean = createCacheKey();
         EasyMock.expect(getMockBundleScriptsTagCache().contains(keyBean))
-                .andReturn(resourcesCached);
+        .andReturn(resourcesCached);
 
         if (resourcesCached) {
             EasyMock.expect(getMockBundleScriptsTagCache().get(keyBean)).andReturn(
@@ -208,15 +306,15 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordBehaviourForWritingScriptTag() {
         EasyMock.expect(getMockPageContext().getOut())
-            .andReturn(getSpringMockJspWriter())
-            .atLeastOnce();
+        .andReturn(getSpringMockJspWriter())
+        .atLeastOnce();
     }
 
     private void recordBehaviourForClientSrcPathCreation() {
         EasyMock.expect(getMockResource1().getNewPath()).andReturn(getSourceBundle1NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
         EasyMock.expect(getMockResource2().getNewPath()).andReturn(getSourceBundle2NewPath())
-                .atLeastOnce();
+        .atLeastOnce();
 
     }
 
@@ -227,7 +325,13 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAndCharsetDynamicTagAttribute() throws Exception {
+    public void testDoTagWhenResourcesToBundleAndCharsetDynamicTagAttribute()
+            throws Exception {
+
+        recordGetWebApplicationContext();
+
+        recordGetTagStackBean();
+
         recordGetTagDependencies();
 
         recordPushBundleTag();
@@ -262,7 +366,13 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAndTypeDynamicTagAttribute() throws Exception {
+    public void testDoTagWhenResourcesToBundleAndTypeDynamicTagAttribute()
+            throws Exception {
+
+        recordGetWebApplicationContext();
+
+        recordGetTagStackBean();
+
         recordGetTagDependencies();
 
         recordPushBundleTag();
@@ -297,7 +407,13 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenResourcesToBundleAreCached() throws Exception {
+    public void testDoTagWhenResourcesToBundleAreCached()
+            throws Exception {
+
+        recordGetWebApplicationContext();
+
+        recordGetTagStackBean();
+
         recordGetTagDependencies();
 
         recordPushBundleTag();
@@ -324,14 +440,20 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
     }
 
     @Test
-    public void testDoTagWhenNoResourcesToBundle() throws Exception {
-        recordGetTagDependencies();
+    public void testDoTagWhenNoResourcesToBundle()
+            throws Exception {
+
+        recordGetWebApplicationContext();
+
+        recordGetTagStackBean();
 
         recordPushBundleTag();
 
         getMockJspFragment().invoke(null);
 
         recordRemoveBundleTag();
+
+        EasyMock.expect(getMockPageContext().getOut()).andReturn(getSpringMockJspWriter());
 
         replay();
 
@@ -345,7 +467,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         getMockBundleTagStack().removeBundleTag(getMockPageContext());
     }
 
-    private void recordGetTagDependencies() {
+    private void recordGetWebApplicationContext() {
 
         EasyMock.expect(getMockPageContext().getServletContext()).andReturn(
                 getSpringMockServletContext()).atLeastOnce();
@@ -353,10 +475,21 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
         getSpringMockServletContext().setAttribute(
                 WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
                 getMockWebApplicationContext());
+    }
+
+    private void recordGetTagDependencies() {
 
         EasyMock.expect(
                 getMockWebApplicationContext().getBean("crf.bundleScriptsTagDependencies"))
                 .andReturn(getBundleScriptsTagDependencies())
+                .atLeastOnce();
+    }
+
+    private void recordGetTagStackBean() {
+
+        EasyMock.expect(
+                getMockWebApplicationContext().getBean("crf.bundleScriptsTagStackBean"))
+                .andReturn(getMockBundleTagStack())
                 .atLeastOnce();
     }
 
@@ -366,7 +499,8 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
                 getResourcePathTestData().getAppBundleClientPathPrefix(),
                 getMockResolutionWarnLogger(), getMockBundleScriptsTagCache(),
                 getAppBundlesRootDir(),
-                getMockBundleTagStack());
+                getMockBundleTagStack(),
+                true);
     }
 
     /**
@@ -436,7 +570,7 @@ public class BundleScriptsTagTestCase extends AbstractJUnit4TestCase {
      * @param mockResource the mockResource to set
      */
     public void setMockResource1(final Resource mockResource) {
-        this.mockResource1 = mockResource;
+        mockResource1 = mockResource;
     }
 
     /**

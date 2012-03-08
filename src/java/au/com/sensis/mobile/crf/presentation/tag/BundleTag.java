@@ -20,4 +20,17 @@ public interface BundleTag {
      */
     void addResourcesToBundle(final List<Resource> resources);
 
+    /**
+     * @param href
+     *            Absolute href that a child tag wants to register with this
+     *            {@link BundleTag} to be written out before the bundle. (Note, not actually
+     *            included in the bundle).
+     */
+    void rememberAbsoluteHref(String href);
+
+    /**
+     * @return boolean, configuration parameter - true if bundling should occur.
+     */
+    boolean hasBundlingEnabled();
+
 }

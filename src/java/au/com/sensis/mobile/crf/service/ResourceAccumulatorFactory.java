@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ResourceAccumulatorFactory {
 
-    private final boolean bundlingEnabled;
+    private boolean bundlingEnabled;
     private final String javascriptPackageKeyword;
     private final String javascriptPackageFilename;
 
@@ -112,6 +112,10 @@ public class ResourceAccumulatorFactory {
      */
     public boolean isBundlingEnabled() {
         return bundlingEnabled;
+    }
+
+    public void setBundlingEnabled(final boolean bundlingEnabled) {
+        this.bundlingEnabled = bundlingEnabled;
     }
 
 }

@@ -112,7 +112,7 @@ public class ScriptTagWriter implements TagWriter {
 
     private void writeTagWithHref(final JspWriter jspWriter) throws IOException {
         if (isAbsoluteUrl(getHref())) {
-            writeSingleLinkTag(jspWriter, getHref());
+            handleAbsoluteHref(jspWriter, getHref());
         } else {
             resolveResourceAndWriteTag(jspWriter);
         }
@@ -122,16 +122,42 @@ public class ScriptTagWriter implements TagWriter {
         return href.startsWith(ABSOLUTE_URL_PREFIX);
     }
 
+    private void handleAbsoluteHref(final JspWriter jspWriter, final String href)
+            throws IOException {
+
+        if (bundlingEnabled()) {
+            postponeWriteForAbsoluteHref(href);
+        } else {
+            writeSingleLinkTag(jspWriter, href);
+        }
+    }
+
     private void resolveResourceAndWriteTag(final JspWriter jspWriter) throws IOException {
 
         final List<Resource> allResourcePaths = getAllResourcePaths();
-        if (getParentBundleScriptsTag() != null) {
+        if (bundlingEnabled()) {
             postponeWriteForBundleScriptsTag(allResourcePaths);
         } else {
             writeLinkTagForEachResource(jspWriter, allResourcePaths);
         }
     }
 
+    private void postponeWriteForAbsoluteHref(final String href) {
+        getParentBundleScriptsTag().rememberAbsoluteHref(href);
+    }
+
+    /**
+     * Should bundling occur?
+     * - We must be inside a parent bundle scripts tag.
+     * - The configuration must have bundling set to true.
+     *
+     * @return boolean - true when bundling should occur.
+     */
+    protected boolean bundlingEnabled() {
+
+        return (getParentBundleScriptsTag() != null)
+                && (getParentBundleScriptsTag().hasBundlingEnabled());
+    }
 
     private void postponeWriteForBundleScriptsTag(final List<Resource> allResourcePaths) {
         getParentBundleScriptsTag().addResourcesToBundle(allResourcePaths);
@@ -148,7 +174,7 @@ public class ScriptTagWriter implements TagWriter {
     }
 
     private void writeSingleLinkTag(final JspWriter jspWriter, final Resource resource)
-    throws IOException {
+            throws IOException {
         writeSingleLinkTag(jspWriter, getTagDependencies().getClientPathPrefix()
                 + resource.getNewPath() + getUniqueRequestParam());
     }
@@ -190,7 +216,7 @@ public class ScriptTagWriter implements TagWriter {
 
     private void writeTypeAttributeIfNotFound(final JspWriter jspWriter,
             final boolean typeAttributeFound)
-            throws IOException {
+                    throws IOException {
 
         if (!typeAttributeFound) {
             jspWriter.print("type=\"text/javascript\" ");
@@ -231,8 +257,8 @@ public class ScriptTagWriter implements TagWriter {
 
     private List<Resource> getAllResourcePaths() throws IOException {
         final List<Resource> allResourcePaths =
-            getResourceResolverEngine().getAllResources(getDevice(),
-                    getHref());
+                getResourceResolverEngine().getAllResources(getDevice(),
+                        getHref());
 
         assertNotNull(allResourcePaths);
 
@@ -243,8 +269,8 @@ public class ScriptTagWriter implements TagWriter {
         if (allResourcePaths == null) {
             throw new IllegalStateException(
                     "getResourceResolverEngine.getAllResourcePaths "
-                    + "returned no results for '" + getHref() + ". "
-                    + "This should never happen !!!");
+                            + "returned no results for '" + getHref() + ". "
+                            + "This should never happen !!!");
         }
     }
 

@@ -64,6 +64,25 @@
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <name>var</name>
+            <description>Optional name of the variable to set the result into.</description>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+    <tag>
+        <name>renderBundledScripts</name>
+        <description>Output the scripts previously bundled by a matching bundleScripts tag.</description>
+        <tag-class>au.com.sensis.mobile.crf.presentation.tag.RenderBundledScriptsTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>var</name>
+            <description>The name of the variable to read the results from. Must be set.</description>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
         <dynamic-attributes>true</dynamic-attributes>
     </tag>
     <tag>
@@ -118,7 +137,7 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
         <dynamic-attributes>false</dynamic-attributes>
-    </tag>    
+    </tag>
     <tag>
         <name>imgSrcPrefix</name>
         <description>Render the prefix that is used for all abstract image src paths.</description>
@@ -131,7 +150,7 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    </tag>    
+    </tag>
     <tag>
         <name>linkHrefPrefix</name>
         <description>Render the prefix that is used for all abstract link href paths.</description>
@@ -144,7 +163,7 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    </tag>    
+    </tag>
     <tag>
         <name>scriptSrcPrefix</name>
         <description>Render the prefix that is used for all abstract script src paths.</description>
@@ -157,7 +176,7 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-    </tag>    
+    </tag>
     <tag>
         <name>deviceProperty</name>
         <description>Retrieve a named property from the given .</description>
@@ -182,11 +201,11 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-<!-- 
-  - Don't use the variable element approach for the var attribute since the attribute is optional, 
-  - plus we don't need the full power of automatic tag synchronisation. 
-  -->        
-<!--         
+<!--
+  - Don't use the variable element approach for the var attribute since the attribute is optional,
+  - plus we don't need the full power of automatic tag synchronisation.
+  -->
+<!--
         <variable>
             <description>Variable to set the result into.</description>
             <name-from-attribute>var</name-from-attribute>
@@ -194,12 +213,12 @@
             <declare>true</declare>
             <scope>AT_END</scope>
         </variable>
--->        
+-->
     </tag>
     <tag>
         <name>html</name>
-        <description>Writes the doctype, start and end html tags and sets the response contentType 
-            and charEncoding using values loaded from the device repository. 
+        <description>Writes the doctype, start and end html tags and sets the response contentType
+            and charEncoding using values loaded from the device repository.
         </description>
         <tag-class>au.com.sensis.mobile.crf.presentation.tag.HtmlTag</tag-class>
         <body-content>scriptless</body-content>
@@ -216,12 +235,12 @@
                     <head>
                         ...
                     </head>
-                    
+
                     <body>
                         ...
                     </body>
                 </crf:html>
             ]]>
         </example>
-    </tag>    
+    </tag>
 </taglib>

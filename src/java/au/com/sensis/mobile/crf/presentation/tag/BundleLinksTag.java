@@ -1,93 +1,30 @@
 package au.com.sensis.mobile.crf.presentation.tag;
 
-import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
-
 /**
  * Tag that bundles the output of any child {@link LinkTag}s that register
- * {@link au.com.sensis.mobile.crf.service.Resource}s with
- * this {@link BundleLinksTag} via the {@link #addResourcesToBundle(java.util.List)} method.
+ * {@link au.com.sensis.mobile.crf.service.Resource}s with this {@link BundleLinksTag} via the
+ * {@link #addResourcesToBundle(java.util.List)} method.
  *
  * @author w12495
  */
-public class BundleLinksTag extends AbstractBundleTag {
+public class BundleLinksTag
+        extends AbstractBundleTag<BundleLinksTagDelegate> {
 
     /**
-     * {@inheritDoc}
-     */
+    * {@inheritDoc}
+    */
     @Override
-    protected void writeTag(final String href) throws IOException {
-        getJspContext().getOut().print("<link id=\"");
+    protected BundleLinksTagDelegate createBundleTagDelegate() {
 
-        getJspContext().getOut().print(getId());
-
-        getJspContext().getOut().print("\" href=\"");
-        getJspContext().getOut().print(href);
-        getJspContext().getOut().print("\" ");
-
-        writeDynamicTagAttributes(getJspContext().getOut());
-
-        getJspContext().getOut().print("/>");
-    }
-
-
-    private void writeDynamicTagAttributes(final JspWriter jspWriter) throws IOException {
-        boolean relAttributeFound = false;
-        boolean typeAttributeFound = false;
-
-        for (final DynamicTagAttribute attribute : getDynamicAttributes()) {
-
-            if ("rel".equals(attribute.getLocalName())) {
-                relAttributeFound = true;
-            }
-
-            if ("type".equals(attribute.getLocalName())) {
-                typeAttributeFound = true;
-            }
-
-            jspWriter.print(attribute.getLocalName());
-            jspWriter.print("=\"");
-            jspWriter.print(attribute.getValue());
-            jspWriter.print("\" ");
-        }
-
-        writeRelAttributeIfNotFound(jspWriter, relAttributeFound);
-        writeTypeAttributeIfNotFound(jspWriter, typeAttributeFound);
-    }
-
-    private void writeTypeAttributeIfNotFound(final JspWriter jspWriter,
-            final boolean typeAttributeFound)
-            throws IOException {
-
-        if (!typeAttributeFound) {
-            jspWriter.print("type=\"text/css\" ");
-        }
-    }
-
-
-    private void writeRelAttributeIfNotFound(final JspWriter jspWriter,
-            final boolean charsetAttributeFound) throws IOException {
-
-        if (!charsetAttributeFound) {
-            jspWriter.print("rel=\"stylesheet\" ");
-        }
+        return new BundleLinksTagDelegate(getJspContext(), getBundleTagData());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected String getBundleFileExtension() {
-        return "css";
-    }
+    protected String getTagStackBeanName() {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected String getTagDependenciesBeanName() {
-        return "crf.bundleLinksTagDependencies";
+        return "crf.bundleLinksTagStackBean";
     }
 }
-

@@ -1,6 +1,7 @@
 package au.com.sensis.mobile.crf.showcase.selenium;
 
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.HD800BdpPage;
+import au.com.sensis.mobile.crf.showcase.selenium.fixture.HD800BundledBdpPage;
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.IphoneOS2xBdpPage;
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.IphoneOS3xBdpPage;
 import au.com.sensis.mobile.crf.showcase.selenium.fixture.IphoneOS3xClientAppBdpPage;
@@ -25,6 +26,11 @@ public class BdpPageIntegrationTestCase extends AbstractSeleniumIntegrationTestC
         openUrl("http://" + getServerHostAndPort() + "/uidev/crfshowcase/crf/bdp.action");
     }
 
+    protected final void openBdpWithBundlingOn() {
+        openUrl("http://" + getServerHostAndPort()
+                + "/uidev/crfshowcase/crf/bdp.action?config.change=env.bundle.resources,true");
+    }
+
     protected final void openBdpWithUserAgent(final String userAgent) {
         openUrlWithUserAgent("http://" + getServerHostAndPort()
                 + "/uidev/crfshowcase/crf/bdp.action", userAgent);
@@ -39,6 +45,7 @@ public class BdpPageIntegrationTestCase extends AbstractSeleniumIntegrationTestC
      * Test the page for a specific device.
      */
     public void testHD800Device() throws Exception {
+
         openBdp();
 
         getPageFixtureFactory().createPageFixture(HD800BdpPage.class);
@@ -57,6 +64,10 @@ public class BdpPageIntegrationTestCase extends AbstractSeleniumIntegrationTestC
      * Test the page for a specific device.
      */
     public void testIphoneOS3xDevice() throws Exception {
+
+        /**
+         * Assert expected out of the bundleScriptsTag.
+         */
         openBdpWithUserAgent(UserAgent.IPHONE_OS3_1.getUserAgentString());
 
         getPageFixtureFactory().createPageFixture(IphoneOS3xBdpPage.class);
@@ -86,11 +97,28 @@ public class BdpPageIntegrationTestCase extends AbstractSeleniumIntegrationTestC
     }
 
     /**
-     * Test the page for a specific device.
+     * Test the page for a specific device.config.change=env.bundle.resources,true
      */
     public void testIphoneOS2xDevice() throws Exception {
         openBdpWithUserAgent(UserAgent.IPHONE_OS2_1.getUserAgentString());
 
         getPageFixtureFactory().createPageFixture(IphoneOS2xBdpPage.class);
     }
+
+    /**
+     * Assert expected out of the bundleScriptsTag.
+     */
+
+    /**
+     * Test the page for a specific device - with bundling switched on.
+     *
+     * Please note - after this test bundling will be enabled for all subsequent tests.
+     */
+    public void testHD800DeviceWithBundlingOn() throws Exception {
+
+        openBdpWithBundlingOn();
+
+        getPageFixtureFactory().createPageFixture(HD800BundledBdpPage.class);
+    }
+
 }
