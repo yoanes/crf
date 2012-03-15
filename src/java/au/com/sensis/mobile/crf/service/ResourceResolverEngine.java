@@ -2,8 +2,8 @@ package au.com.sensis.mobile.crf.service;
 
 import java.util.List;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Key interface for selecting concrete resources based on the current device
@@ -26,7 +26,7 @@ public interface ResourceResolverEngine {
      * @throws ResourceResolutionRuntimeException Thrown if an IO error occurs.
      */
     Resource getResource(Device device, String requestedResourcePath)
-        throws ResourceResolutionRuntimeException;
+            throws ResourceResolutionRuntimeException;
 
     /**
      * List of all concrete resource paths (not just the first found)
@@ -42,5 +42,5 @@ public interface ResourceResolverEngine {
      * @throws ResourceResolutionRuntimeException Thrown if an IO error occurs.
      */
     List<Resource> getAllResources(Device device, String requestedResourcePath)
-        throws ResourceResolutionRuntimeException;
+            throws ResourceResolutionRuntimeException;
 }

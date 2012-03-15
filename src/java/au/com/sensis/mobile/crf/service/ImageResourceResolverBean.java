@@ -18,10 +18,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * {@link ResourceResolver} that resolves abstract image paths to real image paths.
@@ -31,7 +31,7 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
 
     private static final Logger LOGGER =
-        Logger.getLogger(ImageResourceResolverBean.class);
+            Logger.getLogger(ImageResourceResolverBean.class);
 
     private final String [] fileExtensionWildcards;
 
@@ -70,7 +70,7 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
                 || containsBlanks(fileExtensionWildcards)) {
             throw new IllegalArgumentException(
                     "fileExtensionWildcards must be an array of non-blank Strings but was: '"
-                    + ArrayUtils.toString(fileExtensionWildcards) + "'");
+                            + ArrayUtils.toString(fileExtensionWildcards) + "'");
         }
     }
 
@@ -176,12 +176,12 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "Requested resource '"
-                    + requestedResourcePath
-                    + "' resolved to multiple real resources with extensions matching "
-                    + ArrayUtils.toString(getFileExtensionWildcards())
-                    + ". Will only return the first resource. Total found: "
-                    + nonEmptyArrayToString(matchedFiles)
-                    + ".");
+                            + requestedResourcePath
+                            + "' resolved to multiple real resources with extensions matching "
+                            + ArrayUtils.toString(getFileExtensionWildcards())
+                            + ". Will only return the first resource. Total found: "
+                            + nonEmptyArrayToString(matchedFiles)
+                            + ".");
         }
     }
 
@@ -192,7 +192,7 @@ public class ImageResourceResolverBean extends AbstractSingleResourceResolver {
         int i = 0;
         for (final File currFile : matchedFiles) {
             stringBuilder.append(currFile);
-            if (i < matchedFiles.length - 1) {
+            if (i < (matchedFiles.length - 1)) {
                 stringBuilder.append(", ");
             }
             i++;

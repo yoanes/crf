@@ -9,9 +9,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.devicerepository.DefaultDevice;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.GroupTestData;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.DefaultDevice;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 

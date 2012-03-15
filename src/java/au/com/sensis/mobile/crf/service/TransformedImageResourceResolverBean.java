@@ -12,6 +12,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
@@ -20,7 +21,6 @@ import au.com.sensis.mobile.crf.util.ImageReader;
 import au.com.sensis.mobile.crf.util.ImageTransformationFactory;
 import au.com.sensis.mobile.crf.util.ImageTransformationParametersBean;
 import au.com.sensis.mobile.crf.util.TransformedImageAttributes;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * {@link ResourceResolver} that resolves abstract image paths to real image paths.
@@ -30,7 +30,7 @@ import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 public class TransformedImageResourceResolverBean extends AbstractSingleResourceResolver {
 
     private static final Logger LOGGER =
-        Logger.getLogger(TransformedImageResourceResolverBean.class);
+            Logger.getLogger(TransformedImageResourceResolverBean.class);
 
     /**
      * Name of the (optional) device property that specifies an extra ratio to apply to a
@@ -96,7 +96,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
 
             throw new IllegalArgumentException(
                     "fileExtensionWildcards must be an array of non-blank Strings but was: '"
-                    + ArrayUtils.toString(fileExtensionWildcards) + "'");
+                            + ArrayUtils.toString(fileExtensionWildcards) + "'");
         }
     }
 
@@ -132,8 +132,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
             if (getResourceResolutionWarnLogger().isWarnEnabled()) {
                 getResourceResolutionWarnLogger().warn(
                         "Error resolving requested resource: '"
-                        + requestedResourcePath
-                        + "' for device " + device, e);
+                                + requestedResourcePath
+                                + "' for device " + device, e);
             }
             return new ArrayList<Resource>();
         }
@@ -160,8 +160,8 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
 
         for (final File propertyFile : imagePropertyFiles) {
             imageProperties =
-                accumulateImageProperties(imageProperties,
-                        propertyFile);
+                    accumulateImageProperties(imageProperties,
+                            propertyFile);
         }
 
         return imageProperties;
@@ -292,19 +292,12 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
             return ImageTransformationFactory.ImageFormat.GIF;
         }
 
-        final String deviceRepositoryImageFormat
-            = device.getPropertyAsString(getImageFormatDeviceRepositoryPropertyName());
-        if (deviceRepositoryImageFormat != null) {
-            final ImageTransformationFactory.ImageFormat tempResult
-                = ImageTransformationFactory.ImageFormat.fromString(deviceRepositoryImageFormat);
-            if (ImageTransformationFactory.ImageFormat.PNG.equals(tempResult)) {
-                return ImageTransformationFactory.ImageFormat.PNG;
-            }
+        if (device.supportsPng()) {
+            return ImageTransformationFactory.ImageFormat.PNG;
         }
 
         // Default format.
         return ImageTransformationFactory.ImageFormat.GIF;
-
     }
 
     private void setDeviceImagePercentWidthIfRequired(
@@ -404,7 +397,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
             final List<File> imagePropertyFiles) throws IOException {
 
         final Properties imageProperties =
-            getImageProperties(imagePropertyFiles);
+                getImageProperties(imagePropertyFiles);
 
         final ImageTransformationParametersBean transformationParametersBean =
                 createImageTransformationParametersBean(device, imageProperties,
@@ -441,7 +434,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         if (((outputImageAttributes.getPixelWidth() > sourceImageAttributes.getPixelWidth())
                 || (outputImageAttributes.getPixelHeight()
                         > sourceImageAttributes.getPixelHeight()))
-                && getResourceResolutionWarnLogger().isWarnEnabled()) {
+                        && getResourceResolutionWarnLogger().isWarnEnabled()) {
 
             getResourceResolutionWarnLogger().warn(
                     "Scaled image up for device " + device + ". This may produce "
@@ -488,12 +481,12 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "Requested resource '"
-                    + requestedResourcePath
-                    + "' resolved to multiple real resources with extensions matching "
-                    + ArrayUtils.toString(getFileExtensionWildcards())
-                    + ". Will only use the first resource. Total found: "
-                    + nonEmptyArrayToString(matchedFiles)
-                    + ".");
+                            + requestedResourcePath
+                            + "' resolved to multiple real resources with extensions matching "
+                            + ArrayUtils.toString(getFileExtensionWildcards())
+                            + ". Will only use the first resource. Total found: "
+                            + nonEmptyArrayToString(matchedFiles)
+                            + ".");
         }
     }
 
@@ -504,7 +497,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
         int i = 0;
         for (final File currFile : matchedFiles) {
             stringBuilder.append(currFile);
-            if (i < matchedFiles.length - 1) {
+            if (i < (matchedFiles.length - 1)) {
                 stringBuilder.append(", ");
             }
             i++;

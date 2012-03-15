@@ -18,6 +18,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.presentation.ImageServlet.ImageServletDependencies;
@@ -27,7 +28,6 @@ import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 import au.com.sensis.wireless.web.mobile.MobileContext;
 
@@ -62,7 +62,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     private ImageServletDependencies imageServletDependencies;
     private final GroupTestData groupTestData = new GroupTestData();
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
 
     /**
      * Setup test data.
@@ -73,7 +73,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
     @Before
     public void setUp() throws Exception {
         FileIoFacadeFactory
-                .changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
+        .changeDefaultFileIoFacadeSingleton(getMockFileIoFacade());
         setSpringMockServletConfig(new MockServletConfig(
                 getMockServletContext()));
         setSpringMockHttpSession(new MockHttpSession());
@@ -198,12 +198,12 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
         } catch (final ServletException e) {
 
             Assert.assertEquals("ServletException has wrong message",
-                "Requests for abstract images should have a requestUri starting with '"
-                        + getExpectedRequestedResourcePathPrefix()
-                        + "'. However, requestUri is '"
-                        + getResourcePathTestData()
-                                .getMapComponentRequestedImageResourcePath()
-                        + "'", e.getMessage());
+                    "Requests for abstract images should have a requestUri starting with '"
+                            + getExpectedRequestedResourcePathPrefix()
+                            + "'. However, requestUri is '"
+                            + getResourcePathTestData()
+                            .getMapComponentRequestedImageResourcePath()
+                            + "'", e.getMessage());
         }
 
     }
@@ -219,24 +219,24 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
     private String getExpectedRequestedResourcePathPrefix() {
         return IMAGES_CLIENT_PATH_PREFIX
-                        + getDeploymentMetadataTestData().createDevDeploymentMetadata().getVersion()
-                        + "/images/";
+                + getDeploymentMetadataTestData().createDevDeploymentMetadata().getVersion()
+                + "/images/";
     }
 
     private Resource getResource() {
         return new ResourceBean(getRequestedResourcePath(),
                 getExpectedMappedFile().getName(), getExpectedMappedFile()
-                        .getParentFile(), getGroupTestData().createDefaultGroup());
+                .getParentFile(), getGroupTestData().createDefaultGroup());
     }
 
     private void recordGetImageServletDependencies() {
         EasyMock.expect(
                 getMockServletContext().getAttribute(
                         WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE))
-                .andReturn(getMockWebApplicationContext());
+                        .andReturn(getMockWebApplicationContext());
 
         EasyMock.expect(getMockWebApplicationContext().getBean(BEAN_NAME))
-                .andReturn(getImageServletDependencies()).atLeastOnce();
+        .andReturn(getImageServletDependencies()).atLeastOnce();
     }
 
     private void recordGetDevice() {
@@ -263,7 +263,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
     private void recordetServletOutputStream() throws IOException {
         EasyMock.expect(getMockHttpServletResponse().getOutputStream())
-                .andReturn(getMockServletOutputStream());
+        .andReturn(getMockServletOutputStream());
     }
 
     private void recordSetResponseLastModified() {
@@ -279,7 +279,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
         EasyMock.expect(
                 getMockServletContext().getMimeType(
                         getExpectedMappedFile().getPath()))
-                .andReturn(MIME_TYPE);
+                        .andReturn(MIME_TYPE);
         getMockHttpServletResponse().setContentType(MIME_TYPE);
     }
 
@@ -294,7 +294,7 @@ public class ImageServletTestCase extends AbstractJUnit4TestCase {
 
     private void recordGetRequestUri(final String requestUri) {
         EasyMock.expect(getMockHttpServletRequest().getRequestURI())
-                .andReturn(requestUri).atLeastOnce();
+        .andReturn(requestUri).atLeastOnce();
     }
 
     private ImageServlet getObjectUnderTest() {

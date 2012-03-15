@@ -15,7 +15,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 
 /**
  * Encapsulates the group configuration.
@@ -82,7 +82,7 @@ public class Groups {
         // the default group. However, there is no harm in doing so and it makes
         // the code a bit more robust to any future changes to the DefaultGroup
         // semantics.
-        if (getDefaultGroup() != null && getDefaultGroup().match(device)) {
+        if ((getDefaultGroup() != null) && getDefaultGroup().match(device)) {
             matchingGroups.add(getDefaultGroup());
         }
     }
@@ -197,7 +197,7 @@ public class Groups {
             return true;
         }
 
-        if (obj == null || !this.getClass().equals(obj.getClass())) {
+        if ((obj == null) || !this.getClass().equals(obj.getClass())) {
             return false;
         }
 

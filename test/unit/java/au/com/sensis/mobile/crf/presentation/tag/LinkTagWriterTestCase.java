@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockJspWriter;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
@@ -26,7 +27,6 @@ import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -79,12 +79,12 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
 
     private DynamicTagAttribute createTypeDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "type",
-        "text/css");
+                "text/css");
     }
 
     private DynamicTagAttribute createRelDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "rel",
-        "stylesheet");
+                "stylesheet");
     }
 
     private void resetMocksAndTestData() {
@@ -355,11 +355,11 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(getMappedDefaultGroupCssResourcePath(),
                         getMappediPhoneGroupCssResourcePath()),
                         "<link href=\""
-                        + getMappedDefaultGroupCssResourceHref()
-                        + "\" rel=\"stylesheet\" type=\"text/css\" />"
-                        + "<link href=\""
-                        + getMappediPhoneGroupCssResourceHref()
-                        + "\" rel=\"stylesheet\" type=\"text/css\" />");
+                                + getMappedDefaultGroupCssResourceHref()
+                                + "\" rel=\"stylesheet\" type=\"text/css\" />"
+                                + "<link href=\""
+                                + getMappediPhoneGroupCssResourceHref()
+                                + "\" rel=\"stylesheet\" type=\"text/css\" />");
     }
 
     private TestData createTestDataOneDynamicAttributeMultipleMappedResourcesDevMode() {
@@ -368,11 +368,11 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(getMappedDefaultGroupCssResourcePath(),
                         getMappediPhoneGroupCssResourcePath()),
                         "<link href=\""
-                        + getMappedDefaultGroupCssResourceHref()
-                        + "\" rel=\"stylesheet\" />"
-                        + "<link href=\""
-                        + getMappediPhoneGroupCssResourceHref()
-                        + "\" rel=\"stylesheet\" />");
+                                + getMappedDefaultGroupCssResourceHref()
+                                + "\" rel=\"stylesheet\" />"
+                                + "<link href=\""
+                                + getMappediPhoneGroupCssResourceHref()
+                                + "\" rel=\"stylesheet\" />");
     }
 
     private TestData createTestDataNoDynamicAttributesMultipleMappedResourcesDevMode() {
@@ -391,8 +391,8 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(createRelDynamicAttribute(), createTypeDynamicAttribute()),
                 Arrays.asList(getMappedDefaultGroupCssResourcePath()),
                 "<link href=\""
-                + getMappedDefaultGroupCssResourceHref()
-                + "\" rel=\"stylesheet\" type=\"text/css\" />");
+                        + getMappedDefaultGroupCssResourceHref()
+                        + "\" rel=\"stylesheet\" type=\"text/css\" />");
     }
 
     private TestData createTestDataOneDynamicAttributeSingleMappedResourceDevMode() {
@@ -400,8 +400,8 @@ public class LinkTagWriterTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(createRelDynamicAttribute()),
                 Arrays.asList(getMappedDefaultGroupCssResourcePath()),
                 "<link href=\""
-                + getMappedDefaultGroupCssResourceHref()
-                + "\" rel=\"stylesheet\" />");
+                        + getMappedDefaultGroupCssResourceHref()
+                        + "\" rel=\"stylesheet\" />");
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResourceDevMode() {

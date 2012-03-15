@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
@@ -28,7 +29,6 @@ import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.util.TimeGeneratorFactory;
 import au.com.sensis.mobile.crf.util.TimerGeneratorStub;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -115,7 +115,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     @Test
     public void testConstructorWithBlankAbstractResourceExtension()
-    throws Throwable {
+            throws Throwable {
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             try {
@@ -126,7 +126,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
                 Assert.assertEquals(" has wrong message",
                         "abstractResourceExtension must not be blank: '"
-                        + testValue + "'", e.getMessage());
+                                + testValue + "'", e.getMessage());
             }
         }
     }
@@ -147,7 +147,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
     @Test
     public void testConstructorWhenResourcesRootPathInvalid() throws Throwable {
         final File[] invalidPaths =
-        {
+            {
                 new File(StringUtils.EMPTY),
                 new File(" "),
                 new File("  "),
@@ -156,8 +156,8 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
                         getClass()
                         .getResource(
                                 "/au/com/sensis/mobile/crf/service/"
-                                + "CssResourceResolverBeanTestCase.class")
-                                .toURI()) };
+                                        + "CssResourceResolverBeanTestCase.class")
+                                        .toURI()) };
         for (final File invalidPath : invalidPaths) {
             try {
                 createWithRootResourcesDir(invalidPath);
@@ -189,7 +189,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     @Test
     public void testConstructorWhenResourceResolutionWarnLoggerIsNull()
-    throws Throwable {
+            throws Throwable {
         try {
             createWithResourceResolutionWarnLogger(null);
 
@@ -218,7 +218,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
     @Test
     public void testConstructorWhenDeploymentMetadatIsNull()
-    throws Throwable {
+            throws Throwable {
         try {
             createWithDeploymentMetadata(null);
 
@@ -242,9 +242,9 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
 
         final ResourceCacheEntryBean resourceCacheEntryBean =
-            new ResourceCacheEntryBean(new Resource[] { },
-                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
-                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
+                new ResourceCacheEntryBean(new Resource[] { },
+                        ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                        ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
         recordGetFromResourceCache(resourceCacheKey, resourceCacheEntryBean);
 
         recordLogWarningIfEmptyCachedResourcesToBeRefreshed(
@@ -259,9 +259,9 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         replay();
 
         final List<Resource> actualResources =
-            localObjectUnderTest.resolve(
-                    getResourcePathTestData().getRequestedJspResourcePath(),
-                    getMockDevice());
+                localObjectUnderTest.resolve(
+                        getResourcePathTestData().getRequestedJspResourcePath(),
+                        getMockDevice());
 
         // Explicit verify since we are in a loop.
         verify();
@@ -286,9 +286,9 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         recordCheckResourceCache(resourceCacheKey, Boolean.TRUE);
 
         final ResourceCacheEntryBean resourceCacheEntryBean =
-            new ResourceCacheEntryBean(new Resource[] { },
-                    DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
-                    DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
+                new ResourceCacheEntryBean(new Resource[] { },
+                        DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                        DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
         // TODo: fix this hardcoded timestamp update.
         getTimeGenerator().setTimestamp(new Date(getTimeGenerator().getTimeInMillis() + 80000));
         resourceCacheEntryBean.incrementRefreshCountRateLimited();
@@ -301,9 +301,9 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         replay();
 
         final List<Resource> actualResources =
-            localObjectUnderTest.resolve(
-                    getResourcePathTestData().getRequestedJspResourcePath(),
-                    getMockDevice());
+                localObjectUnderTest.resolve(
+                        getResourcePathTestData().getRequestedJspResourcePath(),
+                        getMockDevice());
 
         // Explicit verify since we are in a loop.
         verify();
@@ -329,11 +329,11 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         EasyMock.expect(
                 getMockConfigurationFactory().getUiConfiguration(
                         getResourcePathTestData().getRequestedJspResourcePath()))
-                .andReturn(getMockUiConfiguration());
+                        .andReturn(getMockUiConfiguration());
 
         final Group[] matchingGroups =
                 new Group[] { getGroupTestData().createIPhoneGroup(),
-                        getGroupTestData().createAppleGroup() };
+                getGroupTestData().createAppleGroup() };
 
         EasyMock.expect(getMockUiConfiguration().matchingGroups(getMockDevice())).andReturn(
                 matchingGroups);
@@ -344,7 +344,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         final ResourceCacheKey resourceCacheKey =
                 new ResourceCacheKeyBean(getResourcePathTestData().getRequestedJspResourcePath(),
                         new Group[] { getGroupTestData().createIPhoneGroup(),
-                                getGroupTestData().createAppleGroup() });
+                    getGroupTestData().createAppleGroup() });
         return resourceCacheKey;
     }
 
@@ -547,8 +547,8 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         recordResourceCacheResourecsNotFoundProperties();
         getMockResourceCache().put(resourceCacheKey,
                 new ResourceCacheEntryBean(new Resource[] { resource },
-                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
-                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
+                        ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                        ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
     }
 
     protected void recordPutResourceCache(final ResourceCacheKey resourceCacheKey,
@@ -556,16 +556,16 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         recordResourceCacheResourecsNotFoundProperties();
         getMockResourceCache().put(resourceCacheKey,
                 new ResourceCacheEntryBean(resources,
-                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
-                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
+                        ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                        ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
     }
 
     protected void recordPutEmptyResultsIntoResourceCache(final ResourceCacheKey resourceCacheKey) {
         recordResourceCacheResourecsNotFoundProperties();
         getMockResourceCache()
-            .put(resourceCacheKey, new ResourceCacheEntryBean(new Resource[] {},
-                    ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
-                    ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
+        .put(resourceCacheKey, new ResourceCacheEntryBean(new Resource[] {},
+                ResourceCache.DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT,
+                ResourceCache.DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS));
     }
 
     private void recordResourceCacheResourecsNotFoundProperties() {
@@ -573,8 +573,8 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         EasyMock.expect(getMockResourceCache().getResourcesNotFoundMaxRefreshCount()).andReturn(
                 DEFAULT_RESOUCRES_NOT_FOUND_MAX_REFRESH_COUNT);
         EasyMock
-            .expect(getMockResourceCache().getResourcesNotFoundRefreshCountUpdateMilliseconds())
-            .andReturn(DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
+        .expect(getMockResourceCache().getResourcesNotFoundRefreshCountUpdateMilliseconds())
+        .andReturn(DEFAULT_RESOURCES_NOT_FOUND_REFRESH_COUNT_UPDATE_MILLISECONDS);
     }
 
     protected void recordLogWarningIfEmptyCachedResourcesToBeRefreshed(
@@ -584,8 +584,8 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
                 Boolean.TRUE);
         getMockResourceResolutionWarnLogger().warn(
                 "Empty cached resources found for requested resource '" + requestedResourcePath
-                        + "' and device " + getMockDevice() + " but refreshCount is "
-                        + resourceCacheEntryBean.getRefreshCount() + ". Will refresh the entry.");
+                + "' and device " + getMockDevice() + " but refreshCount is "
+                + resourceCacheEntryBean.getRefreshCount() + ". Will refresh the entry.");
     }
 
     protected void recordLogWarningIfEmptyResolvedResources(final String requestedResourcePath) {
@@ -594,7 +594,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
 
         getMockResourceResolutionWarnLogger().warn(
                 "No resource was found for requested resource '" + requestedResourcePath
-                        + "' and device " + getMockDevice());
+                + "' and device " + getMockDevice());
     }
 
     protected void recordLogWarningIfEmptyCachedResources(final String requestedResourcePath,
@@ -666,7 +666,7 @@ public abstract class AbstractResourceResolverTestCase extends AbstractJUnit4Tes
         }
 
         private static final Logger LOGGER
-            = Logger.getLogger(StubbedAbstractResourceResolver.class);
+        = Logger.getLogger(StubbedAbstractResourceResolver.class);
 
         @Override
         protected List<Resource> doResolve(final String requestedResourcePath,

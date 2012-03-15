@@ -17,6 +17,7 @@ import org.springframework.mock.web.MockJspWriter;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.service.ImageResourceBean;
@@ -26,7 +27,6 @@ import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -105,8 +105,8 @@ public class ImagePathTagTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testDoTagWithInvalidHref() throws Throwable {
         final String[] testSrcs =
-        { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
-        "  " };
+            { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
+            "  " };
 
         for (final String testSrc : testSrcs) {
             try {
@@ -119,9 +119,9 @@ public class ImagePathTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testSrc: '"
-                        + testSrc + "'",
-                        "path must not start with '..' or '/'. Was: '"
-                        + testSrc + "'", e.getMessage());
+                                + testSrc + "'",
+                                "path must not start with '..' or '/'. Was: '"
+                                        + testSrc + "'", e.getMessage());
             }
         }
 
@@ -153,7 +153,7 @@ public class ImagePathTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals("incorrect output for testData at index " + i + ": '",
                         testDataArray[i].getOutputString(), getStringWriter().getBuffer()
-                                .toString());
+                        .toString());
 
                 // Explicit verify since we are in a loop.
                 verify();

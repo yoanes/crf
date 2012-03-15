@@ -51,37 +51,11 @@
             class="au.com.sensis.wireless.web.framework.MobileContextSetUpInterceptor"
             init-method="validateState">
 
-        <property name="deviceRecognition" ref="volantisDeviceRecognition" />
+        <property name="deviceRecognition" ref="wurflDeviceRecognition" />
 
         <!-- For this showcase, we just create a new Visitor for every request. -->  
         <property name="headerInterpreter" ref="defaultHeaderInterpreter" />
     </bean>
-    
-    <bean id="volantisDeviceRecognition"
-            class="au.com.sensis.wireless.common.volantis.devicerepository.VolantisDeviceRecognition"
-            init-method="initialise">
-
-        <property name="deviceRepositoryLocation" value="${env.mcs.devicerepository.filepath}"/>
-    </bean>
-    
-<!--     
-    <bean id="wurflDeviceRecognition"
-            class="au.com.sensis.mobile.common.device.WurflDeviceRecognition">
-        <constructor-arg ref="wurflHolder" />
-    </bean>
-    
-    <bean id="propertiesSwitchedDeviceRecognition"
-            class="au.com.sensis.mobile.common.device.PropertiesSwitchedDeviceRecognition">
-        <constructor-arg>
-            <map>
-                <entry key="wurfl"><ref local="wurflDeviceRecognition"/></entry>
-                <entry key="volantis"><ref local="volantisDeviceRecognition"/></entry>
-            </map>
-        </constructor-arg>
-        <constructor-arg><value>/device-recognition.properties</value></constructor-arg>
-        <constructor-arg ref="volantisDeviceRecognition" />
-    </bean>
--->    
 
     <bean id="defaultHeaderInterpreter"
             class="au.com.sensis.wireless.web.mobile.DefaultHeaderInterpreter"
@@ -95,7 +69,7 @@
 
         <property name="headerInterpreter" ref="defaultHeaderInterpreter"/>
         
-        <property name="deviceRecognition" ref="volantisDeviceRecognition"/>
+        <property name="deviceRecognition" ref="wurflDeviceRecognition"/>
     </bean>
 
     <!-- ======================================================================================= -->

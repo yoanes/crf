@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -113,11 +113,11 @@ public class GroupsTestCase extends AbstractJUnit4TestCase {
         recordBehaviourWhenSetGroupsAndSetDefaultGroupInvoked();
 
         EasyMock.expect(getMockAppleIphoneGroup().match(getMockDevice()))
-                .andReturn(Boolean.FALSE);
+        .andReturn(Boolean.FALSE);
         EasyMock.expect(getMockAndroidOsGroup().match(getMockDevice()))
         .andReturn(Boolean.FALSE);
         EasyMock.expect(getMockDefaultGroup().match(getMockDevice()))
-                .andReturn(Boolean.FALSE);
+        .andReturn(Boolean.FALSE);
 
         replay();
 
@@ -130,12 +130,12 @@ public class GroupsTestCase extends AbstractJUnit4TestCase {
 
     private void recordBehaviourWhenSetGroupsAndSetDefaultGroupInvoked() {
         EasyMock.expect(getMockAppleIphoneGroup().getName()).andReturn(IPHONE_GROUP_NAME)
-                .atLeastOnce();
+        .atLeastOnce();
         getMockAppleIphoneGroup().setIndex(0);
         getMockAppleIphoneGroup().setParentGroups(getObjectUnderTest());
 
         EasyMock.expect(getMockAndroidOsGroup().getName()).andReturn(ANDROID_OS_GROUP_NAME)
-                .atLeastOnce();
+        .atLeastOnce();
         getMockAndroidOsGroup().setIndex(1);
         getMockAndroidOsGroup().setParentGroups(getObjectUnderTest());
 
@@ -206,11 +206,11 @@ public class GroupsTestCase extends AbstractJUnit4TestCase {
         recordBehaviourWhenSetGroupsAndSetDefaultGroupInvoked();
 
         EasyMock.expect(getMockAppleIphoneGroup().match(getMockDevice()))
-                .andReturn(Boolean.TRUE);
+        .andReturn(Boolean.TRUE);
         EasyMock.expect(getMockAndroidOsGroup().match(getMockDevice()))
-                .andReturn(Boolean.FALSE);
+        .andReturn(Boolean.FALSE);
         EasyMock.expect(getMockDefaultGroup().match(getMockDevice()))
-                .andReturn(Boolean.TRUE);
+        .andReturn(Boolean.TRUE);
 
         replay();
 

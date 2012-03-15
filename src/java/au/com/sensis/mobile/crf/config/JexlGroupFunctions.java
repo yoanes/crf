@@ -1,6 +1,6 @@
 package au.com.sensis.mobile.crf.config;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 
 /**
  * Holds functions we want to expose to JEXL group expressions, as well as their

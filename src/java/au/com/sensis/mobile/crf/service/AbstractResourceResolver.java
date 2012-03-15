@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.ConfigurationFactory;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.config.Group;
@@ -17,7 +18,6 @@ import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
 import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Standard base class for {@link ResourceResolver}s.
@@ -65,7 +65,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         configurationFactory = commonParams.getConfigurationFactory();
 
         this.abstractResourceExtension =
-            prefixWithLeadingDotIfRequired(abstractResourceExtension);
+                prefixWithLeadingDotIfRequired(abstractResourceExtension);
         this.rootResourcesDir = rootResourcesDir;
 
         resourceCache = commonParams.getResourceCache();
@@ -79,7 +79,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      */
     @Override
     public final List<Resource> resolve(final String requestedResourcePath, final Device device)
-        throws ResourceResolutionRuntimeException {
+            throws ResourceResolutionRuntimeException {
 
         if (isRecognisedAbstractResourceRequest(requestedResourcePath)) {
 
@@ -130,24 +130,24 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "Empty cached resources found for requested resource '" + requestedResourcePath
-                            + "' and device " + device + " but refreshCount is "
-                            + resourceCacheEntry.getRefreshCount() + ". Will refresh the entry.");
+                    + "' and device " + device + " but refreshCount is "
+                    + resourceCacheEntry.getRefreshCount() + ". Will refresh the entry.");
         }
     }
 
     private void logWarningIfEmptyResolvedResources(final String requestedResourcePath,
             final Device device, final List<Resource> resolvedResources) {
-        if (resolvedResources != null && resolvedResources.isEmpty()
+        if ((resolvedResources != null) && resolvedResources.isEmpty()
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "No resource was found for requested resource '" + requestedResourcePath
-                            + "' and device " + device);
+                    + "' and device " + device);
         }
     }
 
     private void logWarningIfEmptyCachedResources(final String requestedResourcePath,
             final Device device, final ResourceCacheEntry cachedResources) {
-        if (cachedResources != null && cachedResources.isEmptyResources()
+        if ((cachedResources != null) && cachedResources.isEmptyResources()
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "Cached empty resources found and returned for requested resource '"
@@ -182,11 +182,11 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     }
 
     private boolean cachedEntryHasNonEmptyResources(final ResourceCacheEntry cachedResources) {
-        return cachedResources != null && !cachedResources.isEmptyResources();
+        return (cachedResources != null) && !cachedResources.isEmptyResources();
     }
 
     private boolean cachedEntryHasEmptyResources(final ResourceCacheEntry cachedResources) {
-        return cachedResources != null && cachedResources.isEmptyResources();
+        return (cachedResources != null) && cachedResources.isEmptyResources();
     }
 
     /**
@@ -218,7 +218,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         debugLogAttemptingResolution(requestedResourcePath);
 
         final List<Resource> resolvedResources =
-            doResolveForGroup(requestedResourcePath, device, group);
+                doResolveForGroup(requestedResourcePath, device, group);
 
         debugLogResolutionResults(requestedResourcePath, resolvedResources);
 
@@ -240,7 +240,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            {@link Device} to perform the path mapping for.
      * @param group
      *            {@link Group} that the
-     *            {@link au.com.sensis.wireless.common.volantis.devicerepository.api.Device}
+     *            {@link au.com.sensis.devicerepository.Device}
      *            for the current request belongs to.
      *
      * @return {@link List} of {@link Resource}s that exist.
@@ -249,10 +249,10 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      */
     protected List<Resource> doResolveForGroup(final String requestedResourcePath,
             final Device device, final Group group)
-            throws ResourceResolutionRuntimeException {
+                    throws ResourceResolutionRuntimeException {
 
         final String newResourcePath =
-            createNewResourcePath(requestedResourcePath, group);
+                createNewResourcePath(requestedResourcePath, group);
 
         debugLogCheckingIfPathExists(newResourcePath);
 
@@ -329,7 +329,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            The path of the resource requested.
      * @param group
      *            {@link Group} that the
-     *            {@link au.com.sensis.wireless.common.volantis.devicerepository.api.Device}
+     *            {@link au.com.sensis.devicerepository.Device}
      *            for the current request belongs to.
      * @return The candidate real resource path that the requested resource path
      *         maps to. May not be null.
@@ -375,7 +375,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      *            The path of the resource requested.
      * @param group
      *            {@link Group} that the
-     *            {@link au.com.sensis.wireless.common.volantis.devicerepository.api.Device}
+     *            {@link au.com.sensis.devicerepository.Device}
      *            for the current request belongs to.
      * @return the result of inserting the the name of the given {@link Group},
      *         plus the {@link #getDeploymentMetadata()} version into the
@@ -450,7 +450,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (StringUtils.isBlank(abstractResourceExtension)) {
             throw new IllegalArgumentException(
                     "abstractResourceExtension must not be blank: '"
-                    + abstractResourceExtension + "'");
+                            + abstractResourceExtension + "'");
         }
     }
 
@@ -458,7 +458,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (!resourcesRootDir.exists() || !resourcesRootDir.isDirectory()) {
             throw new IllegalArgumentException(
                     "rootResourcesDir must be a directory: '"
-                    + resourcesRootDir + "'");
+                            + resourcesRootDir + "'");
         }
     }
 
@@ -500,7 +500,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug(
                     "Attempting to resolve requested resource '"
-                    + requestedResourcePath + "'");
+                            + requestedResourcePath + "'");
         }
     }
 
@@ -626,7 +626,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
      * @return cached resources for the given key.
      */
     protected final ResourceCacheEntry getCachedResources(final ResourceCacheKey resourceCacheKey) {
-        if (resourceCacheKey != null && getResourceCache().contains(resourceCacheKey)) {
+        if ((resourceCacheKey != null) && getResourceCache().contains(resourceCacheKey)) {
             debugLogResourcesFoundInCache();
             return getResourceCache().get(resourceCacheKey);
         } else {

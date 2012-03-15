@@ -71,9 +71,6 @@
         <!-- ehcache -->
         <dependency org="org.ehcache" name="ehcache-core" rev="2.3.0" conf="default"/>
 
-        <!-- MCS -->
-        <dependency org="com.volantis" name="com.volantis.mcs.servlet" rev="5.1.2" conf="showcase->default"/>
-
         <!-- Struts2 -->
         <dependency org="org.apache" name="struts2-core" rev="2.0.11.2" conf="showcase->default"/>
 
@@ -92,8 +89,7 @@
 
         <!-- SDP Common -->
         <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>
-        <dependency org="com.sensis" name="sdpCommon-web" rev="2.0-006" conf="default"/>
-        <dependency org="com.sensis" name="sdpCommon-volantis" rev="0.6-013" conf="default"/>
+        <dependency org="com.sensis" name="sdpCommon-web" rev="3.0-wurfl-snapshot-5" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-utils" rev="1.0-008" conf="default"/>
 
         <!-- Castor. -->
@@ -113,7 +109,7 @@
         <dependency org="com.vladium" name="emma" rev="2.0" conf="test->default"/>
 
         <!-- Testbed depedency. -->
-        <dependency org="com.sensis" name="wl-webapp-testbed" rev="2.1.0" conf="showcase->default"/>
+        <dependency org="com.sensis" name="wl-webapp-testbed" rev="3.0.wurfl-snapshot-4" conf="showcase->default"/>
 
         <!-- ================================================================================ -->
         <!-- Exclusions. -->

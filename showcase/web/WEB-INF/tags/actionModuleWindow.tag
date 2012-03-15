@@ -4,7 +4,7 @@
   - Should also work with Tomcat 6.  
   --%>
 <%@ attribute name="device" required="true"
-    type="au.com.sensis.wireless.common.volantis.devicerepository.api.Device"  
+    type="au.com.sensis.devicerepository.Device"  
     description="Device of the current user." %>
 
 <%@ taglib uri="/tags/c" prefix="c" %>

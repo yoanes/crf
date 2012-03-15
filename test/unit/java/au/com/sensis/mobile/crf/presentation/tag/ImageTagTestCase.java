@@ -24,6 +24,7 @@ import org.springframework.mock.web.MockJspWriter;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.config.GroupTestData;
 import au.com.sensis.mobile.crf.service.ImageResourceBean;
@@ -33,7 +34,6 @@ import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -121,8 +121,8 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testDoTagWithInvalidHref() throws Throwable {
         final String[] testSrcs =
-        { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
-        "  " };
+            { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
+            "  " };
 
         for (final String testSrc : testSrcs) {
             try {
@@ -135,9 +135,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testSrc: '"
-                        + testSrc + "'",
-                        "path must not start with '..' or '/'. Was: '"
-                        + testSrc + "'", e.getMessage());
+                                + testSrc + "'",
+                                "path must not start with '..' or '/'. Was: '"
+                                        + testSrc + "'", e.getMessage());
             }
         }
 
@@ -171,7 +171,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals("incorrect output for testData at index " + i + ": '",
                         testDataArray[i].getOutputString(), getStringWriter().getBuffer()
-                                .toString());
+                        .toString());
 
                 // Explicit verify since we are in a loop.
                 verify();
@@ -185,7 +185,7 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
 
     private void recordGetImageRatio(final Integer imageRatio) {
         EasyMock.expect(getMockDevice().getPropertyAsInteger("custom.crf.image.ratio"))
-                .andReturn(imageRatio);
+        .andReturn(imageRatio);
     }
 
     @Test
@@ -574,9 +574,9 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(createTitleDynamicAttribute()),
                 getMockResource(),
                 "<img src=\"" + getMappedDefaultGroupPngImageResourceHref() + "\" "
-                + "width=\"" + IMG_WIDTH + "\" " + "height=\"" + IMG_HEIGHT + "\" "
-                + "title=\"unmetered usage\" />",
-                BODY_CONTENT);
+                        + "width=\"" + IMG_WIDTH + "\" " + "height=\"" + IMG_HEIGHT + "\" "
+                        + "title=\"unmetered usage\" />",
+                        BODY_CONTENT);
     }
 
     private TestData createTestDataTwoDynamicAttributesSingleMappedResource() {
@@ -584,39 +584,39 @@ public class ImageTagTestCase extends AbstractJUnit4TestCase {
                 Arrays.asList(createTitleDynamicAttribute(), createAltDynamicAttribute()),
                 getMockResource(),
                 "<img src=\"" + getMappedDefaultGroupPngImageResourceHref() + "\" "
-                + "width=\"" + IMG_WIDTH + "\" " + "height=\"" + IMG_HEIGHT + "\" "
-                + "title=\"unmetered usage\" alt=\"unmetered\" />",
-                BODY_CONTENT);
+                        + "width=\"" + IMG_WIDTH + "\" " + "height=\"" + IMG_HEIGHT + "\" "
+                        + "title=\"unmetered usage\" alt=\"unmetered\" />",
+                        BODY_CONTENT);
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResourceAndNoBodyContent() {
         return new TestData(new ArrayList<DynamicTagAttribute>(), null,
                 "<img src=\""
-                + getResourcePathTestData().getImageClientPathPrefix()
-                + getResourcePathTestData().getDeploymentVersion()
-                + "/images/"
-                + getResourcePathTestData().getRequestedImageResourcePath()
-                + "\" />", StringUtils.EMPTY);
+                        + getResourcePathTestData().getImageClientPathPrefix()
+                        + getResourcePathTestData().getDeploymentVersion()
+                        + "/images/"
+                        + getResourcePathTestData().getRequestedImageResourcePath()
+                        + "\" />", StringUtils.EMPTY);
     }
 
     private TestData createTestDataNoDynamicAttributesNoMappedResourceButWithBodyContent() {
         return new TestData(new ArrayList<DynamicTagAttribute>(), null,
                 "<img src=\""
-                + getResourcePathTestData().getImageClientPathPrefix()
-                + getResourcePathTestData().getDeploymentVersion()
-                + "/images/"
-                + getResourcePathTestData().getRequestedImageResourcePath()
-                + "\" />", BODY_CONTENT);
+                        + getResourcePathTestData().getImageClientPathPrefix()
+                        + getResourcePathTestData().getDeploymentVersion()
+                        + "/images/"
+                        + getResourcePathTestData().getRequestedImageResourcePath()
+                        + "\" />", BODY_CONTENT);
     }
 
     private DynamicTagAttribute createTitleDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "title",
-        "unmetered usage");
+                "unmetered usage");
     }
 
     private DynamicTagAttribute createAltDynamicAttribute() {
         return new DynamicTagAttribute(DYN_ATTR_URI, "alt",
-        "unmetered");
+                "unmetered");
     }
 
     private String getMappedDefaultGroupPngImageResourceHref() {

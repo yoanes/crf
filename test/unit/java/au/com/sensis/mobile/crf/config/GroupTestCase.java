@@ -12,9 +12,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.devicerepository.Device;
+import au.com.sensis.devicerepository.ImageCategory;
 import au.com.sensis.mobile.crf.exception.GroupEvaluationRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.ImageCategory;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 import au.com.sensis.wireless.web.mobile.ThreadLocalContextObjectsHolder;
 
@@ -60,10 +60,10 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
             } catch (final GroupEvaluationRuntimeException e) {
 
                 Assert.assertEquals(
-                    "GroupEvaluationRuntimeException has wrong message",
-                    "group has invalid name: '" + invalidFilename
-                    + "'. Must start with a letter or digit and contain only letters, "
-                    + "digits, underscores and hyphens.", e.getMessage());
+                        "GroupEvaluationRuntimeException has wrong message",
+                        "group has invalid name: '" + invalidFilename
+                        + "'. Must start with a letter or digit and contain only letters, "
+                        + "digits, underscores and hyphens.", e.getMessage());
             }
 
             // Explicit verify since we are in a loop
@@ -91,7 +91,7 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
     public void testValidateWhenExprIsInvalid() throws Throwable {
         final String[] testExpressions =
             { "device.propertyDoesNotExist eq 'HD800'",
-                    "device.imageCategory dummyOperator 'M'" };
+            "device.imageCategory dummyOperator 'M'" };
 
         for (final String invalidExpr : testExpressions) {
             getObjectUnderTest().setExpr(invalidExpr);
@@ -109,10 +109,10 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
             } catch (final GroupEvaluationRuntimeException e) {
 
                 Assert.assertEquals(
-                    "GroupEvaluationRuntimeException has wrong message",
-                    "Error evaluating expression '" + invalidExpr
-                    + "' for group '" + GROUP_NAME + "' and device "
-                    + getMockDevice(), e.getMessage());
+                        "GroupEvaluationRuntimeException has wrong message",
+                        "Error evaluating expression '" + invalidExpr
+                        + "' for group '" + GROUP_NAME + "' and device "
+                        + getMockDevice(), e.getMessage());
             }
 
             // Explicit verify since we are in a loop
@@ -183,8 +183,8 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testMatchWhenExprIsInvalid() throws Throwable {
         final String[] testExpressions =
-                { "device.propertyDoesNotExist eq 'HD800'",
-                        "device.imageCategory dummyOperator 'M'" };
+            { "device.propertyDoesNotExist eq 'HD800'",
+            "device.imageCategory dummyOperator 'M'" };
 
         for (final String testExpr : testExpressions) {
             getObjectUnderTest().setExpr(testExpr);
@@ -198,7 +198,7 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
             } catch (final GroupEvaluationRuntimeException e) {
                 Assert.assertEquals("GroupEvaluationRuntimeException has wrong message",
                         "Error evaluating expression '" + testExpr + "' for group '" + GROUP_NAME
-                                + "' and device " + getMockDevice(), e.getMessage());
+                        + "' and device " + getMockDevice(), e.getMessage());
                 Assert.assertNotNull("GroupEvaluationRuntimeException has no cause", e.getCause());
             }
 
@@ -254,8 +254,8 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
             throws Throwable {
 
         final String[] expressions =
-                { "inAllGroups('trueGroup1', 'unknownGroup1', 'unknownGroup2', 'default')",
-                        "inAnyGroup('trueGroup1', 'unknownGroup1', 'unknownGroup2', 'default')" };
+            { "inAllGroups('trueGroup1', 'unknownGroup1', 'unknownGroup2', 'default')",
+            "inAnyGroup('trueGroup1', 'unknownGroup1', 'unknownGroup2', 'default')" };
 
         for (final String expr : expressions) {
 
@@ -272,7 +272,7 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals("GroupEvaluationRuntimeException has wrong message"
                         + errorSuffix, "Error evaluating expression '" + expr + "' for group '"
-                        + GROUP_NAME + "' and device " + getMockDevice(), e.getMessage());
+                                + GROUP_NAME + "' and device " + getMockDevice(), e.getMessage());
 
                 Assert.assertNotNull("GroupEvaluationRuntimeException should have a cause"
                         + errorSuffix, e.getCause());
@@ -311,10 +311,10 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
         };
 
         final String[] illegalGroups =
-                { "[laterGroup1, laterGroup2, default]",
-                        "[laterGroup1, laterGroup2, default]",
-                        "[" + GROUP_NAME + ", laterGroup1]",
-                        "[" + GROUP_NAME + ", laterGroup1]" };
+            { "[laterGroup1, laterGroup2, default]",
+                "[laterGroup1, laterGroup2, default]",
+                "[" + GROUP_NAME + ", laterGroup1]",
+                "[" + GROUP_NAME + ", laterGroup1]" };
 
         for (int i = 0; i < expressions.length; i++) {
 
@@ -332,8 +332,8 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals("GroupEvaluationRuntimeException has wrong message"
                         + errorSuffix, "Error evaluating expression '" + expressions[i]
-                        + "' for group '" + GROUP_NAME + "' and device " + getMockDevice(), e
-                        .getMessage());
+                                + "' for group '" + GROUP_NAME + "' and device " + getMockDevice(), e
+                                .getMessage());
 
                 Assert.assertNotNull("GroupEvaluationRuntimeException should have a cause"
                         + errorSuffix, e.getCause());
@@ -351,7 +351,7 @@ public class GroupTestCase extends AbstractJUnit4TestCase {
                         "GroupEvaluationRuntimeException cause has wrong message" + errorSuffix,
                         "Illegal for expression to reference the current group or later groups "
                                 + "since this may lead to a cyclic dependency: " + illegalGroups[i]
-                                + ".", e.getCause().getCause().getMessage());
+                                        + ".", e.getCause().getCause().getMessage());
             }
 
             // Explicit verify and reset since we are in a loop.

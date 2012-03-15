@@ -9,14 +9,14 @@ import au.com.sensis.mobile.crf.util.LegacyEhcacheCacheBean;
  * Note that {@link Group} currently has a private, transient
  * {@link Groups} field. This is okay for the current usage of this
  * cache, since we only cache groups as the result of positive
- * {@link Group#match(au.com.sensis.wireless.common.volantis.devicerepository.api.Device)}
+ * {@link Group#match(au.com.sensis.devicerepository.Device)}
  * evaluation, after which the {@link Groups} is no longer needed.
  * </p>
  *
  * @author Adrian.Koh2@sensis.com.au
  */
 public class EhcacheGroupsCacheBean extends LegacyEhcacheCacheBean<GroupsCacheKey, Group> implements
-        GroupsCache {
+GroupsCache {
 
     /**
      * Constructor.

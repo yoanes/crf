@@ -17,11 +17,11 @@ import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -134,7 +134,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals("IllegalArgumentException has wrong message",
                         "You must set either the src or name attributes but not both. src='"
-                        + testValue + "'; name='" + testValue + "'", e.getMessage());
+                                + testValue + "'; name='" + testValue + "'", e.getMessage());
             }
         }
 
@@ -153,14 +153,14 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
             Assert.assertEquals("IllegalArgumentException has wrong message",
                     "You must set either the src or name attributes but not both. src='"
-                    + "common/main.js" + "'; name='" + "myName" + "'", e.getMessage());
+                            + "common/main.js" + "'; name='" + "myName" + "'", e.getMessage());
         }
     }
 
     @Test
     public void testDoTagWithInvalidSrc() throws Throwable {
         final String[] testSrcs =
-        { "../some/where", "/somewhere" };
+            { "../some/where", "/somewhere" };
 
         for (final String testSrc : testSrcs) {
             try {
@@ -173,9 +173,9 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testSrc: '"
-                        + testSrc + "'",
-                        "src must not start with '..' or '/'. Was: '" + testSrc + "'",
-                        e.getMessage());
+                                + testSrc + "'",
+                                "src must not start with '..' or '/'. Was: '" + testSrc + "'",
+                                e.getMessage());
             }
         }
 
@@ -211,7 +211,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
                                 getRequestedJavaScriptResourcePath(),
                                 null,
                                 getTagDependencies(), null))
-                .andReturn(getMockScriptTagWriter());
+                                .andReturn(getMockScriptTagWriter());
     }
 
     private void recordCheckIfScriptTagWriterSeenBefore() {
@@ -457,7 +457,7 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
     public void setMockScriptTagWriter(
             final ScriptTagWriter mockScriptTagWriter) {
         this.mockScriptTagWriter =
-            mockScriptTagWriter;
+                mockScriptTagWriter;
     }
 
     /**
@@ -475,22 +475,22 @@ public class ScriptTagTestCase extends AbstractJUnit4TestCase {
             final ScriptTagWriterFactory
             mockScriptTagWriterFactory) {
         this.mockScriptTagWriterFactory =
-            mockScriptTagWriterFactory;
+                mockScriptTagWriterFactory;
     }
 
     public DynamicTagAttribute createTitleDynamicAttribute() {
         return new DynamicTagAttribute("title",
-        "My Image");
+                "My Image");
     }
 
     public DynamicTagAttribute createTypeDynamicAttribute() {
         return new DynamicTagAttribute("type",
-        "text/css");
+                "text/css");
     }
 
     public DynamicTagAttribute createArbitraryDynamicAttribute() {
         return new DynamicTagAttribute("arbitraryName",
-        "arbitraryValue");
+                "arbitraryValue");
     }
 
     /**

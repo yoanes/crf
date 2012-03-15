@@ -10,9 +10,9 @@ import javax.servlet.jsp.tagext.JspFragment;
 
 import org.apache.commons.lang.StringUtils;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Simple implementation of {@link TagWriter} that outputs a link tag in the
@@ -100,7 +100,7 @@ public class LinkTagWriter implements TagWriter {
     protected boolean bundlingEnabled() {
 
         return (getParentBundleLinksTag() != null)
-        && (getParentBundleLinksTag().hasBundlingEnabled());
+                && (getParentBundleLinksTag().hasBundlingEnabled());
     }
 
     private void postponeWriteForBundleLinksTag(final List<Resource> allResourcePaths) {
@@ -145,8 +145,8 @@ public class LinkTagWriter implements TagWriter {
 
     private List<Resource> getAllResourcePaths() throws IOException {
         final List<Resource> allResourcePaths =
-            getResourceResolverEngine().getAllResources(getDevice(),
-                    getHref());
+                getResourceResolverEngine().getAllResources(getDevice(),
+                        getHref());
 
         assertNotNull(allResourcePaths);
 
@@ -157,8 +157,8 @@ public class LinkTagWriter implements TagWriter {
         if (allResourcePaths == null) {
             throw new IllegalStateException(
                     "getResourceResolverEngine.getAllResourcePaths "
-                    + "returned null for '" + getHref() + ". "
-                    + "This should never happen !!!");
+                            + "returned null for '" + getHref() + ". "
+                            + "This should never happen !!!");
         }
     }
 

@@ -12,7 +12,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.log4j.Logger;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 
 /**
  * @author Adrian.Koh2@sensis.com.au
@@ -101,7 +101,7 @@ public class UiConfiguration {
      * @return true if this {@link UiConfiguration} applies to the given requested resource path.
      */
     public boolean appliesToPath(final String requestedResourcePath) {
-        return requestedResourcePath != null && requestedResourcePath.contains(getConfigPath());
+        return (requestedResourcePath != null) && requestedResourcePath.contains(getConfigPath());
     }
 
     /**
@@ -109,7 +109,7 @@ public class UiConfiguration {
      *         (ie. does not apply to any specific config path).
      */
     public boolean hasDefaultConfigPath() {
-        return getConfigPath() == null || StringUtils.isBlank(getConfigPath());
+        return (getConfigPath() == null) || StringUtils.isBlank(getConfigPath());
     }
 
     /**
@@ -236,7 +236,7 @@ public class UiConfiguration {
             return true;
         }
 
-        if (obj == null || !this.getClass().equals(obj.getClass())) {
+        if ((obj == null) || !this.getClass().equals(obj.getClass())) {
             return false;
         }
 

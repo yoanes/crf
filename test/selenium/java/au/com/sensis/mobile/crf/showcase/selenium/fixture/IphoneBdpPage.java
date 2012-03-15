@@ -132,41 +132,41 @@ public abstract class IphoneBdpPage extends BdpPage {
 
     private void assertCssLinksFoundInLeafGroupUptoDefaultGroup() {
         assertCssLink("default/selenium/common/main.css link not found",
-        "default/selenium/common/main.css");
+                "default/selenium/common/main.css");
         assertCssLink("webkit/selenium/common/main.css link not found",
-        "webkit/selenium/common/main.css");
+                "webkit/selenium/common/main.css");
         assertCssLink("applewebkit/selenium/common/main.css link not found",
-        "applewebkit/selenium/common/main.css");
+                "applewebkit/selenium/common/main.css");
         assertCssLink("iphone-ipod/selenium/common/main.css link not found",
-        "iphone-ipod/selenium/common/main.css");
+                "iphone-ipod/selenium/common/main.css");
     }
 
     private void assertCssLinkFoundInLeafGroupOnly() {
         assertCssLink("iphone-ipod/selenium/common/columns.css link not found",
-        "iphone-ipod/selenium/common/columns.css");
+                "iphone-ipod/selenium/common/columns.css");
     }
 
     private void assertCssLinkFoundInDefaultGroupOnly() {
         assertCssLink("default/selenium/results/results.css link not found",
-        "default/selenium/results/results.css");
+                "default/selenium/results/results.css");
     }
 
     private void assertCssLinkFoundInIntermediateGroupOnly() {
         assertCssLink("webkit/selenium/common/jazz.css link not found",
-        "webkit/selenium/common/jazz.css");
+                "webkit/selenium/common/jazz.css");
     }
 
     private void assertCssLinkFoundInMultipleIntermediateGroupsOnly() {
         assertCssLink("webkit/selenium/common/decorations.css link not found",
-        "webkit/selenium/common/decorations.css");
+                "webkit/selenium/common/decorations.css");
         assertCssLink("applewebkit/selenium/common/decorations.css link not found",
-        "applewebkit/selenium/common/decorations.css");
+                "applewebkit/selenium/common/decorations.css");
 
     }
 
     private void assertCssLinkFoundFromMapComponent() {
         assertCssLink("mapComponent-advanced/selenium/component/map/map.css link not found",
-        "mapComponent-advanced/selenium/component/map/map.css");
+                "mapComponent-advanced/selenium/component/map/map.css");
     }
 
     private void assertIphoneScripts() {
@@ -195,27 +195,27 @@ public abstract class IphoneBdpPage extends BdpPage {
 
     private void assertLeafGroupScriptResolvedByNameWithNoInheritenceToOverride() {
         assertScript("iphone-ipod/selenium/common/columns.js script not found",
-        "iphone-ipod/selenium/common/columns.js");
+                "iphone-ipod/selenium/common/columns.js");
     }
 
     private void assertLeafGroupScriptResolvedByNameOverridingInheritedGroups() {
         assertScript("iphone-ipod/selenium/common/main.js script not found",
-        "iphone-ipod/selenium/common/main.js");
+                "iphone-ipod/selenium/common/main.js");
     }
 
     private void assertDefaultGroupScriptResolvedByName() {
         assertScript("default/selenium/results/results.js script not found",
-        "default/selenium/results/results.js");
+                "default/selenium/results/results.js");
     }
 
     private void assertIntermediateGroupScriptResolvedByNameWithNoInheritenceToOverride() {
         assertScript("webkit/selenium/common/jazz.js script not found",
-        "webkit/selenium/common/jazz.js");
+                "webkit/selenium/common/jazz.js");
     }
 
     private void assertIntermediateGroupScriptResolvedByNameOverridingInheritedGroup() {
         assertScript("applewebkit/selenium/common/decorations.js script not found",
-        "applewebkit/selenium/common/decorations.js");
+                "applewebkit/selenium/common/decorations.js");
     }
 
     private void assertIphoneScriptsByPackageNoBundling() {
@@ -236,68 +236,68 @@ public abstract class IphoneBdpPage extends BdpPage {
     assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrder() {
 
         assertScript("default/selenium/fielddecorators/decorator2.js script not found",
-        "default/selenium/fielddecorators/decorator2.js");
+                "default/selenium/fielddecorators/decorator2.js");
         assertScript("default/selenium/fielddecorators/decorator1.js script not found",
-        "default/selenium/fielddecorators/decorator1.js");
+                "default/selenium/fielddecorators/decorator1.js");
         assertScript("default/selenium/fielddecorators/decorator3.js script not found",
-        "default/selenium/fielddecorators/decorator3.js");
+                "default/selenium/fielddecorators/decorator3.js");
     }
 
     private void assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrderPlusExplicitWildcard() {
         assertScript("iphone-ipod/selenium/grid/grid2.js script not found",
-        "iphone-ipod/selenium/grid/grid2.js");
+                "iphone-ipod/selenium/grid/grid2.js");
         assertScript("iphone-ipod/selenium/grid/grid1.js script not found",
-        "iphone-ipod/selenium/grid/grid1.js");
+                "iphone-ipod/selenium/grid/grid1.js");
         assertScript("iphone-ipod/selenium/grid/grid3.js script not found",
-        "iphone-ipod/selenium/grid/grid3.js");
+                "iphone-ipod/selenium/grid/grid3.js");
     }
 
     private void assertResolvedScriptsInheritenceFromMultipleGroupsUptoDefaultGroupWithCompleteOrderDefinedForSome() {
         assertScript("default/selenium/reporting/default-reporting1.js script not found",
-        "default/selenium/reporting/default-reporting1.js");
+                "default/selenium/reporting/default-reporting1.js");
         assertScript("default/selenium/reporting/default-reporting2.js script not found",
-        "default/selenium/reporting/default-reporting2.js");
+                "default/selenium/reporting/default-reporting2.js");
 
         assertScript("webkit/selenium/reporting/webkit-reporting1.js script not found",
-        "webkit/selenium/reporting/webkit-reporting1.js");
+                "webkit/selenium/reporting/webkit-reporting1.js");
         assertScript("webkit/selenium/reporting/webkit-reporting2.js script not found",
-        "webkit/selenium/reporting/webkit-reporting2.js");
+                "webkit/selenium/reporting/webkit-reporting2.js");
 
         assertScript("applewebkit/selenium/reporting/applewebkit-reporting2.js script not found",
-        "applewebkit/selenium/reporting/applewebkit-reporting2.js");
+                "applewebkit/selenium/reporting/applewebkit-reporting2.js");
         assertScript("applewebkit/selenium/reporting/applewebkit-reporting1.js script not found",
-        "applewebkit/selenium/reporting/applewebkit-reporting1.js");
+                "applewebkit/selenium/reporting/applewebkit-reporting1.js");
 
         assertScript("iphone-ipod/selenium/reporting/iphone-ipod-reporting1.js script not found",
-        "iphone-ipod/selenium/reporting/iphone-ipod-reporting1.js");
+                "iphone-ipod/selenium/reporting/iphone-ipod-reporting1.js");
         assertScript("iphone-ipod/selenium/reporting/iphone-ipod-reporting2.js script not found",
-        "iphone-ipod/selenium/reporting/iphone-ipod-reporting2.js");
+                "iphone-ipod/selenium/reporting/iphone-ipod-reporting2.js");
     }
 
     private void assertMapComponentScriptsResolvedByPackageNoBundlingWithCompleteOrder() {
         assertScript("mapComponent-advanced/selenium/component/map/map2.js script not found",
-        "mapComponent-advanced/selenium/component/map/map2.js");
+                "mapComponent-advanced/selenium/component/map/map2.js");
         assertScript("mapComponent-advanced/selenium/component/map/map1.js script not found",
-        "mapComponent-advanced/selenium/component/map/map1.js");
+                "mapComponent-advanced/selenium/component/map/map1.js");
     }
 
     private void assertOnlyIntermediateGroupScriptsResolvedByPackageNoBundling() {
         assertScript("webkit/selenium/animation/animation1.js script not found",
-        "webkit/selenium/animation/animation1.js");
+                "webkit/selenium/animation/animation1.js");
         assertScript("webkit/selenium/animation/animation2.js script not found",
-        "webkit/selenium/animation/animation2.js");
+                "webkit/selenium/animation/animation2.js");
     }
 
     private void assertMultipleIntermediateGroupScriptsResolvedByPackageNoBundling() {
         assertScript("webkit/selenium/layers/webkit-layers1.js script not found",
-        "webkit/selenium/layers/webkit-layers1.js");
+                "webkit/selenium/layers/webkit-layers1.js");
         assertScript("webkit/selenium/layers/webkit-layers2.js script not found",
-        "webkit/selenium/layers/webkit-layers2.js");
+                "webkit/selenium/layers/webkit-layers2.js");
 
         assertScript("applewebkit/selenium/layers/layers1.js script not found",
-        "applewebkit/selenium/layers/applewebkit-layers1.js");
+                "applewebkit/selenium/layers/applewebkit-layers1.js");
         assertScript("applewebkit/selenium/layers/layers2.js script not found",
-        "applewebkit/selenium/layers/applewebkit-layers2.js");
+                "applewebkit/selenium/layers/applewebkit-layers2.js");
     }
 
     private void assertLeafGroupJsp() {
@@ -305,7 +305,6 @@ public abstract class IphoneBdpPage extends BdpPage {
     }
 
     private void assertDeviceProperties() {
-        assertTrue(getBrowser().isTextPresent("'brwsrname': Safari"));
         assertImageCategoryText();
     }
 
@@ -328,9 +327,9 @@ public abstract class IphoneBdpPage extends BdpPage {
     @Override
     protected void assertBundleScriptsTagOutputPresent() {
         assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File1",
-        "true");
+                "true");
         assertBundleScriptsTagJavaScriptVariable("iphoneIpodShowcaseAppBundlePackage1File2",
-        "true");
+                "true");
 
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File1", "null");
         assertBundleScriptsTagJavaScriptVariable("defaultShowcaseAppBundlePackage1File2", "null");

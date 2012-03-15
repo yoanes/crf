@@ -10,8 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.GroupTestData;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -65,8 +65,8 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
         getMockLogger(DelegatingResourceResolverBean.class).warn(
                 "resourceResolvers is empty. "
-                + "This DelegatingResourceResolverBean will always "
-                + "return an empty list of resources.");
+                        + "This DelegatingResourceResolverBean will always "
+                        + "return an empty list of resources.");
 
         replay();
 
@@ -87,8 +87,8 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         replay();
 
         final List<Resource> actualResources =
-            getObjectUnderTest().resolve(getRequestedPath(),
-                    getMockDevice());
+                getObjectUnderTest().resolve(getRequestedPath(),
+                        getMockDevice());
 
         Assert.assertEquals("actualResource is wrong",
                 getExpectedResources(), actualResources);
@@ -110,7 +110,7 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         replay();
 
         final List<Resource> actualResources =
-            getObjectUnderTest().resolve(getRequestedPath(), getMockDevice());
+                getObjectUnderTest().resolve(getRequestedPath(), getMockDevice());
 
         Assert.assertEquals("actualResource is wrong",
                 getExpectedResources(), actualResources);
@@ -130,7 +130,7 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
         replay();
 
         final List<Resource> actualResources =
-            getObjectUnderTest().resolve(getRequestedPath(), getMockDevice());
+                getObjectUnderTest().resolve(getRequestedPath(), getMockDevice());
 
         Assert.assertNotNull("actualResource should not be null",
                 actualResources);
@@ -191,7 +191,7 @@ public class DelegatingResourceResolverBeanTestCase extends AbstractJUnit4TestCa
 
     private String getRequestedPath() {
         return getResourcePathTestData()
-        .getRequestedJspResourcePath();
+                .getRequestedJspResourcePath();
     }
 
     /**

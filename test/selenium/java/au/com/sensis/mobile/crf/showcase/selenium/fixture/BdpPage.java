@@ -595,6 +595,6 @@ public abstract class BdpPage extends AbstractPageFixture {
      * @return image format expected for scaled images.
      */
     protected String getScaledImageFormat() {
-        return "gif";
+        return "png";
     }
 }

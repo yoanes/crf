@@ -19,6 +19,7 @@ import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
 import au.com.sensis.mobile.crf.debug.ResourceTreeNode;
@@ -26,7 +27,6 @@ import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.util.FileIoFacade;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 import au.com.sensis.wireless.web.mobile.MobileContext;
 
@@ -36,7 +36,7 @@ import au.com.sensis.wireless.web.mobile.MobileContext;
  * @author Adrian.Koh2@sensis.com.au
  */
 public class ResourceResolverServletTestCase extends
-        AbstractJUnit4TestCase {
+AbstractJUnit4TestCase {
 
     private static final String BEAN_NAME = "resourceResolverEngine";
 
@@ -92,8 +92,8 @@ public class ResourceResolverServletTestCase extends
         final String[] testValues = { null, StringUtils.EMPTY, " ", "  " };
         for (final String testValue : testValues) {
             getObjectUnderTest()
-                    .setResourceResolverEngineBeanName(
-                            testValue);
+            .setResourceResolverEngineBeanName(
+                    testValue);
             try {
                 getObjectUnderTest().init(getSpringMockServletConfig());
 
@@ -102,11 +102,11 @@ public class ResourceResolverServletTestCase extends
             } catch (final IllegalStateException e) {
 
                 Assert.assertEquals(
-                    "IllegalStateException has wrong message",
-                    "resourceResolverEngineBeanName must be set "
-                            + "as a non-blank Servlet init-param in your web.xml. Was: '"
-                            + testValue + "'",
-                    e.getMessage());
+                        "IllegalStateException has wrong message",
+                        "resourceResolverEngineBeanName must be set "
+                                + "as a non-blank Servlet init-param in your web.xml. Was: '"
+                                + testValue + "'",
+                                e.getMessage());
             }
         }
 
@@ -140,7 +140,7 @@ public class ResourceResolverServletTestCase extends
 
             Assert.assertEquals("IOException has wrong message",
                     "No concrete resource found for requested path: '"
-                        + requestedResourceServletPath + "'", e.getMessage());
+                            + requestedResourceServletPath + "'", e.getMessage());
         }
 
     }
@@ -151,7 +151,7 @@ public class ResourceResolverServletTestCase extends
         EasyMock.expect(
                 getMockResourceResolverEngine().getResource(getMockDevice(),
                         requestedResourceServletPath)).andReturn(null)
-                .atLeastOnce();
+                        .atLeastOnce();
 
     }
 
@@ -171,8 +171,8 @@ public class ResourceResolverServletTestCase extends
 
         final ResourceTreeNode resourceTreeNode = treePreOrderIterator.next();
         Assert
-                .assertNotNull("next item from preOrderIterator should not be null",
-                        resourceTreeNode);
+        .assertNotNull("next item from preOrderIterator should not be null",
+                resourceTreeNode);
         Assert.assertEquals("next item from preOrderIterator has wrong resource",
                 getMockResource(), resourceTreeNode.getResource());
     }
@@ -187,7 +187,7 @@ public class ResourceResolverServletTestCase extends
     }
 
     private void setupForRequestViaForward() throws ServletException,
-            IOException {
+    IOException {
         recordGetResourceResolverEngine();
 
         recordGetDevice();
@@ -216,7 +216,7 @@ public class ResourceResolverServletTestCase extends
     private void recordGetNewPath(final String newPath) {
 
         EasyMock.expect(getMockResource().getNewPath())
-                .andReturn(newPath);
+        .andReturn(newPath);
     }
 
     @Test
@@ -238,14 +238,14 @@ public class ResourceResolverServletTestCase extends
     }
 
     private void setupForRequestViaInclude() throws ServletException,
-            IOException {
+    IOException {
         recordGetResourceResolverEngine();
 
         recordGetDevice();
 
         final String webappContextPath = "/webappContext";
         final String includedResourceServletPathWithoutContext =
-            "/WEB-INF/view/common/logo.jsp";
+                "/WEB-INF/view/common/logo.jsp";
         final String includedResourceServletPath =
                 webappContextPath + includedResourceServletPathWithoutContext;
         recordIsRequestViaIncludeReturnsTrue(includedResourceServletPath);
@@ -256,7 +256,7 @@ public class ResourceResolverServletTestCase extends
                 includedResourceServletPathWithoutContext);
 
         final String actualResourceServletPath =
-            "/WEB-INF/view/master/common/logo.jsp";
+                "/WEB-INF/view/master/common/logo.jsp";
         recordGetNewPath(actualResourceServletPath);
 
         recordGetRequestDispatcher(actualResourceServletPath);
@@ -271,7 +271,7 @@ public class ResourceResolverServletTestCase extends
     private void recordGetRequestContextPath(final String webappContextPath) {
 
         EasyMock.expect(getMockHttpServletRequest().getContextPath())
-                .andReturn(webappContextPath).atLeastOnce();
+        .andReturn(webappContextPath).atLeastOnce();
     }
 
     private void recordIsRequestViaIncludeReturnsTrue(
@@ -279,7 +279,7 @@ public class ResourceResolverServletTestCase extends
         EasyMock.expect(
                 getMockHttpServletRequest().getAttribute(
                         "javax.servlet.include.request_uri")).andReturn(
-                requestedResourceServletPath).atLeastOnce();
+                                requestedResourceServletPath).atLeastOnce();
     }
 
     private void recordIsRequestViaIncludeReturnsFalse() {
@@ -287,7 +287,7 @@ public class ResourceResolverServletTestCase extends
         EasyMock.expect(
                 getMockHttpServletRequest().getAttribute(
                         "javax.servlet.include.request_uri")).andReturn(null)
-                .atLeastOnce();
+                        .atLeastOnce();
     }
 
     /**
@@ -295,7 +295,7 @@ public class ResourceResolverServletTestCase extends
      * @throws IOException
      */
     private void recordRequestDispatcherForward() throws ServletException,
-            IOException {
+    IOException {
         getMockRequestDispatcher().forward(getMockHttpServletRequest(),
                 getSpringMockHttpServletResponse());
     }
@@ -305,7 +305,7 @@ public class ResourceResolverServletTestCase extends
      * @throws IOException
      */
     private void recordRequestDispatcherInclude() throws ServletException,
-            IOException {
+    IOException {
         getMockRequestDispatcher().include(getMockHttpServletRequest(),
                 getSpringMockHttpServletResponse());
     }
@@ -318,22 +318,22 @@ public class ResourceResolverServletTestCase extends
         EasyMock.expect(
                 getMockHttpServletRequest().getRequestDispatcher(
                         actualResourceServletPath)).andReturn(
-                getMockRequestDispatcher()).atLeastOnce();
+                                getMockRequestDispatcher()).atLeastOnce();
     }
 
     private void recordGetResourceFromResourceResolverEngine(
             final String requestedResourceServletPath) throws IOException {
         EasyMock.expect(
                 getMockResourceResolverEngine()
-                        .getResource(getMockDevice(),
-                                requestedResourceServletPath)).andReturn(
-                getMockResource()).atLeastOnce();
+                .getResource(getMockDevice(),
+                        requestedResourceServletPath)).andReturn(
+                                getMockResource()).atLeastOnce();
     }
 
     private void recordGetRequestServletPath(
             final String requestedResourceServletPath) {
         EasyMock.expect(getMockHttpServletRequest().getServletPath())
-                .andReturn(requestedResourceServletPath).atLeastOnce();
+        .andReturn(requestedResourceServletPath).atLeastOnce();
     }
 
     private void recordGetDevice() {
@@ -377,7 +377,7 @@ public class ResourceResolverServletTestCase extends
      * @return the mockResourceResolverEngine
      */
     public ResourceResolverEngine
-        getMockResourceResolverEngine() {
+    getMockResourceResolverEngine() {
         return mockResourceResolverEngine;
     }
 

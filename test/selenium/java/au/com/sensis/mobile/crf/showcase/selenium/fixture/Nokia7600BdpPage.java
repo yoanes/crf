@@ -45,11 +45,11 @@ public class Nokia7600BdpPage extends BdpPage {
         assertCssLink("results.css link not found", "default/selenium/results/results.css");
 
         /* TODO: implementation of assertCssLinkNotPresent just does not work. */
-/*
+        /*
         assertCssLinkNotPresent("jazz.css link should not be found", "jazz\\.css$");
         assertCssLinkNotPresent("decorations.css link should not be found", "decorations\\.css$");
         assertCssLinkNotPresent("columns.css link should not be found", "columns\\.css$");
-*/
+         */
     }
 
     private void assertNokia7600Scripts() {
@@ -85,7 +85,7 @@ public class Nokia7600BdpPage extends BdpPage {
     }
 
     private void
-        assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrder() {
+    assertOnlyDefaultGroupScriptsResolvedByPackageNoBundlingWithPartiallyDefinedOrder() {
 
         assertScript("default/selenium/fielddecorators/decorator2.js script not found",
                 "default/selenium/fielddecorators/decorator2.js");
@@ -113,8 +113,8 @@ public class Nokia7600BdpPage extends BdpPage {
         assertBodyContentOutputWhenDotNullImgFound();
         assertImgPathWhenDotNullImgFound();
 
-        assertScaledYellowPagesImage(120, 48, "gif");
-        assertScaledYellowPagesImagePath(120, 48, "gif");
+        assertScaledYellowPagesImage(115, 46, "png");
+        assertScaledYellowPagesImagePath(115, 46, "png");
         assertScaledSearchImage(50, 21, "gif", "S");
     }
 
@@ -140,7 +140,6 @@ public class Nokia7600BdpPage extends BdpPage {
     }
 
     private void assertDeviceProperties() {
-        assertTrue(getBrowser().isTextPresent("'brwsrname': Nokia"));
         assertTrue(getBrowser().isTextPresent("'custom.imageCategory': S"));
     }
 

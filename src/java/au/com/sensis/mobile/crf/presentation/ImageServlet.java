@@ -13,11 +13,11 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.DeploymentMetadata;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.web.mobile.MobileContext;
 
 /**
@@ -30,7 +30,7 @@ import au.com.sensis.wireless.web.mobile.MobileContext;
  * @author Adrian.Koh2@sensis.com.au
  */
 public class ImageServlet
-        extends HttpServletBean {
+extends HttpServletBean {
 
     private static final long serialVersionUID = 1L;
 
@@ -57,8 +57,8 @@ public class ImageServlet
                 .getBean(getImageServletDependenciesBeanName()));
         setExpectedRequestedResourcePathPrefix(
                 getImageServletDependencies().getImagesClientPathPrefix()
-                    + getImageServletDependencies().getDeploymentMetadata().getVersion()
-                    + "/images/");
+                + getImageServletDependencies().getDeploymentMetadata().getVersion()
+                + "/images/");
 
     }
 
@@ -100,9 +100,9 @@ public class ImageServlet
 
             throw new ServletException(
                     "Requests for abstract images should have a requestUri starting with '"
-                    + getExpectedRequestedResourcePathPrefix()
-                    + "'. However, requestUri is '" + request.getRequestURI()
-                    + "'");
+                            + getExpectedRequestedResourcePathPrefix()
+                            + "'. However, requestUri is '" + request.getRequestURI()
+                            + "'");
         }
     }
 
@@ -119,9 +119,9 @@ public class ImageServlet
     private void writeImageToResponse(final HttpServletResponse resp,
             final Resource resource) throws IOException {
         FileIoFacadeFactory.getFileIoFacadeSingleton()
-                .writeFileAndCloseStream(
-                        resource.getNewFile(),
-                        resp.getOutputStream());
+        .writeFileAndCloseStream(
+                resource.getNewFile(),
+                resp.getOutputStream());
     }
 
     private void setResponseHeaders(final HttpServletResponse resp,
@@ -145,7 +145,7 @@ public class ImageServlet
     private Device getDevice(final HttpServletRequest req) {
 
         final MobileContext context
-                = (MobileContext) req.getSession().getAttribute(MobileContext.MOBILE_CONTEXT_KEY);
+        = (MobileContext) req.getSession().getAttribute(MobileContext.MOBILE_CONTEXT_KEY);
 
         if (context == null) {
 

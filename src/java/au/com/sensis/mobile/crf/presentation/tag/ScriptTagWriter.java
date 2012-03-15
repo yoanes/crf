@@ -10,9 +10,9 @@ import javax.servlet.jsp.tagext.JspFragment;
 
 import org.apache.commons.lang.StringUtils;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Simple implementation of {@link TagWriter} that outputs a script tag in the

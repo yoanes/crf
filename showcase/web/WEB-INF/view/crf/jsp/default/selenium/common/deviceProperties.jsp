@@ -4,16 +4,7 @@
 <jsp:directive.include file="/WEB-INF/view/common/jsp/projectTagLibs.jsp"/>
 
 <div>
-    <div><strong>[default] deviceProperties.jsp </strong>: </div>
-    <div>
-        <%--
-          - Acceptance criteria covered by the following (Jira CRF-59):
-          - brwsrname property of the device successfully retrieved, set into the browserName
-          - variable and then output to the page.
-          --%>
-        <crf:deviceProperty var="browserName" property="brwsrname" device="${context.device}"/> 
-        'brwsrname': <c:out value="${browserName}" />
-    </div>        
+    <div><strong>[default] deviceProperties.jsp </strong>: </div>      
     
     <div>
         <%--

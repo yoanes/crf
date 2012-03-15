@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.Group;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * {@link ResourceResolver} that can resolve to multiple resources.

@@ -14,12 +14,12 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.HttpServletBean;
 
-import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTree;
 import au.com.sensis.mobile.crf.debug.ResourceResolutionTreeHolder;
+import au.com.sensis.mobile.crf.debug.ResourceTreeNodeBean;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.web.mobile.MobileContext;
 
 /**
@@ -52,8 +52,8 @@ public class ResourceResolverServlet extends HttpServletBean {
 
         final WebApplicationContext webApplicationContext =
                 WebApplicationContextUtils
-                        .getRequiredWebApplicationContext(config
-                                .getServletContext());
+                .getRequiredWebApplicationContext(config
+                        .getServletContext());
         setResourceResolverEngine((ResourceResolverEngine) webApplicationContext
                 .getBean(getResourceResolverEngineBeanName()));
     }
@@ -116,15 +116,15 @@ public class ResourceResolverServlet extends HttpServletBean {
      */
     private String rewriteUri(
             final HttpServletRequestInterrogator httpServletRequestInterrogator)
-                throws IOException {
+                    throws IOException {
 
         logDebugRewriteUrlEntry(httpServletRequestInterrogator);
 
         final Resource resource =
-            getResourceResourceResolverEngine().getResource(
+                getResourceResourceResolverEngine().getResource(
                         getDevice(httpServletRequestInterrogator
                                 .getHttpServletRequest()),
-                        httpServletRequestInterrogator.getRequestUri());
+                                httpServletRequestInterrogator.getRequestUri());
 
         addResourceToResourceResolutionTreeIfEnabled(resource);
 
@@ -141,7 +141,7 @@ public class ResourceResolverServlet extends HttpServletBean {
     private void addResourceToResourceResolutionTreeIfEnabled(final Resource resource) {
         if (getResourceResolutionTree().isEnabled()) {
             getResourceResolutionTree()
-                .addChildToCurrentNodeAndPromoteToCurrent(new ResourceTreeNodeBean(resource));
+            .addChildToCurrentNodeAndPromoteToCurrent(new ResourceTreeNodeBean(resource));
         }
     }
 

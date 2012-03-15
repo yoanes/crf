@@ -26,6 +26,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import au.com.sensis.devicerepository.DefaultDevice;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.exception.ConfigurationRuntimeException;
 import au.com.sensis.mobile.crf.exception.GroupEvaluationRuntimeException;
 import au.com.sensis.mobile.crf.exception.XmlValidationRuntimeException;
@@ -33,8 +35,6 @@ import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
 import au.com.sensis.mobile.crf.util.XmlBinder;
 import au.com.sensis.mobile.crf.util.XmlValidator;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.DefaultDevice;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Factory for returning a {@link UiConfiguration}.
@@ -212,7 +212,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
         final List<Group> importedGroups = new ArrayList<Group>();
 
         final UiConfiguration importedUiConfiguration
-            = getUiConfigurationByExactConfigPath(groupImport.getFromConfigPath());
+        = getUiConfigurationByExactConfigPath(groupImport.getFromConfigPath());
 
         if (StringUtils.isNotBlank(groupImport.getEffectiveGroupName())) {
             importGroupByName(groupImport, parentUiConfiguration, importedUiConfiguration,
@@ -368,7 +368,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
     }
 
     private UiConfiguration unmarshallToUiConfiguration(final Resource resource)
-        throws IOException {
+            throws IOException {
 
         final UiConfiguration uiConfiguration =
                 (UiConfiguration) getXmlBinder().unmarshall(resource.getURL());
@@ -384,7 +384,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
         final String[] patterns =
                 getMappingConfigurationClasspathPattern()
-                        .split(CONFIG_CLASSPATH_PATTERNS_SEPARATOR);
+                .split(CONFIG_CLASSPATH_PATTERNS_SEPARATOR);
         for (final String pattern : patterns) {
             addArrayToList(getResourcePatternResolver().getResources(pattern.trim()), resources);
         }
@@ -523,8 +523,8 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "No group directories found for groups: " + groupsMissingADir
-                            + " for UiConfiguration loaded from: " + uiConfiguration.getSourceUrl()
-                            + ". Searched directories: " + getUiResourceRootDirectories());
+                    + " for UiConfiguration loaded from: " + uiConfiguration.getSourceUrl()
+                    + ". Searched directories: " + getUiResourceRootDirectories());
         }
     }
 
@@ -606,8 +606,8 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
 
     private File[] getDirs(final File uiResourceRootDir) {
         final File[] allFilesAndDirs =
-            FileIoFacadeFactory.getFileIoFacadeSingleton().list(uiResourceRootDir,
-                    createDirFileFilter());
+                FileIoFacadeFactory.getFileIoFacadeSingleton().list(uiResourceRootDir,
+                        createDirFileFilter());
 
         final List<File> dirs = new ArrayList<File>();
         for (final File fileOrDir : allFilesAndDirs) {
@@ -806,7 +806,7 @@ public class ConfigurationFactoryBean implements ConfigurationFactory {
                 return true;
             }
 
-            if (obj == null || !this.getClass().equals(obj.getClass())) {
+            if ((obj == null) || !this.getClass().equals(obj.getClass())) {
                 return false;
             }
 

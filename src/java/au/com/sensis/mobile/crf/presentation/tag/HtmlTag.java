@@ -10,7 +10,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.log4j.Logger;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.wireless.web.mobile.DeviceDetection;
 
 /**

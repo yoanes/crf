@@ -12,8 +12,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.service.PropertiesLoader;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -62,7 +62,7 @@ public class ContentTypeTagTestCase extends AbstractJUnit4TestCase {
         EasyMock.expect(
                 getMockPropertiesLoader().loadProperties(getMockDevice(),
                         "responseHeader.properties")).andReturn(
-                properties);
+                                properties);
 
         replay();
 
@@ -83,8 +83,8 @@ public class ContentTypeTagTestCase extends AbstractJUnit4TestCase {
 
         EasyMock.expect(
                 getMockPropertiesLoader().loadProperties(getMockDevice(),
-                "responseHeader.properties")).andReturn(
-                        properties);
+                        "responseHeader.properties")).andReturn(
+                                properties);
 
         replay();
 
@@ -103,7 +103,7 @@ public class ContentTypeTagTestCase extends AbstractJUnit4TestCase {
     private void recordGetPropertiesLoader() {
 
         EasyMock.expect(getMockPageContext().getServletContext()).andReturn(getServletContext())
-                .atLeastOnce();
+        .atLeastOnce();
 
         getServletContext().setAttribute(
                 WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,

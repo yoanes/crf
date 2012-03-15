@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * {@link ResourceResolver} that delegates to a list of other
@@ -50,7 +50,7 @@ public class DelegatingResourceResolverBean implements ResourceResolver {
      */
     @Override
     public List<Resource> resolve(final String requestedResourcePath, final Device device)
-    throws ResourceResolutionRuntimeException {
+            throws ResourceResolutionRuntimeException {
 
         for (final ResourceResolver resourceResolver : getResourceResolvers()) {
             if (resourceResolver.supports(requestedResourcePath)) {

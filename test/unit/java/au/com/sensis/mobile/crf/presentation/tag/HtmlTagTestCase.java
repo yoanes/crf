@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**

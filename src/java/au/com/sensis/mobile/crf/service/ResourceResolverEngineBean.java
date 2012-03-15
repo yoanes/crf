@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Standard implementation of {@link ResourceResolverEngine}.
@@ -38,7 +38,7 @@ ResourceResolverEngine {
 
         Validate.notNull(resourceResolver, "resourceResolver must not be null");
         Validate.notNull(resourceResolutionWarnLogger,
-        "resourceResolutionWarnLogger must not be null");
+                "resourceResolutionWarnLogger must not be null");
 
         this.resourceResolver = resourceResolver;
         this.resourceResolutionWarnLogger = resourceResolutionWarnLogger;
@@ -65,8 +65,8 @@ ResourceResolverEngine {
         //            debugLogCheckingGroup(requestedResourcePath, currGroup);
 
         final List<Resource> resources =
-            //resolve(requestedResourcePath, currGroup, null);
-            getResourceResolver().resolve(requestedResourcePath, device);
+                //resolve(requestedResourcePath, currGroup, null);
+                getResourceResolver().resolve(requestedResourcePath, device);
 
         if (!resources.isEmpty()) {
             debugLogResourcesFound(resources);
@@ -96,7 +96,7 @@ ResourceResolverEngine {
         }
 
         final List<Resource> resources =
-            getResourceResolver().resolve(requestedResourcePath, device);
+                getResourceResolver().resolve(requestedResourcePath, device);
 
         if (resources.isEmpty()) {
             debugLogNoResourcesFound(requestedResourcePath);
@@ -146,10 +146,10 @@ ResourceResolverEngine {
                 && getResourceResolutionWarnLogger().isWarnEnabled()) {
             getResourceResolutionWarnLogger().warn(
                     "Requested resource '"
-                    + requestedResourcePath
-                    + "' resolved to multiple resources when only one was requested. "
-                    + "Will only return the first. Total found: "
-                    + resources + ".");
+                            + requestedResourcePath
+                            + "' resolved to multiple resources when only one was requested. "
+                            + "Will only return the first. Total found: "
+                            + resources + ".");
         }
     }
 

@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 
 /**
@@ -54,7 +54,7 @@ implements ResourceResolverEngine {
      */
     @Override
     public List<Resource> getAllResources(final Device device, final String requestedResourcePath)
-    throws ResourceResolutionRuntimeException {
+            throws ResourceResolutionRuntimeException {
 
         List<Resource> resources;
 
@@ -85,7 +85,7 @@ implements ResourceResolverEngine {
      */
     @Override
     public Resource getResource(final Device device, final String requestedResourcePath)
-    throws ResourceResolutionRuntimeException {
+            throws ResourceResolutionRuntimeException {
 
         Resource resource;
 

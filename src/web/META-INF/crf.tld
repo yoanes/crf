@@ -21,7 +21,7 @@
         <attribute>
             <name>device</name>
             <description>Device of current request.</description>
-            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <type>au.com.sensis.devicerepository.Device</type>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -47,7 +47,7 @@
         <attribute>
             <name>device</name>
             <description>Device of current request.</description>
-            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <type>au.com.sensis.devicerepository.Device</type>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -112,7 +112,7 @@
         <attribute>
             <name>device</name>
             <description>Device of current request.</description>
-            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <type>au.com.sensis.devicerepository.Device</type>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -132,7 +132,7 @@
         <attribute>
             <name>device</name>
             <description>Device of current request.</description>
-            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <type>au.com.sensis.devicerepository.Device</type>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -185,7 +185,7 @@
         <attribute>
             <name>device</name>
             <description>Device of current request.</description>
-            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <type>au.com.sensis.devicerepository.Device</type>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
@@ -225,7 +225,7 @@
         <attribute>
             <name>device</name>
             <description>Device of current request.</description>
-            <type>au.com.sensis.wireless.common.volantis.devicerepository.api.Device</type>
+            <type>au.com.sensis.devicerepository.Device</type>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>

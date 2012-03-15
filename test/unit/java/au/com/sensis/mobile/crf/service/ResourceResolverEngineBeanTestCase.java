@@ -10,8 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.util.FileIoFacadeFactory;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -88,8 +88,8 @@ AbstractJUnit4TestCase {
         replay();
 
         final Resource actualResourcePath =
-            getObjectUnderTest().getResource(getMockDevice(),
-                    getResourcePathTestData().getRequestedJspResourcePath());
+                getObjectUnderTest().getResource(getMockDevice(),
+                        getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertNull(actualResourcePath);
     }
@@ -102,8 +102,8 @@ AbstractJUnit4TestCase {
         replay();
 
         final Resource actualResourcePath =
-            getObjectUnderTest().getResource(getMockDevice(),
-                    getResourcePathTestData().getRequestedJspResourcePath());
+                getObjectUnderTest().getResource(getMockDevice(),
+                        getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals(getMockDefaultResource1(), actualResourcePath);
     }
@@ -118,8 +118,8 @@ AbstractJUnit4TestCase {
         replay();
 
         final Resource actualResourcePath =
-            getObjectUnderTest().getResource(getMockDevice(),
-                    getResourcePathTestData().getRequestedJspResourcePath());
+                getObjectUnderTest().getResource(getMockDevice(),
+                        getResourcePathTestData().getRequestedJspResourcePath());
 
         // Confirm that it returns the first of the multiple results
         Assert.assertEquals(getMockDefaultResource1(), actualResourcePath);
@@ -133,8 +133,8 @@ AbstractJUnit4TestCase {
         replay();
 
         final List<Resource> actualResourcePaths =
-            getObjectUnderTest().getAllResources(getMockDevice(),
-                    getResourcePathTestData().getRequestedJspResourcePath());
+                getObjectUnderTest().getAllResources(getMockDevice(),
+                        getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertTrue(actualResourcePaths.isEmpty());
     }
@@ -147,8 +147,8 @@ AbstractJUnit4TestCase {
         replay();
 
         final List<Resource> actualResourcePaths =
-            getObjectUnderTest().getAllResources(getMockDevice(),
-                    getResourcePathTestData().getRequestedJspResourcePath());
+                getObjectUnderTest().getAllResources(getMockDevice(),
+                        getResourcePathTestData().getRequestedJspResourcePath());
 
         Assert.assertEquals(returnMultipleResources(), actualResourcePaths);
     }

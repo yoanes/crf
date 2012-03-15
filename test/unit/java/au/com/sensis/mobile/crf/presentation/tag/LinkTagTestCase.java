@@ -17,11 +17,11 @@ import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -124,8 +124,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testDoTagWithInvalidHref() throws Throwable {
         final String[] testHrefs =
-        { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
-        "  " };
+            { "../some/where", "/somewhere", null, StringUtils.EMPTY, " ",
+            "  " };
 
         for (final String testHref : testHrefs) {
             try {
@@ -138,9 +138,9 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals(
                         "IllegalArgumentException has wrong message for testHref: '"
-                        + testHref + "'",
-                        "path must not start with '..' or '/'. Was: '" + testHref + "'",
-                        e.getMessage());
+                                + testHref + "'",
+                                "path must not start with '..' or '/'. Was: '" + testHref + "'",
+                                e.getMessage());
             }
         }
 
@@ -174,8 +174,8 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
                         getMockDevice(),
                         Arrays.asList(createRelDynamicAttribute(), createTypeDynamicAttribute(),
                                 createArbitraryDynamicAttribute()),
-                        getRequestedCssResourcePath(), getTagDependencies(), null))
-                .andReturn(getMockLinkTagWriter());
+                                getRequestedCssResourcePath(), getTagDependencies(), null))
+                                .andReturn(getMockLinkTagWriter());
     }
 
     private void recordCheckIfLinkTagWriterSeenBefore() {
@@ -419,7 +419,7 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
     public void setMockLinkTagWriter(
             final LinkTagWriter mockLinkTagWriter) {
         this.mockLinkTagWriter =
-            mockLinkTagWriter;
+                mockLinkTagWriter;
     }
 
     /**
@@ -441,17 +441,17 @@ public class LinkTagTestCase extends AbstractJUnit4TestCase {
 
     public DynamicTagAttribute createRelDynamicAttribute() {
         return new DynamicTagAttribute("rel",
-        "stylesheet");
+                "stylesheet");
     }
 
     public DynamicTagAttribute createTypeDynamicAttribute() {
         return new DynamicTagAttribute("type",
-        "text/css");
+                "text/css");
     }
 
     public DynamicTagAttribute createArbitraryDynamicAttribute() {
         return new DynamicTagAttribute("arbitraryName",
-        "arbitraryValue");
+                "arbitraryValue");
     }
 
     /**

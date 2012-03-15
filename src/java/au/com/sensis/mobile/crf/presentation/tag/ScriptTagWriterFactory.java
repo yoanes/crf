@@ -2,7 +2,7 @@ package au.com.sensis.mobile.crf.presentation.tag;
 
 import java.util.List;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 
 
 /**

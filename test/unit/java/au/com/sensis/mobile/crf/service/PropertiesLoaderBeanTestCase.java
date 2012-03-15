@@ -9,8 +9,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -41,11 +41,11 @@ public class PropertiesLoaderBeanTestCase extends AbstractJUnit4TestCase {
         setObjectUnderTest(new PropertiesLoaderBean(getMockResourceResolverEngine()));
 
         setPropertiesFile1(new File(this.getClass().getResource(
-            "/au/com/sensis/mobile/crf/service/propertiesLoaderBeanTestData/"
-                + "propertiesFile1.properties").toURI()));
+                "/au/com/sensis/mobile/crf/service/propertiesLoaderBeanTestData/"
+                        + "propertiesFile1.properties").toURI()));
         setPropertiesFile2(new File(this.getClass().getResource(
-            "/au/com/sensis/mobile/crf/service/propertiesLoaderBeanTestData/"
-                + "propertiesFile2.properties").toURI()));
+                "/au/com/sensis/mobile/crf/service/propertiesLoaderBeanTestData/"
+                        + "propertiesFile2.properties").toURI()));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class PropertiesLoaderBeanTestCase extends AbstractJUnit4TestCase {
         EasyMock.expect(
                 getMockResourceResolverEngine().getAllResources(getMockDevice(),
                         REQUESTED_PROPERTIES_PATH)).andReturn(
-                Arrays.asList(getMockResource1(), getMockResource2()));
+                                Arrays.asList(getMockResource1(), getMockResource2()));
 
         EasyMock.expect(getMockResource1().getNewFile()).andReturn(getPropertiesFile1());
         EasyMock.expect(getMockResource2().getNewFile()).andReturn(getPropertiesFile2());
@@ -123,7 +123,7 @@ public class PropertiesLoaderBeanTestCase extends AbstractJUnit4TestCase {
         } catch (final ResourceResolutionRuntimeException e) {
             Assert.assertEquals("ResourceResolutionRuntimeException has wrong message",
                     "Error loading properties file: '" + nonExistantFile.getPath() + "'", e
-                            .getMessage());
+                    .getMessage());
         }
     }
 

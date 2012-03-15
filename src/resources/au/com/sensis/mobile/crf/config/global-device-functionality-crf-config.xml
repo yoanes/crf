@@ -7,10 +7,7 @@
     <config-path>global/deviceFunctionality</config-path>
     <groups>
     
-        <group name="touch" expr="device.getPropertyAsString('pdevtype') == 'finger' or
-                                  device.getPropertyAsString('pdevtype') == 'mouse' or 
-                                  device.getPropertyAsString('pdevtype') == 'stylus' or
-                                  device.getPropertyAsString('pdevtype') == 'touchpad'"/>
+        <group name="touch" expr="device.supportsTouch()"/>
         
         <default-group name="default" />
     </groups>

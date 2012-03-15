@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -86,9 +86,9 @@ public class DevicePropertyTagTestCase extends AbstractJUnit4TestCase {
             } catch (final IllegalArgumentException e) {
 
                 Assert
-                        .assertEquals("IllegalArgumentException has wrong message",
-                                "property attribute must not be blank: '" + testValue + "'", e
-                                        .getMessage());
+                .assertEquals("IllegalArgumentException has wrong message",
+                        "property attribute must not be blank: '" + testValue + "'", e
+                        .getMessage());
             }
         }
     }
@@ -120,7 +120,7 @@ public class DevicePropertyTagTestCase extends AbstractJUnit4TestCase {
 
                 Assert.assertEquals("IllegalArgumentException has wrong message",
                         "var attribute must be either null or non-blank: '" + testValue + "'", e
-                                .getMessage());
+                        .getMessage());
             }
         }
 

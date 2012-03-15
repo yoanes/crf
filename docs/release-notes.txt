@@ -1,3 +1,64 @@
+==== Version 3.0.0
+
+Changes:
+- CRF-145 Migrate from Volantis to WURFL for the device repository.
+
+Upgrade steps:
+
+1. Any Volantis configuration / code should now be removed.
+
+2. Device interface has moved from au.com.sensis.wireless.volantis.devicerepository.api.Device to au.com.sensis.devicerepository.Device
+ 
+- Update any java, jsp, tag, tld references. 
+  
+3. Device names will have changed. If you are referring to a specific Device Name you will need to refer to the device name as WURFL knows it.
+
+4. The Device interface has changed.
+
+The following methods have been removed from the Device interface as they are no longer supported.
+
+>>getDeviceNameHeirarchyIterator
+>>getJavascriptVersion
+>>getPositioningType
+>>isWeb2Supported
+
+The following methods have been added to the Device interface. These are expected to be used in the crf groups config.
+
+>>isATablet
+>>supportsOS(String osVersionName)
+>>supportsOSVersion(String osVersionName, String osVersionName)
+>>supportsTouch
+>>isNokiaSeriesAndEdition(String series, String edition)
+
+The semantics for >>isA have changed - any custom crf groups config will need to be updated.
+
+In Volantis, isA referred to the device name in the heirarchy.  In the WURFL based implementation isA can refer to...
+
+a) The Device brand or b) The Device brand_name & model_name (separated by a space).
+
+ie. For a specific device model...
+
+Old: isA("Apple-iPhone")
+New: is("Apple iPhone")
+
+ie. For a brand only.
+
+Old: isA("Apple")
+New: isA("Apple")
+
+For Android devices.
+Old: isA("Android-OS")
+New: supportsOS("Android OS");
+
+Further examples see global-devices-crf-config.xml
+
+5. To use the wurfl repository you will need to include spring configuration - see the crf showcase for an example.
+
+6. Any specific Volantis device attributes being accessed via crf:deviceProperty will need to be changed to the equivalent property from wurfl.
+   In many cases there will not be a like for like replacement so your options are either find something that is close enough and use that, 
+   or see if you really need it anymore.  
+
+
 ==== Version 2.0.15 (tag: contentRenderingFramework_v2_0_15) ====
 
 Changes:

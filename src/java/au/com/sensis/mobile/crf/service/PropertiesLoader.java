@@ -2,8 +2,8 @@ package au.com.sensis.mobile.crf.service;
 
 import java.util.Properties;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Allows callers to load a {@link Properties} object for a ({@link Device},

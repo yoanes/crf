@@ -19,8 +19,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.exception.GroupEvaluationRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.web.mobile.ThreadLocalContextObjectsHolder;
 
 /**
@@ -97,7 +97,7 @@ public class Group implements Serializable {
      * @throws GroupEvaluationRuntimeException if an error occurs.
      */
     public boolean match(final Device device)
-        throws GroupEvaluationRuntimeException {
+            throws GroupEvaluationRuntimeException {
 
         if (getImportedGroup() != null) {
             return getImportedGroup().match(device);
@@ -128,8 +128,8 @@ public class Group implements Serializable {
         } catch (final Exception e) {
             throw new GroupEvaluationRuntimeException(
                     "Error evaluating expression '" + getExpr()
-                            + "' for group '" + getName() + "' and device "
-                            + device, e);
+                    + "' for group '" + getName() + "' and device "
+                    + device, e);
         }
     }
 
@@ -322,7 +322,7 @@ public class Group implements Serializable {
             return true;
         }
 
-        if (obj == null || !this.getClass().equals(obj.getClass())) {
+        if ((obj == null) || !this.getClass().equals(obj.getClass())) {
             return false;
         }
 
@@ -342,7 +342,7 @@ public class Group implements Serializable {
         // just that we're lazy and stash it in this group rather than create another
         // wrapper.
 
-        if (getImportedGroup() != null && rhs.getImportedGroup() != null) {
+        if ((getImportedGroup() != null) && (rhs.getImportedGroup() != null)) {
             equalsBuilder.append(getImportedGroup().getName(), rhs.getImportedGroup().getName());
             equalsBuilder.append(getImportedGroup().getExpr(), rhs.getImportedGroup().getExpr());
         } else {
@@ -400,10 +400,10 @@ public class Group implements Serializable {
         if (!StringUtils.isNotEmpty(getName())
                 || !getName().matches("\\w(\\w|-)*")) {
             throw new GroupEvaluationRuntimeException(
-                "group has invalid name: '"
-                + getName()
-                + "'. Must start with a letter or digit and contain only letters, "
-                + "digits, underscores and hyphens.");
+                    "group has invalid name: '"
+                            + getName()
+                            + "'. Must start with a letter or digit and contain only letters, "
+                            + "digits, underscores and hyphens.");
         }
 
         validateExpr(mockDevice);

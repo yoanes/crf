@@ -12,7 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.DeviceRecognition;
+import au.com.sensis.devicerepository.DeviceRecognition;
 import au.com.sensis.wireless.web.filter.MobileContextSetUpFilter;
 import au.com.sensis.wireless.web.mobile.HeaderInterpreter;
 
@@ -40,7 +40,6 @@ public class ContextSetUpFIlterThatWorks extends MobileContextSetUpFilter {
 
         setServletContext(filterConfig.getServletContext());
 
-        // setDeviceRecognition(new VolantisDeviceRecognition());
         setHeaderInterpreter(newHeaderInterpreter());
     }
 

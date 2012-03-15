@@ -11,10 +11,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.service.ImageResourceBean;
 import au.com.sensis.mobile.crf.service.Resource;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * Facade to an image tag that uses the Content Rendering Framework to resolve
@@ -43,8 +43,8 @@ public class ImageTag extends AbstractTag {
         validatePathAttribute(getSrc());
 
         final Resource resource =
-            getResourceResolverEngine().getResource(getDevice(),
-                    getSrc());
+                getResourceResolverEngine().getResource(getDevice(),
+                        getSrc());
 
 
 
@@ -141,10 +141,10 @@ public class ImageTag extends AbstractTag {
         final PageContext pc = (PageContext) getJspContext();
 
         final WebApplicationContext webApplicationContext =
-            WebApplicationContextUtils.getRequiredWebApplicationContext(pc
-                    .getServletContext());
+                WebApplicationContextUtils.getRequiredWebApplicationContext(pc
+                        .getServletContext());
         return (ImageTagDependencies) webApplicationContext
-        .getBean(ImageTagDependencies.BEAN_NAME);
+                .getBean(ImageTagDependencies.BEAN_NAME);
     }
 
     private String getUniqueRequestParam() {

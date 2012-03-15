@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -54,7 +54,7 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testAppliesToPathWhenConfigPathIsNonEmptyAndResultIsTrue() throws Throwable {
         final String[] testValues =
-                { "component/map/map.css", "/WEB-INF/view/jsp/component/map/render.jsp" };
+            { "component/map/map.css", "/WEB-INF/view/jsp/component/map/render.jsp" };
 
         for (final String testValue : testValues) {
             Assert.assertTrue("appliesToPath should be true for testValue: '" + testValue + "'",
@@ -65,7 +65,7 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testAppliesToPathWhenConfigPathIsEmptyAndResultIsTrue() throws Throwable {
         final String[] testValues =
-                { "component/map/map.css", "/WEB-INF/view/jsp/component/map/render.jsp" };
+            { "component/map/map.css", "/WEB-INF/view/jsp/component/map/render.jsp" };
 
         getObjectUnderTest().setConfigPath(StringUtils.EMPTY);
 
@@ -78,14 +78,14 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
     @Test
     public void testAppliesToPathWhenFalse() throws Throwable {
         Assert.assertFalse("appliesToPath should be false", getObjectUnderTest().appliesToPath(
-            "common/main.css"));
+                "common/main.css"));
     }
 
     @Test
     public void testAppliesToPathWhenRequestedPathNull() throws Throwable {
         Assert
-                .assertFalse("appliesToPath should be false", getObjectUnderTest().appliesToPath(
-                        null));
+        .assertFalse("appliesToPath should be false", getObjectUnderTest().appliesToPath(
+                null));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
         EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
 
         EasyMock.expect(getMockGroupsCache().contains(getGroupsCacheKey())).andReturn(Boolean.FALSE)
-                .atLeastOnce();
+        .atLeastOnce();
 
         EasyMock.expect(getMockGroups().matchingGroups(getMockDevice())).andReturn(
                 getGroups());
@@ -165,7 +165,7 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
         replay();
 
         final Group [] actualGroups =
-            getObjectUnderTest().matchingGroups(getMockDevice());
+                getObjectUnderTest().matchingGroups(getMockDevice());
 
         Assert.assertArrayEquals("groups are wrong", getGroups().toArray(), actualGroups);
     }
@@ -176,7 +176,7 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
         EasyMock.expect(getMockDevice().getUserAgent()).andReturn(USER_AGENT).atLeastOnce();
 
         EasyMock.expect(getMockGroupsCache().contains(getGroupsCacheKey())).andReturn(Boolean.TRUE)
-                .atLeastOnce();
+        .atLeastOnce();
 
         EasyMock.expect(getMockGroupsCache().get(getGroupsCacheKey())).andReturn(
                 getGroups().toArray(new Group[] {}));
@@ -209,7 +209,7 @@ public class UiConfigurationTestCase extends AbstractJUnit4TestCase {
         replay();
 
         final Group [] actualGroups =
-            getObjectUnderTest().matchingGroups(getMockDevice());
+                getObjectUnderTest().matchingGroups(getMockDevice());
 
         Assert.assertArrayEquals("groups are wrong", getGroups().toArray(), actualGroups);
     }

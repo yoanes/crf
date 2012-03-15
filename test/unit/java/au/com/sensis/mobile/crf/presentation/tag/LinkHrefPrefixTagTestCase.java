@@ -10,11 +10,11 @@ import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.DeploymentMetadataTestData;
 import au.com.sensis.mobile.crf.service.ResourcePathTestData;
 import au.com.sensis.mobile.crf.service.ResourceResolutionWarnLogger;
 import au.com.sensis.mobile.crf.service.ResourceResolverEngine;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -38,7 +38,7 @@ public class LinkHrefPrefixTagTestCase extends AbstractJUnit4TestCase {
     private final ResourcePathTestData resourcePathTestData = new ResourcePathTestData();
 
     private final DeploymentMetadataTestData deploymentMetadataTestData
-        = new DeploymentMetadataTestData();
+    = new DeploymentMetadataTestData();
 
     private LinkTagDependencies imageTagDependencies;
 
@@ -68,8 +68,8 @@ public class LinkHrefPrefixTagTestCase extends AbstractJUnit4TestCase {
         getMockPageContext().setAttribute(
                 "myVar",
                 getResourcePathTestData().getCssClientPathPrefix()
-                        + getDeploymentMetadataTestData().createDevDeploymentMetadata()
-                                .getVersion() + "/css/");
+                + getDeploymentMetadataTestData().createDevDeploymentMetadata()
+                .getVersion() + "/css/");
 
         replay();
 
@@ -89,8 +89,8 @@ public class LinkHrefPrefixTagTestCase extends AbstractJUnit4TestCase {
 
             getMockJspWriter().write(
                     getResourcePathTestData().getCssClientPathPrefix()
-                            + getDeploymentMetadataTestData().createDevDeploymentMetadata()
-                                    .getVersion() + "/css/");
+                    + getDeploymentMetadataTestData().createDevDeploymentMetadata()
+                    .getVersion() + "/css/");
 
             replay();
 

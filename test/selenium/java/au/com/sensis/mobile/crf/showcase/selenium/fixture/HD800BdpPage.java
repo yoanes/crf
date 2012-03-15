@@ -157,7 +157,6 @@ public class HD800BdpPage extends BdpPage {
     }
 
     private void assertDeviceProperties() {
-        assertTrue(getBrowser().isTextPresent("'brwsrname': Mozilla"));
         assertTrue(getBrowser().isTextPresent("'custom.imageCategory': HD800"));
     }
 }

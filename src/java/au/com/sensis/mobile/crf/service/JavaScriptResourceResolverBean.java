@@ -10,9 +10,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.mobile.crf.config.Group;
 import au.com.sensis.mobile.crf.exception.ResourceResolutionRuntimeException;
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
 
 /**
  * {@link ResourceResolver} that maps abstract Script paths to real Script paths.
@@ -76,14 +76,14 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
         if (StringUtils.isBlank(abstractPathPackageKeyword)) {
             throw new IllegalArgumentException(
                     "abstractPathPackageKeyword must not be blank: '"
-                    + abstractPathPackageKeyword + "'");
+                            + abstractPathPackageKeyword + "'");
         }
     }
 
     private void validateJavaScriptFileFinder(
             final JavaScriptFileFinder javaScriptFileFinder) {
         Validate.notNull(javaScriptFileFinder,
-        "javaScriptFileFinder must not be null");
+                "javaScriptFileFinder must not be null");
     }
 
     /**
@@ -93,7 +93,7 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
     protected boolean isRecognisedAbstractResourceRequest(
             final String requestedResourcePath) {
         return super.isRecognisedAbstractResourceRequest(requestedResourcePath)
-        || isPackageRequested(requestedResourcePath);
+                || isPackageRequested(requestedResourcePath);
     }
 
     /**
@@ -105,7 +105,7 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
     @Override
     protected List<Resource> doResolveForGroup(final String requestedResourcePath,
             final Device device, final Group group)
-            throws ResourceResolutionRuntimeException {
+                    throws ResourceResolutionRuntimeException {
 
         if (isPackageRequested(requestedResourcePath)) {
             return findPacakgeResources(requestedResourcePath, group);
@@ -118,7 +118,7 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
             final Group group) throws IllegalStateException {
 
         final String requestedGroupResourcePath =
-            insertGroupNameAndDeploymentVersionIntoPath(requestedResourcePath, group);
+                insertGroupNameAndDeploymentVersionIntoPath(requestedResourcePath, group);
         return new File(getRootResourcesDir(), FilenameUtils
                 .getPath(requestedGroupResourcePath));
     }
@@ -132,7 +132,7 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
         } catch (final IOException e) {
             throw new ResourceResolutionRuntimeException(
                     "Unexpected error when resolving requested resource '"
-                    + requestedResourcePath + "' for group " + group, e);
+                            + requestedResourcePath + "' for group " + group, e);
         }
     }
 
@@ -145,12 +145,12 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
         final List<Resource> result = new ArrayList<Resource>();
 
         final List<File> foundFiles =
-            getJavaScriptFileFinder().findFiles(javascriptFilesBaseDir);
+                getJavaScriptFileFinder().findFiles(javascriptFilesBaseDir);
         if (foundFiles != null) {
             for (final File file : foundFiles) {
                 final Resource currResource =
-                    createResource(requestedResourcePath,
-                            getRootResourceDirRelativePath(file), group);
+                        createResource(requestedResourcePath,
+                                getRootResourceDirRelativePath(file), group);
                 result.add(currResource);
             }
         }
@@ -159,10 +159,10 @@ public class JavaScriptResourceResolverBean extends AbstractMultipleResourceReso
 
     private String getRootResourceDirRelativePath(final File file) {
         String rootResourceDirRelativePath =
-            StringUtils.substringAfter(file.getPath(),
-                    getRootResourcesDir().getPath());
+                StringUtils.substringAfter(file.getPath(),
+                        getRootResourcesDir().getPath());
         rootResourceDirRelativePath =
-            rootResourceDirRelativePath.replace(File.separator, SEPARATOR);
+                rootResourceDirRelativePath.replace(File.separator, SEPARATOR);
 
         if (rootResourceDirRelativePath.startsWith(SEPARATOR)) {
             return StringUtils.substringAfter(rootResourceDirRelativePath,

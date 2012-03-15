@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import au.com.sensis.wireless.common.volantis.devicerepository.api.Device;
+import au.com.sensis.devicerepository.Device;
 import au.com.sensis.wireless.test.AbstractJUnit4TestCase;
 
 /**
@@ -36,7 +36,7 @@ public class JexlGroupFunctionsTestCase extends AbstractJUnit4TestCase {
         final String groupName2 = "group2";
 
         EasyMock.expect(getMockGroup().inAllGroups(getMockDevice(), groupName1, groupName2))
-                .andReturn(Boolean.TRUE);
+        .andReturn(Boolean.TRUE);
 
         replay();
 
@@ -51,7 +51,7 @@ public class JexlGroupFunctionsTestCase extends AbstractJUnit4TestCase {
         final String groupName2 = "group2";
 
         EasyMock.expect(getMockGroup().inAnyGroup(getMockDevice(), groupName1, groupName2))
-                .andReturn(Boolean.TRUE);
+        .andReturn(Boolean.TRUE);
 
         replay();
 
