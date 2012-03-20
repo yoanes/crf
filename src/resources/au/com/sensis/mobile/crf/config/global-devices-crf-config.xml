@@ -31,7 +31,7 @@
         
         <group name="iphone-ipod-upto-os3-x" expr="inAnyGroup('iphone-ipod-os2-x', 'iphone-ipod-os3-x')" />
         <group name="iphone-ipod-upto-os4-x" expr="inAnyGroup('iphone-ipod-upto-os3-x', 'iphone-ipod-os4-x')" />
-        <group name="iphone-ipod" expr="device.isA('Apple iPhone') or device.isA('Apple iPod Touch')" />
+        <group name="iphone-ipod" expr="device.isA('Apple-iPhone') or device.isA('Apple-iPod-Touch')" />
         
         <group name="ipad-os3-x" expr="device.isA('Apple-iPad') and device.userAgent =~ '.*OS 3_.*'" />
         <group name="ipad-os4-x" expr="device.isA('Apple-iPad') and device.userAgent =~ '.*OS 4_.*'" />        
