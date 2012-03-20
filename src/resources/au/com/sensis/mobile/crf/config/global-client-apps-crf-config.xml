@@ -10,7 +10,7 @@
         <group name="iphone-clientapp" expr="device.isA('Apple') and visitor.isClientApp() 
             and (visitor.getClientApp().type.name() == 'IPHONE')" />
             
-        <group name="android-clientapp" expr="device.supportsOS('Android') and visitor.isClientApp() 
+        <group name="android-clientapp" expr="device.supportsOs('Android') and visitor.isClientApp() 
             and (visitor.getClientApp().type.name() == 'ANDROID')" />
         
         <default-group name="default" />

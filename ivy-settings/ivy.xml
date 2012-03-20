@@ -89,7 +89,7 @@
 
         <!-- SDP Common -->
         <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>
-        <dependency org="com.sensis" name="sdpCommon-web" rev="3.0-wurfl-snapshot-5" conf="default"/>
+        <dependency org="com.sensis" name="sdpCommon-web" rev="3.0-wurfl-snapshot-6" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-utils" rev="1.0-008" conf="default"/>
 
         <!-- Castor. -->
@@ -109,7 +109,7 @@
         <dependency org="com.vladium" name="emma" rev="2.0" conf="test->default"/>
 
         <!-- Testbed depedency. -->
-        <dependency org="com.sensis" name="wl-webapp-testbed" rev="3.0.wurfl-snapshot-4" conf="showcase->default"/>
+        <dependency org="com.sensis" name="wl-webapp-testbed" rev="3.0.wurfl-snapshot-5" conf="showcase->default"/>
 
         <!-- ================================================================================ -->
         <!-- Exclusions. -->
