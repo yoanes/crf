@@ -25,8 +25,8 @@ The following methods have been removed from the Device interface as they are no
 The following methods have been added to the Device interface. These are expected to be used in the crf groups config.
 
 >>isATablet
->>supportsOS(String osVersionName)
->>supportsOSVersion(String osVersionName, String osVersionName)
+>>supportsOs(String osVersionName)
+>>supportsOsVersion(String osVersionName, String osVersionName)
 >>supportsTouch
 >>isNokiaSeriesAndEdition(String series, String edition)
 
@@ -34,12 +34,17 @@ The semantics for >>isA have changed - any custom crf groups config will need to
 
 In Volantis, isA referred to the device name in the heirarchy.  In the WURFL based implementation isA can refer to...
 
-a) The Device brand or b) The Device brand_name & model_name (separated by a space).
+a) The Device brand or b) The Device brand_name & model_name (separated by a hyphen).
 
-ie. For a specific device model...
+ie. For a specific device model, there may be no change...
 
 Old: isA("Apple-iPhone")
-New: is("Apple iPhone")
+New: isA("Apple-iPhone")
+
+or maybe slight change...
+
+Old: isA("Nokia-6120c")
+New: isA("Nokia-6120-classic")
 
 ie. For a brand only.
 
@@ -48,7 +53,7 @@ New: isA("Apple")
 
 For Android devices.
 Old: isA("Android-OS")
-New: supportsOS("Android OS");
+New: supportsOs("Android");
 
 Further examples see global-devices-crf-config.xml
 

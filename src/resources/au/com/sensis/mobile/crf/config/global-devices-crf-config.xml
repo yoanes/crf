@@ -70,7 +70,7 @@
         <group name="blackberry" expr="device.isA('RIM-Blackberry')" />
         
         <!-- thub. -->
-        <group name="thub" expr="device.isA('SAGEM-HomeManager')" />
+        <group name="thub" expr="device.isA('Sagem-HomeManager')" />
         
         <!-- Nokia devices. -->
         <group name="nokia6120" expr="device.isA('Nokia-6120-classic')" />
@@ -95,7 +95,7 @@
         <!-- PC. -->
         <group name="mozilla" expr="device.isA('firefox')" />
                                     
-        <group name="opera" expr="device.isA('opera') or device.isA('SAGEM-HomeManager')"/>
+        <group name="opera" expr="device.isA('opera') or device.isA('Sagem-HomeManager')"/>
                                     
         <!--  XHTML devices -->
         <group name="xhtml" expr="device.getPropertyAsString('xhtmlmp_preferred_mime_type') eq 'application/xhtml+xml'"/>
