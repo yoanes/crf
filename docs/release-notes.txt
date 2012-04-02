@@ -32,9 +32,10 @@ The following methods have been added to the Device interface. These are expecte
 
 The semantics for >>isA have changed - any custom crf groups config will need to be updated.
 
-In Volantis, isA referred to the device name in the heirarchy.  In the WURFL based implementation isA can refer to...
+In Volantis, isA referred to the device name in the hierarchy.  In the WURFL based implementation isA can refer to...
 
-a) The Device brand or b) The Device brand_name & model_name (separated by a hyphen).
+a) The Device brand or 
+b) The Device brand_name & model_name (separated by a hyphen).
 
 ie. For a specific device model, there may be no change...
 
@@ -56,6 +57,14 @@ Old: isA("Android-OS")
 New: supportsOs("Android");
 
 Further examples see global-devices-crf-config.xml
+
+Other Device Name translations...
+
+Nokia-6120c -> Nokia-6120-classic
+Nokia-6720c -> Nokia-6720
+HTC-Diamond -> HTC-Touch-Diamond
+HTC-Diamond2 -> HTC-Touch-Diamond-2
+HTC-TouchHD2 -> HTC-HD2
 
 5. To use the wurfl repository you will need to include spring configuration - see the crf showcase for an example.
 
