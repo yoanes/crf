@@ -462,23 +462,19 @@ public class TransformedImageResourceResolverBeanTestCase extends AbstractResour
     }
 
     private void recordGetGifPreferredImageType() {
-        EasyMock.expect(getMockDevice().getPropertyAsString(
-                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME)).andReturn("GIF");
+        EasyMock.expect(getMockDevice().preferredImageType()).andReturn("GIF");
     }
 
     private void recordGetPNGPreferredImageType() {
-        EasyMock.expect(getMockDevice().getPropertyAsString(
-                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME)).andReturn("PNG");
+        EasyMock.expect(getMockDevice().preferredImageType()).andReturn("PNG");
     }
 
     private void recordGetJpegPreferredImageType() {
-        EasyMock.expect(getMockDevice().getPropertyAsString(
-                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME)).andReturn("JPEG");
+        EasyMock.expect(getMockDevice().preferredImageType()).andReturn("JPEG");
     }
 
     private void recordGetNullPreferredImageType() {
-        EasyMock.expect(getMockDevice().getPropertyAsString(
-                IMAGE_FORMAT_DEVICE_REPOSITORY_PROPERTY_NAME)).andReturn(null);
+        EasyMock.expect(getMockDevice().preferredImageType()).andReturn(null);
     }
 
     @Test

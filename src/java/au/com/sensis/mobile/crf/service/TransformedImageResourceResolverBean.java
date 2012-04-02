@@ -292,7 +292,7 @@ public class TransformedImageResourceResolverBean extends AbstractSingleResource
             return ImageTransformationFactory.ImageFormat.GIF;
         }
 
-        if (device.supportsPng()) {
+        if ("PNG".equals(device.preferredImageType())) {
             return ImageTransformationFactory.ImageFormat.PNG;
         }
 
