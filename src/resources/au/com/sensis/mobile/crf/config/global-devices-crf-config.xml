@@ -67,7 +67,7 @@
         <group name="windows-mobile-7" expr="device.supportsOsVersion('Windows Phone OS', '7')" />
         
         <!-- Blackberry -->
-        <group name="blackberry" expr="device.isA('RIM-Blackberry')" />
+        <group name="blackberry" expr="device.isA('RIM-BlackBerry')" />
         
         <!-- thub. -->
         <group name="thub" expr="device.isA('Sagem-HomeManager')" />

@@ -1,3 +1,16 @@
+==== Version 3.0.1
+
+Changes:
+- Fixed definition of blackberry group in global-devices-crf-config.xml.
+- Now depends on device-repository 4.28-128.
+
+Upgrade steps:
+- If your crf config file imports the above blackberry group, typically like so:
+
+    <import name="blackberry" />
+    
+  then it should actually work now. Otherwise, you won't see any other differences.
+
 ==== Version 3.0.0
 
 Changes:
