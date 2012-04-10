@@ -91,7 +91,7 @@
         <dependency org="com.sensis" name="sdpCommon-logging" rev="0.5" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-web" rev="3.0-001" conf="default"/>
         <dependency org="com.sensis" name="sdpCommon-utils" rev="1.0-008" conf="default"/>
-        <dependency org="com.sensis" name="device-repository" rev="4.28-128" conf="default"/>
+        <dependency org="com.sensis" name="device-repository" rev="4.28-125" conf="default"/>
 
         <!-- Castor. -->
         <dependency org="org.exolab" name="castor-xml" rev="1.1.2.1" conf="default"/>
