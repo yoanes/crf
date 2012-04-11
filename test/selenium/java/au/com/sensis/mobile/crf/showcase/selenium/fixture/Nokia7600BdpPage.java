@@ -113,8 +113,8 @@ public class Nokia7600BdpPage extends BdpPage {
         assertBodyContentOutputWhenDotNullImgFound();
         assertImgPathWhenDotNullImgFound();
 
-        assertScaledYellowPagesImage(115, 46, "png");
-        assertScaledYellowPagesImagePath(115, 46, "png");
+        assertScaledYellowPagesImage(125, 50, "png");
+        assertScaledYellowPagesImagePath(125, 50, "png");
         assertScaledSearchImage(50, 21, "gif", "S");
     }
 
