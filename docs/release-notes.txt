@@ -1,3 +1,10 @@
+==== Version 3.0.2
+
+Changes:
+- Now depends on device-repository 4.28-135.
+- Fixed definition of blackberry group in global-devices-crf-config.xml to accommodate device.isA
+  semantics change in device-repository API.
+
 ==== Version 3.0.1
 
 Changes:
