@@ -1,3 +1,9 @@
+==== Version 3.0.3
+
+Changes:
+- Updated global-devices-crf-config.xml with definitions for thub2 and
+  motorolaXoom.
+
 ==== Version 3.0.2
 
 Changes:

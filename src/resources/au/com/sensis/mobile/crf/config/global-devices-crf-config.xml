@@ -55,6 +55,7 @@
         <group name="htcDiamond" expr="device.isA('HTC-Touch-Diamond')" />
         <group name="htc-desire" expr="device.isA('HTC-Desire') or device.isA('HTC-A8183')" />
         <group name="htcTouchHD2" expr="device.isA('HTC-HD2')" />
+        <group name="motorolaXoom" expr="device.isA('Motorola-MZ601')" />
 
         <group name="android-os1-x" expr="device.supportsOs('Android') and device.userAgent =~ '.*Android 1\..*'" />        
         <group name="android-os2-x" expr="device.supportsOs('Android') and device.userAgent =~ '.*Android 2\..*'" />
@@ -71,6 +72,7 @@
         
         <!-- thub. -->
         <group name="thub" expr="device.isA('Sagem-HomeManager')" />
+        <group name="thub2" expr="device.isA('Telstra-T-Hub2')" />
         
         <!-- Nokia devices. -->
         <group name="nokia6120" expr="device.isA('Nokia-6120-classic')" />
